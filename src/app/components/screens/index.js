@@ -6,12 +6,12 @@
 
 
     // Main Screens
-    export { default as HomeScreen } from './mainScreens/homeScreen'
+    export { default as HomeScreen } from './mainScreens/HomeScreen'
 
     // User Screens
     export { default as UpdateUserScreen } from '../screens/userScreens/userUpdateScreen'
     
 // Assets  
     // Font Awesome
-    export { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-    export { faTimes } from '@fortawesome/free-solid-svg-icons';
+    export { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+    export { faTimes } from '@fortawesome/free-solid-svg-icons'
