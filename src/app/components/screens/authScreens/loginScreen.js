@@ -18,7 +18,7 @@ import {
 //FontAwesome
 import { FontAwesomeIcon, faTimes } from '../index'
 
-export default function LoginScreen({navigation}) {
+export default function LoginScreen({navigation, route}) {
     const { logIn, successAlert, failureAlert } = useAuth()
     const db = firebase.firestore()
     const [ isLoading, setIsLoading] = useState(true)
@@ -51,6 +51,7 @@ export default function LoginScreen({navigation}) {
                         alert("User does not exist anymore.")
                         return;
                     }
+                    route.params.setNotLoggingIn(false)
                     navigation.navigate('Home')
                 })
                 .catch(err => {
@@ -90,7 +91,7 @@ export default function LoginScreen({navigation}) {
               <View style={{ paddingLeft: 20 }}>
                 <FontAwesomeIcon 
                   icon={ faTimes } color={manualColorSet().fontColor} size={50} 
-                  onPress={() => navigation.navigate('Home')}
+                  onPress={() => route.params.setNotLoggingIn(true)}
                 />
               </View>
               <KeyboardAwareScrollView
