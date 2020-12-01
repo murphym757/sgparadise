@@ -6,10 +6,13 @@
 
 
     // Main Screens
-    export { default as SgProfileScreen } from './mainScreens/SgProfileScreen'
+    export { default as SgHomeScreen } from './mainScreens/sgHomeScreen'
 
     // User Screens
-    export { default as UpdateUserScreen } from '../screens/userScreens/userUpdateScreen'
+    export { default as UserProfileScreen } from './userScreens/UserProfileScreen'
+    export { default as UpdateUserScreen } from './userScreens/userUpdateScreen'
+    export { default as UserSavesScreen } from './userScreens/UserSavesScreen'
+    
     
 // Assets  
     // Font Awesome

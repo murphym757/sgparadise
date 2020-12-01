@@ -8,12 +8,12 @@ import { // App Styling
   } from '../../../../../assets/styles/authScreensStyling'
 import { manualColorSet, loadingScreen } from '../authScreens/loadingScreen' //Loader
 
-export default function SgProfileScreen({navigation}) {
+export default function UserProfileScreen({navigation}) {
     const { currentUser, logOut } = useAuth()
     const [error, setError] = useState('')
 
     function onUpdateUser() {
-        navigation.navigate('Account')
+        navigation.navigate('UserProfileScreen')
     }
     
     async function onHandleLogout() {
@@ -28,7 +28,7 @@ export default function SgProfileScreen({navigation}) {
 
     return (
         <View style={{ flex: 1, backgroundColor: manualColorSet().backgroundColor, justifyContent: 'center', alignItems: 'center' }}>
-            <Text>Home Screen</Text>
+            <Text>Account Screen</Text>
             {currentUser !== null
                 ?   <View>
                         <Text>{error}</Text>

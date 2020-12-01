@@ -9,9 +9,11 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 import {CurrentThemeContext} from '../../../../assets/styles/globalTheme'
 import { 
   LoginScreen, 
-  SgProfileScreen, 
   RegistrationScreen,
+  SgHomeScreen,
+  UserProfileScreen,
   UpdateUserScreen,
+  UserSavesScreen,
   ResetPasswordScreen,
   FontAwesomeIcon,
   faHome, faHeart, faUser
@@ -40,14 +42,14 @@ export default function App() {
         barStyle={{ backgroundColor: colors.primaryColor }}     
       >
         <Tab.Screen 
-          name="SgProfileScreen"
+          name="SgHomeScreen"
           options={{
             tabBarLabel: 'Home',
             tabBarIcon: ({ color, size }) => (
             <FontAwesomeIcon icon={ faHome } color={color} size={size} />
           ),
           }}
-          component={SgProfileScreen} // HomePage
+          component={SgHomeScreen} // HomePage
         />
         <Tab.Screen 
           name="Saved"
@@ -57,17 +59,17 @@ export default function App() {
             <FontAwesomeIcon icon={ faHeart } color={color} size={size} />
           ),
           }}
-          component={UserSavesMainScreen} 
+          component={UserSavesScreen} 
         />
         <Tab.Screen 
-          name="Account"
+          name="UserProfileScreen"
           options={{
             tabBarLabel: 'Account',
             tabBarIcon: ({ color, size }) => (
             <FontAwesomeIcon icon={ faUser } color={color} size={size} />
           ),
           }}
-          component={UserProfileMainScreen} 
+          component={UserProfileScreen} 
         />
       </Tab.Navigator>
     )
@@ -83,14 +85,14 @@ export default function App() {
         barStyle={{ backgroundColor: colors.primaryColor }}     
       >
         <Tab.Screen 
-          name="SgProfileScreen"
+          name="SgHomeScreen"
           options={{
             tabBarLabel: 'Home',
             tabBarIcon: ({ color, size }) => (
             <FontAwesomeIcon icon={ faHome } color={color} size={size} />
           ),
           }}
-          component={SgProfileScreen} // HomePage
+          component={UserProfileScreen} // HomePage
         />
         <Tab.Screen 
           name="Saved"
@@ -100,17 +102,17 @@ export default function App() {
             <FontAwesomeIcon icon={ faHeart } color={color} size={size} />
           ),
           }}
-          component={UserSavesMainScreen} 
+          component={UserSavesScreen} 
         />
         <Tab.Screen 
-          name="Account"
+          name="UserProfileScreen"
           options={{
             tabBarLabel: 'Account',
             tabBarIcon: ({ color, size }) => (
             <FontAwesomeIcon icon={ faUser } color={color} size={size} />
           ),
           }}
-          component={UserProfileMainScreen} 
+          component={UserProfileScreen} 
         />
       </Tab.Navigator>
   }
@@ -141,16 +143,9 @@ export default function App() {
 
   return (
       <NavigationContainer> 
-        { notLoggingIn !== false
-         ?  (<>
-              { currentUser !== null 
-                ? loggedinStackNavbar()
-                : notLoggedInStackNavbar()
-              }
-              </>)
-          : (<>
-              {notLoggedInStack()}
-            </>)
+        { notLoggingIn !== false || currentUser !== null 
+          ? loggedinStackNavbar()
+          : notLoggedInStack()
         }
       </NavigationContainer>
   );
