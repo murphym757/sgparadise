@@ -10,7 +10,7 @@ import {CurrentThemeContext} from '../../../../assets/styles/globalTheme'
 import { 
   LoginScreen, 
   RegistrationScreen,
-  SgHomeScreen,
+  SgMainScreen,
   UserProfileScreen,
   UpdateUserScreen,
   UserSavesScreen,
@@ -31,7 +31,7 @@ export default function App() {
   const [notLoggingIn, setNotLoggingIn] = useState(false)
   const colors = useContext(CurrentThemeContext) 
 
-  function loggedinStackNavbar() {
+  function sgUserStackNavbar() {
     return (
       <Tab.Navigator
         initialRouteName="Home"
@@ -42,14 +42,14 @@ export default function App() {
         barStyle={{ backgroundColor: colors.primaryColor }}     
       >
         <Tab.Screen 
-          name="SgHomeScreen"
+          name="SgMainScreen"
           options={{
             tabBarLabel: 'Home',
             tabBarIcon: ({ color, size }) => (
             <FontAwesomeIcon icon={ faHome } color={color} size={size} />
           ),
           }}
-          component={SgHomeScreen} // HomePage
+          component={SgMainScreen} // HomePage
         />
         <Tab.Screen 
           name="Saved"
@@ -75,56 +75,13 @@ export default function App() {
     )
   }
 
-  function notLoggedInStackNavbar() {
-    <Tab.Navigator
-        initialRouteName="Home"
-        activeColor={colors.primaryFontColor}
-        inactiveColor={colors.secondaryColor}
-        labelStyle={{ fontSize: 12 }}
-        style={{ backgroundColor: colors.primaryColor }}
-        barStyle={{ backgroundColor: colors.primaryColor }}     
-      >
-        <Tab.Screen 
-          name="SgHomeScreen"
-          options={{
-            tabBarLabel: 'Home',
-            tabBarIcon: ({ color, size }) => (
-            <FontAwesomeIcon icon={ faHome } color={color} size={size} />
-          ),
-          }}
-          component={UserProfileScreen} // HomePage
-        />
-        <Tab.Screen 
-          name="Saved"
-          options={{
-            tabBarLabel: 'Saved',
-            tabBarIcon: ({ color, size }) => (
-            <FontAwesomeIcon icon={ faHeart } color={color} size={size} />
-          ),
-          }}
-          component={UserSavesScreen} 
-        />
-        <Tab.Screen 
-          name="UserProfileScreen"
-          options={{
-            tabBarLabel: 'Account',
-            tabBarIcon: ({ color, size }) => (
-            <FontAwesomeIcon icon={ faUser } color={color} size={size} />
-          ),
-          }}
-          component={UserProfileScreen} 
-        />
-      </Tab.Navigator>
-  }
-
-  function notLoggedInStack() {
+  function sgAuthStack() {
     return (
-      <Stack.Navigator>
+      <Stack.Navigator initialRouteName="Login">
         <Stack.Screen 
           name="Login" 
           options={{ headerShown: false }} 
           component={LoginScreen}
-          initialParams={{ setNotLoggingIn: setNotLoggingIn }}
         />
         <Stack.Screen 
           name="Registration" 
@@ -140,14 +97,28 @@ export default function App() {
     )
   }
 
+  function userAuthStatus() {
+    if(currentUser !== null) {
+      return "Main"
+    } else {
+      return "Auth"
+    }
+  }
 
   return (
       <NavigationContainer> 
-        { notLoggingIn !== false || currentUser !== null 
-          ? loggedinStackNavbar()
-          : notLoggedInStack()
-        }
+        <Stack.Navigator initialRouteName={userAuthStatus}>
+          <Stack.Screen 
+            name="Main" 
+            options={{ headerShown: false }} 
+            component={sgUserStackNavbar}
+          />
+          <Stack.Screen 
+            name="Auth" 
+            options={{ headerShown: false }} 
+            component={sgAuthStack}
+          />
+        </Stack.Navigator>
       </NavigationContainer>
   );
 }
-

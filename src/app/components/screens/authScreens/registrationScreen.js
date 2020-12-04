@@ -11,7 +11,7 @@ import { // App Styling
   FooterView,
   FooterFont,
   FooterLink
-} from '../../../../../assets/styles/authScreensStyling'
+} from '../index.js'
 //FontAwesome
 import { FontAwesomeIcon, faTimes } from '../index'
 
