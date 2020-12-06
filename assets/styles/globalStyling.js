@@ -6,6 +6,8 @@ import {
 
 export const Container = styled(View) `
     flex: 1;
+    paddingLeft: 20px;
+    paddingRight: 20px;
 `;
 
 export const ViewContainer = styled(Container) `

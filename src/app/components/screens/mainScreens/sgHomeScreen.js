@@ -7,7 +7,7 @@ import { manualColorSet, loadingScreen } from '../authScreens/loadingScreen' //L
 // App Styling & Screens
 import {
     CurrentThemeContext,
-    MainContainer,
+    Container,
     MainFont,
     TouchableButton,
     TouchableButtonFont,
@@ -49,18 +49,22 @@ export default function SgHomeScreen({ navigation, route }) {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.primaryColor }}>
         {currentUser !== null
-            ?   <View style={{ flex: 1 }}>
+            ?   <Container>
                     <MainFont>Home Screen</MainFont>
                     <Text>Logged In</Text>
-                </View>
-            :   <View style={{ flex: 1 }}>
+                </Container>
+            :   <Container>
                     <MainFont>Home Screen</MainFont>
                     <Text>Not Logged In</Text>
                     <TouchableButton
                         onPress={() => navigation.navigate('Auth', { screen: 'sgAuthStack' })}>
                         <TouchableButtonFont>Log in</TouchableButtonFont>
                     </TouchableButton>
-                </View>
+                    <TouchableButton
+                        onPress={() => navigation.navigate('UserAddGame')}>
+                    <TouchableButtonFont>Add Game</TouchableButtonFont>
+                    </TouchableButton>
+                </Container>
         } 
     </SafeAreaView>
   );

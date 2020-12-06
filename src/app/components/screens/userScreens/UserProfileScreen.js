@@ -27,7 +27,7 @@ export default function UserProfileScreen({navigation}) {
     }
 
     return (
-        <View style={{ flex: 1, backgroundColor: manualColorSet().backgroundColor, justifyContent: 'center', alignItems: 'center' }}>
+        <View style={{ flex: 1, backgroundColor: colors.primaryColor, justifyContent: 'center', alignItems: 'center' }}>
             <Text>Account Screen</Text>
             {currentUser !== null
                 ?   <View>

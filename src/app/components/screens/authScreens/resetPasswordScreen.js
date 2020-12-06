@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Image, Text, TextInput, TouchableOpacity, View, SafeAreaView } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import {CurrentThemeContext} from '../../../../../assets/styles/globalTheme';
@@ -28,6 +28,7 @@ export default function ResetPasswordScreen({navigation}) {
     const [message, setMessage] = useState('Forgotten your password? Enter your e-mail address below, and we\'ll send you an e-mail allowing you to reset it.')
     const [error, setError] = useState('')
     const appIcon = '../../../../../assets/images/icon.png'
+    const colors = useContext(CurrentThemeContext)
 
     function onFooterLinkPress() {
         navigation.navigate('Login')
@@ -64,7 +65,7 @@ export default function ResetPasswordScreen({navigation}) {
     })
 
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: manualColorSet().backgroundColor }}> 
+      <SafeAreaView style={{ flex: 1, backgroundColor: colors.primaryColor }}> 
         {isLoading == true 
           ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                 {loadingScreen()}
@@ -72,7 +73,7 @@ export default function ResetPasswordScreen({navigation}) {
           : <View style={{ flex: 1 }}>
               <View style={{ paddingLeft: 20 }}>
                 <FontAwesomeIcon 
-                  icon={ faTimes } color={manualColorSet().fontColor} size={50} 
+                  icon={ faTimes } color={colors.primaryFontColor} size={50} 
                   onPress={() => navigation.navigate('Home')}
                 />
               </View>
@@ -96,10 +97,10 @@ export default function ResetPasswordScreen({navigation}) {
                 </View>
               <CustomInputField
                   placeholder='E-mail'
-                  placeholderTextColor={manualColorSet().backgroundColor}
+                  placeholderTextColor={colors.primaryColor}
                   onChangeText={(text) => setEmail(text)}
                   value={email}
-                  color={manualColorSet().backgroundColor}
+                  color={colors.primaryColor}
                   underlineColorAndroid="transparent"
                   autoCapitalize="none"
               />

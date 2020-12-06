@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { Text, View } from 'react-native';
+import React from 'react';
+import { View } from 'react-native';
 import LottieView from 'lottie-react-native' //Loader
 
 export function manualColorSet() {

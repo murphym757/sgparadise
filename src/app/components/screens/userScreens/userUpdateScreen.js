@@ -108,7 +108,7 @@ export default function UpdateUserScreen({navigation}) {
     })
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: manualColorSet().backgroundColor }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: colors.primaryColor }}>
         {isLoading == true 
           ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
               {loadingScreen()}
@@ -116,7 +116,7 @@ export default function UpdateUserScreen({navigation}) {
           : <View style={{ flex: 1 }}>
               <View style={{ paddingLeft: 20 }}>
                 <FontAwesomeIcon 
-                  icon={ faTimes } color={manualColorSet().fontColor} size={50} 
+                  icon={ faTimes } color={colors.primaryFontColor} size={50} 
                   onPress={() => navigation.navigate('Home')}
                 />
               </View>
@@ -132,31 +132,31 @@ export default function UpdateUserScreen({navigation}) {
                 </View>
                 <CustomInputField
                     placeholder='E-mail'
-                    placeholderTextColor={manualColorSet().backgroundColor}
+                    placeholderTextColor={colors.primaryColor}
                     onChangeText={(text) => setEmail(text)}
                     required
                     value={email}
-                    color={manualColorSet().backgroundColor}
+                    color={colors.primaryColor}
                     underlineColorAndroid="transparent"
                     autoCapitalize="none"
                 />
                 <CustomInputField
-                    placeholderTextColor={manualColorSet().backgroundColor}
+                    placeholderTextColor={colors.primaryColor}
                     secureTextEntry
                     placeholder='Password'
                     onChangeText={(text) => setPassword(text)}
                     value={password}
-                    color={manualColorSet().backgroundColor}
+                    color={colors.primaryColor}
                     underlineColorAndroid="transparent"
                     autoCapitalize="none"
                 />
                 <CustomInputField
-                    placeholderTextColor={manualColorSet().backgroundColor}
+                    placeholderTextColor={colors.primaryColor}
                     secureTextEntry
                     placeholder='Confirm Password'
                     onChangeText={(text) => setConfirmPassword(text)}
                     value={confirmPassword}
-                    color={manualColorSet().backgroundColor}
+                    color={colors.primaryColor}
                     underlineColorAndroid="transparent"
                     autoCapitalize="none"
                 />

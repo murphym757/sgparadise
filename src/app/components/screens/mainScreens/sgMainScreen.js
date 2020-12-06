@@ -7,7 +7,7 @@ import { manualColorSet, loadingScreen } from '../authScreens/loadingScreen' //L
 // App Styling & Screens
 import {
     SgHomeScreen,
-    LoginScreenAlt,
+    UserAddGameScreen,
     CurrentThemeContext,
     MainContainer,
     MainFont,
@@ -25,6 +25,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 export default function SgMainScreen({ navigation, route }) {
     const { currentUser, logOut } = useAuth()
     const [error, setError] = useState('')
+    const colors = useContext(CurrentThemeContext)
 
     function toOnLoginPress({ navigation }) {
         navigation.goBack()
@@ -53,17 +54,19 @@ export default function SgMainScreen({ navigation, route }) {
                     options={{ headerShown: false }}
                     component={SgHomeScreen} 
                 />
+                <Stack.Screen 
+                    name="UserAddGame"
+                    options={{ headerShown: false }}
+                    component={UserAddGameScreen} 
+                />
                 </Stack.Navigator>   
             )
     }
 
-  const colors = useContext(CurrentThemeContext);
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.primaryColor }}>
         <View style={{ flex: 1 }}>
-        <Drawer.Navigator initialRouteName="SgHome">
-            <Drawer.Screen name="Home" component={sgGamesStack} />
-        </Drawer.Navigator>
+            {sgGamesStack()}
         </View>
     </SafeAreaView>
   );

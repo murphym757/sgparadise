@@ -10,7 +10,7 @@ import {
   MainFont
 } from '../index.js'
 
-export default function UserAddGameScreen() {
+export default function UserSavesScreen() {
     const { currentUser, logOut } = useAuth()
     const [error, setError] = useState('')
   return (
