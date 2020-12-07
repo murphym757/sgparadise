@@ -4,17 +4,22 @@
     export { default as RegistrationScreen } from './authScreens/registrationScreen'
     export { default as ResetPasswordScreen } from './authScreens/resetPasswordScreen' 
 
-
     // Main Screens
     export { default as SgMainScreen } from './mainScreens/sgMainScreen'
     export { default as SgHomeScreen } from './mainScreens/sgHomeScreen'
-
+        // Search Screens
+        export { default as SgGameSearchScreen } from './mainScreens/sgGameSearchScreenContent/sgGameSearchScreen'        
+        
+        // Game Screens
+        export { default as GameInfoPageScreen } from './mainScreens/sgGameScreenContent/sgGameScreen'
+        
     // User Screens
     export { default as UserProfileScreen } from './userScreens/userProfileScreen'
     export { default as UpdateUserScreen } from './userScreens/userUpdateScreen'
     export { default as UserSavesScreen } from './userScreens/userSavesScreen'
-    export { default as UserAddGameScreen } from './userScreens/userAddGameScreen'
-    
+    export { default as UserAddGameScreen } from './userScreens/userAddGameScreenContent/userAddGameScreen'
+    export { default as UserEditGameScreen } from './userScreens/userAddGameScreenContent/userEditGameScreen'
+
 // Assets  
     // Styling
         //Theme Context
@@ -47,4 +52,11 @@
 
     // Font Awesome
     export { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-    export { faHome, faHeart, faTimes, faUser } from '@fortawesome/free-solid-svg-icons'
+    export { 
+        faHome, 
+        faHeart, 
+        faTimes, 
+        faUser,
+        faCaretDown,
+        faChevronLeft
+     } from '@fortawesome/free-solid-svg-icons'

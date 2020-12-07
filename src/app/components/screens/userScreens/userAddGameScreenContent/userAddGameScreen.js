@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { View, Text, Button, Image, ScrollView, SafeAreaView } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import {CurrentThemeContext} from '../../../../../assets/styles/globalTheme'
+import {CurrentThemeContext} from '../../../../../../assets/styles/globalTheme'
 import axios from 'axios'
 
 
@@ -13,7 +13,7 @@ import {
     CustomInputField,
     TouchableButton,
     TouchableButtonFont
-} from '../index.js'
+} from '../../index'
 
 export default function UserAddGameScreen() {
     const colors = useContext(CurrentThemeContext)
@@ -55,6 +55,7 @@ export default function UserAddGameScreen() {
     const [tagsDescription10, setTagsDescription10] = useState('')
     return (
         <SafeAreaViewContainer>
+        <Text>Moovie Night</Text>
             <ScrollView 
                 scrollEventThrottle={16}
             >

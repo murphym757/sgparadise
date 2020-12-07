@@ -11,6 +11,7 @@ import {
   LoginScreen, 
   RegistrationScreen,
   SgMainScreen,
+  GameInfoPageScreen,
   UserProfileScreen,
   UpdateUserScreen,
   UserSavesScreen,
@@ -75,6 +76,18 @@ export default function App() {
     )
   }
 
+  function sgGameStack() {
+    return (
+      <Stack.Navigator initialRouteName="Game">
+        <Stack.Screen 
+          name="Game Page" 
+          options={{ headerShown: false }} 
+          component={GameInfoPageScreen}
+        />
+      </Stack.Navigator>
+    )
+  }
+
   function sgAuthStack() {
     return (
       <Stack.Navigator initialRouteName="Login">
@@ -114,6 +127,11 @@ export default function App() {
             component={sgUserStackNavbar}
           />
           <Stack.Screen 
+            name="Game" 
+            options={{ headerShown: false }} 
+            component={sgGameStack}
+          />
+          <Stack.Screen 
             name="Auth" 
             options={{ headerShown: false }} 
             component={sgAuthStack}
@@ -122,3 +140,4 @@ export default function App() {
       </NavigationContainer>
   );
 }
+

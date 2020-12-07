@@ -1,5 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { View, Text, Button, Image, ScrollView, SafeAreaView } from 'react-native'
+import { 
+    View, 
+    Text, 
+    Button, 
+    Image, 
+    ScrollView, 
+    SafeAreaView, 
+    TouchableOpacity 
+} from 'react-native'
 import axios from 'axios'
 import { useAuth } from '../authScreens/authContext'
 import { manualColorSet, loadingScreen } from '../authScreens/loadingScreen' //Loader
@@ -7,13 +15,18 @@ import { manualColorSet, loadingScreen } from '../authScreens/loadingScreen' //L
 // App Styling & Screens
 import {
     SgHomeScreen,
+    SgGameSearchScreen,
     UserAddGameScreen,
+    UserEditGameScreen,
     CurrentThemeContext,
     MainContainer,
     MainFont,
     TouchableButton,
     TouchableButtonFont
 } from '../index.js'
+import {
+    sgSearchBarForm
+} from './sgGameSearchScreenContent/searchIndex'
 
 // React Navigation
 import { createDrawerNavigator } from '@react-navigation/drawer'
@@ -30,6 +43,10 @@ export default function SgMainScreen({ navigation, route }) {
     function toOnLoginPress({ navigation }) {
         navigation.goBack()
   }
+
+    function searchBar() {
+        return sgSearchBarForm()
+    }
 
     function sgGamesStack() {
         const Stack = createStackNavigator()
@@ -59,12 +76,25 @@ export default function SgMainScreen({ navigation, route }) {
                     options={{ headerShown: false }}
                     component={UserAddGameScreen} 
                 />
+                <Stack.Screen 
+                    name="UserEditGame"
+                    options={{ headerShown: false }}
+                    component={UserEditGameScreen} 
+                />
+                <Stack.Screen 
+                    name="SgSearchGame"
+                    options={{ headerShown: false }}
+                    component={SgGameSearchScreen} 
+                />
                 </Stack.Navigator>   
             )
     }
-
+    
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.primaryColor }}>
+        <TouchableOpacity onPress={() => navigation.navigate('SgSearchGame')}>
+            {searchBar()}
+        </TouchableOpacity>
         <View style={{ flex: 1 }}>
             {sgGamesStack()}
         </View>

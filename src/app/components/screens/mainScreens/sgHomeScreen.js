@@ -1,5 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { View, Text, Button, Image, ScrollView, SafeAreaView } from 'react-native'
+import { 
+    View, 
+    Text, 
+    Button, 
+    Image, 
+    ScrollView, 
+    SafeAreaView, 
+    TouchableOpacity 
+} from 'react-native'
 import axios from 'axios'
 import { useAuth } from '../authScreens/authContext'
 import { manualColorSet, loadingScreen } from '../authScreens/loadingScreen' //Loader
@@ -20,6 +28,7 @@ const Stack = createStackNavigator()
 export default function SgHomeScreen({ navigation, route }) {
     const { currentUser, logOut } = useAuth()
     const [error, setError] = useState('')
+    const colors = useContext(CurrentThemeContext)
   
     function loggedInUser() {
         <Stack.Navigator
@@ -45,27 +54,29 @@ export default function SgHomeScreen({ navigation, route }) {
         </Stack.Navigator>
     }
 
-  const colors = useContext(CurrentThemeContext);
+    
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.primaryColor }}>
-        {currentUser !== null
-            ?   <Container>
-                    <MainFont>Home Screen</MainFont>
-                    <Text>Logged In</Text>
-                </Container>
-            :   <Container>
-                    <MainFont>Home Screen</MainFont>
-                    <Text>Not Logged In</Text>
-                    <TouchableButton
-                        onPress={() => navigation.navigate('Auth', { screen: 'sgAuthStack' })}>
-                        <TouchableButtonFont>Log in</TouchableButtonFont>
-                    </TouchableButton>
-                    <TouchableButton
-                        onPress={() => navigation.navigate('UserAddGame')}>
-                    <TouchableButtonFont>Add Game</TouchableButtonFont>
-                    </TouchableButton>
-                </Container>
-        } 
+        <Container>
+            <MainFont onPress={() => navigation.navigate('SgSearchGame')}>Home Screen</MainFont>
+            {currentUser !== null
+                ?   <View>
+                        <Text>Logged In</Text>
+                    </View>
+                :   <View>
+                        <Text>Not Logged In</Text>
+                        <Text onPress={() => navigation.navigate('Game', { screen: 'sgGameStack' })}>TO Games</Text>
+                        <TouchableButton
+                            onPress={() => navigation.navigate('Auth', { screen: 'sgAuthStack' })}>
+                            <TouchableButtonFont>Log in</TouchableButtonFont>
+                        </TouchableButton>
+                        <TouchableButton
+                            onPress={() => navigation.navigate('UserAddGame')}>
+                        <TouchableButtonFont>Add Game</TouchableButtonFont>
+                        </TouchableButton>
+                    </View>
+            }
+        </Container>
     </SafeAreaView>
   );
 }

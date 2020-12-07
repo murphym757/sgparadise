@@ -6,7 +6,7 @@ import {
     CustomFailureAlertFont,
     CustomSuccessAlert,
     CustomSuccessAlertFont
-  } from '../../../../../assets/styles/authScreensStyling';
+  } from '../../../../../assets/styles/authScreensStyling'
 
 const AuthContext = React.createContext()
 
