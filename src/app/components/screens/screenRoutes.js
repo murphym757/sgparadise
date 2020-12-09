@@ -10,8 +10,10 @@ import {CurrentThemeContext} from '../../../../assets/styles/globalTheme'
 import { 
   LoginScreen, 
   RegistrationScreen,
+  GameScreen,
+  EditGameScreen,
+  AddGameScreen,
   SgMainScreen,
-  GameInfoPageScreen,
   UserProfileScreen,
   UpdateUserScreen,
   UserSavesScreen,
@@ -80,13 +82,31 @@ export default function App() {
     return (
       <Stack.Navigator initialRouteName="Game">
         <Stack.Screen 
-          name="Game Page" 
+          name="sgGamePage" 
           options={{ headerShown: false }} 
-          component={GameInfoPageScreen}
+          component={GameScreen}
+        />
+        <Stack.Screen 
+            name="SgEditGame"
+            options={{ headerShown: false }}
+            component={EditGameScreen} 
         />
       </Stack.Navigator>
     )
   }
+
+  function sgGameAddStack() {
+    return (
+      <Stack.Navigator initialRouteName="SgAddGame">
+        <Stack.Screen 
+          name="SgAddGame"
+          options={{ headerShown: false }}
+          component={AddGameScreen} 
+        />
+      </Stack.Navigator>
+    )
+  }
+  
 
   function sgAuthStack() {
     return (
@@ -130,6 +150,11 @@ export default function App() {
             name="Game" 
             options={{ headerShown: false }} 
             component={sgGameStack}
+          />
+          <Stack.Screen 
+            name="AddGame" 
+            options={{ headerShown: false }} 
+            component={sgGameAddStack}
           />
           <Stack.Screen 
             name="Auth" 

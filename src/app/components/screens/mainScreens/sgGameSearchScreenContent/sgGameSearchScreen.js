@@ -10,10 +10,9 @@ import {
 import axios from 'axios'
 
 
-export default function SgGameSearchScreen({navigation}) {
+export default function SgGameSearchScreen({navigation, route}) {
     const [userSearchSelected, setUserSearchSelected] = useState(false)
     const [addGameSelected, setAddGameSelected] = useState(false)
-    
   return (
     <SafeAreaView style={{ flex: 1 }}>
         <Text>Search bar goes here</Text>

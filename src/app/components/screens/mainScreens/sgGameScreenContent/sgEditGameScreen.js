@@ -4,7 +4,6 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import {CurrentThemeContext} from '../../../../../../assets/styles/globalTheme'
 import axios from 'axios'
 
-
 // App Styling
 import {
     SafeAreaViewContainer,
@@ -15,7 +14,7 @@ import {
     TouchableButtonFont
 } from '../../index'
 
-export default function UserAddGameScreen() {
+export default function EditGameScreen() {
     const colors = useContext(CurrentThemeContext)
     const [gameName, setGameName] = useState('')
     const [gameDeveloper, setGameDeveloper] = useState('')

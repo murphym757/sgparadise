@@ -3,7 +3,9 @@ import { View, Text, Button, Image, ScrollView, SafeAreaView } from 'react-nativ
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import {CurrentThemeContext} from '../../../../../../assets/styles/globalTheme'
 import axios from 'axios'
-
+import {
+    searchBar
+} from '../sgGameSearchScreenContent/searchIndex'
 
 // App Styling
 import {
@@ -15,7 +17,9 @@ import {
     TouchableButtonFont
 } from '../../index'
 
-export default function UserEditGameScreen() {
+export default function AddGameScreen({navigation}) {
+    const [searchType, setSearchType] = useState('sgGameSearch')
+    console.log(searchType)
     const colors = useContext(CurrentThemeContext)
     const [gameName, setGameName] = useState('')
     const [gameDeveloper, setGameDeveloper] = useState('')
@@ -55,7 +59,7 @@ export default function UserEditGameScreen() {
     const [tagsDescription10, setTagsDescription10] = useState('')
     return (
         <SafeAreaViewContainer>
-        <Text>Moovie Night</Text>
+        {searchBar({navigation}, searchType)}
             <ScrollView 
                 scrollEventThrottle={16}
             >

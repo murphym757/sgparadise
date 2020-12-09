@@ -7,7 +7,7 @@ import {
     FontAwesomeIcon,
     faChevronLeft
 } from '../../index'
-export default function GameInfoPageScreen({navigation}) {
+export default function GameScreen({navigation}) {
     const colors = useContext(CurrentThemeContext)
   return (
     <SafeAreaView style={{ flex: 1 }}>

@@ -7,19 +7,19 @@
     // Main Screens
     export { default as SgMainScreen } from './mainScreens/sgMainScreen'
     export { default as SgHomeScreen } from './mainScreens/sgHomeScreen'
+
         // Search Screens
         export { default as SgGameSearchScreen } from './mainScreens/sgGameSearchScreenContent/sgGameSearchScreen'        
         
         // Game Screens
-        export { default as GameInfoPageScreen } from './mainScreens/sgGameScreenContent/sgGameScreen'
+        export { default as GameScreen } from './mainScreens/sgGameScreenContent/sgGameScreen'
+        export { default as AddGameScreen } from './mainScreens/sgGameScreenContent/sgAddGameScreen'
+        export { default as EditGameScreen } from './mainScreens/sgGameScreenContent/sgEditGameScreen'
         
     // User Screens
     export { default as UserProfileScreen } from './userScreens/userProfileScreen'
     export { default as UpdateUserScreen } from './userScreens/userUpdateScreen'
     export { default as UserSavesScreen } from './userScreens/userSavesScreen'
-    export { default as UserAddGameScreen } from './userScreens/userAddGameScreenContent/userAddGameScreen'
-    export { default as UserEditGameScreen } from './userScreens/userAddGameScreenContent/userEditGameScreen'
-
 // Assets  
     // Styling
         //Theme Context
@@ -31,6 +31,7 @@
             SafeAreaViewContainer,
             ScrollViewContainer,
             ContentContainer,
+            TextInputSearchBar,
             ViewSortColumn,
             MainFont,
             MainHeading,

@@ -21,6 +21,7 @@ import {
     TouchableButtonFont,
 } from '../index.js'
 
+
 // React Navigation
 import { createStackNavigator } from '@react-navigation/stack'
 const Stack = createStackNavigator()
@@ -71,7 +72,7 @@ export default function SgHomeScreen({ navigation, route }) {
                             <TouchableButtonFont>Log in</TouchableButtonFont>
                         </TouchableButton>
                         <TouchableButton
-                            onPress={() => navigation.navigate('UserAddGame')}>
+                            onPress={() => navigation.navigate('AddGame', { screen: 'sgAddGameStack' })}>
                         <TouchableButtonFont>Add Game</TouchableButtonFont>
                         </TouchableButton>
                     </View>
