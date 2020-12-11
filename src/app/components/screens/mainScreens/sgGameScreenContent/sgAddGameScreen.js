@@ -2,6 +2,8 @@ import React, { useState, useEffect, useContext } from 'react'
 import { View, Text, Button, Image, ScrollView, SafeAreaView } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import {CurrentThemeContext} from '../../../../../../assets/styles/globalTheme'
+import { gamesConfig, firebase } from '../../../../../server/config/config'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'axios'
 import {
     searchBar
@@ -57,6 +59,50 @@ export default function AddGameScreen({navigation}) {
     const [tagsDescription8, setTagsDescription8] = useState('')
     const [tagsDescription9, setTagsDescription9] = useState('')
     const [tagsDescription10, setTagsDescription10] = useState('')
+    console.log(gamesConfig.igdbClientId)
+    console.log(gamesConfig.igdbClientSecret)
+    useEffect(() => {
+        const twitchIdUrl ='https://id.twitch.tv/oauth2/token?'
+        const clientId = 'client_id=' + ""+ gamesConfig.igdbClientId + ""
+        const clientSecret = '&client_secret=' + "" + gamesConfig.igdbClientSecret + ""
+        const grantType = '&grant_type=client_credentials'
+        axios.post(twitchIdUrl + clientId + clientSecret + grantType)
+            .then(async (res) => {
+                console.log(res.data)
+                await AsyncStorage.setItem('igdbAccesstoken', jsonValue)
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+      })
+
+      async function searchGame() {
+        try {
+            const jsonValue = await AsyncStorage.getItem('igdbAccesstoken')
+            const igdbAuthValue = 'Bearer' + " " + JSON.parse(jsonValue)
+            console.log(igdbAuthValue)
+            axios({
+                url: "https://api.igdb.com/v4/games",
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Client-ID': gamesConfig.igdbClientId,
+                    'Authorization': igdbAuthValue,
+                },
+                data: "fields age_ratings,aggregated_rating,aggregated_rating_count,alternative_names,artworks,bundles,category,checksum,collection,cover,created_at,dlcs,expansions,external_games,first_release_date,follows,franchise,franchises,game_engines,game_modes,genres,hypes,involved_companies,keywords,multiplayer_modes,name,parent_game,platforms,player_perspectives,rating,rating_count,release_dates,screenshots,similar_games,slug,standalone_expansions,status,storyline,summary,tags,themes,total_rating,total_rating_count,updated_at,url,version_parent,version_title,videos,websites;"
+              })
+                .then(res => {
+                    console.log(res.data)
+                })
+                .catch(err => {
+                    console.error(err)
+                })
+        } catch(err) {
+            console.log(err)
+        }
+        
+      }
+
     return (
         <SafeAreaViewContainer>
         {searchBar({navigation}, searchType)}
@@ -69,7 +115,7 @@ export default function AddGameScreen({navigation}) {
                         showsHorizontalScrollIndicator={false}
                     >
                         <MainFont>
-                            Add Game
+                            Add Game 
                         </MainFont>
                         <KeyboardAwareScrollView
                             style={{ flex: 1, width: '100%' }}
