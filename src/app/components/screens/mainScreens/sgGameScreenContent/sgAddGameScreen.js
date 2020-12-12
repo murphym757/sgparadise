@@ -69,7 +69,7 @@ export default function AddGameScreen({navigation}) {
         axios.post(twitchIdUrl + clientId + clientSecret + grantType)
             .then(async (res) => {
                 console.log(res.data)
-                await AsyncStorage.setItem('igdbAccesstoken', jsonValue)
+                await AsyncStorage.setItem('igdbAccesstoken', res.data.access_token)
             })
             .catch((err) => {
                 console.log(err);
@@ -77,17 +77,15 @@ export default function AddGameScreen({navigation}) {
       })
 
       async function searchGame() {
-        try {
             const jsonValue = await AsyncStorage.getItem('igdbAccesstoken')
-            const igdbAuthValue = 'Bearer' + " " + JSON.parse(jsonValue)
-            console.log(igdbAuthValue)
+            console.log(jsonValue)
             axios({
                 url: "https://api.igdb.com/v4/games",
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
                     'Client-ID': gamesConfig.igdbClientId,
-                    'Authorization': igdbAuthValue,
+                    'Authorization': 'Bearer' + " " + jsonValue,
                 },
                 data: "fields age_ratings,aggregated_rating,aggregated_rating_count,alternative_names,artworks,bundles,category,checksum,collection,cover,created_at,dlcs,expansions,external_games,first_release_date,follows,franchise,franchises,game_engines,game_modes,genres,hypes,involved_companies,keywords,multiplayer_modes,name,parent_game,platforms,player_perspectives,rating,rating_count,release_dates,screenshots,similar_games,slug,standalone_expansions,status,storyline,summary,tags,themes,total_rating,total_rating_count,updated_at,url,version_parent,version_title,videos,websites;"
               })
@@ -97,9 +95,6 @@ export default function AddGameScreen({navigation}) {
                 .catch(err => {
                     console.error(err)
                 })
-        } catch(err) {
-            console.log(err)
-        }
         
       }
 
@@ -117,6 +112,7 @@ export default function AddGameScreen({navigation}) {
                         <MainFont>
                             Add Game 
                         </MainFont>
+                        {searchGame()}
                         <KeyboardAwareScrollView
                             style={{ flex: 1, width: '100%' }}
                             keyboardShouldPersistTaps="always"
