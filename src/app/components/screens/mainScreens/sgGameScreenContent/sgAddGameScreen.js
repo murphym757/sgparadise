@@ -59,8 +59,10 @@ export default function AddGameScreen({navigation}) {
     const [tagsDescription8, setTagsDescription8] = useState('')
     const [tagsDescription9, setTagsDescription9] = useState('')
     const [tagsDescription10, setTagsDescription10] = useState('')
+    const [gbConsoleId, setGbConsoleId] = useState('')
+    const [igdbConsoleId, setIgdbConsoleId] = useState('')
     console.log(gamesConfig.igdbClientId)
-    console.log(gamesConfig.igdbClientSecret)
+    console.log()
     useEffect(() => {
         const twitchIdUrl ='https://id.twitch.tv/oauth2/token?'
         const clientId = 'client_id=' + ""+ gamesConfig.igdbClientId + ""
@@ -75,32 +77,73 @@ export default function AddGameScreen({navigation}) {
                 console.log(err);
             })
       })
+      
+      async function gbConsole() {
+        const gbSegaSatId = 42
+        const gbSegaGenId = 6
+        const gbSega32XId = 31
+        const gbSegaCDId = 29
+        const gbSegaGGId = 5
+        const gbSegaMSId = 8
+        const gbSegaSG1000Id = 141
+        return setGbConsoleId(gbSegaGenId)
+      }
 
+      async function gbSearchGame() {
+        const gbBaseUrl = 'https://www.giantbomb.com/api/games/'
+        const gbApiUrl = '?api_key=' + gamesConfig.giantbombApiKey + ''
+        const gbGameSeach = '&filter=name:streets of rage 2,'
+        const gbGamePlatform = 'platforms:' + gbConsoleId + ''
+        const gbdataFormat = '&format=json'
+        const gbUrl = gbBaseUrl + gbApiUrl + gbGameSeach + gbGamePlatform + gbdataFormat
+        axios.get(gbUrl)
+        .then(async (res) => {
+            console.log(res.data.results[0].api_detail_url)
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+      }
       async function searchGame() {
-            const jsonValue = await AsyncStorage.getItem('igdbAccesstoken')
-            console.log(jsonValue)
-            axios({
-                url: "https://api.igdb.com/v4/games",
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Client-ID': gamesConfig.igdbClientId,
-                    'Authorization': 'Bearer' + " " + jsonValue,
-                },
-                data: "fields age_ratings,aggregated_rating,aggregated_rating_count,alternative_names,artworks,bundles,category,checksum,collection,cover,created_at,dlcs,expansions,external_games,first_release_date,follows,franchise,franchises,game_engines,game_modes,genres,hypes,involved_companies,keywords,multiplayer_modes,name,parent_game,platforms,player_perspectives,rating,rating_count,release_dates,screenshots,similar_games,slug,standalone_expansions,status,storyline,summary,tags,themes,total_rating,total_rating_count,updated_at,url,version_parent,version_title,videos,websites;"
-              })
-                .then(res => {
-                    console.log(res.data)
-                })
-                .catch(err => {
-                    console.error(err)
-                })
+        const jsonValue = await AsyncStorage.getItem('igdbAccesstoken')
+        console.log(jsonValue)
+        const axiosUrl = "https://api.igdb.com/v4/platforms"
+        const igdbSegaSatId = 32
+        const igdbSegaGenId = 29
+        const igdbSega32XId = 30
+        const igdbSegaGGId = 35
+        const igdbSegaMSId = 64
+        const igdbSegaSG1000Id = 84
+        axios({
+            url: axiosUrl,
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Client-ID': gamesConfig.igdbClientId,
+                'Authorization': 'Bearer' + " " + jsonValue,
+            },
+            data: "fields *; where id = " + igdbSegaGenId + ";"
+            })
+            .then(res => {
+                console.log(res.data)
+            })
+            .catch(err => {
+                console.error(err)
+            })
         
       }
 
     return (
         <SafeAreaViewContainer>
         {searchBar({navigation}, searchType)}
+            <View>
+                <ScrollView
+                    horizontal={true}
+                    showsHorizontalScrollIndicator={false}
+                >
+                <Text>Genesis</Text>
+                </ScrollView>
+            </View>
             <ScrollView 
                 scrollEventThrottle={16}
             >
@@ -112,7 +155,6 @@ export default function AddGameScreen({navigation}) {
                         <MainFont>
                             Add Game 
                         </MainFont>
-                        {searchGame()}
                         <KeyboardAwareScrollView
                             style={{ flex: 1, width: '100%' }}
                             keyboardShouldPersistTaps="always"
