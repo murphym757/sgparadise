@@ -105,9 +105,41 @@ export default function AddGameScreen({navigation}) {
         })
       }
 
-      async function searchGame() {
+      async function igdbSearchGame() {
         const jsonValue = await AsyncStorage.getItem('igdbAccesstoken')
-        console.log(jsonValue)
+        const axiosUrl = "https://api.igdb.com/v4/games"
+        const igdbSegaSatId = 32
+        const igdbSegaGenId = 29
+        const igdbSega32XId = 30
+        const igdbSegaGGId = 35
+        const igdbSegaMSId = 64
+        const igdbSegaSG1000Id = 84
+        const igdbFields = 'fields first_release_date,platforms; where first_release_date < 864345600 & platforms =(' + igdbSegaGenId + ');'
+        const game = "sonic the hedgehog"
+        const parent = '"'
+        const searchedGameName = ''+ parent + game + parent+ ''
+        const igdbSearchGame = 'search ' + searchedGameName + ';'
+        axios({
+            url: axiosUrl,
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Client-ID': gamesConfig.igdbClientId,
+                'Authorization': 'Bearer' + " " + jsonValue,
+            },
+            data: igdbSearchGame + igdbFields
+            })
+            .then(res => {
+                console.log(res.data)
+            })
+            .catch(err => {
+                console.error(err)
+            })
+        
+      }
+
+      async function igdbFoundGame() {
+        const jsonValue = await AsyncStorage.getItem('igdbAccesstoken')
         const axiosUrl = "https://api.igdb.com/v4/games"
         const igdbSegaSatId = 32
         const igdbSegaGenId = 29
@@ -124,7 +156,7 @@ export default function AddGameScreen({navigation}) {
                 'Client-ID': gamesConfig.igdbClientId,
                 'Authorization': 'Bearer' + " " + jsonValue,
             },
-            data: 'fields age_ratings,first_release_date,genres,name,platforms,rating,rating_count,summary,tags; where platforms = ' + igdbSegaGenId + '; search "sonic the hedgehog";'
+            data: 'fields age_ratings,first_release_date,genres,name,platforms,rating,rating_count,summary,tags;'
             })
             .then(res => {
                 console.log(res.data)
@@ -146,7 +178,7 @@ export default function AddGameScreen({navigation}) {
                 <Text>Genesis</Text>
                 </ScrollView>
             </View>
-            {searchGame()}
+            {igdbSearchGame()}
             <ScrollView 
                 scrollEventThrottle={16}
             >
