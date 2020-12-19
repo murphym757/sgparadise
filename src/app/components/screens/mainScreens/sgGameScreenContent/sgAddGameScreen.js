@@ -104,16 +104,18 @@ export default function AddGameScreen({navigation}) {
             console.log(err);
         })
       }
+
       async function searchGame() {
         const jsonValue = await AsyncStorage.getItem('igdbAccesstoken')
         console.log(jsonValue)
-        const axiosUrl = "https://api.igdb.com/v4/platforms"
+        const axiosUrl = "https://api.igdb.com/v4/games"
         const igdbSegaSatId = 32
         const igdbSegaGenId = 29
         const igdbSega32XId = 30
         const igdbSegaGGId = 35
         const igdbSegaMSId = 64
         const igdbSegaSG1000Id = 84
+        const searchedGameName = "sonic the hedgehog"
         axios({
             url: axiosUrl,
             method: 'POST',
@@ -122,7 +124,7 @@ export default function AddGameScreen({navigation}) {
                 'Client-ID': gamesConfig.igdbClientId,
                 'Authorization': 'Bearer' + " " + jsonValue,
             },
-            data: "fields *; where id = " + igdbSegaGenId + ";"
+            data: 'fields age_ratings,first_release_date,genres,name,platforms,rating,rating_count,summary,tags; where platforms = ' + igdbSegaGenId + '; search "sonic the hedgehog";'
             })
             .then(res => {
                 console.log(res.data)
@@ -144,6 +146,7 @@ export default function AddGameScreen({navigation}) {
                 <Text>Genesis</Text>
                 </ScrollView>
             </View>
+            {searchGame()}
             <ScrollView 
                 scrollEventThrottle={16}
             >
