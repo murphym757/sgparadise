@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { View, Text, Button, Image, ScrollView, SafeAreaView } from 'react-native'
+import { View, Text, Button, FlatList, Image, ScrollView, SafeAreaView } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import {CurrentThemeContext} from '../../../../../../assets/styles/globalTheme'
-import { gamesConfig, firebase } from '../../../../../server/config/config'
+import { imagesConfig, gamesConfig, firebase } from '../../../../../server/config/config'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'axios'
 import {
@@ -23,6 +23,22 @@ export default function AddGameScreen({navigation}) {
     const [searchType, setSearchType] = useState('sgGameSearch')
     console.log(searchType)
     const colors = useContext(CurrentThemeContext)
+    const dayImages = [
+        { id: '1', systemLogo: imagesConfig.sggDayImage },
+        { id: '3', systemLogo: imagesConfig.sg1000DayImage },
+        { id: '5', systemLogo: imagesConfig.sg32xDayImage },
+        { id: '7', systemLogo: imagesConfig.sgcdDayImage },
+        { id: '9', systemLogo: imagesConfig.sgggDayImage },
+        { id: '11', systemLogo: imagesConfig.sgmsDayImage },
+      ];
+    const nightImages = [
+        { id: '1', systemLogo: imagesConfig.sggNightImage },
+        { id: '3', systemLogo: imagesConfig.sg1000NightImage },
+        { id: '5', systemLogo: imagesConfig.sg32xNightImage },
+        { id: '7', systemLogo: imagesConfig.sgcdNightImage },
+        { id: '9', systemLogo: imagesConfig.sgggNightImage },
+        { id: '11', systemLogo: imagesConfig.sgmsNightImage },
+    ];
     const [gameName, setGameName] = useState('')
     const [gameDeveloper, setGameDeveloper] = useState('')
     const [gamePublisher, setGamePublisher] = useState('')
@@ -61,6 +77,7 @@ export default function AddGameScreen({navigation}) {
     const [tagsDescription10, setTagsDescription10] = useState('')
     const [gbConsoleId, setGbConsoleId] = useState('')
     const [igdbConsoleId, setIgdbConsoleId] = useState('')
+    console.log(igdbConsoleId)
     console.log(gamesConfig.igdbClientId)
     console.log()
     useEffect(() => {
@@ -113,29 +130,33 @@ export default function AddGameScreen({navigation}) {
         const igdbSega32XId = 30
         const igdbSegaGGId = 35
         const igdbSegaMSId = 64
+        const igdbSegaCD = 78
         const igdbSegaSG1000Id = 84
         const igdbFields = 'fields first_release_date,platforms; where first_release_date < 864345600 & platforms =(' + igdbSegaGenId + ');'
         const game = "sonic the hedgehog"
         const parent = '"'
         const searchedGameName = ''+ parent + game + parent+ ''
         const igdbSearchGame = 'search ' + searchedGameName + ';'
-        axios({
-            url: axiosUrl,
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Client-ID': gamesConfig.igdbClientId,
-                'Authorization': 'Bearer' + " " + jsonValue,
-            },
-            data: igdbSearchGame + igdbFields
-            })
-            .then(res => {
-                console.log(res.data)
-            })
-            .catch(err => {
-                console.error(err)
-            })
-        
+        try {
+            await axios({
+                url: axiosUrl,
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Client-ID': gamesConfig.igdbClientId,
+                    'Authorization': 'Bearer' + " " + jsonValue,
+                },
+                data: igdbSearchGame + igdbFields
+                })
+                .then(res => {
+                    console.log(res.data)
+                })
+                .catch(err => {
+                    console.error(err)
+                })
+        } catch {
+
+        }
       }
 
       async function igdbFoundGame() {
@@ -175,10 +196,23 @@ export default function AddGameScreen({navigation}) {
                     horizontal={true}
                     showsHorizontalScrollIndicator={false}
                 >
-                <Text>Genesis</Text>
+                {Object.keys(nightImages) 
+                    .map((listItem, index) => (
+                        <Image
+                            style={{
+                                width: 200,
+                                height: 60
+                            }}
+                            source={{
+                            uri: "" + nightImages[listItem].systemLogo + "",
+                            }}
+                        />
+                    ))
+                }
                 </ScrollView>
             </View>
-            {igdbSearchGame()}
+            <View style={{flexDirection:'row'}}>
+            </View>
             <ScrollView 
                 scrollEventThrottle={16}
             >
