@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { View, Text, Button, FlatList, Image, ScrollView, SafeAreaView } from 'react-native'
+import { View, Text, Button, FlatList, Image, ScrollView, SafeAreaView, TouchableOpacity } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import {CurrentThemeContext} from '../../../../../../assets/styles/globalTheme'
 import { imagesConfig, gamesConfig, firebase } from '../../../../../server/config/config'
@@ -24,20 +24,22 @@ export default function AddGameScreen({navigation}) {
     console.log(searchType)
     const colors = useContext(CurrentThemeContext)
     const dayImages = [
-        { id: '1', systemLogo: imagesConfig.sggDayImage },
-        { id: '3', systemLogo: imagesConfig.sg1000DayImage },
-        { id: '5', systemLogo: imagesConfig.sg32xDayImage },
-        { id: '7', systemLogo: imagesConfig.sgcdDayImage },
-        { id: '9', systemLogo: imagesConfig.sgggDayImage },
-        { id: '11', systemLogo: imagesConfig.sgmsDayImage },
+        { id: '0', systemLogo: imagesConfig.sgallDayImage, systemLogoSelected: imagesConfig.sgallDayImagePicked, gbId:[6,141,31,29,5,8], igdbId: [29,84,30,78,35,64] },
+        { id: '1', systemLogo: imagesConfig.sggDayImage, systemLogoSelected: imagesConfig.sggDayImagePicked, gbId: 6, igdbId: 29 },
+        { id: '2', systemLogo: imagesConfig.sg1000DayImage, systemLogoSelected: imagesConfig.sg1000DayImagePicked, gbId: 141, igdbId: 84 },
+        { id: '3', systemLogo: imagesConfig.sg32xDayImage, systemLogoSelected: imagesConfig.sg32xDayImagePicked, gbId: 31, igdbId: 30 },
+        { id: '4', systemLogo: imagesConfig.sgcdDayImage, systemLogoSelected: imagesConfig.sgcdDayImagePicked, gbId: 29, igdbId: 78 },
+        { id: '5', systemLogo: imagesConfig.sgggDayImage, systemLogoSelected: imagesConfig.sgggDayImagePicked, gbId: 5, igdbId: 35 },
+        { id: '6', systemLogo: imagesConfig.sgmsDayImage, systemLogoSelected: imagesConfig.sgmsDayImagePicked, gbId: 8, igdbId: 64  },
       ];
     const nightImages = [
-        { id: '1', systemLogo: imagesConfig.sggNightImage },
-        { id: '3', systemLogo: imagesConfig.sg1000NightImage },
-        { id: '5', systemLogo: imagesConfig.sg32xNightImage },
-        { id: '7', systemLogo: imagesConfig.sgcdNightImage },
-        { id: '9', systemLogo: imagesConfig.sgggNightImage },
-        { id: '11', systemLogo: imagesConfig.sgmsNightImage },
+        { id: '0', systemLogo: imagesConfig.sgallNightImage, systemLogoSelected: imagesConfig.sgallNightImagePicked, gbId:[6,141,31,29,5,8], igdbId: [29,84,30,78,35,64] },
+        { id: '1', systemLogo: imagesConfig.sggNightImage, systemLogoSelected: imagesConfig.sggNightImagePicked, gbId: 6, igdbId: 29  },
+        { id: '2', systemLogo: imagesConfig.sg1000NightImage, systemLogoSelected: imagesConfig.sg1000NightImagePicked, gbId: 141, igdbId: 84 },
+        { id: '3', systemLogo: imagesConfig.sg32xNightImage, systemLogoSelected: imagesConfig.sg32xNightImagePicked, gbId: 31, igdbId: 30 },
+        { id: '4', systemLogo: imagesConfig.sgcdNightImage, systemLogoSelected: imagesConfig.sgcdNightImagePicked, gbId: 29, igdbId: 78 },
+        { id: '5', systemLogo: imagesConfig.sgggNightImage, systemLogoSelected: imagesConfig.sgggNightImagePicked, gbId: 5, igdbId: 35 },
+        { id: '6', systemLogo: imagesConfig.sgmsNightImage, systemLogoSelected: imagesConfig.sgmsNightImagePicked, gbId: 8, igdbId: 64 },
     ];
     const [gameName, setGameName] = useState('')
     const [gameDeveloper, setGameDeveloper] = useState('')
@@ -75,9 +77,12 @@ export default function AddGameScreen({navigation}) {
     const [tagsDescription8, setTagsDescription8] = useState('')
     const [tagsDescription9, setTagsDescription9] = useState('')
     const [tagsDescription10, setTagsDescription10] = useState('')
-    const [gbConsoleId, setGbConsoleId] = useState('')
-    const [igdbConsoleId, setIgdbConsoleId] = useState('')
+    const [gbConsoleId, setGbConsoleId] = useState()
+    console.log(gbConsoleId)
+    const [igdbConsoleId, setIgdbConsoleId] = useState()
     console.log(igdbConsoleId)
+    const [sgGamesArray, setSgGamesArray] = useState([])
+    console.log(sgGamesArray)
     console.log(gamesConfig.igdbClientId)
     console.log()
     useEffect(() => {
@@ -94,17 +99,6 @@ export default function AddGameScreen({navigation}) {
                 console.log(err);
             })
       })
-      
-      async function gbConsole() {
-        const gbSegaSatId = 42
-        const gbSegaGenId = 6
-        const gbSega32XId = 31
-        const gbSegaCDId = 29
-        const gbSegaGGId = 5
-        const gbSegaMSId = 8
-        const gbSegaSG1000Id = 141
-        return setGbConsoleId(gbSegaGenId)
-      }
 
       async function gbSearchGame() {
         const gbBaseUrl = 'https://www.giantbomb.com/api/games/'
@@ -122,20 +116,14 @@ export default function AddGameScreen({navigation}) {
         })
       }
 
-      async function igdbSearchGame() {
+      async function igdbSearchGame(item) {
         const jsonValue = await AsyncStorage.getItem('igdbAccesstoken')
         const axiosUrl = "https://api.igdb.com/v4/games"
-        const igdbSegaSatId = 32
-        const igdbSegaGenId = 29
-        const igdbSega32XId = 30
-        const igdbSegaGGId = 35
-        const igdbSegaMSId = 64
-        const igdbSegaCD = 78
-        const igdbSegaSG1000Id = 84
-        const igdbFields = 'fields first_release_date,platforms; where first_release_date < 864345600 & platforms =(' + igdbSegaGenId + ');'
-        const game = "sonic the hedgehog"
+        const igdbFields = 'fields first_release_date,platforms; where first_release_date < 864345600 & platforms=(' + igdbConsoleId + ');'
+        console.log(igdbFields)
+        const gameSearchedName = "sonic the hedgehog"
         const parent = '"'
-        const searchedGameName = ''+ parent + game + parent+ ''
+        const searchedGameName = ''+ parent + gameSearchedName + parent + ''
         const igdbSearchGame = 'search ' + searchedGameName + ';'
         try {
             await axios({
@@ -149,17 +137,20 @@ export default function AddGameScreen({navigation}) {
                 data: igdbSearchGame + igdbFields
                 })
                 .then(res => {
-                    console.log(res.data)
-                })
-                .catch(err => {
-                    console.error(err)
-                })
+                    const genGames = res.data;
+                    setSgGamesArray({
+                      genGames
+                    })
+                  })
+                  .catch(err => {
+                    console.error(err);
+                  });
         } catch {
 
         }
       }
 
-      async function igdbFoundGame() {
+      async function igdbFoundGame(item) {
         const jsonValue = await AsyncStorage.getItem('igdbAccesstoken')
         const axiosUrl = "https://api.igdb.com/v4/games"
         const igdbSegaSatId = 32
@@ -185,31 +176,43 @@ export default function AddGameScreen({navigation}) {
             .catch(err => {
                 console.error(err)
             })
-        
       }
+
+       function setGameId(item) {
+        setGbConsoleId(item.gbId)
+        setIgdbConsoleId(item.igdbId)
+            try {
+                igdbSearchGame(item.igdbId)
+            } catch {
+
+           }
+       }
 
     return (
         <SafeAreaViewContainer>
         {searchBar({navigation}, searchType)}
             <View>
-                <ScrollView
+                <FlatList
                     horizontal={true}
                     showsHorizontalScrollIndicator={false}
-                >
-                {Object.keys(nightImages) 
-                    .map((listItem, index) => (
-                        <Image
-                            style={{
-                                width: 200,
-                                height: 60
-                            }}
-                            source={{
-                            uri: "" + nightImages[listItem].systemLogo + "",
-                            }}
-                        />
-                    ))
-                }
-                </ScrollView>
+                    data={nightImages}
+                    keyExtractor={item => item.id}
+                    renderItem={({ item }) => (
+                    <View>
+                        <TouchableOpacity onPress={() => setGameId(item)}>
+                            <Image
+                                style={{
+                                    width: 200,
+                                    height: 60
+                                }}
+                                source={{
+                                uri: "" + item.systemLogo + "",
+                                }}
+                            />
+                        </TouchableOpacity>
+                    </View>
+                    )}
+                />
             </View>
             <View style={{flexDirection:'row'}}>
             </View>
@@ -246,6 +249,10 @@ export default function AddGameScreen({navigation}) {
                                 underlineColorAndroid="transparent"
                                 autoCapitalize="none"
                             />
+                            {Object.keys(sgGamesArray)
+                                .map((object, i) => (
+                                  <Text>{sgGamesArray[i]}</Text>
+                            ))}
                         </KeyboardAwareScrollView>
                     </ScrollView>
                 </Container>
