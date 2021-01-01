@@ -61,12 +61,11 @@ export default function AddGameScreen({navigation}) {
     const [tagsDescription9, setTagsDescription9] = useState('')
     const [tagsDescription10, setTagsDescription10] = useState('')
     const [gbConsoleId, setGbConsoleId] = useState([])
-    console.log(gbConsoleId)
     const [igdbConsoleId, setIgdbConsoleId] = useState()
-    console.log(igdbConsoleId)
     const [sgGamesArray, setSgGamesArray] = useState([])
-    console.log(sgGamesArray)
-    console.log(gamesConfig.igdbClientId)
+    const [sgGamesIdsArray, setSgGamesIdsArray] = useState([])
+    const [sgGamesImagesArray, setSgGamesImagesArray] = useState([])
+    console.log(sgGamesImagesArray)
     useEffect(() => {
         const twitchIdUrl ='https://id.twitch.tv/oauth2/token?'
         const clientId = 'client_id=' + ""+ gamesConfig.igdbClientId + ""
@@ -99,11 +98,10 @@ export default function AddGameScreen({navigation}) {
         })
       }
 
-      async function igdbSearchGame(item) {
+      async function igdbSearchGame() {
         const jsonValue = await AsyncStorage.getItem('igdbAccesstoken')
         const axiosUrl = "https://api.igdb.com/v4/games"
-        const igdbFields = 'fields first_release_date,platforms; where first_release_date < 864345600 & platforms=(' + igdbConsoleId + ');'
-        console.log(igdbFields)
+        const igdbFields = 'fields first_release_date,platforms; where first_release_date < 864345600 & platforms = (' + igdbConsoleId + ');'        
         const gameSearchedName = "sonic the hedgehog"
         const parent = '"'
         const searchedGameName = ''+ parent + gameSearchedName + parent + ''
@@ -121,6 +119,7 @@ export default function AddGameScreen({navigation}) {
                 })
                 .then(res => {
                     setSgGamesArray(res.data)
+                    setSgGamesIdsArray(res.data.map(game => game.id))
                   })
                   .catch(err => {
                     console.error(err);
@@ -130,11 +129,12 @@ export default function AddGameScreen({navigation}) {
         }
       }
 
-      async function igdbFoundGame(item) {
+      async function igdbSearchGameImage() {
         const jsonValue = await AsyncStorage.getItem('igdbAccesstoken')
-        const axiosUrl = "https://api.igdb.com/v4/games"
-        const searchedGameName = "sonic the hedgehog"
-        axios({
+        const axiosUrl = "https://api.igdb.com/v4/covers"
+        const igdbFields = 'fields alpha_channel,animated,checksum,game,height,image_id,url,width; where game = (' + sgGamesIdsArray + ');'
+        try {
+            await axios({
             url: axiosUrl,
             method: 'POST',
             headers: {
@@ -142,24 +142,38 @@ export default function AddGameScreen({navigation}) {
                 'Client-ID': gamesConfig.igdbClientId,
                 'Authorization': 'Bearer' + " " + jsonValue,
             },
-            data: 'fields age_ratings,first_release_date,genres,name,platforms,rating,rating_count,summary,tags;'
+            data: igdbFields
             })
             .then(res => {
+                setSgGamesImagesArray(res.data)
                 console.log(res.data)
             })
             .catch(err => {
                 console.error(err)
             })
-      }
+        } catch {
 
-      async function setGameId(item) {
+        }
+    }
+
+    async function setGameId(item) {
         setGbConsoleId(item.gbId)
         setIgdbConsoleId(item.igdbId)
             try {
-                igdbSearchGame(item.igdbId)
+                igdbSearchGame()
+                igdbSearchGameImage()
             } catch {
 
            }
+       }
+
+    async function setGameImage(item) {
+        try {
+            igdbSearchGameImage(item)
+            console.log('This is your item id' + item.id)
+        } catch {
+
+        }
        }
 
     return (
@@ -196,7 +210,6 @@ export default function AddGameScreen({navigation}) {
             >
                 <Container>
                     <ScrollView
-                        horizontal={true}
                         showsHorizontalScrollIndicator={false}
                     >
                         <MainFont>
@@ -208,13 +221,33 @@ export default function AddGameScreen({navigation}) {
                             keyboardShouldPersistTaps="always"
                         >
                         <FlatList
-                            data={sgGamesArray}
+                            data={sgGamesImagesArray}
                             keyboardShouldPersistTaps='always' 
                             keyExtractor={item => item.id}
+                            contentContainerStyle={{
+                                justifyContent: 'center',
+                                flexDirection: 'row',
+                                flexWrap: 'wrap'
+                            }}
                             renderItem={({ item }) => (
-                            <View>
+                            <View style={{
+                                flex: 1,
+                                margin: 5,
+                                minWidth: 100,
+                                maxWidth: 150,
+                                height: 200,
+                                maxHeight:304,
+                            }}>
                                 <TouchableOpacity onPress={() => setGameId(item)}>
-                                    <Text>{item.id}</Text>
+                                    <Image
+                                        style={{
+                                            width: 150,
+                                            height: 200
+                                        }}
+                                        source={{
+                                            uri: "https://images.igdb.com/igdb/image/upload/t_1080p/" + item.image_id + ".jpg", 
+                                        }}
+                                    />
                                 </TouchableOpacity>
                             </View>
                             )}
