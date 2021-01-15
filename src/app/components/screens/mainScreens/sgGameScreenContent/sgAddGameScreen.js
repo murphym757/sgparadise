@@ -3,12 +3,14 @@ import { View, Text, Button, FlatList, Image, ScrollView, SafeAreaView, Touchabl
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import {CurrentThemeContext} from '../../../../../../assets/styles/globalTheme'
 import { gamesConfig, firebase } from '../../../../../server/config/config'
-import { consoleImages } from './sgAPIIndex'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'axios'
 import {
     searchBar
 } from '../sgGameSearchScreenContent/searchIndex'
+
+// React Navigation
+import { createStackNavigator } from '@react-navigation/stack'
 
 // App Styling
 import {
@@ -17,14 +19,19 @@ import {
     MainFont,
     CustomInputField,
     TouchableButton,
-    TouchableButtonFont
+    TouchableButtonFont,
+    FontAwesomeIcon,
+    faChevronLeft
 } from '../../index'
 
-export default function AddGameScreen({navigation}) {
+export default function AddGameScreen({ route, navigation }) {
     const [searchType, setSearchType] = useState('sgGameSearch')
     console.log(searchType)
     const colors = useContext(CurrentThemeContext)
+    const { itemId, otherParam } = route.params
+    console.log(route.params)
     const [gameName, setGameName] = useState('')
+    console.log("this is your game " + gameName)
     const [gameDeveloper, setGameDeveloper] = useState('')
     const [gamePublisher, setGamePublisher] = useState('')
     const [gameGenre, setGameGenre] = useState('')
@@ -60,6 +67,7 @@ export default function AddGameScreen({navigation}) {
     const [tagsDescription8, setTagsDescription8] = useState('')
     const [tagsDescription9, setTagsDescription9] = useState('')
     const [tagsDescription10, setTagsDescription10] = useState('')
+    const [selectedSystemLogo, setSelectedSystemLogo] = useState('')
     const [gbConsoleId, setGbConsoleId] = useState([])
     const [igdbConsoleId, setIgdbConsoleId] = useState()
     const [sgGamesArray, setSgGamesArray] = useState([])
@@ -67,6 +75,7 @@ export default function AddGameScreen({navigation}) {
     const [sgGamesImagesArray, setSgGamesImagesArray] = useState([])
     console.log(sgGamesImagesArray)
     useEffect(() => {
+        setGameName(JSON.stringify(itemId))
         const twitchIdUrl ='https://id.twitch.tv/oauth2/token?'
         const clientId = 'client_id=' + ""+ gamesConfig.igdbClientId + ""
         const clientSecret = '&client_secret=' + "" + gamesConfig.igdbClientSecret + ""
@@ -156,16 +165,6 @@ export default function AddGameScreen({navigation}) {
         }
     }
 
-    async function setGameId(item) {
-        setGbConsoleId(item.gbId)
-        setIgdbConsoleId(item.igdbId)
-            try {
-                igdbSearchGame()
-                igdbSearchGameImage()
-            } catch {
-
-           }
-       }
 
     async function setGameImage(item) {
         try {
@@ -176,86 +175,90 @@ export default function AddGameScreen({navigation}) {
         }
        }
 
+       function setConsole() {
+           return (
+            <Image
+                style={{
+                    width: 200,
+                    height: 60
+                }}
+                source={{
+                    uri: "" + selectedSystemLogo + "",
+                }}
+            />
+           )
+       }
+
+
+      function sgAddGameStack() {
+          return (
+              <View>
+                {searchBar({navigation}, searchType)}
+                <View style={{flexDirection:'row'}}>
+                </View>
+                    <Container>
+                            {selectedSystemLogo !== ''
+                                ?   setConsoleConfirmation()
+                                :   <MainFont>
+                                        Add Game 
+                                        {gbConsoleId}
+                                    </MainFont>
+                            }
+                            
+                            <KeyboardAwareScrollView
+                                style={{ flex: 1, width: '100%' }}
+                                showsHorizontalScrollIndicator={false}
+                                keyboardShouldPersistTaps="always"
+                            >
+                            <FlatList
+                                data={sgGamesImagesArray}
+                                keyboardShouldPersistTaps='always' 
+                                keyExtractor={item => item.id}
+                                contentContainerStyle={{
+                                    justifyContent: 'center',
+                                    flexDirection: 'row',
+                                    flexWrap: 'wrap'
+                                }}
+                                renderItem={({ item }) => (
+                                <View style={{
+                                    flex: 1,
+                                    margin: 5,
+                                    minWidth: 100,
+                                    maxWidth: 150,
+                                    height: 200,
+                                    maxHeight:304,
+                                }}>
+                                    <TouchableOpacity onPress={() => setGameId(item)}>
+                                        <Image
+                                            style={{
+                                                width: 150,
+                                                height: 200
+                                            }}
+                                            source={{
+                                                uri: "https://images.igdb.com/igdb/image/upload/t_1080p/" + item.image_id + ".jpg", 
+                                            }}
+                                        />
+                                    </TouchableOpacity>
+                                </View>
+                                )}
+                            />
+                            </KeyboardAwareScrollView>
+                    </Container>
+              </View>
+          )
+      }
+
+      
+
     return (
         <SafeAreaViewContainer>
-        {searchBar({navigation}, searchType)}
-            <View>
-                <FlatList
-                    horizontal={true}
-                    showsHorizontalScrollIndicator={false}
-                    data={consoleImages()}
-                    keyboardShouldPersistTaps={true}
-                    keyExtractor={item => item.id}
-                    renderItem={({ item }) => (
-                    <View>
-                        <TouchableOpacity onPress={() => setGameId(item)}>
-                            <Image
-                                style={{
-                                    width: 200,
-                                    height: 60
-                                }}
-                                source={{
-                                    uri: "" + item.systemLogo + "",
-                                }}
-                            />
-                        </TouchableOpacity>
-                    </View>
-                    )}
-                />
-            </View>
-            <View style={{flexDirection:'row'}}>
-            </View>
-            <ScrollView 
-                scrollEventThrottle={16}
-            >
-                <Container>
-                    <ScrollView
-                        showsHorizontalScrollIndicator={false}
-                    >
-                        <MainFont>
-                            Add Game 
-                            {gbConsoleId}
-                        </MainFont>
-                        <KeyboardAwareScrollView
-                            style={{ flex: 1, width: '100%' }}
-                            keyboardShouldPersistTaps="always"
-                        >
-                        <FlatList
-                            data={sgGamesImagesArray}
-                            keyboardShouldPersistTaps='always' 
-                            keyExtractor={item => item.id}
-                            contentContainerStyle={{
-                                justifyContent: 'center',
-                                flexDirection: 'row',
-                                flexWrap: 'wrap'
-                            }}
-                            renderItem={({ item }) => (
-                            <View style={{
-                                flex: 1,
-                                margin: 5,
-                                minWidth: 100,
-                                maxWidth: 150,
-                                height: 200,
-                                maxHeight:304,
-                            }}>
-                                <TouchableOpacity onPress={() => setGameId(item)}>
-                                    <Image
-                                        style={{
-                                            width: 150,
-                                            height: 200
-                                        }}
-                                        source={{
-                                            uri: "https://images.igdb.com/igdb/image/upload/t_1080p/" + item.image_id + ".jpg", 
-                                        }}
-                                    />
-                                </TouchableOpacity>
-                            </View>
-                            )}
-                        />
-                        </KeyboardAwareScrollView>
-                    </ScrollView>
-                </Container>
-            </ScrollView>
+        <FontAwesomeIcon 
+            icon={ faChevronLeft } color={colors.primaryFontColor} size={50} 
+            onPress={() => navigation.navigate('SgConsoleList', { post: itemId })}
+        />
+        <Text>Received params: {JSON.stringify(route.params)}</Text>
+        <Text>Your here now</Text>
+            {sgAddGameStack()}
         </SafeAreaViewContainer>
     )
 }

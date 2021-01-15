@@ -18,6 +18,7 @@ import {
 // App Styling & Screens
 import {
     SgHomeScreen,
+    SgConsoleListScreen,
     AddGameScreen,
     EditGameScreen,
     SgGameSearchScreen,
@@ -63,6 +64,19 @@ export default function SgMainScreen({ navigation, route }) {
                     component={SgHomeScreen} 
                 />
                 <Stack.Screen 
+                    name="SgConsoleList"
+                    options={{ headerShown: false }}
+                    component={SgConsoleListScreen} 
+                />
+                <Stack.Screen 
+                    name="SgAddGame"
+                    options={{ 
+                        headerShown: false,
+                        gestureEnabled: false 
+                    }}
+                    component={AddGameScreen} 
+                />
+                <Stack.Screen 
                     name="SgSearchGame"
                     options={{ headerShown: false }}
                     component={SgGameSearchScreen} 
@@ -70,7 +84,7 @@ export default function SgMainScreen({ navigation, route }) {
                 </Stack.Navigator>   
             )
     }
-    
+      
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.primaryColor }}>
         {searchBar({navigation}, searchType)}

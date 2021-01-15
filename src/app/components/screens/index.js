@@ -9,8 +9,8 @@
     export { default as SgHomeScreen } from './mainScreens/sgHomeScreen'
 
         // Search Screens
-        export { default as SgGameSearchScreen } from './mainScreens/sgGameSearchScreenContent/sgGameSearchScreen'        
-        
+        export { default as SgGameSearchScreen } from './mainScreens/sgGameSearchScreenContent/sgGameSearchScreen'     
+        export { default as SgConsoleListScreen } from './mainScreens/sgGameScreenContent/sgConsoleListScreen'
         // Game Screens
         export { default as GameScreen } from './mainScreens/sgGameScreenContent/sgGameScreen'
         export { default as AddGameScreen } from './mainScreens/sgGameScreenContent/sgAddGameScreen'

@@ -14,6 +14,8 @@ import { manualColorSet, loadingScreen } from '../authScreens/loadingScreen' //L
 
 // App Styling & Screens
 import {
+    AddGameScreen,
+    SgConsoleListScreen,
     CurrentThemeContext,
     Container,
     MainFont,
@@ -52,6 +54,16 @@ export default function SgHomeScreen({ navigation, route }) {
               options={{ headerShown: false }}
               component={HomeScreen} 
           />
+          <Stack.Screen 
+                name="SgConsoleList"
+                options={{ headerShown: false }}
+                component={SgConsoleListScreen} 
+            />
+            <Stack.Screen 
+                name="SgAddGame"
+                options={{ headerShown: false }}
+                component={AddGameScreen} 
+            />
         </Stack.Navigator>
     }
 
@@ -59,20 +71,26 @@ export default function SgHomeScreen({ navigation, route }) {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.primaryColor }}>
         <Container>
-            <MainFont onPress={() => navigation.navigate('SgSearchGame')}>Home Screen</MainFont>
+            <MainFont onPress={() => navigation.navigate('SgConsoleList')}>Home Screen</MainFont>
             {currentUser !== null
                 ?   <View>
                         <Text>Logged In</Text>
                     </View>
                 :   <View>
                         <Text>Not Logged In</Text>
-                        <Text onPress={() => navigation.navigate('Game', { screen: 'sgGameStack' })}>TO Games</Text>
+                        <Text onPress={() => navigation.navigate('Game', {
+                            screen: 'sgGameStack',
+                            params: { 
+                                itemId: 86,
+                                otherParam: 'anything you want here',
+                            },
+                          })}>TO Games</Text>
                         <TouchableButton
                             onPress={() => navigation.navigate('Auth', { screen: 'sgAuthStack' })}>
                             <TouchableButtonFont>Log in</TouchableButtonFont>
                         </TouchableButton>
                         <TouchableButton
-                            onPress={() => navigation.navigate('AddGame', { screen: 'sgAddGameStack' })}>
+                            onPress={() => navigation.navigate('SgConsoleList')}>
                         <TouchableButtonFont>Add Game</TouchableButtonFont>
                         </TouchableButton>
                     </View>

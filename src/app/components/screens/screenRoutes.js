@@ -12,7 +12,6 @@ import {
   RegistrationScreen,
   GameScreen,
   EditGameScreen,
-  AddGameScreen,
   SgMainScreen,
   UserProfileScreen,
   UpdateUserScreen,
@@ -95,19 +94,6 @@ export default function App() {
     )
   }
 
-  function sgGameAddStack() {
-    return (
-      <Stack.Navigator initialRouteName="SgAddGame">
-        <Stack.Screen 
-          name="SgAddGame"
-          options={{ headerShown: false }}
-          component={AddGameScreen} 
-        />
-      </Stack.Navigator>
-    )
-  }
-  
-
   function sgAuthStack() {
     return (
       <Stack.Navigator initialRouteName="Login">
@@ -150,11 +136,6 @@ export default function App() {
             name="Game" 
             options={{ headerShown: false }} 
             component={sgGameStack}
-          />
-          <Stack.Screen 
-            name="AddGame" 
-            options={{ headerShown: false }} 
-            component={sgGameAddStack}
           />
           <Stack.Screen 
             name="Auth" 
