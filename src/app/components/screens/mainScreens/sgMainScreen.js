@@ -11,9 +11,7 @@ import {
 import axios from 'axios'
 import { useAuth } from '../authScreens/authContext'
 import { manualColorSet, loadingScreen } from '../authScreens/loadingScreen' //Loader
-import {
-    searchBar
-} from './sgGameSearchScreenContent/searchIndex'
+
 
 // App Styling & Screens
 import {
@@ -21,7 +19,6 @@ import {
     SgConsoleListScreen,
     AddGameScreen,
     EditGameScreen,
-    SgGameSearchScreen,
     CurrentThemeContext,
 } from '../index.js'
 
@@ -32,8 +29,6 @@ import { createStackNavigator } from '@react-navigation/stack'
 export default function SgMainScreen({ navigation, route }) {
     const { currentUser, logOut } = useAuth()
     const [error, setError] = useState('')
-    const [searchType, setSearchType] = useState('sgDBSearch')
-    console.log(searchType)
     const colors = useContext(CurrentThemeContext)
 
     function toOnLoginPress({ navigation }) {
@@ -76,18 +71,12 @@ export default function SgMainScreen({ navigation, route }) {
                     }}
                     component={AddGameScreen} 
                 />
-                <Stack.Screen 
-                    name="SgSearchGame"
-                    options={{ headerShown: false }}
-                    component={SgGameSearchScreen} 
-                />
                 </Stack.Navigator>   
             )
     }
       
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.primaryColor }}>
-        {searchBar({navigation}, searchType)}
         <View style={{ flex: 1 }}>
             {sgHomeStack()}
         </View>

@@ -1,5 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react'
+import { View, Text, Button, FlatList, Image, ScrollView, SafeAreaView, TouchableOpacity } from 'react-native'
 import { imagesConfig } from '../../../../../server/config/config'
+
+// App Styling
+import {
+  MainFont
+} from '../../index'
 
 export function consoleImages() {
     let currentTime = new Date();
@@ -28,3 +34,44 @@ export function consoleImages() {
         return dayImages
       }
    }
+
+  export function setImage(imageWidth, imageHeight, imageUrl) {
+    return (
+        <Image
+            style={{
+                width: imageWidth,
+                height: imageHeight
+            }}
+            source={{
+                uri: "" + imageUrl + "",
+            }}
+        />
+    )
+}
+
+export function modalConfirmation(confirmationPadding, imageConfirmation, buttonFontColor, resetConfirmation, setConfirmation) {
+  return (
+      <View style={{
+          alignItems: 'center',
+          flexDirection: 'column',
+          justifyContent: 'space-between'
+      }}>
+          <MainFont>You have selected</MainFont>
+          <View style={{ padding: confirmationPadding }}>{imageConfirmation}</View>
+          <MainFont style={{}}>Are you sure?</MainFont>
+          <View style={{ flexDirection: 'row' }}>
+              <Button
+                  onPress={() => resetConfirmation}
+                  title="No"
+                  color={buttonFontColor}
+              />
+              <Button
+                  onPress={() => setConfirmation}
+                  title="Yes"
+                  color={buttonFontColor}
+              />
+          </View>
+      </View>
+      
+  )
+}

@@ -12,6 +12,10 @@ import axios from 'axios'
 import { useAuth } from '../authScreens/authContext'
 import { manualColorSet, loadingScreen } from '../authScreens/loadingScreen' //Loader
 
+import {
+    searchBar
+} from './sgGameSearchScreenContent/searchIndex'
+
 // App Styling & Screens
 import {
     AddGameScreen,
@@ -31,6 +35,7 @@ const Stack = createStackNavigator()
 export default function SgHomeScreen({ navigation, route }) {
     const { currentUser, logOut } = useAuth()
     const [error, setError] = useState('')
+    const [searchType, setSearchType] = useState('sgDBSearch')
     const colors = useContext(CurrentThemeContext)
   
     function loggedInUser() {
@@ -70,6 +75,7 @@ export default function SgHomeScreen({ navigation, route }) {
     
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.primaryColor }}>
+        {searchBar({navigation}, searchType)}
         <Container>
             <MainFont onPress={() => navigation.navigate('SgConsoleList')}>Home Screen</MainFont>
             {currentUser !== null

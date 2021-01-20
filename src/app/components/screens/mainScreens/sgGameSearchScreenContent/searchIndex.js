@@ -14,10 +14,14 @@ import {
 
 export function searchBar({navigation}, searchType) {
     const colors = useContext(CurrentThemeContext)
+    const onSearch = props.onSearch
+    const searchQuery = props.searchQuery
+    const resetSearchQuery = props.resetSearchQuery
+    const searchType = props.searchType
     const [ sgDbSearchQuery, setSgDbSearchQuery ] = useState('')
     const [ addGameSearchQuery, setAddGameSearchQuery ] = useState('')
 
-    function onSearch(searchType) {
+    function onSearch(dbSearch) {
         if ({searchType} == 'sgDBSearch' || {searchType} == '') {
             return (sgDbSearchQuery) => setSgDbSearchQuery(sgDbSearchQuery)
         } else {
@@ -25,7 +29,7 @@ export function searchBar({navigation}, searchType) {
         }
         
     }
-    function searchBarState(searchType) {
+    function searchBarState(dbSearch) {
         if ({searchType} == 'sgDBSearch' || {searchType} == '') {
             return sgDbSearchQuery
         } else {
@@ -48,7 +52,7 @@ export function searchBar({navigation}, searchType) {
             placeholder='Search Games'
             onKeyPress={() => searchScreenType({navigation})}
             onChangeText={onSearch()}
-            value={searchBarState(searchType)}
+            value={searchBarState(dbSearch)}
             color={colors.primaryColor}
             underlineColorAndroid="transparent"
             autoCapitalize="none"
