@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { Image, Text, TextInput, TouchableOpacity, View, SafeAreaView } from 'react-native'
 import {CurrentThemeContext} from '../../../../../assets/styles/globalTheme'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { useAuth } from './authContext'
 import { firebase } from '../../../../server/config/config'
 import { manualColorSet, loadingScreen } from './loadingScreen' //Loader
@@ -96,10 +95,6 @@ export default function RegistrationScreen({navigation}) {
                   onPress={() => navigation.navigate('Main', { screen: 'sgUserStackNavbar' })}
                 />
               </View>
-              <KeyboardAwareScrollView
-                style={{ flex: 1, width: '100%' }}
-                keyboardShouldPersistTaps="always"
-              >
                 <View>
                   {error !== ''
                     ? failureAlertMessage(error)
@@ -152,7 +147,6 @@ export default function RegistrationScreen({navigation}) {
                 <FooterView>
                     <FooterFont>Already got an account? <FooterLink onPress={onFooterLinkPress}>Log In</FooterLink></FooterFont>
                 </FooterView>
-              </KeyboardAwareScrollView>
           </View>
         }
       </SafeAreaView>

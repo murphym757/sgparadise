@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { View, Text, Button, Image, ScrollView, SafeAreaView } from 'react-native'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import {CurrentThemeContext} from '../../../../../../assets/styles/globalTheme'
 import axios from 'axios'
 
@@ -66,10 +65,6 @@ export default function EditGameScreen() {
                         <MainFont>
                             Add Game
                         </MainFont>
-                        <KeyboardAwareScrollView
-                            style={{ flex: 1, width: '100%' }}
-                            keyboardShouldPersistTaps="always"
-                        >
                             <CustomInputField
                                 placeholder='Game Name'
                                 placeholderTextColor={colors.primaryColor}
@@ -88,7 +83,6 @@ export default function EditGameScreen() {
                                 underlineColorAndroid="transparent"
                                 autoCapitalize="none"
                             />
-                        </KeyboardAwareScrollView>
                     </ScrollView>
                 </Container>
             </ScrollView>

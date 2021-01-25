@@ -1,7 +1,6 @@
 
 import React, { useState, useEffect, useContext } from 'react';
 import { Text, View, SafeAreaView } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useAuth } from '../authScreens/authContext'
 import { firebase } from '../../../../server/config/config';
 import { // App Styling
@@ -120,10 +119,6 @@ export default function UpdateUserScreen({navigation}) {
                   onPress={() => navigation.navigate('Home')}
                 />
               </View>
-              <KeyboardAwareScrollView
-                style={{ flex: 1, width: '100%' }}
-                keyboardShouldPersistTaps="always"
-              >
                 <View>
                   {error !== ''
                     ? failureAlertMessage(error)
@@ -173,7 +168,6 @@ export default function UpdateUserScreen({navigation}) {
                 <FooterView>
                     <FooterFont><FooterLink onPress={cancelUpdate}>Cancel</FooterLink></FooterFont>
                 </FooterView>
-              </KeyboardAwareScrollView>
           </View>
         }
       </SafeAreaView>

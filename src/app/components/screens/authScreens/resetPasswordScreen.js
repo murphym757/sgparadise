@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Image, Text, TextInput, TouchableOpacity, View, SafeAreaView } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import {CurrentThemeContext} from '../../../../../assets/styles/globalTheme';
 import { useAuth } from './authContext'
 import { firebase } from '../../../../server/config/config';
@@ -80,10 +79,6 @@ export default function ResetPasswordScreen({navigation}) {
               <FormHeadingFontContainer>
                 <FormHeadingFont>Password Reset</FormHeadingFont>
               </FormHeadingFontContainer>
-              <KeyboardAwareScrollView
-                style={{ flex: 1, width: '100%' }}
-                keyboardShouldPersistTaps="always"
-              >
               <View>
                 {message !== ''
                     ? successAlertMessage(message)
@@ -115,7 +110,6 @@ export default function ResetPasswordScreen({navigation}) {
                     </FooterLink>
                   </FooterFont>
               </FooterView>
-            </KeyboardAwareScrollView>
           </View>
         }
       </SafeAreaView>

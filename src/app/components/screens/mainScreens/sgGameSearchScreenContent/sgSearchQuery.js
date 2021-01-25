@@ -30,8 +30,8 @@ export default function SgSearchQuery(props) {
                     marginTop: 20,
                     flexWrap:'wrap',
                     resizeMode: 'cover', 
-                    borderTopLeftRadius: '25%',
-                    borderTopRightRadius: '25%',
+                    borderTopLeftRadius: 25,
+                    borderTopRightRadius: 25,
                     zIndex: 3
                 }}/>
             </View>
@@ -42,8 +42,8 @@ export default function SgSearchQuery(props) {
                 flexWrap:'wrap',
                 height: 180,
                 opacity: 0.65,
-                borderTopLeftRadius: '25%',
-                borderTopRightRadius: '25%',
+                borderTopLeftRadius: 25,
+                borderTopRightRadius: 25,
                 backgroundColor: colors.primaryColorLight,
                 zIndex: 2,
                 width: '90.5%',
@@ -56,8 +56,8 @@ export default function SgSearchQuery(props) {
                 marginTop: 200,
                 flexWrap:'wrap',
                 height: 120,
-                borderBottomLeftRadius: '25%',
-                borderBottomRightRadius: '25%',
+                borderBottomLeftRadius: 25,
+                borderBottomRightRadius: 25,
                 backgroundColor: colors.primaryColorLight,
                 zIndex: 2,
                 width: '90.5%',

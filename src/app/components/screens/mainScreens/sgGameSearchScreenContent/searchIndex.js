@@ -15,6 +15,7 @@ import {
 export default function SearchBar({navigation}, props) {
     const colors = useContext(CurrentThemeContext)
     const searchType = props.searchType
+    console.log(searchType)
     const [ sgDbSearchQuery, setSgDbSearchQuery ] = useState('')
     console.log(sgDbSearchQuery)
     const [ addGameSearchQuery, setAddGameSearchQuery ] = useState('')
@@ -35,7 +36,7 @@ export default function SearchBar({navigation}, props) {
         }
     }
 
-    function searchScreenType({navigation}) {
+    function searchScreenType() {
         if ({searchType} == 'sgDBSearch' || {searchType} == '') {
             return navigation.navigate('SgSearchHome')
         } else {
@@ -48,7 +49,6 @@ export default function SearchBar({navigation}, props) {
         <CustomInputField
             placeholderTextColor={colors.primaryColor}
             placeholder='Search Games'
-            onKeyPress={() => searchScreenType({navigation})}
             onChangeText={onSearchFinder()}
             value={searchBarState()}
             color={colors.primaryColor}

@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { View, Text, Button, FlatList, Image, ScrollView, SafeAreaView, TouchableOpacity } from 'react-native'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import {CurrentThemeContext} from '../../../../../../assets/styles/globalTheme'
 import { gamesConfig, firebase } from '../../../../../server/config/config'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -196,20 +195,14 @@ export default function AddGameScreen({ route, navigation }) {
               <View>
                 <View style={{flexDirection:'row'}}>
                 </View>
-                    <Container>   
-                        <KeyboardAwareScrollView
-                            style={{ flex: 1, width: '100%' }}
-                            showsHorizontalScrollIndicator={false}
-                            keyboardShouldPersistTaps="always"
-                        >
+                    <Container> 
                         <FlatList
                             data={sgGamesImagesArray}
                             keyboardShouldPersistTaps='always' 
                             keyExtractor={item => item.id}
                             contentContainerStyle={{
                                 justifyContent: 'center',
-                                flexDirection: 'row',
-                                flexWrap: 'wrap'
+                                flexDirection: 'row'
                             }}
                             renderItem={({ item }) => (
                             <View style={{
@@ -234,7 +227,6 @@ export default function AddGameScreen({ route, navigation }) {
                             </View>
                             )}
                         />
-                        </KeyboardAwareScrollView>
                     </Container>
               </View>
           )
