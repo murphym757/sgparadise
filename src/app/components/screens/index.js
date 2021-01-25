@@ -11,6 +11,9 @@
         // Search Screens
         export { default as SgGameSearchScreen } from './mainScreens/sgGameSearchScreenContent/sgGameSearchScreen'     
         export { default as SgConsoleListScreen } from './mainScreens/sgGameScreenContent/sgConsoleListScreen'
+        export { default as TestImageDB } from './mainScreens/sgGameScreenContent/TestImageDB'
+        export { default as SearchBar } from './mainScreens/sgGameSearchScreenContent/searchIndex'
+        export { default as SgSearchQuery } from './mainScreens/sgGameSearchScreenContent/sgSearchQuery'
         // Game Screens
         export { default as GameScreen } from './mainScreens/sgGameScreenContent/sgGameScreen'
         export { default as AddGameScreen } from './mainScreens/sgGameScreenContent/sgAddGameScreen'
@@ -49,6 +52,23 @@
             FooterFont,
             FooterLink
         } from '../../../../assets/styles/authScreensStyling'
+
+        //Screens Styling
+        export {
+            ViewTopRow,
+            ViewSearchBar,
+            PopGamesView,
+            AccordionHeader,
+            AccordionView,
+            LastAccordionView,
+            TagFont,
+            GameTitle,
+            GameDescription,
+            GameReleaseDate,
+            CustomFontAwesomeIcon,
+            SearchGameTitle,
+            SearchGameData
+        } from '../../../../assets/styles/sgScreensStyling'
 
 
     // Font Awesome

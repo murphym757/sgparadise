@@ -12,24 +12,22 @@ import {
     FooterLink
   } from '../../../../../../assets/styles/authScreensStyling'
 
-export function searchBar({navigation}, searchType) {
+export default function SearchBar({navigation}, props) {
     const colors = useContext(CurrentThemeContext)
-    const onSearch = props.onSearch
-    const searchQuery = props.searchQuery
-    const resetSearchQuery = props.resetSearchQuery
     const searchType = props.searchType
     const [ sgDbSearchQuery, setSgDbSearchQuery ] = useState('')
+    console.log(sgDbSearchQuery)
     const [ addGameSearchQuery, setAddGameSearchQuery ] = useState('')
-
-    function onSearch(dbSearch) {
+    console.log(addGameSearchQuery)
+    function onSearchFinder() {
         if ({searchType} == 'sgDBSearch' || {searchType} == '') {
-            return (sgDbSearchQuery) => setSgDbSearchQuery(sgDbSearchQuery)
+            return (searchQuery) => setSgDbSearchQuery(searchQuery)
         } else {
-            return (addGameSearchQuery) => setAddGameSearchQuery(addGameSearchQuery)
+            return (searchQuery) => setAddGameSearchQuery(searchQuery)
         }
         
     }
-    function searchBarState(dbSearch) {
+    function searchBarState() {
         if ({searchType} == 'sgDBSearch' || {searchType} == '') {
             return sgDbSearchQuery
         } else {
@@ -51,8 +49,8 @@ export function searchBar({navigation}, searchType) {
             placeholderTextColor={colors.primaryColor}
             placeholder='Search Games'
             onKeyPress={() => searchScreenType({navigation})}
-            onChangeText={onSearch()}
-            value={searchBarState(dbSearch)}
+            onChangeText={onSearchFinder()}
+            value={searchBarState()}
             color={colors.primaryColor}
             underlineColorAndroid="transparent"
             autoCapitalize="none"

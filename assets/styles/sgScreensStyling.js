@@ -18,13 +18,6 @@ export const ViewSearchBar = styled(View) `
     marginHorizontal: 20px;
 `;
 
-export const TextInputSearchBar = styled(TextInput) `
-    flex: 1;
-    fontWeight: 700;
-    paddingLeft: 10px;
-    backgroundColor: ${currentTheme.primaryColorAlt};
-`;
-
 export const PopGamesView = styled(View) `
     flex: 1;
     height: 300;

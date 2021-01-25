@@ -12,12 +12,9 @@ import axios from 'axios'
 import { useAuth } from '../authScreens/authContext'
 import { manualColorSet, loadingScreen } from '../authScreens/loadingScreen' //Loader
 
-import {
-    searchBar
-} from './sgGameSearchScreenContent/searchIndex'
-
 // App Styling & Screens
 import {
+    SearchBar,
     AddGameScreen,
     SgConsoleListScreen,
     CurrentThemeContext,
@@ -72,10 +69,18 @@ export default function SgHomeScreen({ navigation, route }) {
         </Stack.Navigator>
     }
 
+    function sgGameSearchbar() {
+        return (
+            <SearchBar 
+                searchType={searchType}
+            />
+        )
+    }
+
     
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.primaryColor }}>
-        {searchBar({navigation}, searchType)}
+        {sgGameSearchbar({ navigation })}
         <Container>
             <MainFont onPress={() => navigation.navigate('SgConsoleList')}>Home Screen</MainFont>
             {currentUser !== null

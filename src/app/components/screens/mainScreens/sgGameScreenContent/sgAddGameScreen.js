@@ -5,9 +5,6 @@ import {CurrentThemeContext} from '../../../../../../assets/styles/globalTheme'
 import { gamesConfig, firebase } from '../../../../../server/config/config'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'axios'
-import {
-    searchBar
-} from '../sgGameSearchScreenContent/searchIndex'
 
 // React Navigation
 import { createStackNavigator } from '@react-navigation/stack'
@@ -25,9 +22,9 @@ import {
     faChevronLeft
 } from '../../index'
 
+
 export default function AddGameScreen({ route, navigation }) {
     const [searchType, setSearchType] = useState('sgGameSearch')
-    console.log(searchType)
     const colors = useContext(CurrentThemeContext)
     const { igdbConsoleId, gbConsoleId, selectedSystemLogo } = route.params
     const [gameName, setGameName] = useState('')
@@ -70,7 +67,6 @@ export default function AddGameScreen({ route, navigation }) {
     const [sgGamesArray, setSgGamesArray] = useState([])
     const [sgGamesIdsArray, setSgGamesIdsArray] = useState([])
     const [sgGamesImagesArray, setSgGamesImagesArray] = useState([])
-    const [ searchQuery, setSearchQuery ] = useState('')
 
     useEffect(() => {
         const twitchIdUrl ='https://id.twitch.tv/oauth2/token?'
@@ -186,38 +182,9 @@ export default function AddGameScreen({ route, navigation }) {
            )
        }
 
-       function filterList(list) {
-            return list.filter(
-            (listItem) =>
-                listItem.name
-                .toLowerCase()
-                .includes(searchQuery.toLowerCase()) ||
-                listItem.publisher
-                .toLowerCase()
-                .includes(searchQuery.toLowerCase()) ||
-                listItem.releaseYear
-                .toLowerCase()
-                .includes(searchQuery.toLowerCase()) ||
-                listItem.platform
-                .toLowerCase()
-                .includes(searchQuery.toLowerCase())
-            );
-        }
-
-        function onSearch() {
-            return (searchQuery) => setSearchQuery(searchQuery)
-        }
-
-        function resetSearchQuery() {
-            setSearchQuery('')
-        }
-
-        function sgGameSearch({ navigation }) {
+        function sgGameSearch() {
             return (
                 <SgGameSearchScreen 
-                    onSearch={onSearch}
-                    searchQuery={searchQuery}
-                    resetSearchQuery={resetSearchQuery}
                     searchType={searchType}
                 />
             )
@@ -227,7 +194,6 @@ export default function AddGameScreen({ route, navigation }) {
       function sgAddGameStack() {
           return (
               <View>
-                {searchBar({navigation}, searchType)}
                 <View style={{flexDirection:'row'}}>
                 </View>
                     <Container>   
