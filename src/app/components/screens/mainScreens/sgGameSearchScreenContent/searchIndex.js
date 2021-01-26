@@ -15,7 +15,6 @@ import {
 export default function SearchBar({navigation}, props) {
     const colors = useContext(CurrentThemeContext)
     const searchType = props.searchType
-    console.log(searchType)
     const [ sgDbSearchQuery, setSgDbSearchQuery ] = useState('')
     console.log(sgDbSearchQuery)
     const [ addGameSearchQuery, setAddGameSearchQuery ] = useState('')
@@ -34,15 +33,6 @@ export default function SearchBar({navigation}, props) {
         } else {
             return addGameSearchQuery
         }
-    }
-
-    function searchScreenType() {
-        if ({searchType} == 'sgDBSearch' || {searchType} == '') {
-            return navigation.navigate('SgSearchHome')
-        } else {
-            return navigation.navigate('SgSearchGame')
-        }
-        
     }
 
     return (

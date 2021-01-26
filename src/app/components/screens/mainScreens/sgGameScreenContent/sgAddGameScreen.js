@@ -195,7 +195,7 @@ export default function AddGameScreen({ route, navigation }) {
               <View>
                 <View style={{flexDirection:'row'}}>
                 </View>
-                    <Container> 
+                    <Container>  
                         <FlatList
                             data={sgGamesImagesArray}
                             keyboardShouldPersistTaps='always' 
