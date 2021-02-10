@@ -11,8 +11,10 @@ import {
   LoginScreen, 
   RegistrationScreen,
   GameScreen,
+  ConfirmAddGameScreen,
   EditGameScreen,
   SgMainScreen,
+  SgGameSearchScreen,
   UserProfileScreen,
   UpdateUserScreen,
   UserSavesScreen,
@@ -86,6 +88,16 @@ export default function App() {
           component={GameScreen}
         />
         <Stack.Screen 
+            name="SgGameSearch"
+            options={{ headerShown: false }}
+            component={SgGameSearchScreen} 
+        />
+        <Stack.Screen 
+            name="SgAddGame"
+            options={{ headerShown: false }}
+            component={ConfirmAddGameScreen} 
+        />
+        <Stack.Screen 
             name="SgEditGame"
             options={{ headerShown: false }}
             component={EditGameScreen} 
@@ -134,7 +146,7 @@ export default function App() {
           />
           <Stack.Screen 
             name="Game" 
-            options={{ headerShown: false }} 
+            options={{ headerShown: false, gestureEnabled: false }} 
             component={sgGameStack}
           />
           <Stack.Screen 

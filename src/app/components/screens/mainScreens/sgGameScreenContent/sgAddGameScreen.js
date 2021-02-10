@@ -10,8 +10,10 @@ import { createStackNavigator } from '@react-navigation/stack'
 
 // App Styling
 import {
+    ConfirmAddGameScreen,
     SgGameSearchScreen,
     SafeAreaViewContainer,
+    ContentContainer,
     Container,
     MainFont,
     CustomInputField,
@@ -21,48 +23,18 @@ import {
     faChevronLeft
 } from '../../index'
 
+import {
+    consoleIconList
+} from './sgAPIIndex'
+
+import { loadingScreen } from '../../authScreens/loadingScreen' //Loader
+
 
 export default function AddGameScreen({ route, navigation }) {
-    const [searchType, setSearchType] = useState('sgGameSearch')
     const colors = useContext(CurrentThemeContext)
+    const [isLoading, setIsLoading] = useState(true)
+    const [searchType, setSearchType] = useState('sgGameSearch')
     const { igdbConsoleId, gbConsoleId, selectedSystemLogo } = route.params
-    const [gameName, setGameName] = useState('')
-    console.log("this is your game " + gameName)
-    const [gameDeveloper, setGameDeveloper] = useState('')
-    const [gamePublisher, setGamePublisher] = useState('')
-    const [gameGenre, setGameGenre] = useState('')
-    const [gameEsrbRating, setGameEsrbRating] = useState('')
-    const [gameUserRating, setGameUserRating] = useState('')
-    const [gameReleaseDate, setGameReleaseDate] = useState('')
-    const [gameReleaseYear, setGameReleaseYear] = useState('')
-    const [gamePlatform, setGamePlatform] = useState('')
-    const [gameSynopsis, setGameSynopsis] = useState('')
-    const [gameCoverArtPopular, setGameCoverArtPopular] = useState('')
-    const [gameCoverArt, setGameCoverArt] = useState('')
-    const [gameGameplay1, setGameGameplay1] = useState('')
-    const [gameGameplay2, setGameGameplay2] = useState('')
-    const [gameGameplay3, setGameGameplay3] = useState('')
-    const [gameGameplay4, setGameGameplay4] = useState('')
-    const [tagsGenre1, setTagsGenre1] = useState('')
-    const [tagsGenre2, setTagsGenre2] = useState('')
-    const [tagsGenre3, setTagsGenre3] = useState('')
-    const [tagsGenre4, setTagsGenre4] = useState('')
-    const [tagsGenre5, setTagsGenre5] = useState('')
-    const [tagsGenre6, setTagsGenre6] = useState('')
-    const [tagsGenre7, setTagsGenre7] = useState('')
-    const [tagsGenre8, setTagsGenre8] = useState('')
-    const [tagsGenre9, setTagsGenre9] = useState('')
-    const [tagsGenre10, setTagsGenre10] = useState('')
-    const [tagsDescription1, setTagsDescription1] = useState('')
-    const [tagsDescription2, setTagsDescription2] = useState('')
-    const [tagsDescription3, setTagsDescription3] = useState('')
-    const [tagsDescription4, setTagsDescription4] = useState('')
-    const [tagsDescription5, setTagsDescription5] = useState('')
-    const [tagsDescription6, setTagsDescription6] = useState('')
-    const [tagsDescription7, setTagsDescription7] = useState('')
-    const [tagsDescription8, setTagsDescription8] = useState('')
-    const [tagsDescription9, setTagsDescription9] = useState('')
-    const [tagsDescription10, setTagsDescription10] = useState('')
     const [sgGamesArray, setSgGamesArray] = useState([])
     const [sgGamesIdsArray, setSgGamesIdsArray] = useState([])
     const [sgGamesImagesArray, setSgGamesImagesArray] = useState([])
@@ -72,6 +44,9 @@ export default function AddGameScreen({ route, navigation }) {
         const clientId = 'client_id=' + ""+ gamesConfig.igdbClientId + ""
         const clientSecret = '&client_secret=' + "" + gamesConfig.igdbClientSecret + ""
         const grantType = '&grant_type=client_credentials'
+        setTimeout(() => {
+            setIsLoading(false)
+          }, 2500)
         axios.post(twitchIdUrl + clientId + clientSecret + grantType)
             .then(async (res) => {
                 console.log(res.data)
@@ -130,7 +105,7 @@ export default function AddGameScreen({ route, navigation }) {
         }
       }
 
-      async function igdbSearchGameImage() {
+    async function igdbSearchGameImage() {
         const jsonValue = await AsyncStorage.getItem('igdbAccesstoken')
         const axiosUrl = "https://api.igdb.com/v4/covers"
         const igdbFields = 'fields alpha_channel,animated,checksum,game,height,image_id,url,width; where game = (' + sgGamesIdsArray + ');'
@@ -167,84 +142,9 @@ export default function AddGameScreen({ route, navigation }) {
         }
        }
 
-       function setConsole() {
-           return (
-            <Image
-                style={{
-                    width: 200,
-                    height: 60
-                }}
-                source={{
-                    uri: "" + selectedSystemLogo + "",
-                }}
-            />
-           )
-       }
-
-        function sgGameSearch() {
-            return (
-                <SgGameSearchScreen 
-                    searchType={searchType}
-                />
-            )
-        }
-
-
-      function sgAddGameStack() {
-          return (
-              <View>
-                <View style={{flexDirection:'row'}}>
-                </View>
-                    <Container>  
-                        <FlatList
-                            data={sgGamesImagesArray}
-                            keyboardShouldPersistTaps='always' 
-                            keyExtractor={item => item.id}
-                            contentContainerStyle={{
-                                justifyContent: 'center',
-                                flexDirection: 'row'
-                            }}
-                            renderItem={({ item }) => (
-                            <View style={{
-                                flex: 1,
-                                margin: 5,
-                                minWidth: 100,
-                                maxWidth: 150,
-                                height: 200,
-                                maxHeight:304,
-                            }}>
-                                <TouchableOpacity onPress={() => setGameId(item)}>
-                                    <Image
-                                        style={{
-                                            width: 150,
-                                            height: 200
-                                        }}
-                                        source={{
-                                            uri: "https://images.igdb.com/igdb/image/upload/t_1080p/" + item.image_id + ".jpg", 
-                                        }}
-                                    />
-                                </TouchableOpacity>
-                            </View>
-                            )}
-                        />
-                    </Container>
-              </View>
-          )
-      }
-
-      
-
     return (
         <SafeAreaViewContainer>
-            <FontAwesomeIcon 
-                icon={ faChevronLeft } color={colors.primaryFontColor} size={50} 
-                onPress={() => navigation.navigate('SgConsoleList', { modal: false })}
-            />
-            <Text>Received params: {JSON.stringify(route.params)}</Text>
-            <Text>Your here now</Text>
-                {sgAddGameStack()}
-                {setConsole()}
-                {sgGameSearch({ navigation })}
+            <Text>Moved On</Text>
         </SafeAreaViewContainer>
     )
 }

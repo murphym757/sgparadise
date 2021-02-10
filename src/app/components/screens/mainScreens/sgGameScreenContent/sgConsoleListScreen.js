@@ -8,6 +8,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 
 // App Styling
 import {
+    SgGameSearchScreen,
     SafeAreaViewContainer,
     Container,
     ContentContainer,
@@ -58,11 +59,14 @@ export default function SgConsoleListScreens({route, navigation}) {
        }
 
     function confirmSetGameId(){
-        navigation.navigate('SgAddGame', {
-            igdbConsoleId: igdbConsoleId,
-            gbConsoleId: gbConsoleId,
-            selectedSystemLogo: selectedSystemLogo,
-          })
+        navigation.navigate('Game', {
+            screen: 'SgGameSearch',
+            params: { 
+                igdbConsoleId: igdbConsoleId,
+                gbConsoleId: gbConsoleId,
+                selectedSystemLogo: selectedSystemLogo,
+            }
+        })
           setModalSelected(true)
     }
 

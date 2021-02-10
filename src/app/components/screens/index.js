@@ -13,10 +13,11 @@
         export { default as SgConsoleListScreen } from './mainScreens/sgGameScreenContent/sgConsoleListScreen'
         export { default as TestImageDB } from './mainScreens/sgGameScreenContent/TestImageDB'
         export { default as SearchBar } from './mainScreens/sgGameSearchScreenContent/searchIndex'
-        export { default as SgSearchQuery } from './mainScreens/sgGameSearchScreenContent/sgSearchQuery'
+        export { default as SgSearchQuery } from './mainScreens/sgGameScreenContent/sgConfirmAddGameScreen'
         // Game Screens
         export { default as GameScreen } from './mainScreens/sgGameScreenContent/sgGameScreen'
         export { default as AddGameScreen } from './mainScreens/sgGameScreenContent/sgAddGameScreen'
+        export { default as ConfirmAddGameScreen } from './mainScreens/sgGameScreenContent/sgConfirmAddGameScreen'
         export { default as EditGameScreen } from './mainScreens/sgGameScreenContent/sgEditGameScreen'
         
     // User Screens

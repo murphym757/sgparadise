@@ -18,6 +18,7 @@ import {
     SgHomeScreen,
     SgConsoleListScreen,
     AddGameScreen,
+    ConfirmAddGameScreen,
     EditGameScreen,
     CurrentThemeContext,
 } from '../index.js'
@@ -70,6 +71,11 @@ export default function SgMainScreen({ navigation, route }) {
                         gestureEnabled: false 
                     }}
                     component={AddGameScreen} 
+                />
+                <Stack.Screen 
+                    name="SgAddGameConfirm"
+                    options={{ headerShown: false }}
+                    component={ConfirmAddGameScreen} 
                 />
                 </Stack.Navigator>   
             )

@@ -16,6 +16,7 @@ import { manualColorSet, loadingScreen } from '../authScreens/loadingScreen' //L
 import {
     SearchBar,
     AddGameScreen,
+    ConfirmAddGameScreen,
     SgConsoleListScreen,
     CurrentThemeContext,
     Container,
@@ -56,7 +57,7 @@ export default function SgHomeScreen({ navigation, route }) {
               options={{ headerShown: false }}
               component={HomeScreen} 
           />
-          <Stack.Screen 
+            <Stack.Screen 
                 name="SgConsoleList"
                 options={{ headerShown: false }}
                 component={SgConsoleListScreen} 
