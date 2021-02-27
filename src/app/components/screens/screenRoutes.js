@@ -11,9 +11,12 @@ import {
   LoginScreen, 
   RegistrationScreen,
   GameScreen,
+  AddGameScreen,
   ConfirmAddGameScreen,
+  SgConsoleListScreen,
   EditGameScreen,
   SgMainScreen,
+  SgHomeScreen,
   SgGameSearchScreen,
   UserProfileScreen,
   UpdateUserScreen,
@@ -53,7 +56,7 @@ export default function App() {
             <FontAwesomeIcon icon={ faHome } color={color} size={size} />
           ),
           }}
-          component={SgMainScreen} // HomePage
+          component={sgGameStack} // HomePage
         />
         <Tab.Screen 
           name="Saved"
@@ -83,6 +86,11 @@ export default function App() {
     return (
       <Stack.Navigator initialRouteName="Game">
         <Stack.Screen 
+          name="sgMainGamePage" 
+          options={{ headerShown: false }} 
+          component={SgHomeScreen}
+        />
+        <Stack.Screen 
           name="sgGamePage" 
           options={{ headerShown: false }} 
           component={GameScreen}
@@ -93,7 +101,20 @@ export default function App() {
             component={SgGameSearchScreen} 
         />
         <Stack.Screen 
+            name="SgConsoleList"
+            options={{ headerShown: false }}
+            component={SgConsoleListScreen} 
+        />
+        <Stack.Screen 
             name="SgAddGame"
+            options={{ 
+                headerShown: false,
+                gestureEnabled: false 
+            }}
+            component={AddGameScreen} 
+        />
+        <Stack.Screen 
+            name="SgAddGameConfirm"
             options={{ headerShown: false }}
             component={ConfirmAddGameScreen} 
         />

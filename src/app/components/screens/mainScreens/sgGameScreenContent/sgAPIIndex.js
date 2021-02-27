@@ -53,73 +53,19 @@ export function consoleImages() {
     )
 }
 
-export function modalConfirmation(confirmationPadding, imageConfirmation, buttonFontColor, resetConfirmation, setConfirmation) {
+export function modalConfirmation(resetConfirmation, setConfirmation) {
   return (
-      <View style={{
-          alignItems: 'center',
-          flexDirection: 'column',
-          justifyContent: 'space-between'
-      }}>
-          <MainFont>You have selected</MainFont>
-          <View style={{ padding: confirmationPadding }}>{imageConfirmation}</View>
-          <MainFont style={{}}>Are you sure?</MainFont>
-          <View style={{ flexDirection: 'row' }}>
-              <Button
-                  onPress={() => resetConfirmation}
-                  title="No"
-                  color={buttonFontColor}
-              />
-              <Button
-                  onPress={() => setConfirmation}
-                  title="Yes"
-                  color={buttonFontColor}
-              />
-          </View>
-      </View>
-      
-  )
-}
-
-export function consoleIconList(systemLogos) {
-    return (
-        <View>
-            <View style={{flexDirection:'row'}}>
-            </View>
-            <Container>  
-                <FlatList
-                    data={systemLogos}
-                    keyboardShouldPersistTaps='always' 
-                    keyExtractor={item => item.id}
-                    contentContainerStyle={{
-                        justifyContent: 'center',
-                        flexDirection: 'row'
-                    }}
-                    renderItem={({ item }) => (
-                    <View style={{
-                        flex: 1,
-                        margin: 5,
-                        minWidth: 100,
-                        maxWidth: 150,
-                        height: 200,
-                        maxHeight:304,
-                    }}>
-                        <TouchableOpacity onPress={() => setGameId(item)}>
-                            <Image
-                                style={{
-                                    width: 150,
-                                    height: 200
-                                }}
-                                source={{
-                                    uri: "https://images.igdb.com/igdb/image/upload/t_1080p/" + item.image_id + ".jpg", 
-                                }}
-                            />
-                        </TouchableOpacity>
-                    </View>
-                    )}
-                />
-            </Container>
+        <View style={{ flexDirection: 'row' }}>
+            <Button
+                onPress={() => resetConfirmation}
+                title="No"
+            />
+            <Button
+                onPress={() => setConfirmation}
+                title="Yes"
+            />
         </View>
-    )
+  )
 }
 
 export function searchGameIcon(colors, item) {

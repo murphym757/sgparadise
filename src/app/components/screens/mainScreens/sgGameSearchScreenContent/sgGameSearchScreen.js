@@ -13,6 +13,7 @@ import axios from 'axios'
 // React Navigation
 import { createStackNavigator } from '@react-navigation/stack'
 import {
+    modalConfirmation,
     searchGameIcon
 } from '../sgGameScreenContent/sgAPIIndex'
 import {
@@ -33,7 +34,7 @@ import {
   } from '../../../../../../assets/styles/authScreensStyling'
 import { loadingScreen } from '../../authScreens/loadingScreen' //Loader
 
-export default function SgGameSearchScreen({navigation, route}, props) {
+export default function SgGameSearchScreen({route, navigation}, props) {
     const colors = useContext(CurrentThemeContext)
     const { selectedSystemLogo } = route.params
     console.log("This is it tho" + selectedSystemLogo)
@@ -41,14 +42,17 @@ export default function SgGameSearchScreen({navigation, route}, props) {
     const searchType = props.searchType
     console.log(searchType)
     const [isLoading, setIsLoading] = useState(true)
-    const [ searchQuery, setSearchQuery ] = useState('')
-    const [ gameName, setGameName ] = useState('')
+    const [searchQuery, setSearchQuery] = useState('')
+    const [gameName, setGameName] = useState()
+    console.log(gameName)
+    const [modalSelected, setModalSelected] = useState(route.params?.modal)
 
     useEffect(() => {
         setTimeout(() => {
             setIsLoading(false)
           }, 2500)
-    })
+        setModalSelected(false)
+    }, [])
 
     function filterList(testGamesDb) {
         return testGamesDb.filter(
@@ -76,34 +80,64 @@ export default function SgGameSearchScreen({navigation, route}, props) {
         setSearchQuery('')
     }
 
-    function pressedIcon(){
-        setGameName('ice'),
-        navigation.navigate('SgAddGame', { 
+    function setGameId(item) {
+        navigation.navigate('SgGameModal')
+        setGameName(item.name)
+    }
+
+    function resetGameId() {
+        navigation.navigate('SgGameSearch')
+        setGameName({ ...gameName }) 
+    }
+
+    function confirmSetGameId(){
+        navigation.navigate('SgAddGameConfirm', { 
             gameName: gameName
         })
         console.log("It worked :)")
+          setModalSelected(true)
     }
 
-    function gameIcon() {
+    function setGameConfirmation(item) {
+        const resetConfirmation = resetGameId(item)
+        const setConfirmation = confirmSetGameId(item)
+        return modalConfirmation(resetConfirmation, setConfirmation)
+    }
+
+    function sgModalScreen() {
+        return (
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.primaryColor }}>
+               {setGameConfirmation()}
+            </View>
+        );
+    }
+
+    function sgGSRenderItem(item) {
+        return (
+            <View style={{
+                flexDirection: 'column',
+                flex: 1,
+                marginBottom: 120
+            }}>
+                <TouchableOpacity onPress={() => setGameId(item)}>
+                    {searchGameIcon(colors, item)}
+                </TouchableOpacity>
+            </View>
+        )
+    }
+
+    function sgGameStack() {
         const currentSearchDB = filterList(testGamesDb)
       return (
             <FlatList
                 data={currentSearchDB}
-                keyboardShouldPersistTaps='always' 
-                keyExtractor={item => item.id}
+                keyboardShouldPersistTaps="always" 
                 contentContainerStyle={{
                     justifyContent: 'center'
                 }}
+                keyExtractor={item => item.id}
                 renderItem={({ item }) => (
-                <View style={{
-                    flexDirection: 'column',
-                    flex: 1,
-                    marginBottom: 120
-                }}>
-                    <TouchableOpacity onPress={() => pressedIcon()}>
-                        {searchGameIcon(colors, item)}
-                    </TouchableOpacity>
-                </View>
+                    sgGSRenderItem(item)
                 )}
             />
         ) 
@@ -128,7 +162,7 @@ export default function SgGameSearchScreen({navigation, route}, props) {
             <SafeAreaView style={{ flex: 1, backgroundColor: colors.primaryColor }}>
                     <FontAwesomeIcon 
                         icon={ faChevronLeft } color={colors.primaryFontColor} size={50} 
-                        onPress={() => navigation.navigate('SgConsoleList', { modal: false })}
+                        onPress={() => navigation.navigate('SgConsoleList')}
                     />
                     <Text>Received params: {JSON.stringify(route.params)}</Text>
                     <Text>Your here now</Text>
@@ -151,7 +185,7 @@ export default function SgGameSearchScreen({navigation, route}, props) {
                                 </Text>
                             </View>
                             <View>
-                                {gameIcon()}
+                                {sgGameStack()}
                             </View>
                         </ScrollView>
                 </SafeAreaView>
@@ -160,9 +194,12 @@ export default function SgGameSearchScreen({navigation, route}, props) {
     
 
     function sgSearchGameStack() {
-          const Stack = createStackNavigator()
+        const ModalStack = createStackNavigator()
+        const sgModal = modalSelected == true 
+        ? null
+        : <ModalStack.Screen name="SgGameModal" component={sgModalScreen} />
             return (
-                <Stack.Navigator
+                <ModalStack.Navigator mode="modal"
                     screenOptions={{
                         headerStyle: {
                             backgroundColor: colors.primaryColor,
@@ -175,19 +212,14 @@ export default function SgGameSearchScreen({navigation, route}, props) {
                             shadowColor: 'transparent',
                         },
                     }}
-                    initialRouteName="SgDBGameSearch"
                 >
-                    <Stack.Screen 
+                    <ModalStack.Screen 
                         name="SgDBGameSearch"
-                        options={{ headerShown: false }}
                         component={sgDBGameSearch} 
-                    />
-                    <Stack.Screen 
-                        name="SgAddGameConfirm"
                         options={{ headerShown: false }}
-                        component={ConfirmAddGameScreen} 
                     />
-                </Stack.Navigator>
+                    {sgModal}
+                </ModalStack.Navigator>
             )
       }
      

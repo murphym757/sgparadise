@@ -90,13 +90,10 @@ export default function SgHomeScreen({ navigation, route }) {
                     </View>
                 :   <View>
                         <Text>Not Logged In</Text>
-                        <Text onPress={() => navigation.navigate('Game', {
-                            screen: 'sgGameStack',
-                            params: { 
-                                itemId: 86,
-                                otherParam: 'anything you want here',
+                        <Text onPress={() => navigation.navigate('SgAddGameConfirm',{ 
+                                itemId: 86
                             },
-                          })}>TO Games</Text>
+                          )}>TO Games</Text>
                         <TouchableButton
                             onPress={() => navigation.navigate('Auth', { screen: 'sgAuthStack' })}>
                             <TouchableButtonFont>Log in</TouchableButtonFont>

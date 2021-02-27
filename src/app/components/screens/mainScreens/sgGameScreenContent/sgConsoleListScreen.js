@@ -43,47 +43,33 @@ export default function SgConsoleListScreens({route, navigation}) {
         setModalSelected(false)
     })
 
-    function setGameId(item) {
-        {loadingScreen()}
+    function setConsoleId(item) {
         navigation.navigate('MyModal')
         setSelectedSystemLogo(item.systemLogo)
         setGbConsoleId(item.gbId)
         setIgdbConsoleId(item.igdbId)
-       }
+    }
 
-    function resetGameId() {
+    function resetConsoleId() {
         navigation.navigate('SgConsoleOptions') 
-        setSelectedSystemLogo({ ...selectedSystemLogo })
-        setGbConsoleId({ ...gbConsoleId })
-        setIgdbConsoleId({ ...igdbConsoleId })
-       }
+            setSelectedSystemLogo({ ...selectedSystemLogo })
+            setGbConsoleId({ ...gbConsoleId })
+            setIgdbConsoleId({ ...igdbConsoleId })
+    }
 
-    function confirmSetGameId(){
-        navigation.navigate('Game', {
-            screen: 'SgGameSearch',
-            params: { 
-                igdbConsoleId: igdbConsoleId,
-                gbConsoleId: gbConsoleId,
-                selectedSystemLogo: selectedSystemLogo,
-            }
+    function confirmSetConsoleId(){
+        navigation.navigate('SgGameSearch',{ 
+            igdbConsoleId: igdbConsoleId,
+            gbConsoleId: gbConsoleId,
+            selectedSystemLogo: selectedSystemLogo,
         })
           setModalSelected(true)
     }
 
-    function setConsole() {
-        const imageWidth = 200
-        const imageHeight = 60
-        const imageUrl = selectedSystemLogo
-        return setImage(imageWidth, imageHeight, imageUrl)
-    }
-
     function setConsoleConfirmation(item) {
-        const confirmationPadding = 30 
-        const imageConfirmation = setConsole()
-        const resetConfirmation = resetGameId(item)
-        const buttonFontColor = colors.secondaryColor
-        const setConfirmation = confirmSetGameId(item)
-        return modalConfirmation(confirmationPadding, imageConfirmation, buttonFontColor, resetConfirmation, setConfirmation)
+        const resetConfirmation = resetConsoleId(item)
+        const setConfirmation = confirmSetConsoleId(item)
+        return modalConfirmation(resetConfirmation, setConfirmation)
     }
 
     function sgModalScreen() {
@@ -113,7 +99,7 @@ export default function SgConsoleListScreens({route, navigation}) {
                     keyExtractor={item => item.id}
                     renderItem={({ item }) => (
                     <View>
-                        <TouchableOpacity onPress={() => setGameId(item)}>
+                        <TouchableOpacity onPress={() => setConsoleId(item)}>
                             <Image
                                 style={{
                                     width: 200,
@@ -139,29 +125,29 @@ export default function SgConsoleListScreens({route, navigation}) {
         ? null
         : <ModalStack.Screen name="MyModal" component={sgModalScreen} />
 
-    return (
-        <ModalStack.Navigator mode="modal" 
-            screenOptions={{
-                headerStyle: {
-                    backgroundColor: colors.primaryColor,
-                    elevation: 0,
-                    shadowOpacity: 0,
-                    borderBottomWidth: 0
-                },
-                headerTintColor: colors.primaryFontColor,
-                style: {
-                    shadowColor: 'transparent',
-                },
-            }}
-        >
-        <ModalStack.Screen
-          name="SgConsoleOptions"
-          component={sgConsolesStack}
-          options={{ headerShown: false }}
-        />
-        {sgModal}
-      </ModalStack.Navigator>
-    )
+        return (
+            <ModalStack.Navigator mode="modal" 
+                screenOptions={{
+                    headerStyle: {
+                        backgroundColor: colors.primaryColor,
+                        elevation: 0,
+                        shadowOpacity: 0,
+                        borderBottomWidth: 0
+                    },
+                    headerTintColor: colors.primaryFontColor,
+                    style: {
+                        shadowColor: 'transparent',
+                    },
+                }}
+            >
+            <ModalStack.Screen
+                name="SgConsoleOptions"
+                component={sgConsolesStack}
+                options={{ headerShown: false }}
+                />
+                {sgModal}
+            </ModalStack.Navigator>
+        )
   }
 
   return (
