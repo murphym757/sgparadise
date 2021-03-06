@@ -46,8 +46,8 @@ export default function SgConsoleListScreens({route, navigation}) {
     function setConsoleId(item) {
         navigation.navigate('MyModal')
         setSelectedSystemLogo(item.systemLogo)
-        setGbConsoleId(item.gbId)
-        setIgdbConsoleId(item.igdbId)
+        setGbConsoleId(item.systemgbId)
+        setIgdbConsoleId(item.systemigdbId)
     }
 
     function resetConsoleId() {
