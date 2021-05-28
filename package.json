@@ -1,9 +1,8 @@
 {
-  "main": "node_modules/expo/AppEntry.js",
   "scripts": {
-    "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "start": "react-native start",
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
     "web": "expo start --web",
     "eject": "expo eject"
   },
@@ -33,7 +32,7 @@
     "lottie-react-native": "^3.5.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-39.0.4.tar.gz",
+    "react-native": "~0.63.4",
     "react-native-collapsible": "^1.6.0",
     "react-native-gesture-handler": "~1.10.2",
     "react-native-paper": "^4.8.1",
@@ -43,11 +42,15 @@
     "react-native-screens": "~3.0.0",
     "react-native-svg": "12.1.0",
     "react-native-web": "^0.16.3",
-    "styled-components": "^5.3.0"
+    "styled-components": "^5.3.0",
+    "expo-updates": "~0.5.4",
+    "react-native-unimodules": "~0.13.3"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0",
     "react-native-dotenv": "^0.2.0"
   },
-  "private": true
+  "private": true,
+  "name": "sgparadise",
+  "version": "1.0.0"
 }
