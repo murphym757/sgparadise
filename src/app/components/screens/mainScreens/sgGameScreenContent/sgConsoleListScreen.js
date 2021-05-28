@@ -6,6 +6,9 @@ import { consoleImages } from './sgAPIIndex'
 // React Navigation
 import { createStackNavigator } from '@react-navigation/stack'
 
+//Firebase
+import { firebase } from '../../../../../server/config/config'
+
 // App Styling
 import {
     SgGameSearchScreen,
@@ -30,11 +33,26 @@ import { FontAwesomeIcon, faChevronLeft } from '../../index'
 
 export default function SgConsoleListScreens({route, navigation}) {
     const colors = useContext(CurrentThemeContext)
+    const db = firebase.firestore()
+    const consoleData = db.collection("sgAPI").get()
     const [isLoading, setIsLoading] = useState(true)
     const [selectedSystemLogo, setSelectedSystemLogo] = useState('')
     const [gbConsoleId, setGbConsoleId] = useState()
     const [igdbConsoleId, setIgdbConsoleId] = useState()
     const [modalSelected, setModalSelected] = useState(route.params?.modal)
+
+    function consoleLogo() {
+        let currentTime = new Date()
+        let time = currentTime.getHours()
+        const nightImages = db.collection("sgAPI").orderBy("systemLogoNight", "asc")
+        const dayImages = db.collection("sgAPI")
+        console.log(dayImages)
+        if (time >= 17 || time < 7) {
+        return nightImages
+      } else {
+        return dayImages
+      }
+    }
 
     useEffect(() => {
         setTimeout(() => {
@@ -124,30 +142,29 @@ export default function SgConsoleListScreens({route, navigation}) {
     const sgModal = modalSelected == true 
         ? null
         : <ModalStack.Screen name="MyModal" component={sgModalScreen} />
-
-        return (
-            <ModalStack.Navigator mode="modal" 
-                screenOptions={{
-                    headerStyle: {
-                        backgroundColor: colors.primaryColor,
-                        elevation: 0,
-                        shadowOpacity: 0,
-                        borderBottomWidth: 0
-                    },
-                    headerTintColor: colors.primaryFontColor,
-                    style: {
-                        shadowColor: 'transparent',
-                    },
-                }}
-            >
-            <ModalStack.Screen
-                name="SgConsoleOptions"
-                component={sgConsolesStack}
-                options={{ headerShown: false }}
-                />
-                {sgModal}
-            </ModalStack.Navigator>
-        )
+            return (
+                <ModalStack.Navigator mode="modal" 
+                    screenOptions={{
+                        headerStyle: {
+                            backgroundColor: colors.primaryColor,
+                            elevation: 0,
+                            shadowOpacity: 0,
+                            borderBottomWidth: 0
+                        },
+                        headerTintColor: colors.primaryFontColor,
+                        style: {
+                            shadowColor: 'transparent',
+                        },
+                    }}
+                >
+                    <ModalStack.Screen
+                        name="SgConsoleOptions"
+                        component={sgConsolesStack}
+                        options={{ headerShown: false }}
+                    />
+                        {sgModal}
+                </ModalStack.Navigator>
+            )
   }
 
   return (

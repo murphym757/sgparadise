@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import * as Font from 'expo-font';
-import { AppLoading } from 'expo';
+import AppLoading from 'expo-app-loading';
 import { AuthProvider } from './src/app/components/screens/authScreens/authContext'
 import ScreenRoutes from "./src/app/components/screens/screenRoutes";
 

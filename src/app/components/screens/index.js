@@ -21,9 +21,9 @@
         export { default as EditGameScreen } from './mainScreens/sgGameScreenContent/sgEditGameScreen'
         
     // User Screens
-    export { default as UserProfileScreen } from './userScreens/userProfileScreen'
+    export { default as UserProfileScreen } from './userScreens/UserProfileScreen'
     export { default as UpdateUserScreen } from './userScreens/userUpdateScreen'
-    export { default as UserSavesScreen } from './userScreens/userSavesScreen'
+    export { default as UserSavesScreen } from './userScreens/UserSavesScreen'
 // Assets  
     // Styling
         //Theme Context

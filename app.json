@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Sg Paradise 3",
-    "slug": "sgparadise3",
+    "name": "Sg Paradise",
+    "slug": "sgparadise",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -17,6 +17,8 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "com.sgparadise.sgparadise",
+      "buildNumber": "1.0.0",
       "supportsTablet": true
     },
     "android": {
