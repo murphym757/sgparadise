@@ -27,7 +27,11 @@
 // Assets  
     // Styling
         //Theme Context
-        export {CurrentThemeContext} from '../../../../assets/styles/globalTheme'
+        export {
+            CurrentThemeContext,
+            dayTime,
+            nightTime
+        } from '../../../../assets/styles/globalTheme'
         //Global Styling
         export {
             Container,
@@ -40,6 +44,7 @@
             MainFont,
             MainHeading,
             MainSubHeading,
+            GeneralFontColor,
             SearchFont,
             ExpandableHeading
         } from '../../../../assets/styles/globalStyling'

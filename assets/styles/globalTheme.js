@@ -60,14 +60,13 @@ const sgParadiseDefaultTheme = {
 // Checks for night hours
 let currentTime = new Date();
 let time = currentTime.getHours();
+export const dayTime = time >= 17 || time < 7
+export const nightTime = time <= 17 || time > 7
 
 function themeSelector() {
-    if (time >= 17 || time < 7) {
-        return sgParadiseDefaultTheme.dark;
-    } else {
-        return sgParadiseDefaultTheme.light;
-    }
+    if (dayTime) return sgParadiseDefaultTheme.dark
+    if (nightTime) return sgParadiseDefaultTheme.light
 }
-export const currentTheme = themeSelector();
+export const currentTheme = themeSelector()
 
-export const CurrentThemeContext = React.createContext(currentTheme);
+export const CurrentThemeContext = React.createContext(currentTheme)

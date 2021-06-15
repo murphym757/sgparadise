@@ -8,12 +8,12 @@ import {
     MainFont,
     TestImageDB,
     SearchGameTitle,
-    SearchGameData
+    SearchGameData,
+    dayTime,
+    nightTime
 } from '../../index'
 
 export function consoleImages() {
-    let currentTime = new Date();
-    let time = currentTime.getHours();
     const dayImages = [
         { 
             id: '0', 
@@ -671,11 +671,8 @@ export function consoleImages() {
             ]   
         },
     ];
-    if (time >= 17 || time < 7) {
-        return nightImages
-      } else {
-        return dayImages
-      }
+    if (nightTime) {return nightImages}
+    if (dayTime) {return dayImages}
    }
 
   export function setImage(imageWidth, imageHeight, imageUrl) {

@@ -21,6 +21,7 @@ import {
     CurrentThemeContext,
     Container,
     MainFont,
+    GeneralFontColor,
     TouchableButton,
     TouchableButtonFont,
 } from '../index.js'
@@ -86,14 +87,15 @@ export default function SgHomeScreen({ navigation, route }) {
             <MainFont onPress={() => navigation.navigate('SgConsoleList')}>Home Screen</MainFont>
             {currentUser !== null
                 ?   <View>
-                        <Text>Logged In</Text>
+                        <GeneralFontColor>Logged In</GeneralFontColor>
+                        <GeneralFontColor>{JSON.stringify(currentUser)}</GeneralFontColor>
                     </View>
                 :   <View>
-                        <Text>Not Logged In</Text>
-                        <Text onPress={() => navigation.navigate('SgAddGameConfirm',{ 
+                        <GeneralFontColor>Not Logged In</GeneralFontColor>
+                        <GeneralFontColor onPress={() => navigation.navigate('SgAddGameConfirm',{ 
                                 itemId: 86
                             },
-                          )}>TO Games</Text>
+                          )}>TO Games</GeneralFontColor>
                         <TouchableButton
                             onPress={() => navigation.navigate('Auth', { screen: 'sgAuthStack' })}>
                             <TouchableButtonFont>Log in</TouchableButtonFont>

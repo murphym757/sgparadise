@@ -18,7 +18,9 @@ import {
     MainFont,
     CustomInputField,
     TouchableButton,
-    TouchableButtonFont
+    TouchableButtonFont,
+    dayTime,
+    nightTime
 } from '../../index'
 
 import {
@@ -42,16 +44,11 @@ export default function SgConsoleListScreens({route, navigation}) {
     const [modalSelected, setModalSelected] = useState(route.params?.modal)
 
     function consoleLogo() {
-        let currentTime = new Date()
-        let time = currentTime.getHours()
         const nightImages = db.collection("sgAPI").orderBy("systemLogoNight", "asc")
         const dayImages = db.collection("sgAPI")
         console.log(dayImages)
-        if (time >= 17 || time < 7) {
-        return nightImages
-      } else {
-        return dayImages
-      }
+        if (nightTime) {return nightImages}
+        if (dayTime) {return dayImages}
     }
 
     useEffect(() => {

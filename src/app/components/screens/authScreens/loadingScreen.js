@@ -1,6 +1,10 @@
 import React from 'react';
 import { View } from 'react-native';
 import LottieView from 'lottie-react-native' //Loader
+import {
+    dayTime,
+    nightTime
+} from '../index'
 
 export function manualColorSet() {
     const day = {
@@ -13,13 +17,8 @@ export function manualColorSet() {
       backgroundColor: 'rgb(31, 37, 41)',
       warningColor: 'rgb(103, 162, 162)' 
     }
-    let currentTime = new Date();
-    let time = currentTime.getHours();
-    if (time >= 17 || time < 7) {
-      return night;
-    } else {
-      return day;
-    }
+    if (nightTime) {return night}
+    if (dayTime) {return day}
   }
 
 export function loadingScreen() {
@@ -28,16 +27,15 @@ export function loadingScreen() {
     const nightImage = baseLink + "lottieLoadingNight.json"
 
     function loadingIcon() {
-      let currentTime = new Date();
-      let time = currentTime.getHours();
-      if (time >= 17 || time < 7) {
+      if (nightTime) {
         return <LottieView 
           source={require(nightImage)}
           style={{ width: 200, height: 200, }}
           autoPlay 
           loop
         />
-      } else {
+      }
+      if (dayTime) {
         return <LottieView 
           source={require(dayImage)}
           style={{ width: 200, height: 200, }}
