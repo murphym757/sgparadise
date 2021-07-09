@@ -16,8 +16,7 @@ import { // App Styling
 import { FontAwesomeIcon, faTimes } from '../index'
 
 export default function RegistrationScreen({navigation}) {
-  const { signUp, currentUser, failureAlert } = useAuth()
-  const db = firebase.firestore()
+  const { db, signUp, currentUser, failureAlert } = useAuth()
   const [isLoading, setIsLoading] = useState(true)
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')

@@ -17,8 +17,8 @@ export function manualColorSet() {
       backgroundColor: 'rgb(31, 37, 41)',
       warningColor: 'rgb(103, 162, 162)' 
     }
-    if (nightTime) {return night}
     if (dayTime) {return day}
+    if (nightTime) {return night}
   }
 
 export function loadingScreen() {

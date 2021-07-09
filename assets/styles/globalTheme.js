@@ -59,7 +59,7 @@ const sgParadiseDefaultTheme = {
 }
 // Checks for night hours
 let currentTime = new Date();
-let time = currentTime.getHours();
+export let time = currentTime.getHours();
 export const dayTime = time >= 17 || time < 7
 export const nightTime = time <= 17 || time > 7
 

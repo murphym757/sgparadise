@@ -66,8 +66,8 @@ export const CustomInputField = styled(TextInput) `
     backgroundColor: ${currentTheme.primaryColorAlt};
     marginTop: 10px;
     marginBottom: 10px;
-    marginLeft: 30px;
-    marginRight: 30px;
+    marginLeft: 1px;
+    marginRight: 1px;
     paddingLeft: 16px;
 `;
 

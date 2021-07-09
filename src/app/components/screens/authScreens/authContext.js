@@ -16,8 +16,8 @@ export function useAuth() {
 
 export function AuthProvider({ children }) {
     const [currentUser, setCurrentUser] = useState()
+    const [currentUID, setCurrentUID] = useState()
     const [notLoggedInCurrentUser, setNotLoggedInCurrentUser ] = useState()
-    console.log(currentUser)
     const [isLoading, setIsLoading] = useState(true)
     const auth = firebase.auth()
     const db = firebase.firestore()
@@ -77,6 +77,7 @@ export function AuthProvider({ children }) {
     useEffect(() => {
         const unsubcribe = auth.onAuthStateChanged(user => {
             setCurrentUser(user)
+            setCurrentUID(user.uid)
             setIsLoading(false)
         })
 
@@ -86,6 +87,7 @@ export function AuthProvider({ children }) {
     const value = {
         db,
         currentUser,
+        currentUID,
         signUp,
         deleteAccountAuth,
         deleteAccountDb,

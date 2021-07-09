@@ -17,8 +17,7 @@ import {
 import { ContentContainer, FontAwesomeIcon, faTimes } from '../index'
 
 export default function LoginScreen({navigation, route}) {
-    const { logIn, currentUser, successAlert, failureAlert } = useAuth()
-    const db = firebase.firestore()
+    const { db, logIn, currentUser, successAlert, failureAlert } = useAuth()
     const [ isLoading, setIsLoading] = useState(true)
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
