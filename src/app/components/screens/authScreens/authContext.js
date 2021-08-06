@@ -19,6 +19,9 @@ export function AuthProvider({ children }) {
     const [currentUID, setCurrentUID] = useState()
     const [notLoggedInCurrentUser, setNotLoggedInCurrentUser ] = useState()
     const [isLoading, setIsLoading] = useState(true)
+    const [stateTest, setStateTest] = useState('')
+    const [entryText, setEntryText] = useState('')
+    const [entries, setEntries] = useState([])
     const auth = firebase.auth()
     const db = firebase.firestore()
 
@@ -31,7 +34,7 @@ export function AuthProvider({ children }) {
             navigation.navigate('Home')
           }).catch((err) => {
             setError(""+ err +"")
-          });
+          })
     }
 
     function deleteAccountDb(userId) {
@@ -39,7 +42,7 @@ export function AuthProvider({ children }) {
             console.log("User successfully deleted!")
         }).catch((err) => {
           setError(""+ err +"")
-        });
+        })
     }
 
     function logIn(email, password) {
@@ -61,6 +64,82 @@ export function AuthProvider({ children }) {
     function updatePassword(password) {
         return currentUser.updatePassword(password)
     }
+
+    function displayData(collectionName) {
+        return db.collection(collectionName)
+        .get().then((querySnapshot) => {
+            console.log(querySnapshot.size)
+            const newEntries = []
+            querySnapshot.forEach((doc) => {
+                const entry = doc.data()
+                entry.id = doc.id
+                newEntries.push(entry)
+            });
+            setEntries(newEntries)
+        }, err => {
+            console.log("Error getting document:", err)
+        })
+    }
+
+    function addData(collectionName) {
+       // Add a new document in collection "cities"
+        return db.collection("cities").add({
+            name: "Tokyo",
+            country: "Japan"
+        })
+        .then(() => {
+            console.log("Document successfully written!");
+        })
+        .catch((err) => {
+            console.error("Error writing document: ", err);
+        });
+    }
+
+    async function addData(collectionName) {
+        const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+        db.collection('sgAPI').doc('sg1000').collection('games').add({
+            will: 'this work',
+            age: 'too damn old',
+            postCreator: currentUID,
+            createdAt: timestamp
+        })
+    }
+
+    async function addGameToConsole(collectionName, docName, secondaryCollectionName) {
+        const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+        db.collection(collectionName).doc(docName).collection(secondaryCollectionName).add({
+            will: 'this work',
+            age: 'too damn old',
+            postCreator: currentUID,
+            createdAt: timestamp
+        })
+    }
+
+    async function deleteData(collectionName, docName) {
+        db.collection('sgAPI').doc('sg1000').collection('games').delete()
+    }
+
+    async function deleteGameFromConsole(collectionName, docName, secondaryCollectionName) {
+        db.collection('testCollect').doc('bscOg6nL1akXjGIpk1oz').collection('secondaryCollectionName').doc('Vz0p3yktqlJr1zIy6y91').delete()
+    }
+
+    
+
+    /*
+        function displayData(collectionName, docName, objectName) {
+        return db.collection(collectionName).doc(docName)
+        .onSnapshot((doc) => {
+            if (doc.exists) {
+                console.log("Document data:", doc.data())
+                setStateTest(doc.data() + "." + objectName)
+            } else {
+                console.log("No such document!")
+            }
+        }, err => {
+            console.log("Error getting document:", err)
+        })
+    }
+    */
 
     function successAlert(message) {
         return <CustomSuccessAlert>
@@ -91,11 +170,18 @@ export function AuthProvider({ children }) {
         signUp,
         deleteAccountAuth,
         deleteAccountDb,
+        stateTest,
         logIn,
         logOut,
         resetPassword,
         updateEmail,
         updatePassword,
+        displayData,
+        addData,
+        addGameToConsole,
+        deleteGameFromConsole,
+        deleteData,
+        entries,
         successAlert,
         failureAlert
     }

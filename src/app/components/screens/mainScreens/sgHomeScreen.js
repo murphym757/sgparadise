@@ -33,24 +33,28 @@ import { createStackNavigator } from '@react-navigation/stack'
 const Stack = createStackNavigator()
 
 export default function SgHomeScreen({ navigation, route }) {
-    const { db, currentUser, currentUID, logOut } = useAuth()
+    const { db, currentUser, 
+        currentUID, displayData, 
+        addGameToConsole, 
+        deleteGameFromConsole,
+        deleteData,
+        entries, stateTest, logOut } = useAuth()
+    console.log(entries)
     const [error, setError] = useState('')
     const [searchType, setSearchType] = useState('sgDBSearch')
     const colors = useContext(CurrentThemeContext)
     const [addGame, setGame] = useState('')
-    const [need, setNeed] = useState('')
-    const [games, setGames] = useState([])
     const [isLoading, setIsLoading] = useState(true)
     const [entities, setEntities] = useState([])
     const [userInfo, setUserInfo] = useState()
+    const [testData, setTestData] = useState('')
+    const [collectionName, setCollectionName] = useState('testCollect')
+    const [secondaryCollectionName, setSecondaryCollectionName] = useState('games')
+    const [docName, setDocName] = useState('bscOg6nL1akXjGIpk1oz')
+    const [secondaryDocName, setSecondaryDocName] = useState('bscOg6nL1akXjGIpk1oz')
+    const [objectName, setObjectName]= useState('newTest')
     const entityRef  = db.collection('games')
   
-    async function getTestDoc() {
-        const testDoc = await db.collection('testCollect')
-            .doc('bscOg6nL1akXjGIpk1oz').get()
-            console.log(testDoc)
-    }
-
     useEffect(() => {
         function loadingTime() {
             return new Promise(resolve => {
@@ -66,6 +70,10 @@ export default function SgHomeScreen({ navigation, route }) {
             await loadingTime()
         }
         sgLoader()
+        if(currentUID !== undefined) 
+            return 
+                displayData(collectionName)
+               
     })
 
     function sgGameSearchbar() {
@@ -75,7 +83,6 @@ export default function SgHomeScreen({ navigation, route }) {
             />
         )
     }
-
     
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.primaryColor }}>
@@ -86,7 +93,13 @@ export default function SgHomeScreen({ navigation, route }) {
                     {currentUser !== null
                         ?   <View>
                                 <GeneralFontColor>Logged In</GeneralFontColor>
+                                <GeneralFontColor>{stateTest}</GeneralFontColor>
                                 <GeneralFontColor>{userInfo}</GeneralFontColor>
+                                <Button title="add random user" onPress={() => addGameToConsole(collectionName, docName, secondaryCollectionName)}/>
+                                {entries.map((entry, i) => <View key={i}>
+    <Text>{entry.id}</Text>
+</View>)}
+<Button title="Delete user" onPress={() => deleteGameFromConsole(collectionName, docName, secondaryCollectionName)}/>
                             </View>
                         :   <View>
                                 <GeneralFontColor>Not Logged In</GeneralFontColor>
