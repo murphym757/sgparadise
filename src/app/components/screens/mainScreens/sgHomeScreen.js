@@ -34,12 +34,17 @@ const Stack = createStackNavigator()
 
 export default function SgHomeScreen({ navigation, route }) {
     const { db, currentUser, 
-        currentUID, displayData, 
+        currentUID, displayData,
+        getGameData, 
         addGameToConsole, 
         deleteGameFromConsole,
-        deleteData,
+        updateGameViewCount,
+        addImagesForGame,
+        addCommentsForGame,
+        addGenreTagsForGame,
+        addDescriptionTagsForGame,
+        deleteData, viewCountFirebase,
         entries, stateTest, logOut } = useAuth()
-    console.log(entries)
     const [error, setError] = useState('')
     const [searchType, setSearchType] = useState('sgDBSearch')
     const colors = useContext(CurrentThemeContext)
@@ -48,12 +53,43 @@ export default function SgHomeScreen({ navigation, route }) {
     const [entities, setEntities] = useState([])
     const [userInfo, setUserInfo] = useState()
     const [testData, setTestData] = useState('')
-    const [collectionName, setCollectionName] = useState('testCollect')
-    const [secondaryCollectionName, setSecondaryCollectionName] = useState('games')
+    const [collectionName, setCollectionName] = useState('sgAPI')
+    const [consoleName, setConsoleName] = useState('sg1000')
+    const [gamesCollection, setGamesCollection] = useState('games')
+    const [gameName, setGameName] = useState('tinyToon')
+    const [imagesCollection, setImagesCollection] = useState('images')
+    const [commentsCollection, setCommentsCollection] = useState('comments')
+    const [tagsCollection, setTagsCollection] = useState('tags')
+    const genreTagsTitle = 'Genre'
+    const [genreTagsData, setGenreTagsData] = useState([
+        "Beat 'em up",
+        "Brawler",
+        "Fighting",
+        "Action",
+        "Adventure"
+    ])
+    console.log(genreTagsData)
+    const [editgenreTags, setEditgenreTags] = useState([])
+    const descriptionTagsTitle = 'Description'
+    const [descriptionTagsData, setDescriptionTagsData] = useState([
+        "Great Soundtrack",
+        "Multiplayer",
+        "Co-op",
+        "Story Rich",
+        "Pick up and play",
+    ])
     const [docName, setDocName] = useState('bscOg6nL1akXjGIpk1oz')
+    const [secondaryCollectionName, setSecondaryCollectionName] = useState('games')
     const [secondaryDocName, setSecondaryDocName] = useState('bscOg6nL1akXjGIpk1oz')
     const [objectName, setObjectName]= useState('newTest')
-    const entityRef  = db.collection('games')
+    
+
+function removeFromArray(original, editgenreTags) {
+  return original.filter(value => !editgenreTags.includes(value))
+}
+
+console.log(removeFromArray(genreTagsData, editgenreTags));
+
   
     useEffect(() => {
         function loadingTime() {
@@ -72,9 +108,16 @@ export default function SgHomeScreen({ navigation, route }) {
         sgLoader()
         if(currentUID !== undefined) 
             return 
-                displayData(collectionName)
+                displayData(collectionName),
+                // This function will run as many times as the app renders, the function runs twice here
+                updateGameViewCount(collectionName, consoleName, gamesCollection, gameName) 
                
     })
+
+    async function editGenreTagsData() {
+        setEditgenreTags(["Fighting", "Action"]),
+        removeFromArray(genreTagsData, editgenreTags)
+    }
 
     function sgGameSearchbar() {
         return (
@@ -92,14 +135,14 @@ export default function SgHomeScreen({ navigation, route }) {
                     <MainFont onPress={() => navigation.navigate('SgConsoleList')}>Home Screen</MainFont>
                     {currentUser !== null
                         ?   <View>
+                                <Button title="Tag Editor" onPress={() => editGenreTagsData()}/>
                                 <GeneralFontColor>Logged In</GeneralFontColor>
                                 <GeneralFontColor>{stateTest}</GeneralFontColor>
                                 <GeneralFontColor>{userInfo}</GeneralFontColor>
-                                <Button title="add random user" onPress={() => addGameToConsole(collectionName, docName, secondaryCollectionName)}/>
                                 {entries.map((entry, i) => <View key={i}>
     <Text>{entry.id}</Text>
 </View>)}
-<Button title="Delete user" onPress={() => deleteGameFromConsole(collectionName, docName, secondaryCollectionName)}/>
+<Button title="Delete Game" onPress={() => deleteGameFromConsole(collectionName, consoleName, gamesCollection, gameName)}/>
                             </View>
                         :   <View>
                                 <GeneralFontColor>Not Logged In</GeneralFontColor>

@@ -21,6 +21,8 @@ export function AuthProvider({ children }) {
     const [isLoading, setIsLoading] = useState(true)
     const [stateTest, setStateTest] = useState('')
     const [entryText, setEntryText] = useState('')
+    const [viewCountFirebase, setViewCountFirebase] = useState(0)
+    console.log("Testing testing" + viewCountFirebase)
     const [entries, setEntries] = useState([])
     const auth = firebase.auth()
     const db = firebase.firestore()
@@ -105,13 +107,79 @@ export function AuthProvider({ children }) {
         })
     }
 
-    async function addGameToConsole(collectionName, docName, secondaryCollectionName) {
+    async function addImagesForGame(collectionName, consoleName, gamesCollection, gameName, imagesCollection) {
         const timestamp = firebase.firestore.FieldValue.serverTimestamp();
-        db.collection(collectionName).doc(docName).collection(secondaryCollectionName).add({
-            will: 'this work',
-            age: 'too damn old',
+        db.collection(collectionName).doc(consoleName).collection(gamesCollection).doc(gameName).collection(imagesCollection).add({
+            gameImage: gameName + " Image",
             postCreator: currentUID,
             createdAt: timestamp
+        })
+    }
+
+    async function addCommentsForGame(collectionName, consoleName, gamesCollection, gameName, commentsCollection) {
+        const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+        db.collection(collectionName).doc(consoleName).collection(gamesCollection).doc(gameName).collection(commentsCollection).add({
+            gameImage: gameName + " Image",
+            postCreator: currentUID,
+            createdAt: timestamp
+        })
+    }
+    
+    async function addGenreTagsForGame(collectionName, consoleName, gamesCollection, gameName, tagsCollection, genreTagsTitle, genreTagsData) {
+        const timestamp = firebase.firestore.FieldValue.serverTimestamp()
+        const gameTags = gameName + "Tags"
+        db.collection(collectionName).doc(consoleName).collection(gamesCollection).doc(gameName).collection(tagsCollection).doc('genreTags').set({
+            tagsTitle: genreTagsTitle, 
+            tagsData: genreTagsData,
+            postCreator: currentUID,
+            createdAt: timestamp
+        })
+    }
+
+    async function addDescriptionTagsForGame(collectionName, consoleName, gamesCollection, gameName, tagsCollection, descriptionTagsTitle, descriptionTagsData) {
+        const timestamp = firebase.firestore.FieldValue.serverTimestamp()
+        const gameTags = gameName + "Tags"
+        db.collection(collectionName).doc(consoleName).collection(gamesCollection).doc(gameName).collection(tagsCollection).doc('descriptionTags').set({
+            gameImage: gameName + " Image",
+            tagsTitle: descriptionTagsTitle,
+            tagsData: descriptionTagsData,
+            postCreator: currentUID,
+            createdAt: timestamp
+        })
+    }
+
+    // Add Game to DB
+    async function addGameToConsole(collectionName, consoleName, gamesCollection, gameName, viewCount) {
+        const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+        db.collection(collectionName).doc(consoleName).collection(gamesCollection).doc(gameName).set({
+            will: 'this work',
+            age: 'too damn old',
+            views: viewCount,
+            postCreator: currentUID,
+            createdAt: timestamp
+        })
+    }
+
+    // Update the game's view count
+    async function updateGameViewCount(collectionName, consoleName, gamesCollection, gameName) {
+        const increment = firebase.firestore.FieldValue.increment(0.5) // The page loads twice, so increased the increments by half to make a whole view
+        db.collection(collectionName).doc(consoleName).collection(gamesCollection).doc(gameName).update({    
+            views: increment
+        })
+    }
+
+    // Gets General Game Data
+    async function getGameData(collectionName, consoleName, gamesCollection, gameName) {
+     db.collection(collectionName).doc(consoleName).collection(gamesCollection).doc(gameName).get()
+        .then((doc) => {
+            if (doc.exists) {
+                console.log(doc.data().views)
+                setViewCountFirebase(doc.data().views)
+            } else {
+                console.log("No such document!")
+            }
+        }, err => {
+            console.log("Error getting document:", err)
         })
     }
 
@@ -119,8 +187,10 @@ export function AuthProvider({ children }) {
         db.collection('sgAPI').doc('sg1000').collection('games').delete()
     }
 
-    async function deleteGameFromConsole(collectionName, docName, secondaryCollectionName) {
-        db.collection('testCollect').doc('bscOg6nL1akXjGIpk1oz').collection('secondaryCollectionName').doc('Vz0p3yktqlJr1zIy6y91').delete()
+    // this function runs (and works), but will fail if the collection has subcollections
+    async function deleteGameFromConsole(collectionName, consoleName, gamesCollection, gameName) {
+        db.collection(collectionName).doc(consoleName).collection(gamesCollection).doc(gameName).delete()
+        console.log("this function ran")
     }
 
     
@@ -177,11 +247,18 @@ export function AuthProvider({ children }) {
         updateEmail,
         updatePassword,
         displayData,
+        getGameData,
         addData,
         addGameToConsole,
         deleteGameFromConsole,
+        addImagesForGame,
+        addCommentsForGame,
+        addGenreTagsForGame,
+        addDescriptionTagsForGame,
+        updateGameViewCount,
         deleteData,
         entries,
+        viewCountFirebase,
         successAlert,
         failureAlert
     }
