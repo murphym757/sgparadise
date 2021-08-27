@@ -16,7 +16,7 @@ import { // App Styling
 import { FontAwesomeIcon, faTimes } from '../index'
 
 export default function RegistrationScreen({navigation}) {
-  const { db, signUp, currentUser, failureAlert } = useAuth()
+  const { sgDB, signUp, currentUser, failureAlert } = useAuth()
   const [isLoading, setIsLoading] = useState(true)
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
@@ -48,7 +48,7 @@ export default function RegistrationScreen({navigation}) {
               email,
               fullName,
             };
-            db.collection('users')
+            sgDB.collection('users')
               .doc(uid)
               .set(data)
               .then(() => {

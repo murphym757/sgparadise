@@ -25,7 +25,7 @@ export default function UpdateUserScreen({navigation}) {
       successAlert, 
       failureAlert
     } = useAuth()
-    const db = firebase.firestore()
+    const sgDB = firebase.firestore()
     const [ isLoading, setIsLoading] = useState(true)
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')

@@ -35,8 +35,8 @@ import { FontAwesomeIcon, faChevronLeft } from '../../index'
 
 export default function SgConsoleListScreens({route, navigation}) {
     const colors = useContext(CurrentThemeContext)
-    const db = firebase.firestore()
-    const consoleData = db.collection("sgAPI").get()
+    const sgDB = firebase.firestore()
+    const consoleData = sgDB.collection("sgAPI").get()
     const [isLoading, setIsLoading] = useState(true)
     const [selectedSystemLogo, setSelectedSystemLogo] = useState('')
     const [gbConsoleId, setGbConsoleId] = useState()
@@ -44,8 +44,8 @@ export default function SgConsoleListScreens({route, navigation}) {
     const [modalSelected, setModalSelected] = useState(route.params?.modal)
 
     function consoleLogo() {
-        const nightImages = db.collection("sgAPI").orderBy("systemLogoNight", "asc")
-        const dayImages = db.collection("sgAPI")
+        const nightImages = sgDB.collection("sgAPI").orderBy("systemLogoNight", "asc")
+        const dayImages = sgDB.collection("sgAPI")
         console.log(dayImages)
         if (nightTime) {return nightImages}
         if (dayTime) {return dayImages}

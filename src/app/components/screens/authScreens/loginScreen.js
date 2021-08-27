@@ -17,7 +17,7 @@ import {
 import { ContentContainer, FontAwesomeIcon, faTimes } from '../index'
 
 export default function LoginScreen({navigation, route}) {
-    const { db, logIn, currentUser, successAlert, failureAlert } = useAuth()
+    const { sgDB, logIn, currentUser, successAlert, failureAlert } = useAuth()
     const [ isLoading, setIsLoading] = useState(true)
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -41,7 +41,7 @@ export default function LoginScreen({navigation, route}) {
         await logIn(email, password)
           .then((res) => {
             const uid = res.user.uid
-            db.collection('users')
+            sgDB.collection('users')
             .doc(uid)
                 .get()
                 .then(firestoreDocument => {

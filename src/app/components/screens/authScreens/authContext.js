@@ -25,7 +25,18 @@ export function AuthProvider({ children }) {
     console.log("Testing testing" + viewCountFirebase)
     const [entries, setEntries] = useState([])
     const auth = firebase.auth()
-    const db = firebase.firestore()
+    const sgDB = firebase.firestore()
+    const sgImageStorage = firebase.storage()
+
+    const randomString = (n, r='') => {
+        while (n--) r += String.fromCharCode((r=Math.random()*62|0, r+=r>9?(r<36?55:61):48));
+        return r;
+    };
+    
+
+    function complexID(characterLength) {
+        return randomString(characterLength)
+    }
 
     function signUp(email, password) {
       return auth.createUserWithEmailAndPassword(email, password)
@@ -40,7 +51,7 @@ export function AuthProvider({ children }) {
     }
 
     function deleteAccountDb(userId) {
-        return db.collection("users").doc(userId).delete().then(() => {
+        return sgDB.collection("users").doc(userId).delete().then(() => {
             console.log("User successfully deleted!")
         }).catch((err) => {
           setError(""+ err +"")
@@ -68,7 +79,7 @@ export function AuthProvider({ children }) {
     }
 
     function displayData(collectionName) {
-        return db.collection(collectionName)
+        return sgDB.collection(collectionName)
         .get().then((querySnapshot) => {
             console.log(querySnapshot.size)
             const newEntries = []
@@ -85,7 +96,7 @@ export function AuthProvider({ children }) {
 
     function addData(collectionName) {
        // Add a new document in collection "cities"
-        return db.collection("cities").add({
+        return sgDB.collection("cities").add({
             name: "Tokyo",
             country: "Japan"
         })
@@ -99,7 +110,7 @@ export function AuthProvider({ children }) {
 
     async function addData(collectionName) {
         const timestamp = firebase.firestore.FieldValue.serverTimestamp();
-        db.collection('sgAPI').doc('sg1000').collection('games').add({
+        sgDB.collection('sgAPI').doc('sg1000').collection('games').add({
             will: 'this work',
             age: 'too damn old',
             postCreator: currentUID,
@@ -109,7 +120,7 @@ export function AuthProvider({ children }) {
 
     async function addImagesForGame(collectionName, consoleName, gamesCollection, gameName, imagesCollection) {
         const timestamp = firebase.firestore.FieldValue.serverTimestamp();
-        db.collection(collectionName).doc(consoleName).collection(gamesCollection).doc(gameName).collection(imagesCollection).add({
+        sgDB.collection(collectionName).doc(consoleName).collection(gamesCollection).doc(gameName).collection(imagesCollection).add({
             gameImage: gameName + " Image",
             postCreator: currentUID,
             createdAt: timestamp
@@ -118,7 +129,7 @@ export function AuthProvider({ children }) {
 
     async function addCommentsForGame(collectionName, consoleName, gamesCollection, gameName, commentsCollection) {
         const timestamp = firebase.firestore.FieldValue.serverTimestamp();
-        db.collection(collectionName).doc(consoleName).collection(gamesCollection).doc(gameName).collection(commentsCollection).add({
+        sgDB.collection(collectionName).doc(consoleName).collection(gamesCollection).doc(gameName).collection(commentsCollection).add({
             gameImage: gameName + " Image",
             postCreator: currentUID,
             createdAt: timestamp
@@ -128,7 +139,7 @@ export function AuthProvider({ children }) {
     async function addGenreTagsForGame(collectionName, consoleName, gamesCollection, gameName, tagsCollection, genreTagsTitle, genreTagsData) {
         const timestamp = firebase.firestore.FieldValue.serverTimestamp()
         const gameTags = gameName + "Tags"
-        db.collection(collectionName).doc(consoleName).collection(gamesCollection).doc(gameName).collection(tagsCollection).doc('genreTags').set({
+        sgDB.collection(collectionName).doc(consoleName).collection(gamesCollection).doc(gameName).collection(tagsCollection).doc('genreTags').set({
             tagsTitle: genreTagsTitle, 
             tagsData: genreTagsData,
             postCreator: currentUID,
@@ -139,7 +150,7 @@ export function AuthProvider({ children }) {
     async function addDescriptionTagsForGame(collectionName, consoleName, gamesCollection, gameName, tagsCollection, descriptionTagsTitle, descriptionTagsData) {
         const timestamp = firebase.firestore.FieldValue.serverTimestamp()
         const gameTags = gameName + "Tags"
-        db.collection(collectionName).doc(consoleName).collection(gamesCollection).doc(gameName).collection(tagsCollection).doc('descriptionTags').set({
+        sgDB.collection(collectionName).doc(consoleName).collection(gamesCollection).doc(gameName).collection(tagsCollection).doc('descriptionTags').set({
             gameImage: gameName + " Image",
             tagsTitle: descriptionTagsTitle,
             tagsData: descriptionTagsData,
@@ -148,13 +159,13 @@ export function AuthProvider({ children }) {
         })
     }
 
-    // Add Game to DB
-    async function addGameToConsole(collectionName, consoleName, gamesCollection, gameName, viewCount) {
+    // Add Game to sgDB
+    async function addGameToConsole(collectionName, consoleName, gamesCollection, gameName) {
         const timestamp = firebase.firestore.FieldValue.serverTimestamp();
-        db.collection(collectionName).doc(consoleName).collection(gamesCollection).doc(gameName).set({
-            will: 'this work',
-            age: 'too damn old',
-            views: viewCount,
+        sgDB.collection(collectionName).doc(consoleName).collection(gamesCollection).doc(gameName).set({
+            sgID: complexID(20),
+            name: gameName,
+            views: viewCountFirebase,
             postCreator: currentUID,
             createdAt: timestamp
         })
@@ -163,14 +174,15 @@ export function AuthProvider({ children }) {
     // Update the game's view count
     async function updateGameViewCount(collectionName, consoleName, gamesCollection, gameName) {
         const increment = firebase.firestore.FieldValue.increment(0.5) // The page loads twice, so increased the increments by half to make a whole view
-        db.collection(collectionName).doc(consoleName).collection(gamesCollection).doc(gameName).update({    
+        sgDB.collection(collectionName).doc(consoleName).collection(gamesCollection).doc(gameName).update({    
             views: increment
         })
+          
     }
 
     // Gets General Game Data
     async function getGameData(collectionName, consoleName, gamesCollection, gameName) {
-     db.collection(collectionName).doc(consoleName).collection(gamesCollection).doc(gameName).get()
+     sgDB.collection(collectionName).doc(consoleName).collection(gamesCollection).doc(gameName).get()
         .then((doc) => {
             if (doc.exists) {
                 console.log(doc.data().views)
@@ -184,20 +196,38 @@ export function AuthProvider({ children }) {
     }
 
     async function deleteData(collectionName, docName) {
-        db.collection('sgAPI').doc('sg1000').collection('games').delete()
+        sgDB.collection('sgAPI').doc('sg1000').collection('games').delete()
     }
 
     // this function runs (and works), but will fail if the collection has subcollections
     async function deleteGameFromConsole(collectionName, consoleName, gamesCollection, gameName) {
-        db.collection(collectionName).doc(consoleName).collection(gamesCollection).doc(gameName).delete()
+        sgDB.collection(collectionName).doc(consoleName).collection(gamesCollection).doc(gameName).delete()
         console.log("this function ran")
     }
 
-    
+    async function imageCapture(uploadImageurl, folderName, consoleName, gameName, subFolderName, fileName, fileType) {
+        const filename =  "" + folderName + "/" + consoleName + "/" + gameName + "/" + subFolderName + "/" + fileName + "." + fileType + ""
+       
+
+
+        fetch(uploadImageurl).then(res => {
+            return res.blob();
+        }).then(blob => {
+            //uploading blob to firebase storage
+        firebase.storage().ref().child(filename).put(blob).then(function(snapshot) {
+            return snapshot.ref.getDownloadURL()
+        })
+        .then(url => {
+        console.log("Firebase storage image uploaded : ", url); 
+        }) 
+        }).catch(error => {
+        console.error(error);
+        });
+    }
 
     /*
         function displayData(collectionName, docName, objectName) {
-        return db.collection(collectionName).doc(docName)
+        return sgDB.collection(collectionName).doc(docName)
         .onSnapshot((doc) => {
             if (doc.exists) {
                 console.log("Document data:", doc.data())
@@ -234,7 +264,8 @@ export function AuthProvider({ children }) {
     }, [])
 
     const value = {
-        db,
+        sgDB,
+        sgImageStorage,
         currentUser,
         currentUID,
         signUp,
@@ -258,6 +289,7 @@ export function AuthProvider({ children }) {
         updateGameViewCount,
         deleteData,
         entries,
+        imageCapture,
         viewCountFirebase,
         successAlert,
         failureAlert

@@ -21,7 +21,7 @@ import { FontAwesomeIcon, faTimes } from '../index'
 
 export default function ResetPasswordScreen({navigation}) {
     const { resetPassword, successAlert, failureAlert } = useAuth()
-    const db = firebase.firestore()
+    const sgDB = firebase.firestore()
     const [ isLoading, setIsLoading] = useState(true)
     const [email, setEmail] = useState('')
     const [message, setMessage] = useState('Forgotten your password? Enter your e-mail address below, and we\'ll send you an e-mail allowing you to reset it.')
