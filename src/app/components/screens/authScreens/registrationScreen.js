@@ -3,7 +3,6 @@ import { Image, Text, TextInput, TouchableOpacity, View, SafeAreaView } from 're
 import {CurrentThemeContext} from '../../../../../assets/styles/globalTheme'
 import { useAuth } from './authContext'
 import { firebase } from '../../../../server/config/config'
-import { manualColorSet, loadingScreen } from './loadingScreen' //Loader
 import { // App Styling
   CustomInputField,
   TouchableButton,
@@ -83,71 +82,66 @@ export default function RegistrationScreen({navigation}) {
 
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: colors.primaryColor }}>
-        {isLoading == true 
-          ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-              {loadingScreen()}
+        <View style={{ flex: 1 }}>
+          <View style={{ paddingLeft: 20 }}>
+            <FontAwesomeIcon 
+              icon={ faTimes } color={colors.primaryFontColor} size={50} 
+              onPress={() => navigation.navigate('Main', { screen: 'sgUserStackNavbar' })}
+            />
           </View>
-          : <View style={{ flex: 1 }}>
-              <View style={{ paddingLeft: 20 }}>
-                <FontAwesomeIcon 
-                  icon={ faTimes } color={colors.primaryFontColor} size={50} 
-                  onPress={() => navigation.navigate('Main', { screen: 'sgUserStackNavbar' })}
-                />
-              </View>
-                <View>
-                  {error !== ''
-                    ? failureAlertMessage(error)
-                    : <View></View>
-                  }
-                </View>
-                <CustomInputField
-                    placeholder='Full Name'
-                    placeholderTextColor={colors.primaryColor}
-                    onChangeText={(text) => setFullName(text)}
-                    value={fullName}
-                    color={colors.primaryColor}
-                    underlineColorAndroid="transparent"
-                    autoCapitalize="none"
-                />
-                <CustomInputField
-                    placeholder='E-mail'
-                    placeholderTextColor={colors.primaryColor}
-                    onChangeText={(text) => setEmail(text)}
-                    value={email}
-                    color={colors.primaryColor}
-                    underlineColorAndroid="transparent"
-                    autoCapitalize="none"
-                />
-                <CustomInputField
-                    placeholderTextColor={colors.primaryColor}
-                    secureTextEntry
-                    placeholder='Password'
-                    onChangeText={(text) => setPassword(text)}
-                    value={password}
-                    color={colors.primaryColor}
-                    underlineColorAndroid="transparent"
-                    autoCapitalize="none"
-                />
-                <CustomInputField
-                    placeholderTextColor={colors.primaryColor}
-                    secureTextEntry
-                    placeholder='Confirm Password'
-                    onChangeText={(text) => setConfirmPassword(text)}
-                    value={confirmPassword}
-                    color={colors.primaryColor}
-                    underlineColorAndroid="transparent"
-                    autoCapitalize="none"
-                />
-                <TouchableButton 
-                    disabled={isLoading}
-                    onPress={() => onRegisterPress()}>
-                    <TouchableButtonFont>Create account</TouchableButtonFont>
-                </TouchableButton>
-                <FooterView>
-                    <FooterFont>Already got an account? <FooterLink onPress={onFooterLinkPress}>Log In</FooterLink></FooterFont>
-                </FooterView>
-          </View>
-        }
+            <View>
+              {error !== ''
+                ? failureAlertMessage(error)
+                : <View></View>
+              }
+            </View>
+            <CustomInputField
+                placeholder='Full Name'
+                placeholderTextColor={colors.primaryColor}
+                onChangeText={(text) => setFullName(text)}
+                value={fullName}
+                color={colors.primaryColor}
+                underlineColorAndroid="transparent"
+                autoCapitalize="none"
+            />
+            <CustomInputField
+                placeholder='E-mail'
+                placeholderTextColor={colors.primaryColor}
+                onChangeText={(text) => setEmail(text)}
+                value={email}
+                color={colors.primaryColor}
+                underlineColorAndroid="transparent"
+                autoCapitalize="none"
+            />
+            <CustomInputField
+                placeholderTextColor={colors.primaryColor}
+                secureTextEntry
+                placeholder='Password'
+                onChangeText={(text) => setPassword(text)}
+                value={password}
+                color={colors.primaryColor}
+                underlineColorAndroid="transparent"
+                autoCapitalize="none"
+            />
+            <CustomInputField
+                placeholderTextColor={colors.primaryColor}
+                secureTextEntry
+                placeholder='Confirm Password'
+                onChangeText={(text) => setConfirmPassword(text)}
+                value={confirmPassword}
+                color={colors.primaryColor}
+                underlineColorAndroid="transparent"
+                autoCapitalize="none"
+            />
+            <TouchableButton 
+                disabled={isLoading}
+                onPress={() => onRegisterPress()}>
+                <TouchableButtonFont>Create account</TouchableButtonFont>
+            </TouchableButton>
+            <FooterView>
+                <FooterFont>Already got an account? <FooterLink onPress={onFooterLinkPress}>Log In</FooterLink></FooterFont>
+            </FooterView>
+        </View>
       </SafeAreaView>
     )
 }

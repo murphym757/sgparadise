@@ -44,6 +44,7 @@
     "react-native-svg": "12.1.0",
     "react-native-unimodules": "~0.13.3",
     "react-native-web": "^0.16.5",
+    "string-similarity": "^4.0.4",
     "styled-components": "^5.3.0"
   },
   "devDependencies": {

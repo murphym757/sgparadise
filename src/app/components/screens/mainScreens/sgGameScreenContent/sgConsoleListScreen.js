@@ -2,12 +2,14 @@ import React, { useState, useEffect, useContext } from 'react'
 import { View, Text, Button, FlatList, Image, ScrollView, SafeAreaView, TouchableOpacity } from 'react-native'
 import {CurrentThemeContext} from '../../../../../../assets/styles/globalTheme'
 import { consoleImages } from './sgAPIIndex'
+import axios from 'axios'
 
 // React Navigation
 import { createStackNavigator } from '@react-navigation/stack'
+import { useIsFocused } from "@react-navigation/native";
 
-//Firebase
-import { firebase } from '../../../../../server/config/config'
+import { firebase, gamesConfig } from '../../../../../server/config/config'
+console.log(gamesConfig.igdbClientId)
 
 // App Styling
 import {
@@ -20,7 +22,8 @@ import {
     TouchableButton,
     TouchableButtonFont,
     dayTime,
-    nightTime
+    nightTime,
+    sg32XNATitles
 } from '../../index'
 
 import {
@@ -28,20 +31,33 @@ import {
     modalConfirmation
 } from './sgAPIIndex'
 
-import { loadingScreen } from '../../authScreens/loadingScreen' //Loader
+import stringSimilarity from 'string-similarity'
 
-//FontAwesome
+//FontAwesome searchType
 import { FontAwesomeIcon, faChevronLeft } from '../../index'
 
-export default function SgConsoleListScreens({route, navigation}) {
+export default function SgConsoleListScreens({route, navigation}, props) {
     const colors = useContext(CurrentThemeContext)
     const sgDB = firebase.firestore()
     const consoleData = sgDB.collection("sgAPI").get()
-    const [isLoading, setIsLoading] = useState(true)
+    const [searchType, setSearchType] = useState('sgIGDBSearch')
     const [selectedSystemLogo, setSelectedSystemLogo] = useState('')
+    const [accessTokenIGDB, setAccessTokenIGDB] = useState('')
+    console.log("This is your twitch code " + accessTokenIGDB)
     const [gbConsoleId, setGbConsoleId] = useState()
     const [igdbConsoleId, setIgdbConsoleId] = useState()
+    console.log(igdbConsoleId)
+    const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be read
     const [modalSelected, setModalSelected] = useState(route.params?.modal)
+
+    // For IGDB API Search Endpoint
+    const clientIdIGDB = "" + gamesConfig.igdbClientId + ""
+    const clientSecretIGDB = "" + gamesConfig.igdbClientSecret + ""
+
+        // Finds the clostest game title
+        let matches = stringSimilarity.findBestMatch("The Amazing Spider-Man: Web of Fire", sg32XNATitles);
+        console.log(matches.bestMatch.target)
+  
 
     function consoleLogo() {
         const nightImages = sgDB.collection("sgAPI").orderBy("systemLogoNight", "asc")
@@ -51,12 +67,22 @@ export default function SgConsoleListScreens({route, navigation}) {
         if (dayTime) {return dayImages}
     }
 
+    async function igbdbAPI() {
+        let accessToken;
+        await axios.post('https://id.twitch.tv/oauth2/token?client_id=' + clientIdIGDB + '&client_secret=' + clientSecretIGDB + '&grant_type=client_credentials')
+            .then(res => {
+                accessToken = res.data.access_token;
+                setAccessTokenIGDB(accessToken)
+                console.log(accessToken); // shows the token fine here
+            })
+    }
+    
     useEffect(() => {
-        setTimeout(() => {
-            setIsLoading(false)
-          }, 2500)
-        setModalSelected(false)
-    })
+        if(isFocused){  
+            setModalSelected(false)
+            igbdbAPI()
+        }}, [isFocused])
+        
 
     function setConsoleId(item) {
         navigation.navigate('MyModal')
@@ -66,17 +92,20 @@ export default function SgConsoleListScreens({route, navigation}) {
     }
 
     function resetConsoleId() {
-        navigation.navigate('SgConsoleOptions') 
             setSelectedSystemLogo({ ...selectedSystemLogo })
             setGbConsoleId({ ...gbConsoleId })
             setIgdbConsoleId({ ...igdbConsoleId })
+            setAccessTokenIGDB({ ...accessTokenIGDB })
     }
 
     function confirmSetConsoleId(){
-        navigation.navigate('SgGameSearch',{ 
+        navigation.navigate('SgIGDBGameSearch',{
+            clientIdIGDB: clientIdIGDB,
+            accessTokenIGDB: accessTokenIGDB, 
             igdbConsoleId: igdbConsoleId,
             gbConsoleId: gbConsoleId,
             selectedSystemLogo: selectedSystemLogo,
+            searchType: searchType
         })
           setModalSelected(true)
     }
@@ -166,12 +195,7 @@ export default function SgConsoleListScreens({route, navigation}) {
 
   return (
     <SafeAreaView style={{ flex: 1, justifyContent: 'center', backgroundColor: colors.primaryColor }}>
-        {isLoading == true
-            ?   <ContentContainer>
-                    {loadingScreen()}
-                </ContentContainer>
-            :   sgHomeModalStack()
-        }
+        {sgHomeModalStack()}
         <View style={{alignItems: 'center'}}></View>
     </SafeAreaView>
   );

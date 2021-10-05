@@ -3,7 +3,6 @@ import { Image, Text, TextInput, TouchableOpacity, View, SafeAreaView } from 're
 import {CurrentThemeContext} from '../../../../../assets/styles/globalTheme';
 import { useAuth } from './authContext'
 import { firebase } from '../../../../server/config/config';
-import { manualColorSet, loadingScreen } from './loadingScreen' //Loader
 // App Styling
 import {
     FormHeadingFontContainer,
@@ -65,53 +64,48 @@ export default function ResetPasswordScreen({navigation}) {
 
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: colors.primaryColor }}> 
-        {isLoading == true 
-          ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                {loadingScreen()}
+        <View style={{ flex: 1 }}>
+          <View style={{ paddingLeft: 20 }}>
+            <FontAwesomeIcon 
+              icon={ faTimes } color={colors.primaryFontColor} size={50} 
+              onPress={() => navigation.navigate('Home')}
+            />
           </View>
-          : <View style={{ flex: 1 }}>
-              <View style={{ paddingLeft: 20 }}>
-                <FontAwesomeIcon 
-                  icon={ faTimes } color={colors.primaryFontColor} size={50} 
-                  onPress={() => navigation.navigate('Home')}
-                />
-              </View>
-              <FormHeadingFontContainer>
-                <FormHeadingFont>Password Reset</FormHeadingFont>
-              </FormHeadingFontContainer>
-              <View>
-                {message !== ''
-                    ? successAlertMessage(message)
-                    : <View>
-                    </View>
-                }
-                {error !== ''
-                    ? failureAlertMessage(error)
-                    : <View></View>
-                }
+          <FormHeadingFontContainer>
+            <FormHeadingFont>Password Reset</FormHeadingFont>
+          </FormHeadingFontContainer>
+          <View>
+            {message !== ''
+                ? successAlertMessage(message)
+                : <View>
                 </View>
-              <CustomInputField
-                  placeholder='E-mail'
-                  placeholderTextColor={colors.primaryColor}
-                  onChangeText={(text) => setEmail(text)}
-                  value={email}
-                  color={colors.primaryColor}
-                  underlineColorAndroid="transparent"
-                  autoCapitalize="none"
-              />
-              <TouchableButton
-                  onPress={() => onLoginPress()}>
-                  <TouchableButtonFont>Reset Password</TouchableButtonFont>
-              </TouchableButton>
-              <FooterView>
-                  <FooterFont>
-                    <FooterLink onPress={onFooterLinkPress}>
-                        Log In
-                    </FooterLink>
-                  </FooterFont>
-              </FooterView>
-          </View>
-        }
+            }
+            {error !== ''
+                ? failureAlertMessage(error)
+                : <View></View>
+            }
+            </View>
+          <CustomInputField
+              placeholder='E-mail'
+              placeholderTextColor={colors.primaryColor}
+              onChangeText={(text) => setEmail(text)}
+              value={email}
+              color={colors.primaryColor}
+              underlineColorAndroid="transparent"
+              autoCapitalize="none"
+          />
+          <TouchableButton
+              onPress={() => onLoginPress()}>
+              <TouchableButtonFont>Reset Password</TouchableButtonFont>
+          </TouchableButton>
+          <FooterView>
+              <FooterFont>
+                <FooterLink onPress={onFooterLinkPress}>
+                    Log In
+                </FooterLink>
+              </FooterFont>
+          </FooterView>
+        </View>
       </SafeAreaView>
     )
 }

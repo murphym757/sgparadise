@@ -6,7 +6,6 @@ import { // App Styling
     TouchableButton,
     TouchableButtonFont
   } from '../../../../../assets/styles/authScreensStyling'
-import { manualColorSet, loadingScreen } from '../authScreens/loadingScreen' //Loader
 
 export default function UserProfileScreen({navigation}) {
     const { currentUser, logOut } = useAuth()

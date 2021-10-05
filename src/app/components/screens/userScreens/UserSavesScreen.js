@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { View, Text, Button, Image, ScrollView, SafeAreaView } from 'react-native'
 import axios from 'axios'
 import { useAuth } from '../authScreens/authContext'
-import { manualColorSet, loadingScreen } from '../authScreens/loadingScreen' //Loader
 
 // App Styling
 import {

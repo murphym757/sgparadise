@@ -3,7 +3,6 @@ import { Image, Text, TextInput, TouchableOpacity, View, SafeAreaView } from 're
 import {CurrentThemeContext} from '../../../../../assets/styles/globalTheme'
 import { useAuth } from './authContext'
 import { firebase } from '../../../../server/config/config'
-import { manualColorSet, loadingScreen } from './loadingScreen' //Loader
 // App Styling
 import {
     CustomInputField,
@@ -81,54 +80,49 @@ export default function LoginScreen({navigation, route}) {
     
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: colors.primaryColor }}> 
-        {isLoading == true 
-          ? <ContentContainer>
-                {loadingScreen()}
-          </ContentContainer>
-          : <View style={{ flex: 1 }}>
-              <View style={{ paddingLeft: 20 }}>
-                <FontAwesomeIcon 
-                  icon={ faTimes } color={colors.primaryFontColor} size={50} 
-                  onPress={() => navigation.navigate('Main', { screen: 'sgUserStackNavbar' })}
-                />
-              </View>
-              <View>
-                {error !== ''
-                  ? failureAlertMessage(error)
-                  : <View></View>
-                }
-              </View>
-              <CustomInputField
-                  placeholder='E-mail'
-                  placeholderTextColor={colors.primaryColor}
-                  onChangeText={(text) => setEmail(text)}
-                  value={email}
-                  color={colors.primaryColor}
-                  underlineColorAndroid="transparent"
-                  autoCapitalize="none"
-              />
-              <CustomInputField
-                  placeholderTextColor={colors.primaryColor}
-                  secureTextEntry
-                  placeholder='Password'
-                  onChangeText={(text) => setPassword(text)}
-                  value={password}
-                  color={colors.primaryColor}
-                  underlineColorAndroid="transparent"
-                  autoCapitalize="none"
-              />
-              <TouchableButton
-                  onPress={() => onLoginPress()}>
-                  <TouchableButtonFont>Log in</TouchableButtonFont>
-              </TouchableButton>
-              <FooterView>
-                  <FooterFont>Forgot Password? <FooterLink onPress={onFooterResLinkPress}>Reset Password</FooterLink></FooterFont>
-              </FooterView>
-              <FooterView>
-                  <FooterFont>Don't have an account? <FooterLink onPress={onFooterRegsLinkPress}>Sign up</FooterLink></FooterFont>
-              </FooterView>
+        <View style={{ flex: 1 }}>
+          <View style={{ paddingLeft: 20 }}>
+            <FontAwesomeIcon 
+              icon={ faTimes } color={colors.primaryFontColor} size={50} 
+              onPress={() => navigation.navigate('Main', { screen: 'sgUserStackNavbar' })}
+            />
           </View>
-        }
+          <View>
+            {error !== ''
+              ? failureAlertMessage(error)
+              : <View></View>
+            }
+          </View>
+          <CustomInputField
+              placeholder='E-mail'
+              placeholderTextColor={colors.primaryColor}
+              onChangeText={(text) => setEmail(text)}
+              value={email}
+              color={colors.primaryColor}
+              underlineColorAndroid="transparent"
+              autoCapitalize="none"
+          />
+          <CustomInputField
+              placeholderTextColor={colors.primaryColor}
+              secureTextEntry
+              placeholder='Password'
+              onChangeText={(text) => setPassword(text)}
+              value={password}
+              color={colors.primaryColor}
+              underlineColorAndroid="transparent"
+              autoCapitalize="none"
+          />
+          <TouchableButton
+              onPress={() => onLoginPress()}>
+              <TouchableButtonFont>Log in</TouchableButtonFont>
+          </TouchableButton>
+          <FooterView>
+              <FooterFont>Forgot Password? <FooterLink onPress={onFooterResLinkPress}>Reset Password</FooterLink></FooterFont>
+          </FooterView>
+          <FooterView>
+              <FooterFont>Don't have an account? <FooterLink onPress={onFooterRegsLinkPress}>Sign up</FooterLink></FooterFont>
+          </FooterView>
+      </View>
       </SafeAreaView>
     )
 }

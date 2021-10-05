@@ -10,6 +10,7 @@
 
         // Search Screens
         export { default as SgGameSearchScreen } from './mainScreens/sgGameSearchScreenContent/sgGameSearchScreen'     
+        export { default as SgIGDBGameSearchScreen } from './mainScreens/sgGameSearchScreenContent/sgIGDBGameSearchScreen'   
         export { default as SgConsoleListScreen } from './mainScreens/sgGameScreenContent/sgConsoleListScreen'
         export { default as TestImageDB } from './mainScreens/sgGameScreenContent/TestImageDB'
         export { default as SearchBar } from './mainScreens/sgGameSearchScreenContent/searchIndex'
@@ -87,3 +88,12 @@
         faCaretDown,
         faChevronLeft
      } from '@fortawesome/free-solid-svg-icons'
+
+     // sgGame Titles
+     export { sg32XNATitles, sg32XEUTitles, sg32XJPNTitles } from '../../../server/sgGameTitles/sg32XTitles'
+     export { sg1000JPNTitles } from '../../../server/sgGameTitles/sg1000Titles'
+     export { sgCDNATitles, sgCDEUTitles, sgCDJPNTitles } from '../../../server/sgGameTitles/sgCDTitles'
+     export { sgGenNATitles, sgGenEUTitles, sgGenJPNTitles } from '../../../server/sgGameTitles/sgGenTitles'
+     export { sgGGNATitles, sgGGEUTitles, sgGGJPNTitles } from '../../../server/sgGameTitles/sgGGTitles'
+     export { sgMSNATitles, sgMSEUTitles, sgMSJPNTitles, sgMSBRZTitles } from '../../../server/sgGameTitles/sgMSTitles'
+     export { sgSatNATitles, sgSatEUTitles, sgSatJPNTitles } from '../../../server/sgGameTitles/sgSatTitles'

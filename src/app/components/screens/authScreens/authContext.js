@@ -27,6 +27,13 @@ export function AuthProvider({ children }) {
     const auth = firebase.auth()
     const sgDB = firebase.firestore()
     const sgImageStorage = firebase.storage()
+    const sg1000IGDB = '84'
+    const sg32XIGDB = '30'
+    const sgCDIGDB = '78'
+    const sgGGIGDB = '35'
+    const sgGenIGDB = '29'
+    const sgMSIGDB = '64'
+    const sgSatIGDB = '32'
 
     const randomString = (n, r='') => {
         while (n--) r += String.fromCharCode((r=Math.random()*62|0, r+=r>9?(r<36?55:61):48));
@@ -264,6 +271,13 @@ export function AuthProvider({ children }) {
     }, [])
 
     const value = {
+        sg1000IGDB,
+        sg32XIGDB,
+        sgCDIGDB,
+        sgGGIGDB,
+        sgGenIGDB,
+        sgMSIGDB,
+        sgSatIGDB,
         sgDB,
         sgImageStorage,
         currentUser,

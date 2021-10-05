@@ -15,12 +15,22 @@ import {
     FontAwesomeIcon,
     faChevronLeft
 } from '../../index'
-import { loadingScreen } from '../../authScreens/loadingScreen' //Loader
 
 export default function ConfirmAddGameScreen({navigation, route}, props) {
     const colors = useContext(CurrentThemeContext)
-    const { gameName, itemId } = route.params
-    console.log("This is it tho" + gameName)
+    const { 
+        igdbGameId,
+        igdbGameName,
+        igdbGameCover,
+        igdbGameRating,
+        igdbGameAgeRating,
+        igdbGameGenres,
+        igdbGameScreenshots,
+        igdbGameSummary,
+        igdbUnixTimestamp, 
+        itemId 
+    } = route.params
+    console.log("This is it tho" + igdbGameName)
     const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
@@ -42,7 +52,10 @@ export default function ConfirmAddGameScreen({navigation, route}, props) {
                     onPress={() => navigation.navigate('SgConsoleOptions')}
                 />
             </View>
-                <Text>{JSON.stringify(gameName)}</Text>
+                <Text>{JSON.stringify(igdbGameId)}</Text>
+                <Text>{JSON.stringify(igdbGameName)}</Text>
+                <Text>{JSON.stringify(igdbGameRating)}</Text>
+                <Text>{JSON.stringify(igdbGameSummary)}</Text>
                 <Text>This is where youll confirm your chose</Text>
             </View>
         )
@@ -50,12 +63,7 @@ export default function ConfirmAddGameScreen({navigation, route}, props) {
 
     return (
         <SafeAreaViewContainer>
-            {isLoading == true
-                ?   <ContentContainer>
-                        {loadingScreen()}
-                    </ContentContainer>
-                :   confirmGameScreen()
-            }
+            {confirmGameScreen()}
         </SafeAreaViewContainer>
     )
 }

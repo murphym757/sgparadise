@@ -10,7 +10,6 @@ import {
 } from 'react-native'
 import axios from 'axios'
 import { useAuth } from '../authScreens/authContext'
-import { manualColorSet, loadingScreen } from '../authScreens/loadingScreen' //Loader
 
 
 // App Styling & Screens

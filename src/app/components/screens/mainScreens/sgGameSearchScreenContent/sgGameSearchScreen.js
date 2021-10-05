@@ -32,7 +32,6 @@ import {CurrentThemeContext} from '../../../../../../assets/styles/globalTheme'
 import {
     CustomInputField
   } from '../../../../../../assets/styles/authScreensStyling'
-import { loadingScreen } from '../../authScreens/loadingScreen' //Loader
 
 export default function SgGameSearchScreen({route, navigation}, props) {
     const colors = useContext(CurrentThemeContext)
@@ -225,12 +224,7 @@ export default function SgGameSearchScreen({route, navigation}, props) {
      
   return (
         <SafeAreaViewContainer>
-            {isLoading == true
-                ?   <ContentContainer>
-                        {loadingScreen()}
-                    </ContentContainer>
-                :   sgSearchGameStack()
-            }
+            {sgSearchGameStack()}
         </SafeAreaViewContainer>
   );
 }

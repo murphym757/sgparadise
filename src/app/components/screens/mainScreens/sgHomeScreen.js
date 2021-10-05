@@ -11,6 +11,7 @@ import {
 import axios from 'axios'
 import { useAuth } from '../authScreens/authContext'
 import { firebase } from '../../../../server/config/config';
+
 import { manualColorSet, loadingScreen } from '../authScreens/loadingScreen' //Loader
 
 // App Styling & Screens
@@ -19,12 +20,14 @@ import {
     AddGameScreen,
     ConfirmAddGameScreen,
     SgConsoleListScreen,
+    ContentContainer,
+    SafeAreaViewContainer,
     CurrentThemeContext,
     Container,
     MainFont,
     GeneralFontColor,
     TouchableButton,
-    TouchableButtonFont,
+    TouchableButtonFont
 } from '../index.js'
 
 
@@ -104,6 +107,7 @@ export default function SgHomeScreen({ navigation, route }) {
     const [profileImageUrl2, setProfileImageUrl2] = useState('')
     console.log(profileImageUrl)
 
+    
     function imageCatcher() {
         return imagesRef 
         .getDownloadURL()
@@ -116,11 +120,18 @@ export default function SgHomeScreen({ navigation, route }) {
     }
     
 
-function removeFromArray(original, editgenreTags) {
-  return original.filter(value => !editgenreTags.includes(value))
-}
+    function removeFromArray(original, editgenreTags) {
+        return original.filter(value => !editgenreTags.includes(value))
+    }
 
-console.log(removeFromArray(genreTagsData, editgenreTags));
+    console.log(removeFromArray(genreTagsData, editgenreTags));
+
+    function confirmAddNewGame(){
+        setSearchType('lobster')
+        navigation.navigate('SgConsoleList',{
+            searchType: searchType
+        })
+    }
 
   
     useEffect(() => {
@@ -130,7 +141,7 @@ console.log(removeFromArray(genreTagsData, editgenreTags));
                 resolve(
                     setUserInfo(currentUID),
                     setIsLoading(false),
-                    imageCatcher()
+                    imageCatcher(),
                     //imageCapture(uploadImageurl, folderName, consoleName, gameName, subFolderName, fileName, fileType)
                     )
               }, 2000)
@@ -162,11 +173,11 @@ console.log(removeFromArray(genreTagsData, editgenreTags));
     }
     
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.primaryColor }}>
+    <SafeAreaViewContainer>
     {isLoading !== true 
         ?   <Container>
                 {sgGameSearchbar({ navigation })}
-                    <MainFont onPress={() => navigation.navigate('SgConsoleList')}>Home Screen</MainFont>
+                    <MainFont>Home Screen</MainFont>
                     <FlatList
                         showsHorizontalScrollIndicator={false}
                         scrollEnabled={false}
@@ -183,12 +194,16 @@ console.log(removeFromArray(genreTagsData, editgenreTags));
                     />
                     {currentUser !== null
                         ?   <View>
+                            <TouchableButton
+                                onPress={() => confirmAddNewGame()}>
+                            <TouchableButtonFont>Add Game</TouchableButtonFont>
+                            </TouchableButton>
                                 <Button title="Tag Editor" onPress={() => addGameToConsole(collectionName, consoleName, gamesCollection, gameName)}/>
                                 <GeneralFontColor>Logged In</GeneralFontColor>
                                 <GeneralFontColor>{stateTest}</GeneralFontColor>
                                 <GeneralFontColor>{userInfo}</GeneralFontColor>
                                 {entries.map((entry, i) => <View key={i}><Text>{entry.id}</Text></View>)}
-<Button title="Delete Game" onPress={() => deleteGameFromConsole(collectionName, consoleName, gamesCollection, gameName)}/>
+                                <Button title="Delete Game" onPress={() => deleteGameFromConsole(collectionName, consoleName, gamesCollection, gameName)}/>
                             </View>
                         :   <View>
                                 <GeneralFontColor>Not Logged In</GeneralFontColor>
@@ -199,17 +214,13 @@ console.log(removeFromArray(genreTagsData, editgenreTags));
                                     onPress={() => navigation.navigate('Auth', { screen: 'sgAuthStack' })}>
                                     <TouchableButtonFont>Log in</TouchableButtonFont>
                                 </TouchableButton>
-                                <TouchableButton
-                                    onPress={() => navigation.navigate('SgConsoleList')}>
-                                <TouchableButtonFont>Add Game</TouchableButtonFont>
-                                </TouchableButton>
                             </View>
                     }
             </Container>
-        :   <View>
-                <GeneralFontColor>Loading Screen</GeneralFontColor>
-            </View>
+        :   <ContentContainer>
+                {loadingScreen()}
+            </ContentContainer>
     }
-    </SafeAreaView>
+    </SafeAreaViewContainer>
   );
 }

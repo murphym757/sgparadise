@@ -18,6 +18,7 @@ import {
   SgMainScreen,
   SgHomeScreen,
   SgGameSearchScreen,
+  SgIGDBGameSearchScreen,
   UserProfileScreen,
   UpdateUserScreen,
   UserSavesScreen,
@@ -95,10 +96,15 @@ export default function App() {
           options={{ headerShown: false }} 
           component={GameScreen}
         />
-        <Stack.Screen 
+        <Stack.Screen //For sg Paradise search
             name="SgGameSearch"
             options={{ headerShown: false }}
             component={SgGameSearchScreen} 
+        />
+        <Stack.Screen //For IGDB search
+            name="SgIGDBGameSearch"
+            options={{ headerShown: false }}
+            component={SgIGDBGameSearchScreen} 
         />
         <Stack.Screen 
             name="SgConsoleList"

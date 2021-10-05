@@ -27,9 +27,6 @@ import {
     consoleIconList
 } from './sgAPIIndex'
 
-import { loadingScreen } from '../../authScreens/loadingScreen' //Loader
-
-
 export default function AddGameScreen({ route, navigation }) {
     const colors = useContext(CurrentThemeContext)
     const [isLoading, setIsLoading] = useState(true)
