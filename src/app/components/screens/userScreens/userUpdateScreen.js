@@ -32,7 +32,6 @@ export default function UpdateUserScreen({navigation}) {
     const [userId, setUserId] = useState('')
     const [message, setMessage] = useState('')
     const [error, setError] = useState('')
-  console.log(email)
     function cancelUpdate() {
         navigation.navigate('Home')
     }

@@ -7,7 +7,8 @@ import {
     FlatList, 
     ScrollView, 
     SafeAreaView,
-    TouchableOpacity 
+    TouchableOpacity,
+    ActivityIndicator
 } from 'react-native'
 import axios from 'axios'
 // React Navigation
@@ -22,7 +23,6 @@ import {
     ContentContainer,
     TestImageDB,
     MainFont,
-    SearchBar,
     SgSearchQuery,
     SearchGameTitle,
     SearchGameData,
@@ -41,8 +41,10 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
     const testGamesDb = TestImageDB.results
     const searchType = props.searchType
     console.log(searchType)
+    const searchFormTitle = "Search Games"
     const postDataIGDB = "fields *;"
     const [searchQuery, setSearchQuery] = useState('')
+    const [isLoading, setIsLoading] = useState()
     const [modalSelected, setModalSelected] = useState(route.params?.modal)
 
     function unixTimestampConverter(item) {
@@ -84,6 +86,9 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
     
 
     useEffect(() => {
+        setTimeout(() => {
+            setIsLoading(false)
+          }, 2000)
         setModalSelected(false)
     }, [])
 
@@ -211,79 +216,52 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
             />
         ) 
     }
-
-    function setConsole() {
-        return (
-            <Image
-                style={{
-                    width: 200,
-                    height: 60
-                }}
-                source={{
-                    uri: "" + selectedSystemLogo + "",
-                }}
-            />
-        )
-    }
+    
 
     function sgDBGameSearch() {
         return (
-            <SafeAreaView style={{ flex: 1, backgroundColor: colors.primaryColor }}>
-            <FontAwesomeIcon 
-                            icon={ faChevronLeft } color={colors.primaryFontColor} size={50} 
-                            onPress={() => navigation.navigate({
-                                name: 'SgConsoleList',
-                                merge: true,
-                              })}
-                        />
-                    {igdbGameSelected == "floop"
-                        ?   <Text>You've selected {igdbGameName}, buddy</Text>
-                        :   <View>
-                        
-                        <Text>Received params: {JSON.stringify(route.params)}</Text>
-                        <Text>Your here nows</Text>
-                            {setConsole()}
-                            <CustomInputField
-                                placeholderTextColor={colors.primaryColor}
-                                placeholder='Search Games'
-                                onChangeText={onSearch()}
-                                value={searchQuery}
-                                color={colors.primaryColor}
-                                underlineColorAndroid="transparent"
-                                autoCapitalize="none"
-                            />
-                            <ScrollView 
-                                scrollEventThrottle={16}
-                            >
-                                <View style={{ flex: 1 }}>
-                                    <Text>
-                                        Add Games
-                                    </Text>
-                                    <Button title="Get data from Twitch API" onPress={() => igdbSearchFuction()}/>
-                                    <Button title="Add Game here" onPress={() => confirmSetGameId()}/>
-                                    <MainFont>Home Screen</MainFont>
-                                        <FlatList
-                                                showsHorizontalScrollIndicator={false}
-                                                scrollEnabled={false}
-                                                data={igdbSearchResults.sort((a, b) => a.first_release_date - b.first_release_date)}
-                                                keyboardShouldPersistTaps="always"
-                                                keyExtractor={item => item.id}
-                                                renderItem={({ item }) => (
-                                                <View>
-                                                    <TouchableOpacity onPress={() => igdbGameData(item)}>
-                                                        <Text>{item.name}</Text>
-                                                    </TouchableOpacity>
-                                                </View>
-                                                )}
-                                            />
-                                </View>
-                                <View>
-                                    {sgGameStack()}
-                                </View>
-                            </ScrollView>
+            <SafeAreaView style={{ flex: 1,  backgroundColor: colors.primaryColor }}>
+                <View>
+                    <CustomInputField
+                        placeholderTextColor={colors.primaryColor}
+                        placeholder='Search Games'
+                        onChangeText={onSearch()}
+                        value={searchQuery}
+                        color={colors.primaryColor}
+                        underlineColorAndroid="transparent"
+                        autoCapitalize="none"
+                    />
+                    <ScrollView 
+                        scrollEventThrottle={16}
+                    >
+                        <View style={{ flex: 1 }}>
+                            <Text>
+                                Add Games
+                            </Text>
+                            <Button title="Get data from Twitch API" onPress={() => igdbSearchFuction()}/>
+                            <Button title="Add Game here" onPress={() => confirmSetGameId()}/>
+                            <MainFont>Home Screen</MainFont>
+                                <FlatList
+                                        showsHorizontalScrollIndicator={false}
+                                        scrollEnabled={false}
+                                        data={igdbSearchResults.sort((a, b) => a.first_release_date - b.first_release_date)}
+                                        keyboardShouldPersistTaps="always"
+                                        keyExtractor={item => item.id}
+                                        renderItem={({ item }) => (
+                                        <View>
+                                            <TouchableOpacity onPress={() => igdbGameData(item)}>
+                                                <Text>{item.name}</Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                        )}
+                                    />
                         </View>
-                    }
-                </SafeAreaView>
+                        <View>
+                            {sgGameStack()}
+                        </View>
+                    </ScrollView>
+                </View>
+            </SafeAreaView>
         )
     }
     
@@ -320,7 +298,34 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
      
   return (
         <SafeAreaViewContainer>
-            sgSearchGameStack()
+        {isLoading == undefined
+            ?   <ActivityIndicator size="large" hidesWhenStopped="true"/>
+            :   <View>
+                    <FontAwesomeIcon 
+                        icon={ faChevronLeft } color={colors.primaryFontColor} size={50} 
+                        onPress={() => navigation.navigate({
+                            name: 'SgConsoleList',
+                            merge: true,
+                        })}
+                    />
+                    <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                        <Image
+                            style={{
+                                width: 200,
+                                height: 60
+                            }}
+                            source={{
+                                uri: "" + selectedSystemLogo + "",
+                            }}
+                        />
+
+                        {isLoading && (
+                            <ActivityIndicator size="small" />
+                        )}
+                    </View>
+                </View>
+        }
+            {sgSearchGameStack()}
         </SafeAreaViewContainer>
   );
 }

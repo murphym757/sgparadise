@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import * as Font from 'expo-font';
 import AppLoading from 'expo-app-loading';
 import { AuthProvider } from './src/app/components/screens/authScreens/authContext'
+import { SearchBarProvider } from './src/app/components/screens/mainScreens/sgGameSearchScreenContent/searchIndex'
 import ScreenRoutes from "./src/app/components/screens/screenRoutes";
 
 function useFonts(fontMap) {
@@ -29,7 +30,9 @@ export default function Home() {
       if (fontsLoaded) {
         return  (
           <AuthProvider>
-            <ScreenRoutes />
+            <SearchBarProvider>
+              <ScreenRoutes />
+            </SearchBarProvider>
           </AuthProvider>
         );        
       } else {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { View, Text, Button, FlatList, Image, ScrollView, SafeAreaView, TouchableOpacity } from 'react-native'
+import { View, Text, Button, FlatList, Image, ScrollView, SafeAreaView, TouchableOpacity, ActivityIndicator } from 'react-native'
 import {CurrentThemeContext} from '../../../../../../assets/styles/globalTheme'
 import { consoleImages } from './sgAPIIndex'
 import axios from 'axios'
@@ -9,7 +9,6 @@ import { createStackNavigator } from '@react-navigation/stack'
 import { useIsFocused } from "@react-navigation/native";
 
 import { firebase, gamesConfig } from '../../../../../server/config/config'
-console.log(gamesConfig.igdbClientId)
 
 // App Styling
 import {
@@ -40,13 +39,13 @@ export default function SgConsoleListScreens({route, navigation}, props) {
     const colors = useContext(CurrentThemeContext)
     const sgDB = firebase.firestore()
     const consoleData = sgDB.collection("sgAPI").get()
+    const [isLoading, setIsLoading] = useState()
     const [searchType, setSearchType] = useState('sgIGDBSearch')
     const [selectedSystemLogo, setSelectedSystemLogo] = useState('')
     const [accessTokenIGDB, setAccessTokenIGDB] = useState('')
-    console.log("This is your twitch code " + accessTokenIGDB)
     const [gbConsoleId, setGbConsoleId] = useState()
     const [igdbConsoleId, setIgdbConsoleId] = useState()
-    console.log(igdbConsoleId)
+    const [sgConsoleIcons, setSgConsoleIcons] = useState([])
     const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be read
     const [modalSelected, setModalSelected] = useState(route.params?.modal)
 
@@ -73,20 +72,50 @@ export default function SgConsoleListScreens({route, navigation}, props) {
             .then(res => {
                 accessToken = res.data.access_token;
                 setAccessTokenIGDB(accessToken)
-                console.log(accessToken); // shows the token fine here
             })
     }
-    
+
+    async function firestoreImages() {
+        const nightImages = await sgDB.collection("sgAPI").orderBy('sgId', 'asc')
+        .get()
+        .then(querySnapshot => {
+            const objectsArray = [];
+            querySnapshot.forEach((doc) => {
+                objectsArray.push(doc.data());
+            });
+            setSgConsoleIcons(objectsArray)
+            console.log(objectsArray.systemLogoSelectedDay);
+        });
+    }
+        
     useEffect(() => {
-        if(isFocused){  
+        setTimeout(() => {
+            setIsLoading(false)
+          }, 2000)
+        const subscriber = sgDB
+          .collection("sgAPI").orderBy('sgId', 'asc')
+          .onSnapshot(querySnapshot => {
+            const consoles = []
+            querySnapshot.forEach(documentSnapshot => {
+                consoles.push({
+                ...documentSnapshot.data(),
+                key: documentSnapshot.id,
+              })
+            })
+      
+            setSgConsoleIcons(consoles)
+          });
+          if(isFocused){  
             setModalSelected(false)
             igbdbAPI()
-        }}, [isFocused])
-        
+        }
+        // Unsubscribe from events when no longer in use
+        return () => subscriber();
+      }, [isFocused]);    
 
     function setConsoleId(item) {
         navigation.navigate('MyModal')
-        setSelectedSystemLogo(item.systemLogo)
+        setSelectedSystemLogo(item.systemLogoSelectedDay)
         setGbConsoleId(item.systemgbId)
         setIgdbConsoleId(item.systemigdbId)
     }
@@ -127,38 +156,7 @@ export default function SgConsoleListScreens({route, navigation}, props) {
    function sgConsolesStack() {
        return (
         <View style={{ backgroundColor: colors.primaryColor }}>
-            <View style={{ alignItems: 'left', justifyContent: 'center', backgroundColor: colors.primaryColor }}>
-                <FontAwesomeIcon 
-                    icon={ faChevronLeft } color={colors.primaryFontColor} size={50} 
-                    onPress={() => navigation.goBack()}
-                />
-            </View>
-            <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                <MainFont>Select one of the following consoles:</MainFont>
-                <FlatList
-                    showsHorizontalScrollIndicator={false}
-                    scrollEnabled={false}
-                    data={consoleImages()}
-                    keyboardShouldPersistTaps="always"
-                    keyExtractor={item => item.id}
-                    renderItem={({ item }) => (
-                    <View>
-                        <TouchableOpacity onPress={() => setConsoleId(item)}>
-                            <Image
-                                style={{
-                                    width: 200,
-                                    height: 60,
-                                    marginVertical: 15
-                                }}
-                                source={{
-                                    uri: "" + item.systemLogo + "",
-                                }}
-                            />
-                        </TouchableOpacity>
-                    </View>
-                    )}
-                />
-            </View>
+            
         </View>
        )
    }
@@ -195,8 +193,48 @@ export default function SgConsoleListScreens({route, navigation}, props) {
 
   return (
     <SafeAreaView style={{ flex: 1, justifyContent: 'center', backgroundColor: colors.primaryColor }}>
-        {sgHomeModalStack()}
-        <View style={{alignItems: 'center'}}></View>
+        {isLoading == undefined
+            ? <ActivityIndicator size="large" hidesWhenStopped="true"/>
+            : <View>
+            {sgHomeModalStack()}
+            <View style={{ alignItems: 'left', justifyContent: 'center', backgroundColor: colors.primaryColor }}>
+                <FontAwesomeIcon 
+                    icon={ faChevronLeft } color={colors.primaryFontColor} size={50} 
+                    onPress={() => navigation.goBack()}
+                />
+            </View>
+            <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                    <MainFont>Select one of the following consoles:</MainFont>
+                    <FlatList
+                        scrollEnabled={false}
+                        data={sgConsoleIcons}
+                        keyboardShouldPersistTaps="always"
+                        keyExtractor={item => item.id}
+                        renderItem={({ item }) => (
+                        <View>
+                            <TouchableOpacity onPress={() => setConsoleId(item)}>
+                                <Image
+                                    style={{
+                                        width: 300,
+                                        height: 85,
+                                        marginVertical: 15
+                                    }}
+                                    source={{
+                                        uri: "" + item.systemLogoSelectedDay + "",
+                                    }}
+                                    onLoadStart={() => {setIsLoading(true)}}
+                                    onLoadEnd={() => {setIsLoading(false)}}
+                                />
+                                {isLoading && (
+                                    <ActivityIndicator size="large" />
+                                )}
+                            </TouchableOpacity>
+                        </View>
+                        )}
+                    />
+                </View>
+            </View>
+        }
     </SafeAreaView>
   );
  }

@@ -216,8 +216,8 @@ export function AuthProvider({ children }) {
         const filename =  "" + folderName + "/" + consoleName + "/" + gameName + "/" + subFolderName + "/" + fileName + "." + fileType + ""
        
 
-
-        fetch(uploadImageurl).then(res => {
+        
+    fetch(uploadImageurl).then(res => {
             return res.blob();
         }).then(blob => {
             //uploading blob to firebase storage

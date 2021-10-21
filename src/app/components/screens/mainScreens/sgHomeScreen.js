@@ -10,6 +10,7 @@ import {
 } from 'react-native'
 import axios from 'axios'
 import { useAuth } from '../authScreens/authContext'
+import { useSearchBar } from './sgGameSearchScreenContent/searchIndex'
 import { firebase } from '../../../../server/config/config';
 
 import { manualColorSet, loadingScreen } from '../authScreens/loadingScreen' //Loader
@@ -52,8 +53,8 @@ export default function SgHomeScreen({ navigation, route }) {
         addDescriptionTagsForGame,
         deleteData, viewCountFirebase,
         entries, stateTest, logOut } = useAuth()
+    const { searchBar, searchResults } = useSearchBar()
     const [error, setError] = useState('')
-    const [searchType, setSearchType] = useState('sgDBSearch')
     const colors = useContext(CurrentThemeContext)
     const [addGame, setGame] = useState('')
     const [isLoading, setIsLoading] = useState(true)
@@ -89,6 +90,11 @@ export default function SgHomeScreen({ navigation, route }) {
     const [secondaryCollectionName, setSecondaryCollectionName] = useState('games')
     const [secondaryDocName, setSecondaryDocName] = useState('bscOg6nL1akXjGIpk1oz')
     const [objectName, setObjectName]= useState('newTest')
+
+    // For Search Bar
+    const [searchType, setSearchType] = useState('sgDBSearch')
+    const [searchBarTitle, setSearchBarTitle] = useState('Search Games')
+    const [searchQuery, setSearchQuery] = useState('')
 
     // For Image Image Uploads
     const [uploadImageurl, setImageurl] = useState('https://upload.wikimedia.org/wikipedia/en/7/79/Tiny_Toon_Adventures_MegaDrive_PAL.jpg')
@@ -127,7 +133,6 @@ export default function SgHomeScreen({ navigation, route }) {
     console.log(removeFromArray(genreTagsData, editgenreTags));
 
     function confirmAddNewGame(){
-        setSearchType('lobster')
         navigation.navigate('SgConsoleList',{
             searchType: searchType
         })
@@ -163,20 +168,13 @@ export default function SgHomeScreen({ navigation, route }) {
         setEditgenreTags(["Fighting", "Action"]),
         removeFromArray(genreTagsData, editgenreTags)
     }
-
-    function sgGameSearchbar() {
-        return (
-            <SearchBar 
-                searchType={searchType}
-            />
-        )
-    }
     
   return (
     <SafeAreaViewContainer>
     {isLoading !== true 
         ?   <Container>
-                {sgGameSearchbar({ navigation })}
+                {searchBar(searchBarTitle, searchType, searchQuery)}
+                {searchResults()}
                     <MainFont>Home Screen</MainFont>
                     <FlatList
                         showsHorizontalScrollIndicator={false}
