@@ -44,7 +44,8 @@
             ViewSortColumn,
             MainFont,
             MainHeading,
-            MainSubHeading,
+            MainHeadingButton,
+            MainSubFont,
             GeneralFontColor,
             SearchFont,
             ExpandableHeading
@@ -81,12 +82,24 @@
     // Font Awesome
     export { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
     export { 
-        faHome, 
+        faHome,
+        faFilter,
         faHeart, 
         faTimes, 
         faUser,
         faCaretDown,
-        faChevronLeft
+        faChevronLeft,
+        faTimesCircle,
+        faStar,
+        faBook,
+        faFistRaised,
+        faLayerGroup,
+        faPuzzlePiece,
+        faFlagCheckered,
+        faShieldAlt,
+        faCrosshairs,
+        faMap,
+        faBasketballBall
      } from '@fortawesome/free-solid-svg-icons'
 
      // sgGame Titles

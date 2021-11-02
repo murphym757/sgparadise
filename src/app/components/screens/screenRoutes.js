@@ -1,8 +1,12 @@
 import 'react-native-gesture-handler';
 import React, { useState, useContext } from 'react'
-
+import { useColorScheme } from 'react-native';
 // React Navigation
-import { NavigationContainer } from '@react-navigation/native'
+import {
+  NavigationContainer,
+  DefaultTheme,
+  DarkTheme,
+} from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
 
@@ -38,6 +42,14 @@ export default function App() {
   const { currentUser } = useAuth()
   const [notLoggingIn, setNotLoggingIn] = useState(false)
   const colors = useContext(CurrentThemeContext) 
+  const scheme = useColorScheme();
+  const ReactNavTheme = {
+    ...DefaultTheme,
+    colors: {
+      ...DefaultTheme.colors,
+      background: colors.primaryColor,
+    },
+  }
 
   function sgUserStackNavbar() {
     return (
@@ -164,7 +176,7 @@ export default function App() {
   }
 
   return (
-      <NavigationContainer> 
+      <NavigationContainer theme={ReactNavTheme}> 
         <Stack.Navigator initialRouteName={userAuthStatus}>
           <Stack.Screen 
             name="Main" 

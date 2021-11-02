@@ -15,6 +15,12 @@ import {
     FooterLink
   } from '../../../../../../assets/styles/authScreensStyling'
 
+  import{
+    MainFont,
+    MainSubFont,
+    MainHeading
+} from '../../../../../../assets/styles/globalStyling'
+
   import { TestImageDB } from '../../index'
 
 const SearchContext = React.createContext()
@@ -92,11 +98,10 @@ export function SearchBarProvider({ children }) {
                   renderItem={({ item }) => (
                     <View style={{
                         flexDirection: 'column',
-                        flex: 1,
-                        marginBottom: 120
+                        flex: 1
                     }}>
                         <TouchableOpacity>
-                           <Text>{item.name}</Text>
+                           <MainFont>{item.name}</MainFont>
                         </TouchableOpacity>
                     </View>
                   )}

@@ -133,6 +133,10 @@ export default function SgHomeScreen({ navigation, route }) {
     console.log(removeFromArray(genreTagsData, editgenreTags));
 
     function confirmAddNewGame(){
+        navigation.navigate('SgAddGameConfirm')
+    }
+
+    function confirmViewGames() {
         navigation.navigate('SgConsoleList',{
             searchType: searchType
         })
@@ -192,9 +196,11 @@ export default function SgHomeScreen({ navigation, route }) {
                     />
                     {currentUser !== null
                         ?   <View>
-                            <TouchableButton
-                                onPress={() => confirmAddNewGame()}>
-                            <TouchableButtonFont>Add Game</TouchableButtonFont>
+                            <TouchableButton onPress={() => confirmAddNewGame()}>
+                                <TouchableButtonFont>Add Game</TouchableButtonFont>
+                            </TouchableButton>
+                            <TouchableButton onPress={() => confirmViewGames()}>
+                                <TouchableButtonFont>View All Games</TouchableButtonFont>
                             </TouchableButton>
                                 <Button title="Tag Editor" onPress={() => addGameToConsole(collectionName, consoleName, gamesCollection, gameName)}/>
                                 <GeneralFontColor>Logged In</GeneralFontColor>

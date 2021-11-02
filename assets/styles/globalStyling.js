@@ -1,13 +1,16 @@
-import styled from 'styled-components';
-import { View, Text, Button, Image, ScrollView, SafeAreaView } from 'react-native';
+import styled from 'styled-components'
+import { View, Text, Button, Image, ScrollView, SafeAreaView, Dimensions } from 'react-native'
+import { RFPercentage, RFValue } from "react-native-responsive-fontsize"
 import {
     currentTheme
-} from './globalTheme';
+} from './globalTheme'
+
+export const windowHeight = Dimensions.get('window').height
+console.log("This is the height of your screen:    " + windowHeight)
 
 export const Container = styled(View) `
-    flex: 1;
-    paddingLeft: 20px;
-    paddingRight: 20px;
+    paddingLeft: ${RFValue(22, windowHeight)}px;
+    paddingRight: ${RFValue(22, windowHeight)}px;
 `;
 
 export const ViewContainer = styled(Container) `
@@ -20,7 +23,6 @@ export const ContentContainer = styled(ViewContainer) `
 `;
 
 export const SafeAreaViewContainer = styled(SafeAreaView) `
-    flex: 1;
     backgroundColor: ${currentTheme.primaryColor};
 `;
 
@@ -37,23 +39,40 @@ export const GeneralFontColor = styled(Text) `
 `;
 
 export const MainFont = styled(Text) `
-    fontSize: 24px;
+    fontSize: ${RFValue(15, windowHeight)}px;
 	fontWeight: 500;
+    fontFamily: 'SpartanRegular';
     color: ${currentTheme.primaryFontColor};
 `;
 
+export const MainSubFont = styled(Text) `
+    fontSize: ${RFValue(18, windowHeight)}px;
+	fontWeight: 500;
+    fontFamily: 'SpartanMedium';
+    color: ${currentTheme.secondaryColor};
+`;
+
 export const MainHeading = styled(Text) `
-    fontSize: 20px;
+    fontSize: ${RFValue(25, windowHeight)}px;
     fontWeight: 700;
     fontFamily: 'SpartanBlack';
-    paddingHorizontal: 20px;
+    color: ${currentTheme.primaryFontColor};
+`;
+
+export const MainHeadingButton = styled(Text) `
+    fontSize: ${RFValue(20, windowHeight)}px;
+    fontWeight: 700;
+    fontFamily: 'SpartanBlack';
     color: ${currentTheme.primaryFontColor};
 `;
 
 export const MainSubHeading = styled(Text) `
-    fontFamily: 'SpartanRegular';
+    fontSize: ${RFValue(22, windowHeight)}px;
+    fontWeight: 700;
+    fontFamily: 'SpartanMedium';
     color: ${currentTheme.secondaryColor};
 `;
+
 
 export const ExpandableHeading = styled(Text) `
     fontSize: 12px;
