@@ -11,6 +11,7 @@ import {
 import axios from 'axios'
 import { useAuth } from '../authScreens/authContext'
 import { useSearchBar } from './sgGameSearchScreenContent/searchIndex'
+
 import { firebase } from '../../../../server/config/config';
 
 import { manualColorSet, loadingScreen } from '../authScreens/loadingScreen' //Loader
@@ -23,12 +24,25 @@ import {
     SgConsoleListScreen,
     ContentContainer,
     SafeAreaViewContainer,
+    ScrollViewContainer,
     CurrentThemeContext,
     Container,
     MainFont,
     GeneralFontColor,
+    MainHeadingButton,
     TouchableButton,
-    TouchableButtonFont
+    TouchableButtonFont,
+    FontAwesomeIcon,
+    faStar,
+    faBook,
+    faFistRaised,
+    faLayerGroup,
+    faPuzzlePiece,
+    faFlagCheckered,
+    faShieldAlt,
+    faCrosshairs,
+    faMap,
+    faBasketballBall
 } from '../index.js'
 
 
@@ -69,15 +83,6 @@ export default function SgHomeScreen({ navigation, route }) {
     const [commentsCollection, setCommentsCollection] = useState('comments')
     const [tagsCollection, setTagsCollection] = useState('tags')
     const genreTagsTitle = 'Genre'
-    const [genreTagsData, setGenreTagsData] = useState([
-        "Beat 'em up",
-        "Brawler",
-        "Fighting",
-        "Action",
-        "Adventure"
-    ])
-    console.log(genreTagsData)
-    const [editgenreTags, setEditgenreTags] = useState([])
     const descriptionTagsTitle = 'Description'
     const [descriptionTagsData, setDescriptionTagsData] = useState([
         "Great Soundtrack",
@@ -86,6 +91,7 @@ export default function SgHomeScreen({ navigation, route }) {
         "Story Rich",
         "Pick up and play",
     ])
+
     const [docName, setDocName] = useState('bscOg6nL1akXjGIpk1oz')
     const [secondaryCollectionName, setSecondaryCollectionName] = useState('games')
     const [secondaryDocName, setSecondaryDocName] = useState('bscOg6nL1akXjGIpk1oz')
@@ -113,36 +119,6 @@ export default function SgHomeScreen({ navigation, route }) {
     const [profileImageUrl2, setProfileImageUrl2] = useState('')
     console.log(profileImageUrl)
 
-    
-    function imageCatcher() {
-        return imagesRef 
-        .getDownloadURL()
-        .then((url) => {
-            //from url you can fetched the uploaded image easily
-            setProfileImageUrl(url),
-            setProfileImageUrl2(url)
-        })
-        .catch((e) => console.log('getting downloadURL of image error => ', e));
-    }
-    
-
-    function removeFromArray(original, editgenreTags) {
-        return original.filter(value => !editgenreTags.includes(value))
-    }
-
-    console.log(removeFromArray(genreTagsData, editgenreTags));
-
-    function confirmAddNewGame(){
-        navigation.navigate('SgAddGameConfirm')
-    }
-
-    function confirmViewGames() {
-        navigation.navigate('SgConsoleList',{
-            searchType: searchType
-        })
-    }
-
-  
     useEffect(() => {
         function loadingTime() {
             return new Promise(resolve => {
@@ -168,16 +144,35 @@ export default function SgHomeScreen({ navigation, route }) {
                
     })
 
-    async function editGenreTagsData() {
-        setEditgenreTags(["Fighting", "Action"]),
-        removeFromArray(genreTagsData, editgenreTags)
+    function imageCatcher() {
+        return imagesRef 
+        .getDownloadURL()
+        .then((url) => {
+            //from url you can fetched the uploaded image easily
+            setProfileImageUrl(url),
+            setProfileImageUrl2(url)
+        })
+        .catch((e) => console.log('getting downloadURL of image error => ', e));
     }
+
+    function confirmViewGames() {
+        navigation.navigate('SgConsoleList',{
+            searchType: searchType
+        })
+    }
+
+    function confirmAddNewGame(){
+        navigation.navigate('SgAddGameConfirm')
+    }
+
+
     
   return (
     <SafeAreaViewContainer>
     {isLoading !== true 
         ?   <Container>
                 {searchBar(searchBarTitle, searchType, searchQuery)}
+                <ScrollViewContainer>
                 {searchResults()}
                     <MainFont>Home Screen</MainFont>
                     <FlatList
@@ -196,18 +191,18 @@ export default function SgHomeScreen({ navigation, route }) {
                     />
                     {currentUser !== null
                         ?   <View>
-                            <TouchableButton onPress={() => confirmAddNewGame()}>
-                                <TouchableButtonFont>Add Game</TouchableButtonFont>
-                            </TouchableButton>
-                            <TouchableButton onPress={() => confirmViewGames()}>
-                                <TouchableButtonFont>View All Games</TouchableButtonFont>
-                            </TouchableButton>
-                                <Button title="Tag Editor" onPress={() => addGameToConsole(collectionName, consoleName, gamesCollection, gameName)}/>
-                                <GeneralFontColor>Logged In</GeneralFontColor>
-                                <GeneralFontColor>{stateTest}</GeneralFontColor>
-                                <GeneralFontColor>{userInfo}</GeneralFontColor>
-                                {entries.map((entry, i) => <View key={i}><Text>{entry.id}</Text></View>)}
-                                <Button title="Delete Game" onPress={() => deleteGameFromConsole(collectionName, consoleName, gamesCollection, gameName)}/>
+                                <TouchableButton onPress={() => confirmAddNewGame()}>
+                                    <TouchableButtonFont>Add Game</TouchableButtonFont>
+                                </TouchableButton>
+                                <TouchableButton onPress={() => confirmViewGames()}>
+                                    <TouchableButtonFont>View All Games</TouchableButtonFont>
+                                </TouchableButton>
+                                    <Button title="Tag Editor" onPress={() => addGameToConsole(collectionName, consoleName, gamesCollection, gameName)}/>
+                                    <GeneralFontColor>Logged In</GeneralFontColor>
+                                    <GeneralFontColor>{stateTest}</GeneralFontColor>
+                                    <GeneralFontColor>{userInfo}</GeneralFontColor>
+                                    {entries.map((entry, i) => <View key={i}><Text>{entry.id}</Text></View>)}
+                                    <Button title="Delete Game" onPress={() => deleteGameFromConsole(collectionName, consoleName, gamesCollection, gameName)}/>
                             </View>
                         :   <View>
                                 <GeneralFontColor>Not Logged In</GeneralFontColor>
@@ -220,6 +215,7 @@ export default function SgHomeScreen({ navigation, route }) {
                                 </TouchableButton>
                             </View>
                     }
+                    </ScrollViewContainer>
             </Container>
         :   <ContentContainer>
                 {loadingScreen()}

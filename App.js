@@ -3,7 +3,6 @@ import * as Font from 'expo-font';
 import AppLoading from 'expo-app-loading';
 import { AuthProvider } from './src/app/components/screens/authScreens/authContext'
 import { SearchBarProvider } from './src/app/components/screens/mainScreens/sgGameSearchScreenContent/searchIndex'
-import { TagsProvider } from './src/app/components/screens/mainScreens/sgGameScreenContent/sgTagsIndex'
 import ScreenRoutes from "./src/app/components/screens/screenRoutes";
 
 function useFonts(fontMap) {
@@ -32,9 +31,7 @@ export default function Home() {
         return  (
           <AuthProvider>
             <SearchBarProvider>
-              <TagsProvider>
                 <ScreenRoutes />
-              </TagsProvider>
             </SearchBarProvider>
           </AuthProvider>
         );        
