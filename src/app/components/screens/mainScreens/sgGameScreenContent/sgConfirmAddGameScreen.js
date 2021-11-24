@@ -15,10 +15,13 @@ import{
     MainHeadingButton,
     ScrollViewContainer
 } from '../../../../../../assets/styles/globalStyling'
+import { useTags } from '../../authScreens/tagsContext'
+import { firebase, gamesConfig } from '../../../../../server/config/config'
+
 
 // React Navigation
 import { createStackNavigator } from '@react-navigation/stack'
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useIsFocused } from '@react-navigation/native';
 import {
     sgGenresScreen,
     SafeAreaViewContainer,
@@ -45,7 +48,11 @@ import { useSearchBar } from '../sgGameSearchScreenContent/searchIndex'
 import SgConsoleListScreens from './sgConsoleListScreen'
 
 export default function ConfirmAddGameScreen({navigation, route}, props) {
+    const {
+        selectedTags,
+        tagsSelection} = useTags()
     const colors = useContext(CurrentThemeContext)
+    const sgDB = firebase.firestore()
     const [isLoading, setIsLoading] = useState(true)
     const { searchBar, searchResults } = useSearchBar()
     // For Search Bar
@@ -53,73 +60,87 @@ export default function ConfirmAddGameScreen({navigation, route}, props) {
     const [searchBarTitle, setSearchBarTitle] = useState('Search Games')
     const [searchQuery, setSearchQuery] = useState('')
     const [searchFilterSelected, setSearchFilterSelected] = useState(false)
-    const [resetData, setResetData] = useState(false)
+    const [sgConsoleIcons, setSgConsoleIcons] = useState([])
+    console.log(sgConsoleIcons)
+    const [chosenGenre, setChosenGenre] = useState()
+    const [modalSelected, setModalSelected] = useState(route.params?.modal)
+    const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be read
+    useEffect(() => {
+        setTimeout(() => {
+            setIsLoading(false)
+          }, 2000)
+        const subscriber = sgDB
+          .collection('sgAPI').doc('sgTags').collection('genreTags').orderBy('tagName', 'asc')
+          .onSnapshot(querySnapshot => {
+            const consoles = []
+            querySnapshot.forEach(documentSnapshot => {
+                consoles.push({
+                ...documentSnapshot.data(),
+                key: documentSnapshot.id,
+              })
+            })
+      
+            setSgConsoleIcons(consoles)
+          });
+          if(isFocused){  
+            setModalSelected(false)
+        }
+        // Unsubscribe from events when no longer in use
+        return () => subscriber();
+      }, [isFocused]);  
 
     const [genreTags, setGenreTags] = useState([
         {
-            genreName: "Adventure",
-            genreIcon: faStar,
+            tagName: "Adventure",
+            tagIcon: faStar,
         },
         {
-            genreName: "Educational",
-            genreIcon: faBook,
+            tagName: "Educational",
+            tagIcon: faBook,
         },
         {
-            genreName: "Fighting",
-            genreIcon: faFistRaised,
+            tagName: "Fighting",
+            tagIcon: faFistRaised,
         },
         {
-            genreName: "Platformer",
-            genreIcon: faLayerGroup,
+            tagName: "Platformer",
+            tagIcon: faLayerGroup,
         },
         {
-            genreName: "Puzzle",
-            genreIcon: faPuzzlePiece,
+            tagName: "Puzzle",
+            tagIcon: faPuzzlePiece,
         },
         {
-            genreName: "Racing",
-            genreIcon: faFlagCheckered,
+            tagName: "Racing",
+            tagIcon: faFlagCheckered,
         },
         {
-            genreName: "RPG",
-            genreIcon: faShieldAlt,
+            tagName: "RPG",
+            tagIcon: faShieldAlt,
         },
         {
-            genreName: "Shooter",
-            genreIcon: faCrosshairs,
+            tagName: "Shooter",
+            tagIcon: faCrosshairs,
         },
         {
-            genreName: "Simulation",
-            genreIcon: faMap,
+            tagName: "Simulation",
+            tagIcon: faMap,
         },
         {
-            genreName: "Sports",
-            genreIcon: faBasketballBall,
+            tagName: "Sports",
+            tagIcon: faBasketballBall,
         }
     ])
 
-    const [chosenGenre, setChosenGenre] = useState()
-
-    const [chosenTag, setChosenTag] = useState()
-
-    const [editgenreTags, setEditgenreTags] = useState([])
-
-    const [deletedTag, setdeleteTag] = useState()
+    const tagData = sgConsoleIcons
 
     // Genre Tags Section
     // Chosen Tags (The user chose these tags)
-    const [chosenTagsArray, setChosenTagsArray] = useState([])
-    const tagsNewArray = Array.from(new Set(chosenTagsArray)); //Removes the ability to add dulicate
-    let initSelectedArray = genreTags
-    let deletionSelectedArray = tagsNewArray
-    let currentSelectedTagsArray = []
-    currentSelectedTagsArray = initSelectedArray.filter(item => deletionSelectedArray.includes(item))
+   
+    
     
     // Available Tags
-    let initArray = genreTags
-    let deletionArray = tagsNewArray
-    let currentTagsArray = [];
-    currentTagsArray = initArray.filter(item => !deletionArray.includes(item))
+    
     /*---------------------------*/
 
 
@@ -127,158 +148,14 @@ export default function ConfirmAddGameScreen({navigation, route}, props) {
     const ModalStack = createStackNavigator();
 
 
-    useEffect(() => {
-        setTimeout(() => {
-            setIsLoading(false)
-          }, 2500)
-    })
-
-    async function chosenTagData(item) {
-        setChosenTagsArray(chosenTagsArray => [...chosenTagsArray, item])
-    }
-
-    async function removeChosenTagData(item) {
-        setChosenTagsArray(tagsNewArray.filter(tag => tag !== item))
-    }
-    
-    function confirmGenreSelection(item){
-        navigation.navigate('Modal')
-        setChosenGenre(item.genreName)
-    }
-    
-    function selectedTags(resetData) {
-        if (resetData == true) {
-            return setChosenTagsArray(null)
-        } else {
-            return (
-                <ScrollViewContainer
-                    horizontal={true}
-                    showsHorizontalScrollIndicator={false}
-                >
-                <View>
-               <FlatList
-                    horizontal={true}
-                    scrollEnabled={false}
-                    data={currentSelectedTagsArray}
-                    keyboardShouldPersistTaps="always"
-                    keyExtractor={item => item.id}
-                    renderItem={({ item }) => (
-                        <TouchableOpacity style={{  
-                            margin: 3,
-                            borderWidth: 1,
-                            borderRadius: 50,
-                            alignItems:'center',
-                            justifyContent:'center',
-                            borderColor: colors.secondaryColor,
-                            backgroundColor: colors.secondaryColor,
-                            height:40, 
-                            padding: 3,
-                            marginTop: 3,
-                            marginBottom: 10
-                            }}
-                            onPress={() => removeChosenTagData(item)}>
-                            <View style={{
-                                margin: 10,
-                                flexDirection: "row", justifyContent: "center"
-                            }}>
-                                <MainFont style={{paddingHorizontal: 5}}>{item.genreName}</MainFont>
-                                <FontAwesomeIcon
-                                    style={{paddingHorizontal: 5}} 
-                                    icon={ faTimesCircle } color={colors.primaryFontColor} size={16}
-                                />
-                            </View>
-                        </TouchableOpacity>
-                    )}
-                />
-                </View>
-               </ScrollViewContainer>
-           )
-        }
-     }
- 
-     function tagsSelection() {
-         return (
-             <FlatList
-             columnWrapperStyle={{flexDirection : "row", flexWrap : "wrap"}}
-             numColumns={5}
-             horizontal={false}
-             scrollEnabled={false}
-             data={currentTagsArray}
-             keyboardShouldPersistTaps="always"
-             keyExtractor={item => item.id}
-             renderItem={({ item }) => (
-                 <TouchableOpacity 
-                    style={{  
-                        margin: 3,
-                        borderWidth: 1,
-                        borderRadius: 50,
-                        alignItems:'center',
-                        justifyContent:'center',
-                        borderColor:'rgba(0,0,0,0.2)',
-                        backgroundColor: colors.secondaryColor,
-                        height:50, 
-                        padding: 3,
-                        marginTop: 3
-                    }} 
-                    onPress={() => chosenTagData(item)}>
-                    <View style={{
-                        margin: 10,
-                        flexDirection: "row", justifyContent: "center"
-                    }}>
-                        <MainFont style={{paddingHorizontal: 5}}>{item.genreName}</MainFont>
-                        <FontAwesomeIcon
-                        style={{paddingHorizontal: 5}} 
-                        icon={ faTimesCircle } color={colors.primaryFontColor} size={16}
-                    />
-                 </View>
-             </TouchableOpacity>
-             )}
-         />
-         )
-      }
- 
-    function genreTagCollection() {
-        return (
-             <FlatList
-                 columnWrapperStyle={{justifyContent: 'space-between'}}
-                 numColumns={2}
-                 showsHorizontalScrollIndicator={false}
-                 scrollEnabled={false}
-                 data={genreTags}
-                 keyboardShouldPersistTaps="always"
-                 keyExtractor={item => item.id}
-                 renderItem={({ item }) => (
-                     <TouchableOpacity 
-                     style={{ 
-                         flex: 1, 
-                         justifyContent: 'center', 
-                         alignItems: 'center', 
-                         margin: 3,
-                         borderRadius: 10,
-                         width: 100 * 2,
-                         height: 100,
-                         backgroundColor: colors.secondaryColor,
-                     }} 
-                     onPress={() => confirmGenreSelection(item)}>
-                         <MainHeadingButton style={{justifyContent: 'center', alignItems: 'center',}}>{item.genreName}</MainHeadingButton>
-                         <View style={{ justifyContent: 'center', alignItems: 'center', margin: 7 }}>
-                             <FontAwesomeIcon 
-                                icon={ item.genreIcon } color={colors.primaryColorLight} size={35} 
-                            /> 
-                         </View>
-                 </TouchableOpacity>
-                 )}
-             />
-         )
-     }
-
-
     function resetAll() {
-        setResetData(true)
         setChosenGenre(null)
         navigation.goBack()
     }
-
+    function confirmGenreSelection(item){
+        navigation.navigate('Page1')
+        setChosenGenre(item.tagName)
+    }
     
 
     function searchBarGoBack() {
@@ -311,15 +188,52 @@ export default function ConfirmAddGameScreen({navigation, route}, props) {
     }
 
     function setDBWithGenre(item) {
-        setSearchQuery(item.genreName)
+        setSearchQuery(item.tagName)
     }
+
+
+
+    function genreTagCollection() {
+        return (
+                <FlatList
+                    columnWrapperStyle={{justifyContent: 'space-between'}}
+                    numColumns={2}
+                    showsHorizontalScrollIndicator={false}
+                    scrollEnabled={false}
+                    data={tagData}
+                    keyboardShouldPersistTaps="always"
+                    keyExtractor={item => item.id}
+                    renderItem={({ item }) => (
+                        <TouchableOpacity 
+                        style={{ 
+                            flex: 1, 
+                            justifyContent: 'center', 
+                            alignItems: 'center', 
+                            margin: 3,
+                            borderRadius: 10,
+                            width: 100 * 2,
+                            height: 100,
+                            backgroundColor: colors.secondaryColor,
+                        }} 
+                        onPress={() => confirmGenreSelection(item)}>
+                            <MainHeadingButton style={{justifyContent: 'center', alignItems: 'center',}}>{item.tagName}</MainHeadingButton>
+                            <View style={{ justifyContent: 'center', alignItems: 'center', margin: 7 }}>
+                                <FontAwesomeIcon 
+                                    icon={ item.tagIcon } color={colors.primaryColorLight} size={35} 
+                                />
+                            </View>
+                    </TouchableOpacity>
+                    )}
+                />
+            )
+        }
 
     function chooseGameOptions() {
         return(
             <SafeAreaViewContainer>
                 {searchBarGoBack()}
                 <Container>
-                    {selectedTags()}
+                    {selectedTags(tagData)}
                     <ScrollViewContainer>
                         <View style={{paddingBottom: windowHeight/4}}>
                             <Text>This is where youll confirm your chose</Text>
@@ -327,7 +241,7 @@ export default function ConfirmAddGameScreen({navigation, route}, props) {
                             {genreTagCollection()}
                             {searchFilterSelected == false
                                 ?   <Text>Ocean Drive</Text>
-                                :   tagsSelection()
+                                :   tagsSelection(tagData)
                             }
                         </View>
                     </ScrollViewContainer>
@@ -336,10 +250,38 @@ export default function ConfirmAddGameScreen({navigation, route}, props) {
         )
     }
 
-    function sgModalScreen() {
+    function addGamePage1() {
         return (
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.primaryColor }}>
-                <MainHeading>{chosenGenre}</MainHeading>
+                <MainHeading>{"Page 1"}</MainHeading>
+            </View>
+        );
+    }
+    function addGamePage2() {
+        return (
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.primaryColor }}>
+                <MainHeading>{"Page 2"}</MainHeading>
+            </View>
+        );
+    }
+    function addGamePage3() {
+        return (
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.primaryColor }}>
+                <MainHeading>{"Page 3"}</MainHeading>
+            </View>
+        );
+    }
+    function addGamePage4() {
+        return (
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.primaryColor }}>
+                <MainHeading>{"Page 4"}</MainHeading>
+            </View>
+        );
+    }
+    function addGamePage5() {
+        return (
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.primaryColor }}>
+                <MainHeading>{"Page 5"}</MainHeading>
             </View>
         );
     }
@@ -347,7 +289,11 @@ export default function ConfirmAddGameScreen({navigation, route}, props) {
     return (
         <Root.Navigator headerMode="none" initialRouteName="Home">
             <Root.Screen name="Home" component={chooseGameOptions} />
-            <Root.Screen name="Modal" component={sgModalScreen} />
+            <Root.Screen name="Page1" component={addGamePage1} />
+            <Root.Screen name="Page2" component={addGamePage2} />
+            <Root.Screen name="Page3" component={addGamePage3} />
+            <Root.Screen name="Page4" component={addGamePage4} />
+            <Root.Screen name="Page5" component={addGamePage5} />
         </Root.Navigator>
     )
 }
