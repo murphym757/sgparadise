@@ -29,46 +29,30 @@ export function useSearchBar() {
     return useContext(SearchContext)
 }
 
-export function SearchBarProvider({ children }) {
+export function SearchBarProvider({ children, navigation }) {
     const colors = useContext(CurrentThemeContext)
-    const testingTesting = TestImageDB.results
+    const testDb = TestImageDB.results
+    const [ gameName, setGameName ] = useState('')
     const [ sgDbSearchQuery, setSgDbSearchQuery ] = useState('')
+    console.log("this is sgDbSearchQuery " + sgDbSearchQuery)
     const [ addGameSearchQuery, setAddGameSearchQuery ] = useState('') 
-
-    function dbSelector() {
-        return gamesFilterListName(testingTesting)
-    }
+    console.log("this is addGameSearchQuery " + addGameSearchQuery)
 
     function searchBar(searchBarTitle, searchType, searchQuery) {
         function onSearchFinder() {
-            if (searchQuery == '') {  
-                if (searchType == 'sgDBSearch') {
-                    return (searchQuery) => setSgDbSearchQuery(searchQuery)
-                } else {
-                    return (searchQuery) => setAddGameSearchQuery(searchQuery)
-                }
-            } else {
-                if (searchType == 'sgDBSearch') {
-                    setSgDbSearchQuery(searchQuery)
-                } else {
-                    setAddGameSearchQuery(searchQuery)
-                }
-            }
-            
+            if (searchType == 'sgDBSearch') return (searchQuery) => setSgDbSearchQuery(searchQuery)
+            return (searchQuery) => setAddGameSearchQuery(searchQuery)
         }
         
         function searchBarState() {
-            if (searchType == 'sgDBSearch') {
-                return sgDbSearchQuery
-            } else {
-                return addGameSearchQuery
-            }
+            if (searchType == 'sgDBSearch') return sgDbSearchQuery
+            return addGameSearchQuery
         }
        return <View>
                 <CustomInputField
                     placeholderTextColor={colors.primaryColor}
                     placeholder={searchBarTitle}
-                    onChangeText={onSearchFinder()}
+                    onChangeText={setSgDbSearchQuery}
                     value={searchBarState()}
                     color={colors.primaryColor}
                     underlineColorAndroid="transparent"
@@ -86,32 +70,12 @@ export function SearchBarProvider({ children }) {
         );
     }
 
-    function searchResults() {
-        return (
-              <FlatList
-                  data={dbSelector()}
-                  keyboardShouldPersistTaps="always" 
-                  contentContainerStyle={{
-                      justifyContent: 'center'
-                  }}
-                  keyExtractor={item => item.id}
-                  renderItem={({ item }) => (
-                    <View style={{
-                        flexDirection: 'column',
-                        flex: 1
-                    }}>
-                        <TouchableOpacity>
-                           <MainFont>{item.name}</MainFont>
-                        </TouchableOpacity>
-                    </View>
-                  )}
-              />
-          ) 
-    }
-
     const value = {
         searchBar,
-        searchResults
+        gamesFilterListName,
+        sgDbSearchQuery,
+        testDb,
+        gameName
     }
 
     return (

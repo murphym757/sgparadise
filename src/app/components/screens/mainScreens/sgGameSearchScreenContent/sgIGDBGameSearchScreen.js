@@ -93,7 +93,7 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
     const [igdbGameScreenshots, setIgdbGameScreenshots] = useState([])
     const [igdbGameSummary, setIgdbGameSummary] = useState()
     const [igdbUnixTimestamp, setIgdbUnixTimestamp]= useState()
-    const igdbSearchPlatforms = "(" + JSON.stringify(route.params.igdbConsoleId) + ") "
+    const igdbSearchPlatforms = `(${JSON.stringify(route.params.igdbConsoleId)})`
     const igdbTestField = 'fields name, cover, rating, age_ratings, genres, screenshots, summary, first_release_date; search ' + '"' + igdbSearch + '"' + '; limit 20; where platforms =' + igdbSearchPlatforms + '& cover != null;'
 
     function igdbGameData(item) {
@@ -442,19 +442,19 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
                             )}
                         </View>
                         <Container>
-                        {selectedTags(tagData)}
-                        <ScrollViewContainer>
-                            <View style={{paddingBottom: windowHeight/8}}>
-                                <Text>This is where youll confirm your chose</Text>
-                                {searchResults()}
-                                {genreTagCollection()}
-                                {searchFilterSelected == false
-                                    ?   <Text>Ocean Drive</Text>
-                                    :   tagsSelection(tagData)
-                                }
-                            </View>
-                        </ScrollViewContainer>
-                    </Container>
+                            {selectedTags(tagData)}
+                            <ScrollViewContainer>
+                                <View style={{paddingBottom: windowHeight/8}}>
+                                    <Text>This is where youll confirm your chose</Text>
+                                    {searchResults()}
+                                    {genreTagCollection()}
+                                    {searchFilterSelected == false
+                                        ?   <Text>Ocean Drive</Text>
+                                        :   tagsSelection(tagData)
+                                    }
+                                </View>
+                            </ScrollViewContainer>
+                        </Container>
                     </View>
             }
         </SafeAreaViewContainer>

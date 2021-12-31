@@ -260,6 +260,14 @@ export function AuthProvider({ children }) {
       </CustomFailureAlert>
     }
 
+    function unixTimestampConverter(item) {
+        const unixTimestamp = item.first_release_date
+        const milliseconds = unixTimestamp * 1000
+        const dateObject = new Date(milliseconds)
+        const humanDateFormat = dateObject.toLocaleString("en-US", { year: 'numeric', month: '2-digit', day: '2-digit' })
+        return humanDateFormat
+    }
+
     useEffect(() => {
         const unsubcribe = auth.onAuthStateChanged(user => {
             setCurrentUser(user)
@@ -306,7 +314,8 @@ export function AuthProvider({ children }) {
         imageCapture,
         viewCountFirebase,
         successAlert,
-        failureAlert
+        failureAlert,
+        unixTimestampConverter
     }
 
     return (

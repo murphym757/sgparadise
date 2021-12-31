@@ -10,11 +10,14 @@
 
         // Search Screens
         export { default as SgGameSearchScreen } from './mainScreens/sgGameSearchScreenContent/sgGameSearchScreen'     
+        export { default as SgSelectedGameScreen } from './mainScreens/sgGameSearchScreenContent/sgSelectedGameScreen'     
         export { default as SgIGDBGameSearchScreen } from './mainScreens/sgGameSearchScreenContent/sgIGDBGameSearchScreen'   
         export { default as SgConsoleListScreen } from './mainScreens/sgGameScreenContent/sgConsoleListScreen'
         export { default as TestImageDB } from './mainScreens/sgGameScreenContent/TestImageDB'
-        export { default as SearchBar } from './mainScreens/sgGameSearchScreenContent/searchIndex'
         export { default as SgSearchQuery } from './mainScreens/sgGameScreenContent/sgConfirmAddGameScreen'
+        export { default as sgSearchScreen } from './mainScreens/sgGameSearchScreenContent/sgSearchScreen'
+        export { default as sgSearchResultsScreen } from './mainScreens/sgGameSearchScreenContent/sgSearchResultsScreen'
+
         // Game Screens
         export { default as GameScreen } from './mainScreens/sgGameScreenContent/sgGameScreen'
         export { default as AddGameScreen } from './mainScreens/sgGameScreenContent/sgAddGameScreen'
@@ -48,7 +51,8 @@
             MainSubFont,
             GeneralFontColor,
             SearchFont,
-            ExpandableHeading
+            ExpandableHeading,
+            CustomTextAreaField
         } from '../../../../assets/styles/globalStyling'
 
         //Auth Styling
@@ -75,7 +79,8 @@
             GameReleaseDate,
             CustomFontAwesomeIcon,
             SearchGameTitle,
-            SearchGameData
+            SearchGameData,
+            SearchGameResults
         } from '../../../../assets/styles/sgScreensStyling'
 
 

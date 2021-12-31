@@ -114,7 +114,7 @@ export default function App() {
             component={SgGameSearchScreen} 
         />
         <Stack.Screen //For IGDB search
-            name="SgIGDBGameSearch"
+            name="sgDBSearch"
             options={{ headerShown: false }}
             component={SgIGDBGameSearchScreen} 
         />
@@ -168,11 +168,8 @@ export default function App() {
   }
 
   function userAuthStatus() {
-    if(currentUser !== null) {
-      return "Main"
-    } else {
-      return "Auth"
-    }
+    if(currentUser !== null) return "Main" 
+    return "Auth"
   }
 
   return (

@@ -67,7 +67,12 @@ export default function SgHomeScreen({ navigation, route }) {
         addDescriptionTagsForGame,
         deleteData, viewCountFirebase,
         entries, stateTest, logOut } = useAuth()
-    const { searchBar, searchResults } = useSearchBar()
+    const { 
+        searchBar,  
+        gameName, 
+        gamesFilterListName,
+        testDb,
+        } = useSearchBar()
     const [error, setError] = useState('')
     const colors = useContext(CurrentThemeContext)
     const [addGame, setGame] = useState('')
@@ -78,7 +83,7 @@ export default function SgHomeScreen({ navigation, route }) {
     const [collectionName, setCollectionName] = useState('sgAPI')
     const [consoleName, setConsoleName] = useState('sg1000')
     const [gamesCollection, setGamesCollection] = useState('games')
-    const [gameName, setGameName] = useState('tinyToon')
+    //const [gameName, setGameName] = useState('tinyToon')
     const [imagesCollection, setImagesCollection] = useState('images')
     const [commentsCollection, setCommentsCollection] = useState('comments')
     const [tagsCollection, setTagsCollection] = useState('tags')
@@ -101,6 +106,7 @@ export default function SgHomeScreen({ navigation, route }) {
     const [searchType, setSearchType] = useState('sgDBSearch')
     const [searchBarTitle, setSearchBarTitle] = useState('Search Games')
     const [searchQuery, setSearchQuery] = useState('')
+    const chosenDb = testDb
 
     // For Image Image Uploads
     const [uploadImageurl, setImageurl] = useState('https://upload.wikimedia.org/wikipedia/en/7/79/Tiny_Toon_Adventures_MegaDrive_PAL.jpg')
@@ -143,6 +149,29 @@ export default function SgHomeScreen({ navigation, route }) {
                 updateGameViewCount(collectionName, consoleName, gamesCollection, gameName) 
                
     })
+
+    function searchResults() {
+        return (
+              <FlatList
+                  data={gamesFilterListName(chosenDb)}
+                  keyboardShouldPersistTaps="always" 
+                  contentContainerStyle={{
+                      justifyContent: 'center'
+                  }}
+                  keyExtractor={item => item.id}
+                  renderItem={({ item }) => (
+                    <View style={{
+                        flexDirection: 'column',
+                        flex: 1
+                    }}>
+                        <TouchableOpacity onPress={() => chosenGame(item)}>
+                           <MainFont>{item.name}</MainFont>
+                        </TouchableOpacity>
+                    </View>
+                  )}
+              />
+          ) 
+    }
 
     function imageCatcher() {
         return imagesRef 

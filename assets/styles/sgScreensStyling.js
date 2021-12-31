@@ -1,10 +1,14 @@
 import styled from 'styled-components';
-import { View, Text, TextInput, Button, Image, ScrollView, SafeAreaView, Platform } from 'react-native';
+import { View, Text, Button, Image, ScrollView, SafeAreaView, Dimensions } from 'react-native'
+import { RFPercentage, RFValue } from "react-native-responsive-fontsize"
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 
 import {
     currentTheme
 } from './globalTheme';
+
+export const windowHeight = Dimensions.get('window').height
+
 /* Sg Collection */
 /*---------------------------------------*/
 export const ViewTopRow = styled(View) `
@@ -95,5 +99,12 @@ export const SearchGameData = styled(Text) `
     fontSize: 15px;
     margin-bottom: 5px;
     color: ${currentTheme.primaryFontColor};
+`;
+/*---------------------------------------*/
+/* Sg Search Results Screen */
+/*---------------------------------------*/
+export const SearchGameResults = styled(View) `
+    flexDirection: column;
+    paddingBottom: ${RFValue(20, windowHeight)}px;
 `;
 /*---------------------------------------*/

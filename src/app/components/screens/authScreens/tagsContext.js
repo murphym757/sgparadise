@@ -47,13 +47,11 @@ export function TagsProvider({ children }) {
     }
 
     function selectedTags(tagData) {
-    let initSelectedArray = tagData
-    let deletionSelectedArray = tagsNewArray
-    let currentSelectedTagsArray = []
-    currentSelectedTagsArray = initSelectedArray.filter(item => deletionSelectedArray.includes(item))
-    if (resetData == true) {
-        return setChosenTagsArray(null)
-    } else {
+        let initSelectedArray = tagData
+        let deletionSelectedArray = tagsNewArray
+        let currentSelectedTagsArray = []
+        currentSelectedTagsArray = initSelectedArray.filter(item => deletionSelectedArray.includes(item))
+        if (resetData == true) return setChosenTagsArray(null)
         return (
             <ScrollViewContainer
                 horizontal={true}
@@ -97,7 +95,6 @@ export function TagsProvider({ children }) {
             </View>
             </ScrollViewContainer>
         )
-    }
     }
 
     function tagsSelection(tagData) {

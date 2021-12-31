@@ -39,8 +39,9 @@ export default function SgConsoleListScreens({route, navigation}, props) {
     const colors = useContext(CurrentThemeContext)
     const sgDB = firebase.firestore()
     const consoleData = sgDB.collection("sgAPI").get()
+    const { addGameLinkPressed } = route.params
     const [isLoading, setIsLoading] = useState()
-    const [searchType, setSearchType] = useState('sgIGDBSearch')
+    const [searchType, setSearchType] = useState('sgDBSearch')
     const [selectedSystemLogo, setSelectedSystemLogo] = useState('')
     const [accessTokenIGDB, setAccessTokenIGDB] = useState('')
     const [gbConsoleId, setGbConsoleId] = useState()
@@ -128,14 +129,24 @@ export default function SgConsoleListScreens({route, navigation}, props) {
     }
 
     function confirmSetConsoleId(){
-        navigation.navigate('SgIGDBGameSearch',{
-            clientIdIGDB: clientIdIGDB,
-            accessTokenIGDB: accessTokenIGDB, 
-            igdbConsoleId: igdbConsoleId,
-            gbConsoleId: gbConsoleId,
-            selectedSystemLogo: selectedSystemLogo,
-            searchType: searchType
-        })
+        {addGameLinkPressed !== true
+            ?   navigation.navigate('sgDBSearch',{
+                clientIdIGDB: clientIdIGDB,
+                accessTokenIGDB: accessTokenIGDB, 
+                igdbConsoleId: igdbConsoleId,
+                gbConsoleId: gbConsoleId,
+                selectedSystemLogo: selectedSystemLogo,
+                searchType: searchType
+            })
+            :   navigation.navigate('Page1',{
+                clientIdIGDB: clientIdIGDB,
+                accessTokenIGDB: accessTokenIGDB, 
+                igdbConsoleId: igdbConsoleId,
+                gbConsoleId: gbConsoleId,
+                selectedSystemLogo: selectedSystemLogo,
+                searchType: searchType
+            })
+        }
           setModalSelected(true)
     }
 
@@ -147,7 +158,7 @@ export default function SgConsoleListScreens({route, navigation}, props) {
 
     function sgModalScreen() {
         return (
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.primaryColor }}>
+            <View style={{ flex: 1, backgroundColor: colors.primaryColor }}>
                 {setConsoleConfirmation()}
             </View>
         );

@@ -16,6 +16,7 @@ import{
     ScrollViewContainer
 } from '../../../../../../assets/styles/globalStyling'
 import { useTags } from '../../authScreens/tagsContext'
+import { useSearchBar } from '../sgGameSearchScreenContent/searchIndex'
 import { firebase, gamesConfig } from '../../../../../server/config/config'
 
 
@@ -23,7 +24,11 @@ import { firebase, gamesConfig } from '../../../../../server/config/config'
 import { createStackNavigator } from '@react-navigation/stack'
 import { NavigationContainer, useIsFocused } from '@react-navigation/native';
 import {
+    SgConsoleListScreen,
     sgGenresScreen,
+    sgSearchScreen,
+    sgSearchResultsScreen,
+    SgSelectedGameScreen,
     SafeAreaViewContainer,
     Container,
     ContentContainer,
@@ -44,21 +49,30 @@ import {
     faMap,
     faBasketballBall
 } from '../../index'
-import { useSearchBar } from '../sgGameSearchScreenContent/searchIndex'
 import SgConsoleListScreens from './sgConsoleListScreen'
 
 export default function ConfirmAddGameScreen({navigation, route}, props) {
     const {
         selectedTags,
         tagsSelection} = useTags()
+    const { 
+        searchBar,  
+        gameName, 
+        gamesFilterListName,
+        testDb,
+     } = useSearchBar()
+    console.log(testDb)
+    console.log("If this worked, you won't see undefined here --->: " + gameName)
     const colors = useContext(CurrentThemeContext)
     const sgDB = firebase.firestore()
     const [isLoading, setIsLoading] = useState(true)
-    const { searchBar, searchResults } = useSearchBar()
+    
     // For Search Bar
     const [searchType, setSearchType] = useState('sgDBSearch')
     const [searchBarTitle, setSearchBarTitle] = useState('Search Games')
     const [searchQuery, setSearchQuery] = useState('')
+    const chosenDb = testDb
+
     const [searchFilterSelected, setSearchFilterSelected] = useState(false)
     const [sgConsoleIcons, setSgConsoleIcons] = useState([])
     console.log(sgConsoleIcons)
@@ -142,10 +156,6 @@ export default function ConfirmAddGameScreen({navigation, route}, props) {
     // Available Tags
     
     /*---------------------------*/
-
-
-    const Root = createStackNavigator();
-    const ModalStack = createStackNavigator();
 
 
     function resetAll() {
@@ -250,17 +260,46 @@ export default function ConfirmAddGameScreen({navigation, route}, props) {
         )
     }
 
+    function searchResults() {
+        return (
+              <FlatList
+                  data={gamesFilterListName(chosenDb)}
+                  keyboardShouldPersistTaps="always" 
+                  contentContainerStyle={{
+                      justifyContent: 'center'
+                  }}
+                  keyExtractor={item => item.id}
+                  renderItem={({ item }) => (
+                    <View style={{
+                        flexDirection: 'column',
+                        flex: 1
+                    }}>
+                        <TouchableOpacity onPress={() => chosenGame(item)}>
+                           <MainFont>{item.name}</MainFont>
+                        </TouchableOpacity>
+                    </View>
+                  )}
+              />
+          ) 
+    }
+
     function addGamePage1() {
         return (
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.primaryColor }}>
-                <MainHeading>{"Page 1"}</MainHeading>
+            <View style={{ flex: 1, paddingTop: windowHeight/20, backgroundColor: colors.primaryColor }}>
+            <SafeAreaViewContainer>
+                <Container>
+                    <MainHeading>{"Search for a game"}</MainHeading>
+                    {searchBar(searchBarTitle, searchType, searchQuery)}
+                    {searchResults()}
+                </Container>
+                </SafeAreaViewContainer>
             </View>
         );
     }
     function addGamePage2() {
         return (
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.primaryColor }}>
-                <MainHeading>{"Page 2"}</MainHeading>
+                <MainHeading>{"Page 2: IGDB API Route"}</MainHeading>
             </View>
         );
     }
@@ -286,15 +325,23 @@ export default function ConfirmAddGameScreen({navigation, route}, props) {
         );
     }
 
+
+    function sgSearchStack() {
+        const Stack = createStackNavigator()
+        return (
+            <Stack.Navigator headerMode="none" initialRouteName="Home">
+                <Stack.Screen name="Home" component={SgConsoleListScreen} initialParams={{ addGameLinkPressed: true }} />
+                <Stack.Screen name="Page1" component={sgSearchScreen} />
+                <Stack.Screen name="Page2" component={sgSearchResultsScreen} />
+                <Stack.Screen name="Page3" component={SgSelectedGameScreen} />
+                <Stack.Screen name="Page4" component={chooseGameOptions} />
+                <Stack.Screen name="Page5" component={addGamePage5} />
+            </Stack.Navigator>
+        )
+    }
+
+
     return (
-        <Root.Navigator headerMode="none" initialRouteName="Home">
-            <Root.Screen name="Home" component={chooseGameOptions} />
-            <Root.Screen name="Page1" component={addGamePage1} />
-            <Root.Screen name="Page2" component={addGamePage2} />
-            <Root.Screen name="Page3" component={addGamePage3} />
-            <Root.Screen name="Page4" component={addGamePage4} />
-            <Root.Screen name="Page5" component={addGamePage5} />
-        </Root.Navigator>
+        sgSearchStack()
     )
 }
-
