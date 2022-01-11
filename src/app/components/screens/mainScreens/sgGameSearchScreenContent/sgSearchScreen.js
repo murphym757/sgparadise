@@ -47,16 +47,6 @@ export default function sgSearchScreen({route, navigation}) {
     const [igdbSearchResults, setIgdbSearchResults] = useState([])
     console.log(igdbSearchResults)
     const [igdbSearch, setIgdbSearch] = useState(sgDbSearchQuery)
-    const [igdbGameId, setIgdbGameId] = useState()
-    const [igdbGameName, setIgdbGameName] = useState()
-    console.log(igdbGameName)
-    const [igdbGameCover, setIgdbGameCover] = useState()
-    const [igdbGameRating, setIgdbGameRating] = useState()
-    const [igdbGameAgeRating, setIgdbGameAgeRating] = useState()
-    const [igdbGameGenres, setIgdbGameGenres] = useState([])
-    const [igdbGameScreenshots, setIgdbGameScreenshots] = useState([])
-    const [igdbGameSummary, setIgdbGameSummary] = useState()
-    const [igdbUnixTimestamp, setIgdbUnixTimestamp]= useState()
     const igdbSearchPlatforms = `(${JSON.stringify(route.params.igdbConsoleId)})`
     const igdbTestField = 'fields name, cover, rating, age_ratings, genres, screenshots, summary, first_release_date; search ' + `"${igdbSearch}"` + '; limit 20; where platforms =' + igdbSearchPlatforms + '& cover != null;'
     const igdbSearchResultField = 'fields name, category, slug, first_release_date, cover; search ' + `"${sgDbSearchQuery}"` + '; limit 20; where category != 5 & platforms =' + igdbSearchPlatforms + '& cover != null; '

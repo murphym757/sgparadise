@@ -6,13 +6,9 @@ import {
 } from 'react-native'
 import{
     MainFont,
-    MainSubFont,
-    MainHeading,
-    MainHeadingButton,
     ScrollViewContainer
 } from '../../../../../assets/styles/globalStyling'
 import {CurrentThemeContext} from '../../../../../assets/styles/globalTheme'
-import { NavigationContainer, useIsFocused } from '@react-navigation/native';
 import {
     FontAwesomeIcon,
     faTimesCircle,

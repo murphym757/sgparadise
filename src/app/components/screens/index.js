@@ -9,8 +9,10 @@
     export { default as SgHomeScreen } from './mainScreens/sgHomeScreen'
 
         // Search Screens
-        export { default as SgGameSearchScreen } from './mainScreens/sgGameSearchScreenContent/sgGameSearchScreen'     
-        export { default as SgSelectedGameScreen } from './mainScreens/sgGameSearchScreenContent/sgSelectedGameScreen'     
+        export { default as SgGameSearchScreen } from './mainScreens/sgGameSearchScreenContent/sgGameSearchScreen'   
+        export { default as SgSelectedGameCoverScreen } from './mainScreens/sgGameSearchScreenContent/sgSelectedGameScreens/sgSelectedGameCoverScreen' 
+        export { default as SgSelectedGameSummaryScreen } from './mainScreens/sgGameSearchScreenContent/sgSelectedGameScreens/sgSelectedGameSummaryScreen'
+        export { default as SgSelectedGameplayScreen } from './mainScreens/sgGameSearchScreenContent/sgSelectedGameScreens/sgSelectedGameplayScreen'
         export { default as SgIGDBGameSearchScreen } from './mainScreens/sgGameSearchScreenContent/sgIGDBGameSearchScreen'   
         export { default as SgConsoleListScreen } from './mainScreens/sgGameScreenContent/sgConsoleListScreen'
         export { default as TestImageDB } from './mainScreens/sgGameScreenContent/TestImageDB'
@@ -48,6 +50,7 @@
             MainFont,
             MainHeading,
             MainHeadingButton,
+            MainHeadingLongTitle,
             MainSubFont,
             GeneralFontColor,
             SearchFont,
@@ -60,6 +63,8 @@
             CustomInputField,
             TouchableButton,
             TouchableButtonFont,
+            TouchableButtonAlt,
+            TouchableButtonFontAlt,
             FooterView,
             FooterFont,
             FooterLink

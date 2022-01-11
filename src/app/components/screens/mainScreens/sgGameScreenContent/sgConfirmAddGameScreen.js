@@ -28,7 +28,9 @@ import {
     sgGenresScreen,
     sgSearchScreen,
     sgSearchResultsScreen,
-    SgSelectedGameScreen,
+    SgSelectedGameCoverScreen,
+    SgSelectedGameSummaryScreen,
+    SgSelectedGameplayScreen,
     SafeAreaViewContainer,
     Container,
     ContentContainer,
@@ -333,9 +335,12 @@ export default function ConfirmAddGameScreen({navigation, route}, props) {
                 <Stack.Screen name="Home" component={SgConsoleListScreen} initialParams={{ addGameLinkPressed: true }} />
                 <Stack.Screen name="Page1" component={sgSearchScreen} />
                 <Stack.Screen name="Page2" component={sgSearchResultsScreen} />
-                <Stack.Screen name="Page3" component={SgSelectedGameScreen} />
-                <Stack.Screen name="Page4" component={chooseGameOptions} />
-                <Stack.Screen name="Page5" component={addGamePage5} />
+                <Stack.Screen name="Page3" component={SgSelectedGameCoverScreen} />
+                <Stack.Screen name="Page4" component={SgSelectedGameSummaryScreen} />
+                <Stack.Screen name="Page5" component={SgSelectedGameplayScreen} />
+                <Stack.Screen name="Page6" component={chooseGameOptions} />
+                <Stack.Screen name="Page7" component={addGamePage5} />
+                
             </Stack.Navigator>
         )
     }

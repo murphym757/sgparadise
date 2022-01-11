@@ -59,6 +59,13 @@ export const MainHeading = styled(Text) `
     color: ${currentTheme.primaryFontColor};
 `;
 
+export const MainHeadingLongTitle = styled(Text) `
+    fontSize: ${RFValue(15, windowHeight)}px;
+    fontWeight: 700;
+    fontFamily: 'SpartanBlack';
+    color: ${currentTheme.primaryFontColor};
+`;
+
 export const MainHeadingButton = styled(Text) `
     fontSize: ${RFValue(20, windowHeight)}px;
     fontWeight: 700;

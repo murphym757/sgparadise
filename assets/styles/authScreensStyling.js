@@ -88,6 +88,24 @@ export const TouchableButtonFont = styled(Text) `
     fontFamily: 'SpartanMedium';
 `;
 
+export const TouchableButtonAlt = styled(TouchableOpacity) `
+    backgroundColor: ${currentTheme.primaryColor};
+    marginLeft: 30px;
+    marginRight: 30px;
+    marginTop: 20px;
+    height: 48px;
+    border: ${currentTheme.secondaryColor};
+    borderRadius: 5px;
+    alignItems: center;
+    justifyContent: center;
+`;
+
+export const TouchableButtonFontAlt = styled(Text) `
+    color: ${currentTheme.primaryFontColor};
+    fontSize: 15px;
+    fontFamily: 'SpartanMedium';
+`;
+
 export const FooterView = styled(View) `
     flex: 1;
     alignItems: center;

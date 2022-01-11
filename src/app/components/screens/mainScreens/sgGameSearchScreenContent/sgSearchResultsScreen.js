@@ -49,14 +49,14 @@ export default function sgSearchScreen({route, navigation}) {
     console.log(result)
     const [igdbSearch, setIgdbSearch] = useState(sgDbSearchQuery)
     const [igdbGameId, setIgdbGameId] = useState()
-    const [igdbGameName, setIgdbGameName] = useState()
-    console.log(igdbGameName)
+    const [gameName, setIgdbGameName] = useState()
+    console.log(gameName)
     const [igdbGameCover, setIgdbGameCover] = useState()
     const [igdbGameRating, setIgdbGameRating] = useState()
     const [igdbGameAgeRating, setIgdbGameAgeRating] = useState()
     const [igdbGameGenres, setIgdbGameGenres] = useState([])
     const [igdbGameScreenshots, setIgdbGameScreenshots] = useState([])
-    const [igdbGameSummary, setIgdbGameSummary] = useState()
+    const [gameSummary, setIgdbGameSummary] = useState()
     const [igdbUnixTimestamp, setIgdbUnixTimestamp]= useState()
     const igdbSearchPlatforms = `(${JSON.stringify(route.params.igdbConsoleId)})`
     const igdbTestField = 'fields alpha_channel, animated, checksum, game, height, image_id, url, width;  where game = (' + `"${sgDbSearchQuery}"` + ');'
@@ -86,17 +86,7 @@ export default function sgSearchScreen({route, navigation}) {
                         .then(function () {
                             // always executed
                         })
-                    ),
-                    api.post('https://api.igdb.com/v4/covers', igdbCoversResultField, {timeout: 2000})
-                        .then(res => {
-                            setIgdbCoversResults(res.data)
-                        }, [])
-                        .catch(err => {
-                            console.log(err);
-                        })
-                        .then(function () {
-                            // always executed
-                        })
+                    )
                 }, 2000)
               })
             }
@@ -106,31 +96,16 @@ export default function sgSearchScreen({route, navigation}) {
         }
         sgLoader()
     }, [])
-
-    
-    function foundResultsCovers() {
-        let result = igdbSearchResults.map(({ id }) => id)
-        const todos = [1,2,3,4,5];
-        let promiseArray = [];
-        for(let i=0;i<result.length;i++){
-        promiseArray.push('https://jsonplaceholder.typicode.com/todos/'+result[i])
-        }
-
-        Promise.all(promiseArray)
-        .then(console.log(promiseArray))
-        .catch(err=>console.log(err))
-    }
     
     function searchResults() {
         return (
               <FlatList
-                  data={gamesFilterListName(igdbSearchResults)}
+                  data={gamesFilterListName(igdbSearchResults.sort((a, b) => a.first_release_date - b.first_release_date))}
                   keyboardShouldPersistTaps="always" 
                   contentContainerStyle={{
                       justifyContent: 'center'
                   }}
                   keyExtractor={item => item.id}
-                  data={igdbSearchResults.sort((a, b) => a.first_release_date - b.first_release_date)}
                   renderItem={({ item }) => (
                     <SearchGameResults>
                         <TouchableOpacity onPress={() => chosenGame(item)}>
@@ -146,12 +121,12 @@ export default function sgSearchScreen({route, navigation}) {
     function chosenGame(item) {
         navigation.navigate('Page3', {
             igdbGameId: item.id,
-            igdbGameName: item.name,
-            igdbGameSlug: item.slug,
-            igdbGameCover: item.cover,
-            igdbGameReleaseDate: unixTimestampConverter(item),
-            igdbGameSummary: item.summary,
-            igdbGameNameScreenshots: item.screenshots,
+            gameName: item.name,
+            gameSlug: item.slug,
+            gameCover: item.cover,
+            gameReleaseDate: unixTimestampConverter(item),
+            gameSummary: item.summary,
+            gameScreenshots: item.screenshots,
             clientIdIGDB: clientIdIGDB,
             accessTokenIGDB: accessTokenIGDB, 
             igdbConsoleId: igdbConsoleId

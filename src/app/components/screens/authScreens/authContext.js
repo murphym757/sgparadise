@@ -247,6 +247,15 @@ export function AuthProvider({ children }) {
         })
     }
     */
+    ///Buttons for navigating through uploading games process
+    function forwardToNextPage(pageNumber, passingContent, navigationPass) {
+        navigationPass.navigate(pageNumber, passingContent)
+    }
+
+    function backToPreviousPage(navigationPass) {
+        navigationPass.goBack()
+    }
+    /*--------------*/
 
     function successAlert(message) {
         return <CustomSuccessAlert>
@@ -313,6 +322,8 @@ export function AuthProvider({ children }) {
         entries,
         imageCapture,
         viewCountFirebase,
+        forwardToNextPage,
+        backToPreviousPage,
         successAlert,
         failureAlert,
         unixTimestampConverter

@@ -84,14 +84,14 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
     const [igdbSearchResults, setIgdbSearchResults] = useState([])
     const [igdbSearch, setIgdbSearch] = useState("Sonic")
     const [igdbGameId, setIgdbGameId] = useState()
-    const [igdbGameName, setIgdbGameName] = useState()
-    console.log(igdbGameName)
+    const [gameName, setIgdbGameName] = useState()
+    console.log(gameName)
     const [igdbGameCover, setIgdbGameCover] = useState()
     const [igdbGameRating, setIgdbGameRating] = useState()
     const [igdbGameAgeRating, setIgdbGameAgeRating] = useState()
     const [igdbGameGenres, setIgdbGameGenres] = useState([])
     const [igdbGameScreenshots, setIgdbGameScreenshots] = useState([])
-    const [igdbGameSummary, setIgdbGameSummary] = useState()
+    const [gameSummary, setIgdbGameSummary] = useState()
     const [igdbUnixTimestamp, setIgdbUnixTimestamp]= useState()
     const igdbSearchPlatforms = `(${JSON.stringify(route.params.igdbConsoleId)})`
     const igdbTestField = 'fields name, cover, rating, age_ratings, genres, screenshots, summary, first_release_date; search ' + '"' + igdbSearch + '"' + '; limit 20; where platforms =' + igdbSearchPlatforms + '& cover != null;'
@@ -188,26 +188,26 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
     function resetGameId() {
         navigation.navigate('SgGameSearch')
         setIgdbGameId({ ...igdbGameId }) 
-        setIgdbGameName({ ...igdbGameName })
+        setIgdbGameName({ ...gameName })
         setIgdbGameCover({ ...igdbGameCover }) 
         setIgdbGameRating({ ...igdbGameRating }) 
         setIgdbGameAgeRating({ ...igdbGameAgeRating }) 
         setIgdbGameGenres({ ...igdbGameGenres }) 
         setIgdbGameScreenshots({ ...igdbGameScreenshots }) 
-        setIgdbGameSummary({ ...igdbGameSummary }) 
+        setIgdbGameSummary({ ...gameSummary }) 
         setIgdbUnixTimestamp({ ...igdbUnixTimestamp }) 
     }
 
     function confirmSetGameId(){
         navigation.navigate('SgAddGameConfirm', { 
             igdbGameId: igdbGameId,
-            igdbGameName: igdbGameName,
-            igdbGameCover: igdbGameCover,
+            gameName: gameName,
+           gameCover:gameCover,
             igdbGameRating: igdbGameRating,
             igdbGameAgeRating: igdbGameAgeRating,
             igdbGameGenres: igdbGameGenres,
             igdbGameScreenshots: igdbGameScreenshots,
-            igdbGameSummary: igdbGameSummary,
+            gameSummary: gameSummary,
             igdbUnixTimestamp: igdbUnixTimestamp
         })
         console.log("It worked :)")
