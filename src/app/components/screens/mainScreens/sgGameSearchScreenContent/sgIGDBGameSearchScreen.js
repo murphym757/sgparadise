@@ -125,7 +125,7 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
               })
             })
       
-            setSgConsoleIcons(consoles)
+            setSgConsoleIcons(genreTags)
           });
           if(isFocused){  
             setModalSelected(false)

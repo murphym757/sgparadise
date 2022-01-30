@@ -31,6 +31,8 @@ import {
     SgSelectedGameCoverScreen,
     SgSelectedGameSummaryScreen,
     SgSelectedGameplayScreen,
+    SgSelectedGameSetGenreScreen,
+    SgSelectedGameSetSubGenreScreen,
     SafeAreaViewContainer,
     Container,
     ContentContainer,
@@ -212,7 +214,7 @@ export default function ConfirmAddGameScreen({navigation, route}, props) {
                     numColumns={2}
                     showsHorizontalScrollIndicator={false}
                     scrollEnabled={false}
-                    data={tagData}
+                    data={sgConsoleIcons}
                     keyboardShouldPersistTaps="always"
                     keyExtractor={item => item.id}
                     renderItem={({ item }) => (
@@ -248,7 +250,7 @@ export default function ConfirmAddGameScreen({navigation, route}, props) {
                     {selectedTags(tagData)}
                     <ScrollViewContainer>
                         <View style={{paddingBottom: windowHeight/4}}>
-                            <Text>This is where youll confirm your chose</Text>
+                            <Text>What genre does {gameName} fall under?</Text>
                             {searchResults()}
                             {genreTagCollection()}
                             {searchFilterSelected == false
@@ -284,41 +286,7 @@ export default function ConfirmAddGameScreen({navigation, route}, props) {
               />
           ) 
     }
-
-    function addGamePage1() {
-        return (
-            <View style={{ flex: 1, paddingTop: windowHeight/20, backgroundColor: colors.primaryColor }}>
-            <SafeAreaViewContainer>
-                <Container>
-                    <MainHeading>{"Search for a game"}</MainHeading>
-                    {searchBar(searchBarTitle, searchType, searchQuery)}
-                    {searchResults()}
-                </Container>
-                </SafeAreaViewContainer>
-            </View>
-        );
-    }
-    function addGamePage2() {
-        return (
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.primaryColor }}>
-                <MainHeading>{"Page 2: IGDB API Route"}</MainHeading>
-            </View>
-        );
-    }
-    function addGamePage3() {
-        return (
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.primaryColor }}>
-                <MainHeading>{"Page 3"}</MainHeading>
-            </View>
-        );
-    }
-    function addGamePage4() {
-        return (
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.primaryColor }}>
-                <MainHeading>{"Page 4"}</MainHeading>
-            </View>
-        );
-    }
+    
     function addGamePage5() {
         return (
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.primaryColor }}>
@@ -338,9 +306,9 @@ export default function ConfirmAddGameScreen({navigation, route}, props) {
                 <Stack.Screen name="Page3" component={SgSelectedGameCoverScreen} />
                 <Stack.Screen name="Page4" component={SgSelectedGameSummaryScreen} />
                 <Stack.Screen name="Page5" component={SgSelectedGameplayScreen} />
-                <Stack.Screen name="Page6" component={chooseGameOptions} />
-                <Stack.Screen name="Page7" component={addGamePage5} />
-                
+                <Stack.Screen name="Page6" component={SgSelectedGameSetGenreScreen} />
+                <Stack.Screen name="Page7" component={SgSelectedGameSetSubGenreScreen} />
+                <Stack.Screen name="Page8" component={addGamePage5} />
             </Stack.Navigator>
         )
     }

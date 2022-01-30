@@ -58,7 +58,7 @@ export default function SgSelectedGameCoverScreen({route, navigation}) {
     // IGDB search data (Put on confirmation page)
     const [coversResults, setCoversResults] = useState([])
     const [involvesCompanies, setInvolvesCompaniesResults] = useState([])
-    const [gameScreenshots, setgameScreenshots] = useState([])
+    const [gameScreenshots, setGameScreenshots] = useState([])
     const [updatedGameRating, setUpdatedGameRating] = useState()
     const [unixTimestamp, setUnixTimestamp]= useState()
     const igdbCoversResultsField = 'fields alpha_channel,animated,checksum,game,height,image_id,url,width; where game = (' + `${igdbGameId}` + ');'
@@ -89,7 +89,7 @@ export default function SgSelectedGameCoverScreen({route, navigation}) {
                         }),
                     api.post('https://api.igdb.com/v4/screenshots', igdbScreenshotsResultsField, {timeout: 2000})
                         .then(res => {
-                            setgameScreenshots(res.data)
+                            setGameScreenshots(res.data)
                         }, [])
                         .catch(err => {
                             console.log(err);
@@ -200,7 +200,8 @@ export default function SgSelectedGameCoverScreen({route, navigation}) {
         const pageNumber = 'Page4'
         const passingContent = {
             involvesCompanies: involvesCompanies,
-            gameRating: updatedGameRating, 
+            gameRating: updatedGameRating,
+            gameCover: coversResults, 
             gameId: igdbGameId,
             gameName: gameName,
             gameReleaseDate: gameReleaseDate,

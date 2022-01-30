@@ -60,12 +60,19 @@ export default function SgSelectedGameSummaryScreen({route, navigation}) {
 
     // IGDB search data (Put on confirmation page)
     const [updatedGameSummary, setUpdatedGameSummary] = useState(gameSummary)
+    const [pageNumber, setPageNumber] = useState('Page5')
+    console.log(gameScreenshots)
 
     useEffect(() => {
             return new Promise(resolve => {
                 setTimeout(() => {
                   resolve(
                         setIsLoading(false))
+                        if (gameScreenshots == 0) {
+                            return setPageNumber('Page6')
+                       } else {
+                            return pageNumber
+                       }
                 }, 2000)
               })
             }, [])
@@ -94,7 +101,6 @@ export default function SgSelectedGameSummaryScreen({route, navigation}) {
     }
 
     function buttonGroup() {
-        const pageNumber = 'Page5'
         const passingContent = {
             involvesCompanies: involvesCompanies,
             gameRating: gameRating, 

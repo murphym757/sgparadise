@@ -54,99 +54,51 @@ export default function SgSelectedGameplayScreen({route, navigation}) {
         gameStoryline,
         gameSummary,
         gameScreenshots,
-        igdbInvolvesCompaniesResults
+        involvesCompanies
     } = route.params
 
     const gameNameLastChar = gameName.charAt(gameName.length - 1)
     const [chosenGameplaysArray, setChosenGameplaysArray] = useState([])
-    const gameplaysNewArray = Array.from(new Set(chosenGameplaysArray)); //Removes the ability to add dulicate\
+    const [ imageCount, setImageCount ] = useState()
+    const gameplaysNewArray = Array.from(new Set(chosenGameplaysArray)); //Removes the ability to add duplicate
+
+    // For adding and removing images from the array
+    let initArray = gameScreenshots
+    console.log(currentGameplaysArray)
+    let deletionArray = gameplaysNewArray
+    let currentGameplaysArray = [];
+    console.log(chosenGameplaysArray)
+    currentGameplaysArray = initArray.filter(item => !deletionArray.includes(item))
+    /*-------------*/
    
-    // Adding and removing gameplays from a game
+    // Adding and removing gameplays from a game (Plus, removing all gameplays all at once)
     async function chosenGameplayData(item) {
-    setChosenGameplaysArray(chosenGameplaysArray => [...chosenGameplaysArray, item])
+        setChosenGameplaysArray(chosenGameplaysArray => [...chosenGameplaysArray, item])
+        setImageCount(imageCount - 1 )
     }
 
     async function removeChosenGameplayData(item) {
-    setChosenGameplaysArray(gameplaysNewArray.filter(gameplay => gameplay !== item))
+        setChosenGameplaysArray(gameplaysNewArray.filter(gameplay => gameplay !== item))
+        setImageCount(imageCount + 1 )
     }
 
-    useEffect(() => {
-            return new Promise(resolve => {
-                setTimeout(() => {
-                  resolve(
-                        setIsLoading(false))
-                }, 2000)
-              })
-            }, [])
-
-            
-    function gammeplayResults() {
-        let initArray = gameScreenshots
-        console.log(currentGameplaysArray)
-        let deletionArray = gameplaysNewArray
-        let currentGameplaysArray = [];
-        console.log(chosenGameplaysArray)
-        currentGameplaysArray = initArray.filter(item => !deletionArray.includes(item))
-        return (
-            <Container>
-                <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                    {gameNameLastChar == 's'
-                                ?   <MainFont>Choose 3 images that perfectly showcases some of {gameName + "'"} highlights: </MainFont>
-                                :   <MainFont>Choose 3 images that perfectly showcases some of {gameName + "'s"} highlights: </MainFont>
-                            } 
-                            <FlatList
-                            data={currentGameplaysArray}
-                            keyboardShouldPersistTaps="always" 
-                            contentContainerStyle={{
-                                justifyContent: 'space-between'
-                            }}
-                            flexDirection='column'
-                            numColumns={2}
-                            keyExtractor={item => item.id}
-                            renderItem={({ item }) => (
-                                <View style={{
-                                    height: 110
-                                }}>
-                                <TouchableOpacity
-                                    style={{
-                                        margin: 3,
-                                        alignItems:'center',
-                                        justifyContent:'center',
-                                    }}
-                                    onPress={() => chosenGameplayData(item)}>
-                                    <Image
-                                        style={{
-                                            height: 100,
-                                            width: 180,
-                                            marginVertical: 15,
-                                            resizeMode: 'stretch',
-                                            borderRadius: 25,
-                                        }}
-                                        source={{
-                                            uri: "https://images.igdb.com/igdb/image/upload/t_1080p/" + item.image_id + ".jpg",
-                                        }}
-                                        onLoadStart={() => {setIsLoading(true)}}
-                                        onLoadEnd={() => {setIsLoading(false)}}
-                                        />
-                                        </TouchableOpacity>
-                                        {isLoading && (
-                                            <ActivityIndicator size="large" />
-                                        )}
-                                </View>
-                            )}
-                        />
-                </View>
-                {buttonGroup()}
-            </Container>
-          ) 
+    function resetChosenGameplayData(){
+        setChosenGameplaysArray([])
+        if(gameScreenshots.length <= 3) {
+            return setImageCount(gameScreenshots.length)
+        } else {
+            return setImageCount(3)
+        }
     }
+    /*----------*/
 
     function buttonGroup() {
         const pageNumber = 'Page6'
         const passingContent = {
-            igdbInvolvesCompaniesResults: igdbInvolvesCompaniesResults,
+            involvesCompanies: involvesCompanies,
             gameRating: gameRating, 
-            igdbGameId: igdbGameId,
+            gameCover: gameCover,
+            gameId: igdbGameId,
             gameName: gameName,
             gameReleaseDate: gameReleaseDate,
             gameStoryline: gameStoryline,
@@ -166,13 +118,170 @@ export default function SgSelectedGameplayScreen({route, navigation}) {
         )
     }
 
+    function imgWordingSelector() {
+        const imgSingular = 'more image'
+        const imgPlural = 'images'
+        if (imageCount == 1) return imgSingular
+        if (imageCount != 1) return imgPlural
+    }
+
+    function chooseImages(){
+        return (
+            <View> 
+                {gameScreenshots.length <= 3
+                    ?   <Text>Yep</Text>
+                    :   <Text>Nope</Text>
+                }
+                {gameNameLastChar == 's'
+                    ?   <MainFont>Choose {imageCount} {imgWordingSelector()} that perfectly showcases some of {gameName + "'"} highlights: </MainFont>
+                    :   <MainFont>Choose {imageCount} {imgWordingSelector()} that perfectly showcases some of {gameName + "'s"} highlights: </MainFont>
+                } 
+                {chooseImagesList()}
+            </View>
+        )
+    }
+
+    function chooseImagesList(){
+        return (
+            <FlatList
+                data={currentGameplaysArray}
+                keyboardShouldPersistTaps="always" 
+                contentContainerStyle={{
+                    justifyContent: 'space-between'
+                }}
+                flexDirection='column'
+                numColumns={2}
+                keyExtractor={item => item.id}
+                renderItem={({ item }) => (
+                    <View style={{
+                        height: 110
+                    }}>
+                    <TouchableOpacity
+                        style={{
+                            margin: 3,
+                            alignItems:'center',
+                            justifyContent:'center',
+                        }}
+                        onPress={() => chosenGameplayData(item)}>
+                            <Image
+                                style={{
+                                    height: 100,
+                                    width: 180,
+                                    marginVertical: 15,
+                                    resizeMode: 'stretch',
+                                    borderRadius: 25,
+                                }}
+                                source={{
+                                    uri: "https://images.igdb.com/igdb/image/upload/t_1080p/" + item.image_id + ".jpg",
+                                }}
+                                onLoadStart={() => {setIsLoading(true)}}
+                                onLoadEnd={() => {setIsLoading(false)}}
+                            />
+                        </TouchableOpacity>
+                            {isLoading && (
+                                <ActivityIndicator size="large" />
+                            )}
+                    </View>
+                )}
+            />
+        )
+    }
+
+    function chosenImages(){
+        return (
+            <View>
+                <MainFont>To add another image, select one of the chosen images. To remove all images, press the Clear Images Button</MainFont>
+                {chosenImagesList()}
+                <TouchableButton style={{backgroundColor: colors.primaryColorAltLight}} onPress={() => resetChosenGameplayData()}>
+                    <TouchableButtonFont style={{color: colors.primaryColor}}>Clear Images</TouchableButtonFont>
+                </TouchableButton>
+                {buttonGroup()}
+            </View>
+        )
+    }
+
+    function chosenImagesList(){
+        return (
+            <FlatList
+                data={chosenGameplaysArray}
+                keyboardShouldPersistTaps="always" 
+                contentContainerStyle={{
+                    justifyContent: 'space-between'
+                }}
+                flexDirection='column'
+                numColumns={2}
+                keyExtractor={item => item.id}
+                renderItem={({ item }) => (
+                    <View style={{
+                        height: 110
+                    }}>
+                    <TouchableOpacity
+                        style={{
+                            margin: 3,
+                            alignItems:'center',
+                            justifyContent:'center',
+                        }}
+                        onPress={() => removeChosenGameplayData(item)}>
+                            <Image
+                                style={{
+                                    height: 100,
+                                    width: 180,
+                                    marginVertical: 15,
+                                    resizeMode: 'stretch',
+                                    borderRadius: 25,
+                                    borderWidth: 7,
+                                    borderColor: colors.secondaryColor,
+                                }}
+                                source={{
+                                    uri: "https://images.igdb.com/igdb/image/upload/t_1080p/" + item.image_id + ".jpg",
+                                }}
+                                onLoadStart={() => {setIsLoading(true)}}
+                                onLoadEnd={() => {setIsLoading(false)}}
+                            />
+                        </TouchableOpacity>
+                            {isLoading && (
+                                <ActivityIndicator size="large" />
+                            )}
+                    </View>
+                )}
+            />
+        )
+    }
+
+    useEffect(() => {
+            return new Promise(resolve => {
+                setTimeout(() => {
+                  resolve(
+                        setIsLoading(false))
+                        if (gameScreenshots.length <= 3) {
+                            return setImageCount(gameScreenshots.length)
+                       } else {
+                            return setImageCount(3)
+                       }
+                }, 2000)
+              })
+            }, [])
+            
+    function gameplayResults() { 
+        return (
+            <Container>
+                <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                    {imageCount < 1
+                        ?   chosenImages()
+                        :   chooseImages()
+                    }
+                </View>
+            </Container>
+          ) 
+    }
+
     return (
         <View style={{ flex: 1, paddingTop: windowHeight/20, paddingBottom: windowHeight/20, backgroundColor: colors.primaryColor }}>
             <SafeAreaViewContainer>
             {isLoading == undefined
                 ? <ActivityIndicator size="large" hidesWhenStopped="true"/>
                 : <View>
-                    {gammeplayResults()}
+                    {gameplayResults()}
                 </View>
             }
             </SafeAreaViewContainer>
