@@ -6,7 +6,6 @@ import {
 } from './globalTheme'
 
 export const windowHeight = Dimensions.get('window').height
-console.log("This is the height of your screen:    " + windowHeight)
 
 export const Container = styled(View) `
     paddingLeft: ${RFValue(22, windowHeight)}px;

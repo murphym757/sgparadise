@@ -123,7 +123,6 @@ export default function SgHomeScreen({ navigation, route }) {
     const sgGameImages = [imagesRef, imagesRef2]
     const [profileImageUrl, setProfileImageUrl] = useState('')
     const [profileImageUrl2, setProfileImageUrl2] = useState('')
-    console.log(profileImageUrl)
 
     useEffect(() => {
         function loadingTime() {

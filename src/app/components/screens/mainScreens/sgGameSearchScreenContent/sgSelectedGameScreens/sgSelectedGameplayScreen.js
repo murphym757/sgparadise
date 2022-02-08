@@ -64,10 +64,8 @@ export default function SgSelectedGameplayScreen({route, navigation}) {
 
     // For adding and removing images from the array
     let initArray = gameScreenshots
-    console.log(currentGameplaysArray)
     let deletionArray = gameplaysNewArray
     let currentGameplaysArray = [];
-    console.log(chosenGameplaysArray)
     currentGameplaysArray = initArray.filter(item => !deletionArray.includes(item))
     /*-------------*/
    

@@ -42,15 +42,10 @@ export default function SgSelectedGameSetSubGenreScreen({route, navigation}) {
         backToPreviousPage
     } = useAuth()
     const {
-        selectedParentTag,
+        tagCollection,
         selectedTags,
-        tagsSelection,
-        chosenTagsArray,
-        parentGenreSelected,
-        childGenreSelected,
-        chosenGenre,
-        childTagCollection,
-        parentTagCollection
+        tagsSelected,
+        chosenTag
     } = useTags()
     //let { searchBarTitle, searchType, searchQuery } = route.params
     const colors = useContext(CurrentThemeContext)
@@ -70,7 +65,6 @@ export default function SgSelectedGameSetSubGenreScreen({route, navigation}) {
     } = route.params
     const [sgSubGenreIcons, setSgSubGenreIcons] = useState([])
     const [ gameSubGenre, setGameSubGenre ]= useState([])
-    console.log("🚀 ~ file: sgSelectedGameSetSubGenreScreen.js ~ line 69 ~ SgSelectedGameSetSubGenreScreen ~ gameSubGenre", gameSubGenre)
     const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be read
 
     function buttonGroup() {
@@ -110,7 +104,7 @@ export default function SgSelectedGameSetSubGenreScreen({route, navigation}) {
 
       function firebaseSubGenreCollection() {
         const subscriber = sgDB
-        .collection('sgAPI').doc('sgTags').collection('genreTags').doc(chosenGenre).collection('genreSpecificTags').orderBy('tagName', 'asc')
+        .collection('sgAPI').doc('sgTags').collection('genreTags').doc(chosenTag).collection('genreSpecificTags').orderBy('tagName', 'asc')
         .onSnapshot(querySnapshot => {
           const subGenreTags = []
           querySnapshot.forEach(documentSnapshot => {
@@ -130,19 +124,19 @@ export default function SgSelectedGameSetSubGenreScreen({route, navigation}) {
             <Container>
             <View style={{justifyContent: 'center', alignItems: 'center'}}>
                 <MainFont>What subgenre is ideal for {gameName}?</MainFont>
-                {childGenreSelected == false 
+                {tagsSelected == false 
                     ?   <View></View>  
                     :   selectedTags()
                 }
             </View>
             <View>
-                {childGenreSelected == false 
-                    ?   childTagCollection(gameSubGenre)
+                {tagsSelected == false 
+                    ?   tagCollection(gameSubGenre)
                     :   <View></View>
                 }
             </View>
             <View>
-                {childGenreSelected == false 
+                {tagsSelected == false 
                     ?   <View></View>
                     :   buttonGroup()
                 }

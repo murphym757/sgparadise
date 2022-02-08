@@ -55,14 +55,12 @@ export default function SgConsoleListScreens({route, navigation}, props) {
     const clientSecretIGDB = "" + gamesConfig.igdbClientSecret + ""
 
         // Finds the clostest game title
-        let matches = stringSimilarity.findBestMatch("The Amazing Spider-Man: Web of Fire", sg32XNATitles);
-        console.log(matches.bestMatch.target)
+        let matches = stringSimilarity.findBestMatch("The Amazing Spider-Man: Web of Fire", sg32XNATitles)
   
 
     function consoleLogo() {
         const nightImages = sgDB.collection("sgAPI").orderBy("systemLogoNight", "asc")
         const dayImages = sgDB.collection("sgAPI")
-        console.log(dayImages)
         if (nightTime) {return nightImages}
         if (dayTime) {return dayImages}
     }
@@ -85,7 +83,6 @@ export default function SgConsoleListScreens({route, navigation}, props) {
                 objectsArray.push(doc.data());
             });
             setSgConsoleIcons(objectsArray)
-            console.log(objectsArray.systemLogoSelectedDay);
         });
     }
         

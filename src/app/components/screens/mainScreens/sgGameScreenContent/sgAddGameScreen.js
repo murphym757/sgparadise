@@ -46,7 +46,6 @@ export default function AddGameScreen({ route, navigation }) {
           }, 2500)
         axios.post(twitchIdUrl + clientId + clientSecret + grantType)
             .then(async (res) => {
-                console.log(res.data)
                 await AsyncStorage.setItem('igdbAccesstoken', res.data.access_token)
             })
             .catch((err) => {
@@ -54,22 +53,6 @@ export default function AddGameScreen({ route, navigation }) {
             })
         igdbSearchGame(igdbConsoleId)
       }, [igdbConsoleId])
-
-      async function gbSearchGame() {
-        const gbBaseUrl = 'https://www.giantbomb.com/api/games/'
-        const gbApiUrl = '?api_key=' + gamesConfig.giantbombApiKey + ''
-        const gbGameSeach = '&filter=name:streets of rage 2,'
-        const gbGamePlatform = 'platforms:' + gbConsoleId + ''
-        const gbdataFormat = '&format=json'
-        const gbUrl = gbBaseUrl + gbApiUrl + gbGameSeach + gbGamePlatform + gbdataFormat
-        axios.get(gbUrl)
-        .then(async (res) => {
-            console.log(res.data.results[0].api_detail_url)
-        })
-        .catch((err) => {
-            console.log(err);
-        })
-      }
 
       async function igdbSearchGame() {
         const jsonValue = await AsyncStorage.getItem('igdbAccesstoken')
@@ -119,7 +102,6 @@ export default function AddGameScreen({ route, navigation }) {
             })
             .then(res => {
                 setSgGamesImagesArray(res.data)
-                console.log(res.data)
             })
             .catch(err => {
                 console.error(err)
@@ -133,7 +115,6 @@ export default function AddGameScreen({ route, navigation }) {
     async function setGameImage(item) {
         try {
             igdbSearchGameImage(item)
-            console.log('This is your item id' + item.id)
         } catch {
 
         }

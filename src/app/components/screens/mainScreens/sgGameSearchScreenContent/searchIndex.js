@@ -34,9 +34,7 @@ export function SearchBarProvider({ children, navigation }) {
     const testDb = TestImageDB.results
     const [ gameName, setGameName ] = useState('')
     const [ sgDbSearchQuery, setSgDbSearchQuery ] = useState('')
-    console.log("this is sgDbSearchQuery " + sgDbSearchQuery)
     const [ addGameSearchQuery, setAddGameSearchQuery ] = useState('') 
-    console.log("this is addGameSearchQuery " + addGameSearchQuery)
 
     function searchBar(searchBarTitle, searchType, searchQuery) {
         function onSearchFinder() {

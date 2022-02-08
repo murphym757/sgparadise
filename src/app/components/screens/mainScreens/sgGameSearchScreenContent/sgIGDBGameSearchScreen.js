@@ -56,7 +56,6 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
     const sgDB = firebase.firestore()
     const [isLoading, setIsLoading] = useState(true)
     const { selectedSystemLogo } = route.params
-    console.log("This is it tho" + selectedSystemLogo)
     const testGamesDb = TestImageDB.results
      // For Search Bar
      const { searchBar, searchResults } = useSearchBar()
@@ -65,7 +64,6 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
      const [searchQuery, setSearchQuery] = useState('')
      const [searchFilterSelected, setSearchFilterSelected] = useState(false)
      const [sgConsoleIcons, setSgConsoleIcons] = useState([])
-     console.log(sgConsoleIcons)
      const [chosenGenre, setChosenGenre] = useState()
      const [modalSelected, setModalSelected] = useState(route.params?.modal)
      const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be readconst [modalSelected, setModalSelected] = useState(route.params?.modal)
@@ -85,7 +83,6 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
     const [igdbSearch, setIgdbSearch] = useState("Sonic")
     const [igdbGameId, setIgdbGameId] = useState()
     const [gameName, setIgdbGameName] = useState()
-    console.log(gameName)
     const [igdbGameCover, setIgdbGameCover] = useState()
     const [igdbGameRating, setIgdbGameRating] = useState()
     const [igdbGameAgeRating, setIgdbGameAgeRating] = useState()
@@ -210,7 +207,6 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
             gameSummary: gameSummary,
             igdbUnixTimestamp: igdbUnixTimestamp
         })
-        console.log("It worked :)")
           setModalSelected(true)
     }
 

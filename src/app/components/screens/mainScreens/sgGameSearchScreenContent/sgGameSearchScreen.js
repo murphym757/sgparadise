@@ -36,14 +36,11 @@ import {
 export default function SgGameSearchScreen({route, navigation}, props) {
     const colors = useContext(CurrentThemeContext)
     const { selectedSystemLogo } = route.params
-    console.log("This is it tho" + selectedSystemLogo)
     const testGamesDb = TestImageDB.results
     const searchType = props.searchType
-    console.log(searchType)
     const [isLoading, setIsLoading] = useState(true)
     const [searchQuery, setSearchQuery] = useState('')
     const [gameName, setGameName] = useState()
-    console.log(gameName)
     const [modalSelected, setModalSelected] = useState(route.params?.modal)
 
     useEffect(() => {
@@ -93,7 +90,6 @@ export default function SgGameSearchScreen({route, navigation}, props) {
         navigation.navigate('SgAddGameConfirm', { 
             gameName: gameName
         })
-        console.log("It worked :)")
           setModalSelected(true)
     }
 

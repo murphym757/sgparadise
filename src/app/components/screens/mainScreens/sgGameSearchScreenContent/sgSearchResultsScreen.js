@@ -42,15 +42,11 @@ export default function sgSearchScreen({route, navigation}) {
     // IGDB search data (Put on confirmation page)
     const [igdbGameSelected, setigdbGameSelected] = useState(false)
     const [igdbSearchResults, setIgdbSearchResults] = useState([])
-    console.log(igdbSearchResults)
     const [igdbCoversResults, setIgdbCoversResults] = useState([])
-    console.log(igdbCoversResults)
     let result = igdbSearchResults.map(({ id }) => id)
-    console.log(result)
     const [igdbSearch, setIgdbSearch] = useState(sgDbSearchQuery)
     const [igdbGameId, setIgdbGameId] = useState()
     const [gameName, setIgdbGameName] = useState()
-    console.log(gameName)
     const [igdbGameCover, setIgdbGameCover] = useState()
     const [igdbGameRating, setIgdbGameRating] = useState()
     const [igdbGameAgeRating, setIgdbGameAgeRating] = useState()
@@ -61,7 +57,6 @@ export default function sgSearchScreen({route, navigation}) {
     const igdbSearchPlatforms = `(${JSON.stringify(route.params.igdbConsoleId)})`
     const igdbTestField = 'fields alpha_channel, animated, checksum, game, height, image_id, url, width;  where game = (' + `"${sgDbSearchQuery}"` + ');'
     const igdbSearchResultField = 'fields name, category, slug, first_release_date, rating, age_ratings, artworks, screenshots, summary, cover; search ' + `"${sgDbSearchQuery}"` + '; limit 20; where category != 5 & platforms =' + igdbSearchPlatforms + '& cover != null; '
-    console.log(igdbSearchResultField) 
     const igdbCoversResultField = 'fields alpha_channel,animated,checksum,game,height,image_id,url,width;  where game = (9476);'
     
     useEffect(() => {

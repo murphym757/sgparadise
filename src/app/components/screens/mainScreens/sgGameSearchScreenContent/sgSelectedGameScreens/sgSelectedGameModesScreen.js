@@ -35,16 +35,22 @@ import { useAuth } from '../../../authScreens/authContext'
 
     
 
-export default function SgSelectedGameSetGenreScreen({route, navigation}) {
+export default function SgSelectedGameSetGameModesScreen({route, navigation}) {
     const {
         unixTimestampConverter,
         forwardToNextPage,
         backToPreviousPage
     } = useAuth()
     const {
-        tagCollection,
+        selectedParentTag,
         selectedTags,
-        tagsSelected
+        tagsSelection,
+        chosenTagsArray,
+        parentGenreSelected,
+        childGenreSelected,
+        chosenGenre,
+        childTagCollection,
+        parentTagCollection
     } = useTags()
     //let { searchBarTitle, searchType, searchQuery } = route.params
     const colors = useContext(CurrentThemeContext)
@@ -56,25 +62,28 @@ export default function SgSelectedGameSetGenreScreen({route, navigation}) {
         gameCover,
         gameId,
         gameName,
+        gameGenre,
+        gameSubGenre,
         gameReleaseDate,
         gameStoryline,
         gameSummary,
         gameScreenshots
     } = route.params
-    const gameDataType = "Genres"
-    const [ gameGenreArray, setGameGenreArray ]= useState([])
+    const [ gameModes, setGameModes ]= useState([])
     const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be read
 
     function buttonGroup() {
-        const pageNumber = 'Page7'
+        const pageNumber = 'Page9'
         const passingContent = {
             involvesCompanies: involvesCompanies,
             gameRating: gameRating, 
             gameCover: gameCover,
             gameId: gameId,
             gameName: gameName,
-            gameGenre: gameGenreArray,
+            gameGenre: gameGenre,
+            gameSubGenre: gameSubGenre,
             gameReleaseDate: gameReleaseDate,
+            gameModes: gameModes,
             gameStoryline: gameStoryline,
             gameSummary: gameSummary,
             gameScreenshots: gameScreenshots
@@ -96,51 +105,51 @@ export default function SgSelectedGameSetGenreScreen({route, navigation}) {
         setTimeout(() => {
             setIsLoading(false)
           }, 2000)
-          firebaseGenreCollection()
+          firebaseGameModeCollection()
       }, [isFocused]);  
 
-      function firebaseGenreCollection() {
+      function firebaseGameModeCollection() {
         const subscriber = sgDB
-        .collection('sgAPI').doc('sgTags').collection('genreTags').orderBy('tagName', 'asc')
+        .collection('sgAPI').doc('sgTags').collection('gameModeTags').orderBy('tagName', 'asc')
         .onSnapshot(querySnapshot => {
-          const genreTags = []
+          const gameModeTags = []
           querySnapshot.forEach(documentSnapshot => {
-              genreTags.push({
+            gameModeTags.push({
               ...documentSnapshot.data(),
               key: documentSnapshot.id,
             })
           })
-          setGameGenreArray(genreTags)
+          setGameModes(gameModeTags)
         })
       // Unsubscribe from events when no longer in use
       return () => subscriber();
       }
 
-        function gameGenreResults() { 
-            return (
-                <Container>
+      function gameModesResults() { 
+        return (
+            <Container>
                 <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                    <MainFont>What genre does {gameName} fall under?</MainFont>
-                    {tagsSelected == false 
+                    <MainFont>Finally, what some of the gaming mechanics present in {gameName}?</MainFont>
+                    {childGenreSelected == false 
                         ?   <View></View>  
                         :   selectedTags()
                     }
                 </View>
                 <View>
-                    {tagsSelected == false 
-                        ?   tagCollection(gameGenreArray, gameDataType)
+                    {childGenreSelected == false 
+                        ?   childTagCollection(gameModes)
                         :   <View></View>
                     }
                 </View>
                 <View>
-                    {tagsSelected == false 
+                    {childGenreSelected == false 
                         ?   <View></View>
                         :   buttonGroup()
                     }
                 </View>
-                </Container>
-              ) 
-        }
+            </Container>
+          ) 
+    }
 
     return (
         <View style={{ flex: 1, paddingTop: windowHeight/20, paddingBottom: windowHeight/20, backgroundColor: colors.primaryColor }}>
@@ -148,7 +157,7 @@ export default function SgSelectedGameSetGenreScreen({route, navigation}) {
             {isLoading == undefined
                 ? <ActivityIndicator size="large" hidesWhenStopped="true"/>
                 : <View>
-                    {gameGenreResults()}
+                    {gameModesResults()}
                 </View>
             }
             </SafeAreaViewContainer>

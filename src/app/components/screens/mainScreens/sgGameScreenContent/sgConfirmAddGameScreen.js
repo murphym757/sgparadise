@@ -33,6 +33,8 @@ import {
     SgSelectedGameplayScreen,
     SgSelectedGameSetGenreScreen,
     SgSelectedGameSetSubGenreScreen,
+    SgSelectedGameSetGameModesScreen,
+    SgSelectedGameConfirmationScreen,
     SafeAreaViewContainer,
     Container,
     ContentContainer,
@@ -65,8 +67,6 @@ export default function ConfirmAddGameScreen({navigation, route}, props) {
         gamesFilterListName,
         testDb,
      } = useSearchBar()
-    console.log(testDb)
-    console.log("If this worked, you won't see undefined here --->: " + gameName)
     const colors = useContext(CurrentThemeContext)
     const sgDB = firebase.firestore()
     const [isLoading, setIsLoading] = useState(true)
@@ -79,7 +79,6 @@ export default function ConfirmAddGameScreen({navigation, route}, props) {
 
     const [searchFilterSelected, setSearchFilterSelected] = useState(false)
     const [sgConsoleIcons, setSgConsoleIcons] = useState([])
-    console.log(sgConsoleIcons)
     const [chosenGenre, setChosenGenre] = useState()
     const [modalSelected, setModalSelected] = useState(route.params?.modal)
     const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be read
@@ -308,11 +307,11 @@ export default function ConfirmAddGameScreen({navigation, route}, props) {
                 <Stack.Screen name="Page5" component={SgSelectedGameplayScreen} />
                 <Stack.Screen name="Page6" component={SgSelectedGameSetGenreScreen} />
                 <Stack.Screen name="Page7" component={SgSelectedGameSetSubGenreScreen} />
-                <Stack.Screen name="Page8" component={addGamePage5} />
+                <Stack.Screen name="Page8" component={SgSelectedGameSetGameModesScreen} />
+                <Stack.Screen name="Page9" component={SgSelectedGameConfirmationScreen} />
             </Stack.Navigator>
         )
     }
-
 
     return (
         sgSearchStack()

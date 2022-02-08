@@ -38,19 +38,16 @@ export default function sgSearchScreen({route, navigation}) {
     // For Search Bar
     const [searchBarTitle, setSearchBarTitle] = useState('Search Games')
     const [searchQuery, setSearchQuery] = useState('') //Figure out why searchQuery is coming back as "undefined"
-    console.log(sgDbSearchQuery)
     const [ gameName, setGameName ] = useState('')
     const chosenDb = testDb
 
     // IGDB search data (Put on confirmation page)
     const [igdbGameSelected, setigdbGameSelected] = useState(false)
     const [igdbSearchResults, setIgdbSearchResults] = useState([])
-    console.log(igdbSearchResults)
     const [igdbSearch, setIgdbSearch] = useState(sgDbSearchQuery)
     const igdbSearchPlatforms = `(${JSON.stringify(route.params.igdbConsoleId)})`
     const igdbTestField = 'fields name, cover, rating, age_ratings, genres, screenshots, summary, first_release_date; search ' + `"${igdbSearch}"` + '; limit 20; where platforms =' + igdbSearchPlatforms + '& cover != null;'
     const igdbSearchResultField = 'fields name, category, slug, first_release_date, cover; search ' + `"${sgDbSearchQuery}"` + '; limit 20; where category != 5 & platforms =' + igdbSearchPlatforms + '& cover != null; '
-    console.log(igdbSearchResultField)
     
     useEffect(() => {
         function searchTesting() {

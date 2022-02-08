@@ -61,7 +61,6 @@ export default function SgSelectedGameSummaryScreen({route, navigation}) {
     // IGDB search data (Put on confirmation page)
     const [updatedGameSummary, setUpdatedGameSummary] = useState(gameSummary)
     const [pageNumber, setPageNumber] = useState('Page5')
-    console.log(gameScreenshots)
 
     useEffect(() => {
             return new Promise(resolve => {

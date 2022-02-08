@@ -22,7 +22,6 @@ export function AuthProvider({ children }) {
     const [stateTest, setStateTest] = useState('')
     const [entryText, setEntryText] = useState('')
     const [viewCountFirebase, setViewCountFirebase] = useState(0)
-    console.log("Testing testing" + viewCountFirebase)
     const [entries, setEntries] = useState([])
     const auth = firebase.auth()
     const sgDB = firebase.firestore()
@@ -209,7 +208,6 @@ export function AuthProvider({ children }) {
     // this function runs (and works), but will fail if the collection has subcollections
     async function deleteGameFromConsole(collectionName, consoleName, gamesCollection, gameName) {
         sgDB.collection(collectionName).doc(consoleName).collection(gamesCollection).doc(gameName).delete()
-        console.log("this function ran")
     }
 
     async function imageCapture(uploadImageurl, folderName, consoleName, gameName, subFolderName, fileName, fileType) {
