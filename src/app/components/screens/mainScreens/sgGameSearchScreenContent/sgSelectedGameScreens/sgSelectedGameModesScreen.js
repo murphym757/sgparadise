@@ -42,15 +42,8 @@ export default function SgSelectedGameSetGameModesScreen({route, navigation}) {
         backToPreviousPage
     } = useAuth()
     const {
-        selectedParentTag,
-        selectedTags,
-        tagsSelection,
-        chosenTagsArray,
-        parentGenreSelected,
-        childGenreSelected,
-        chosenGenre,
-        childTagCollection,
-        parentTagCollection
+        tagCollection,
+        selectedTags
     } = useTags()
     //let { searchBarTitle, searchType, searchQuery } = route.params
     const colors = useContext(CurrentThemeContext)
@@ -69,11 +62,14 @@ export default function SgSelectedGameSetGameModesScreen({route, navigation}) {
         gameSummary,
         gameScreenshots
     } = route.params
-    const [ gameModes, setGameModes ]= useState([])
-    const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be read
+    const isFocused = useIsFocused()
+    const [ gameModesArray, setGameModesArray ]= useState([])
+    const [ chosenGameModesTagsArray, setChosenGameModeTagsArray ] = useState([])
+    const tagsNewGameModesArray = Array.from(new Set(chosenGameModesTagsArray))
+    const [ gameModeTagsSelected, setGameModeTagsSelected ] = useState(false)
 
     function buttonGroup() {
-        const pageNumber = 'Page9'
+        const pageNumber = 'Page10'
         const passingContent = {
             involvesCompanies: involvesCompanies,
             gameRating: gameRating, 
@@ -83,7 +79,7 @@ export default function SgSelectedGameSetGameModesScreen({route, navigation}) {
             gameGenre: gameGenre,
             gameSubGenre: gameSubGenre,
             gameReleaseDate: gameReleaseDate,
-            gameModes: gameModes,
+            gameModes: chosenGameModesTagsArray,
             gameStoryline: gameStoryline,
             gameSummary: gameSummary,
             gameScreenshots: gameScreenshots
@@ -119,33 +115,38 @@ export default function SgSelectedGameSetGameModesScreen({route, navigation}) {
               key: documentSnapshot.id,
             })
           })
-          setGameModes(gameModeTags)
+          setGameModesArray(gameModeTags)
         })
       // Unsubscribe from events when no longer in use
       return () => subscriber();
       }
+
+    async function chosenGameModesTagData(item) {
+        setChosenGameModeTagsArray(chosenGameModesTagsArray => [...chosenGameModesTagsArray, item])
+    }
+
+    async function removeChosenGameModesTagData(item) {
+        setGameModeTagsSelected(false)
+        setChosenGameModeTagsArray(tagsNewGameModesArray.filter(tag => tag !== item))
+    }
+
+    function confirmTagSelection(item){
+        setGameModeTagsSelected(true),
+        chosenGameModesTagData(item)
+    }
 
       function gameModesResults() { 
         return (
             <Container>
                 <View style={{justifyContent: 'center', alignItems: 'center'}}>
                     <MainFont>Finally, what some of the gaming mechanics present in {gameName}?</MainFont>
-                    {childGenreSelected == false 
-                        ?   <View></View>  
-                        :   selectedTags()
-                    }
+                    {selectedTags(chosenGameModesTagsArray, tagsNewGameModesArray, removeChosenGameModesTagData)}
                 </View>
                 <View>
-                    {childGenreSelected == false 
-                        ?   childTagCollection(gameModes)
-                        :   <View></View>
-                    }
+                    {tagCollection(gameModesArray, confirmTagSelection)}
                 </View>
                 <View>
-                    {childGenreSelected == false 
-                        ?   <View></View>
-                        :   buttonGroup()
-                    }
+                    {buttonGroup()}
                 </View>
             </Container>
           ) 

@@ -43,8 +43,7 @@ export default function SgSelectedGameSetGenreScreen({route, navigation}) {
     } = useAuth()
     const {
         tagCollection,
-        selectedTags,
-        tagsSelected
+        selectedTags
     } = useTags()
     //let { searchBarTitle, searchType, searchQuery } = route.params
     const colors = useContext(CurrentThemeContext)
@@ -61,9 +60,12 @@ export default function SgSelectedGameSetGenreScreen({route, navigation}) {
         gameSummary,
         gameScreenshots
     } = route.params
-    const gameDataType = "Genres"
-    const [ gameGenreArray, setGameGenreArray ]= useState([])
     const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be read
+    const [ gameGenreArray, setGameGenreArray ]= useState([])
+    const [chosenGenreTagsArray, setChosenGenreTagsArray] = useState([])
+    const tagsNewGenreArray = Array.from(new Set(chosenGenreTagsArray))
+    const [genreTagsSelected, setGenreTagsSelected] = useState(false)
+    const [chosenGenreName, setChosenGenreName] = useState()
 
     function buttonGroup() {
         const pageNumber = 'Page7'
@@ -73,7 +75,7 @@ export default function SgSelectedGameSetGenreScreen({route, navigation}) {
             gameCover: gameCover,
             gameId: gameId,
             gameName: gameName,
-            gameGenre: gameGenreArray,
+            gameGenre: chosenGenreName,
             gameReleaseDate: gameReleaseDate,
             gameStoryline: gameStoryline,
             gameSummary: gameSummary,
@@ -116,24 +118,39 @@ export default function SgSelectedGameSetGenreScreen({route, navigation}) {
       return () => subscriber();
       }
 
+    async function chosenGenreTagData(item) {
+        setChosenGenreTagsArray(chosenGenreTagsArray => [...chosenGenreTagsArray, item])
+    }
+
+    async function removeChosenGenreTagData(item) {
+        setGenreTagsSelected(false)
+        setChosenGenreTagsArray(tagsNewGenreArray.filter(tag => tag !== item))
+    }
+
+    function confirmTagSelection(item){
+        setGenreTagsSelected(true),
+        chosenGenreTagData(item),
+        setChosenGenreName(String(item.tagName))
+    }
+
         function gameGenreResults() { 
             return (
                 <Container>
                 <View style={{justifyContent: 'center', alignItems: 'center'}}>
                     <MainFont>What genre does {gameName} fall under?</MainFont>
-                    {tagsSelected == false 
+                    {genreTagsSelected == false 
                         ?   <View></View>  
-                        :   selectedTags()
+                        :   selectedTags(chosenGenreTagsArray, tagsNewGenreArray, removeChosenGenreTagData)
                     }
                 </View>
                 <View>
-                    {tagsSelected == false 
-                        ?   tagCollection(gameGenreArray, gameDataType)
+                    {genreTagsSelected == false 
+                        ?   tagCollection(gameGenreArray, confirmTagSelection)
                         :   <View></View>
                     }
                 </View>
                 <View>
-                    {tagsSelected == false 
+                    {genreTagsSelected == false 
                         ?   <View></View>
                         :   buttonGroup()
                     }

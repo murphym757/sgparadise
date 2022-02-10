@@ -128,7 +128,7 @@ export default function SgSelectedGameplayScreen({route, navigation}) {
             <View> 
                 {gameScreenshots.length <= 3
                     ?   <Text>Yep</Text>
-                    :   <Text>Nope</Text>
+                    :   <Text>YeSSSS</Text>
                 }
                 {gameNameLastChar == 's'
                     ?   <MainFont>Choose {imageCount} {imgWordingSelector()} that perfectly showcases some of {gameName + "'"} highlights: </MainFont>

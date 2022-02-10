@@ -26,34 +26,13 @@ export function TagsProvider({ children }) {
     const colors = useContext(CurrentThemeContext)
     const [chosenTagsArray, setChosenTagsArray] = useState([])
     const tagsNewArray = Array.from(new Set(chosenTagsArray)); //Removes the ability to add dulicate
-    const [chosenTag, setChosenTag] = useState()
-    const [tagsSelected, setTagsSelected] = useState(false)
-    const [genreTagsSelected, setGenreTagsSelected] = useState(false)
-    const [subGenreTagsSelected, setSubGenreTagsSelected] = useState(false)
-    const [gameModeTagsSelected, setGameModeTagsSelected] = useState(false)
-    const [editgenreTags, setEditgenreTags] = useState([])
-    const [deletedTag, setdeleteTag] = useState()
     const [resetData, setResetData] = useState(false)
 
-    // Adding and removing tags from a game
-    async function chosenTagData(item) {
-        setChosenTagsArray(chosenTagsArray => [...chosenTagsArray, item])
-    }
-
-    async function removeChosenTagData(item) {
-        setTagsSelected(false)
-        setChosenTagsArray(tagsNewArray.filter(tag => tag !== item))
-    }
-
-    async function removeAllChosenTagData(item) {
-        setChosenTagsArray([])
-    }
-
-    function selectedTags() {
-        let initSelectedArray = chosenTagsArray
-        let deletionSelectedArray = tagsNewArray
+    function selectedTags(initArray, deleArray, resetArray) {
+        let initialSelectedArray = initArray
+        let deletionSelectedArray = deleArray
         let currentSelectedTagsArray = []
-        currentSelectedTagsArray = initSelectedArray.filter(item => deletionSelectedArray.includes(item))
+        currentSelectedTagsArray = initialSelectedArray.filter(item => deletionSelectedArray.includes(item))
         if (resetData == true) return setChosenTagsArray(null)
         return (
             <ScrollViewContainer
@@ -81,7 +60,7 @@ export function TagsProvider({ children }) {
                         marginTop: 3,
                         marginBottom: 10
                         }}
-                        onPress={() => removeChosenTagData(item)}>
+                        onPress={() => resetArray(item)}>
                         <View style={{
                             margin: 10,
                             flexDirection: "row", justifyContent: "center"
@@ -100,11 +79,11 @@ export function TagsProvider({ children }) {
         )
     }
 
-    function tagsSelection(tagData) {
-        let initArray = tagData
-        let deletionArray = tagsNewArray
+    function tagsSelection(initArray, deleArray) {
+        let initialArray = initArray
+        let deletionArray = deleArray
         let currentTagsArray = [];
-        currentTagsArray = initArray.filter(item => !deletionArray.includes(item))
+        currentTagsArray = initialArray.filter(item => !deletionArray.includes(item))
             return (
                 <FlatList
                     columnWrapperStyle={{flexDirection : "row", flexWrap : "wrap"}}
@@ -145,9 +124,7 @@ export function TagsProvider({ children }) {
             )
     }
 
-    function tagCollection(tagData, tagDataType) {
-        let iceCreeam = tagDataType
-        console.log("🚀 ~ file: tagsContext.js ~ line 148 ~ tagCollection ~ iceCreeam", iceCreeam)
+    function tagCollection(tagData, tagDataConfirmation) {
         let initArray = tagData
         let deletionArray = tagsNewArray
         let currentTagsArray = [];
@@ -173,7 +150,7 @@ export function TagsProvider({ children }) {
                         height: 100,
                         backgroundColor: colors.secondaryColor,
                     }} 
-                    onPress={() => confirmTagSelection(item)}>
+                    onPress={() => tagDataConfirmation(item)}>
                         <MainHeadingButton style={{justifyContent: 'center', alignItems: 'center',}}>{item.tagName}</MainHeadingButton>
                         <View style={{ justifyContent: 'center', alignItems: 'center', margin: 7 }}>
                             <FontAwesomeIcon 
@@ -186,22 +163,10 @@ export function TagsProvider({ children }) {
         )
     }
 
-    function confirmTagSelection(item){
-        setTagsSelected(true)
-        chosenTagData(item)
-        setChosenTag(item.tagName)
-    }
-
-    
-
-
     const value = {
         selectedTags,
         tagsSelection,
-        tagCollection,
-        tagsSelected,
-        chosenTag,
-        chosenTagsArray,
+        tagCollection
     }   
 
     return (
