@@ -57,7 +57,7 @@ export default function UpdateUserScreen({navigation}) {
           navigation.navigate('Home')
         })
         .catch((err) => {
-          setError(""+ err +"")
+          setError(`${err}`)
         })
         .finally(() => {
           setIsLoading(false)
@@ -75,7 +75,7 @@ export default function UpdateUserScreen({navigation}) {
           navigation.navigate('Login')
         })
         .catch((err) => {
-          setError(""+ err +"")
+          setError(`${err}`)
         })
         .finally(() => {
           setIsLoading(false)
@@ -99,8 +99,8 @@ export default function UpdateUserScreen({navigation}) {
     }
   
     useEffect(() => {
-      setEmail("" + currentUser.email +"")
-      setUserId("" + currentUser.uid +"")
+      setEmail(`${currentUser.email}`)
+      setUserId(`${currentUser.uid}`)
       pageLoader()
     })
 

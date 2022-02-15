@@ -51,8 +51,8 @@ export default function SgConsoleListScreens({route, navigation}, props) {
     const [modalSelected, setModalSelected] = useState(route.params?.modal)
 
     // For IGDB API Search Endpoint
-    const clientIdIGDB = "" + gamesConfig.igdbClientId + ""
-    const clientSecretIGDB = "" + gamesConfig.igdbClientSecret + ""
+    const clientIdIGDB = `${gamesConfig.igdbClientId}`
+    const clientSecretIGDB = `${gamesConfig.igdbClientSecret}`
 
         // Finds the clostest game title
         let matches = stringSimilarity.findBestMatch("The Amazing Spider-Man: Web of Fire", sg32XNATitles)
@@ -67,7 +67,7 @@ export default function SgConsoleListScreens({route, navigation}, props) {
 
     async function igbdbAPI() {
         let accessToken;
-        await axios.post('https://id.twitch.tv/oauth2/token?client_id=' + clientIdIGDB + '&client_secret=' + clientSecretIGDB + '&grant_type=client_credentials')
+        await axios.post(`https://id.twitch.tv/oauth2/token?client_id=${clientIdIGDB}&client_secret=${clientSecretIGDB}&grant_type=client_credentials`)
             .then(res => {
                 accessToken = res.data.access_token;
                 setAccessTokenIGDB(accessToken)
@@ -228,7 +228,7 @@ export default function SgConsoleListScreens({route, navigation}, props) {
                                         marginVertical: 15
                                     }}
                                     source={{
-                                        uri: "" + item.systemLogoSelectedDay + "",
+                                        uri: `${item.systemLogoSelectedDay}`,
                                     }}
                                     onLoadStart={() => {setIsLoading(true)}}
                                     onLoadEnd={() => {setIsLoading(false)}}

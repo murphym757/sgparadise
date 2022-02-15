@@ -58,7 +58,7 @@ export default function RegistrationScreen({navigation}) {
               });
         })
         .catch((err) => {
-          setError(""+ err +"")
+          setError(`${err}`)
         })
       } catch {
         setError('Failed to create an account')

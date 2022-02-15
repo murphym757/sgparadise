@@ -112,11 +112,10 @@ export default function SgHomeScreen({ navigation, route }) {
     const [uploadImageurl, setImageurl] = useState('https://upload.wikimedia.org/wikipedia/en/7/79/Tiny_Toon_Adventures_MegaDrive_PAL.jpg')
     const [folderName, setFolderName] = useState('images')
     const [subFolderName, setSubFolderName] = useState('boxArtImage')
-    const [fileName, setFileName] = useState(gameName + 'boxArt')
+    const [fileName, setFileName] = useState(`${gameName}boxArt`)
     const [fileType, setFileType] = useState(uploadImageurl.slice(-3))
 
     // For Referencing Images
-    const refImageUrl =  "" + folderName + "/" + consoleName + "/" + gameName + "/" + subFolderName + "/" + fileName + "." + fileType + ""
     const sgImageStorageRef = sgImageStorage.ref()
     const imagesRef  = sgImageStorageRef.child('images/tinyToon/boxArtImage/tinyToonboxArt.jpg')
     const imagesRef2  = sgImageStorageRef.child('images/tinyToon/boxArtImage/Vice-city-cover.jpg')

@@ -55,8 +55,8 @@ export default function sgSearchScreen({route, navigation}) {
     const [gameSummary, setIgdbGameSummary] = useState()
     const [igdbUnixTimestamp, setIgdbUnixTimestamp]= useState()
     const igdbSearchPlatforms = `(${JSON.stringify(route.params.igdbConsoleId)})`
-    const igdbTestField = 'fields alpha_channel, animated, checksum, game, height, image_id, url, width;  where game = (' + `"${sgDbSearchQuery}"` + ');'
-    const igdbSearchResultField = 'fields name, category, slug, first_release_date, rating, age_ratings, artworks, screenshots, summary, cover; search ' + `"${sgDbSearchQuery}"` + '; limit 20; where category != 5 & platforms =' + igdbSearchPlatforms + '& cover != null; '
+    const igdbTestField = `fields alpha_channel, animated, checksum, game, height, image_id, url, width;  where game = ("${sgDbSearchQuery}");`
+    const igdbSearchResultField = `fields name, category, slug, first_release_date, rating, age_ratings, artworks, screenshots, summary, cover; search "${sgDbSearchQuery}"; limit 20; where category != 5 & platforms =${igdbSearchPlatforms}& cover != null;`
     const igdbCoversResultField = 'fields alpha_channel,animated,checksum,game,height,image_id,url,width;  where game = (9476);'
     
     useEffect(() => {
@@ -65,7 +65,7 @@ export default function sgSearchScreen({route, navigation}) {
                 headers: {
                     'Accept': 'application/json',
                     "Client-ID": route.params.clientIdIGDB,
-                    "Authorization": "Bearer " + route.params.accessTokenIGDB
+                    "Authorization": `Bearer ${route.params.accessTokenIGDB}`
                 }
             })
             return new Promise(resolve => {

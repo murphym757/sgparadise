@@ -683,7 +683,7 @@ export function consoleImages() {
                 height: imageHeight
             }}
             source={{
-                uri: "" + imageUrl + "",
+                uri: `${imageUrl}`,
             }}
         />
     )

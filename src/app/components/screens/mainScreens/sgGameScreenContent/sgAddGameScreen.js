@@ -38,13 +38,13 @@ export default function AddGameScreen({ route, navigation }) {
 
     useEffect(() => {
         const twitchIdUrl ='https://id.twitch.tv/oauth2/token?'
-        const clientId = 'client_id=' + ""+ gamesConfig.igdbClientId + ""
-        const clientSecret = '&client_secret=' + "" + gamesConfig.igdbClientSecret + ""
+        const clientId = `client_id=${gamesConfig.igdbClientId}`
+        const clientSecret = `&client_secret=${gamesConfig.igdbClientSecret}`
         const grantType = '&grant_type=client_credentials'
         setTimeout(() => {
             setIsLoading(false)
           }, 2500)
-        axios.post(twitchIdUrl + clientId + clientSecret + grantType)
+        axios.post(`${twitchIdUrl}${clientId}${clientSecret}${grantType}`)
             .then(async (res) => {
                 await AsyncStorage.setItem('igdbAccesstoken', res.data.access_token)
             })
@@ -57,11 +57,11 @@ export default function AddGameScreen({ route, navigation }) {
       async function igdbSearchGame() {
         const jsonValue = await AsyncStorage.getItem('igdbAccesstoken')
         const axiosUrl = "https://api.igdb.com/v4/games"
-        const igdbFields = 'fields first_release_date,platforms; where first_release_date < 864345600 & platforms = (' + igdbConsoleId + ');'        
+        const igdbFields = `fields first_release_date,platforms; where first_release_date < 864345600 & platforms = (${igdbConsoleId});`        
         const gameSearchedName = "sonic the hedgehog"
         const parent = '"'
-        const searchedGameName = ''+ parent + gameSearchedName + parent + ''
-        const igdbSearchGame = 'search ' + searchedGameName + ';'
+        const searchedGameName = `${parent}${gameSearchedName}${parent}`
+        const igdbSearchGame = `search ${searchedGameName};`
         try {
             await axios({
                 url: axiosUrl,
@@ -69,9 +69,9 @@ export default function AddGameScreen({ route, navigation }) {
                 headers: {
                     'Accept': 'application/json',
                     'Client-ID': gamesConfig.igdbClientId,
-                    'Authorization': 'Bearer' + " " + jsonValue,
+                    'Authorization': `Bearer ${jsonValue}`,
                 },
-                data: igdbSearchGame + igdbFields
+                data: `${igdbSearchGame}${igdbFields}`
                 })
                 .then(res => {
                     setSgGamesArray(res.data)
@@ -88,7 +88,7 @@ export default function AddGameScreen({ route, navigation }) {
     async function igdbSearchGameImage() {
         const jsonValue = await AsyncStorage.getItem('igdbAccesstoken')
         const axiosUrl = "https://api.igdb.com/v4/covers"
-        const igdbFields = 'fields alpha_channel,animated,checksum,game,height,image_id,url,width; where game = (' + sgGamesIdsArray + ');'
+        const igdbFields = `fields alpha_channel,animated,checksum,game,height,image_id,url,width; where game = (${sgGamesIdsArray});`
         try {
             await axios({
             url: axiosUrl,
@@ -96,7 +96,7 @@ export default function AddGameScreen({ route, navigation }) {
             headers: {
                 'Accept': 'application/json',
                 'Client-ID': gamesConfig.igdbClientId,
-                'Authorization': 'Bearer' + " " + jsonValue,
+                'Authorization': `Bearer ${jsonValue}`,
             },
             data: igdbFields
             })

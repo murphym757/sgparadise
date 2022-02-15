@@ -11,6 +11,7 @@ import{
 } from '../../../../../assets/styles/globalStyling'
 import {CurrentThemeContext} from '../../../../../assets/styles/globalTheme'
 import {
+    Container,
     FontAwesomeIcon,
     MainHeadingButton,
     faTimesCircle,
@@ -163,10 +164,37 @@ export function TagsProvider({ children }) {
         )
     }
 
+    function gameResults(pageDescription, tagSelected, chosenTagsArray, tagsNewArray, removeChosenTagData, gameArray, confirmTagSelection, buttonGroup) { 
+        return (
+            <Container>
+            <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                <MainFont>{pageDescription}</MainFont>
+                {tagSelected == false 
+                    ?   <View></View>  
+                    :   selectedTags(chosenTagsArray, tagsNewArray, removeChosenTagData)
+                }
+            </View>
+            <View>
+                {tagSelected == false 
+                    ?   tagCollection(gameArray, confirmTagSelection)
+                    :   <View></View>
+                }
+            </View>
+            <View>
+                {tagSelected == false 
+                    ?   <View></View>
+                    :   buttonGroup
+                }
+            </View>
+            </Container>
+          ) 
+    }
+
     const value = {
         selectedTags,
         tagsSelection,
-        tagCollection
+        tagCollection,
+        gameResults
     }   
 
     return (

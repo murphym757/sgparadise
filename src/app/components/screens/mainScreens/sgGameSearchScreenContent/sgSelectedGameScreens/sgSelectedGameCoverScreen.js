@@ -61,9 +61,9 @@ export default function SgSelectedGameCoverScreen({route, navigation}) {
     const [gameScreenshots, setGameScreenshots] = useState([])
     const [updatedGameRating, setUpdatedGameRating] = useState()
     const [unixTimestamp, setUnixTimestamp]= useState()
-    const igdbCoversResultsField = 'fields alpha_channel,animated,checksum,game,height,image_id,url,width; where game = (' + `${igdbGameId}` + ');'
-    const igdbScreenshotsResultsField = 'fields alpha_channel,animated,checksum,game,height,image_id,url,width; where game = (' + `${igdbGameId}` + ');'
-    const igdbInvolvesCompaniesResultsField ='fields company,developer,game,publisher,supporting; where game = (' + `${igdbGameId}` + ');'
+    const igdbCoversResultsField = `fields alpha_channel,animated,checksum,game,height,image_id,url,width; where game = (${igdbGameId});`
+    const igdbScreenshotsResultsField = `fields alpha_channel,animated,checksum,game,height,image_id,url,width; where game = (${igdbGameId});`
+    const igdbInvolvesCompaniesResultsField =`fields company,developer,game,publisher,supporting; where game = (${igdbGameId});`
 
     useEffect(() => {
         function searchTesting() {
@@ -71,7 +71,7 @@ export default function SgSelectedGameCoverScreen({route, navigation}) {
                 headers: {
                     'Accept': 'application/json',
                     "Client-ID": route.params.clientIdIGDB,
-                    "Authorization": "Bearer " + route.params.accessTokenIGDB
+                    "Authorization": `Bearer ${route.params.accessTokenIGDB}`
                 }
             })
             return new Promise(resolve => {
@@ -144,7 +144,7 @@ export default function SgSelectedGameCoverScreen({route, navigation}) {
                                 borderRadius: 25,
                             }}
                             source={{
-                                uri: "https://images.igdb.com/igdb/image/upload/t_1080p/" + item.image_id + ".jpg",
+                                uri: `https://images.igdb.com/igdb/image/upload/t_1080p/${item.image_id}.jpg`,
                             }}
                             onLoadStart={() => {setIsLoading(true)}}
                             onLoadEnd={() => {setIsLoading(false)}}
@@ -173,8 +173,8 @@ export default function SgSelectedGameCoverScreen({route, navigation}) {
                     ?   <MainFont>{"Tap to rate: "}</MainFont>
                     :   <View>
                         {updatedGameRating == 1
-                            ?   <MainFont>{"Tap to rate: " + updatedGameRating + " Star"}</MainFont>
-                            :   <MainFont>{"Tap to rate: " + updatedGameRating + " Stars"}</MainFont>
+                            ?   <MainFont>{`Tap to rate: ${updatedGameRating} Star`}</MainFont>
+                            :   <MainFont>{`Tap to rate: ${updatedGameRating} Stars`}</MainFont>
                         }
                     </View>
                 }

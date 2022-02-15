@@ -55,7 +55,7 @@ export default function LoginScreen({navigation, route}) {
                 });
           })
         .catch((err) => {
-          setError(""+ err +"")
+          setError(`${err}`)
         })
       } catch {
         setError('Failed to log in')

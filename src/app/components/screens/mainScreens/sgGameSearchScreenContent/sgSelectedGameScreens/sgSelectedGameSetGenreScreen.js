@@ -43,7 +43,8 @@ export default function SgSelectedGameSetGenreScreen({route, navigation}) {
     } = useAuth()
     const {
         tagCollection,
-        selectedTags
+        selectedTags,
+        gameResults
     } = useTags()
     //let { searchBarTitle, searchType, searchQuery } = route.params
     const colors = useContext(CurrentThemeContext)
@@ -61,11 +62,12 @@ export default function SgSelectedGameSetGenreScreen({route, navigation}) {
         gameScreenshots
     } = route.params
     const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be read
-    const [ gameGenreArray, setGameGenreArray ]= useState([])
-    const [chosenGenreTagsArray, setChosenGenreTagsArray] = useState([])
-    const tagsNewGenreArray = Array.from(new Set(chosenGenreTagsArray))
-    const [genreTagsSelected, setGenreTagsSelected] = useState(false)
-    const [chosenGenreName, setChosenGenreName] = useState()
+    const [ gameArray, setGameArray ]= useState([])
+    const [chosenTagsArray, setChosenTagsArray] = useState([])
+    const tagsNewArray = Array.from(new Set(chosenTagsArray))
+    const [tagSelected, setTagsSelected] = useState(false)
+    const [chosenName, setChosenName] = useState()
+    const pageDescription = `What genre does ${gameName} fall under?`
 
     function buttonGroup() {
         const pageNumber = 'Page7'
@@ -112,52 +114,26 @@ export default function SgSelectedGameSetGenreScreen({route, navigation}) {
               key: documentSnapshot.id,
             })
           })
-          setGameGenreArray(genreTags)
+          setGameArray(genreTags)
         })
       // Unsubscribe from events when no longer in use
       return () => subscriber();
       }
 
-    async function chosenGenreTagData(item) {
-        setChosenGenreTagsArray(chosenGenreTagsArray => [...chosenGenreTagsArray, item])
+    async function chosenTagData(item) {
+        setChosenTagsArray(chosenGenreTagsArray => [...chosenGenreTagsArray, item])
     }
 
-    async function removeChosenGenreTagData(item) {
-        setGenreTagsSelected(false)
-        setChosenGenreTagsArray(tagsNewGenreArray.filter(tag => tag !== item))
+    async function removeChosenTagData(item) {
+        setTagsSelected(false)
+        setChosenTagsArray(tagsNewArray.filter(tag => tag !== item))
     }
 
     function confirmTagSelection(item){
-        setGenreTagsSelected(true),
-        chosenGenreTagData(item),
-        setChosenGenreName(String(item.tagName))
+        setTagsSelected(true),
+        chosenTagData(item),
+        setChosenName(String(item.tagName))
     }
-
-        function gameGenreResults() { 
-            return (
-                <Container>
-                <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                    <MainFont>What genre does {gameName} fall under?</MainFont>
-                    {genreTagsSelected == false 
-                        ?   <View></View>  
-                        :   selectedTags(chosenGenreTagsArray, tagsNewGenreArray, removeChosenGenreTagData)
-                    }
-                </View>
-                <View>
-                    {genreTagsSelected == false 
-                        ?   tagCollection(gameGenreArray, confirmTagSelection)
-                        :   <View></View>
-                    }
-                </View>
-                <View>
-                    {genreTagsSelected == false 
-                        ?   <View></View>
-                        :   buttonGroup()
-                    }
-                </View>
-                </Container>
-              ) 
-        }
 
     return (
         <View style={{ flex: 1, paddingTop: windowHeight/20, paddingBottom: windowHeight/20, backgroundColor: colors.primaryColor }}>
@@ -165,7 +141,7 @@ export default function SgSelectedGameSetGenreScreen({route, navigation}) {
             {isLoading == undefined
                 ? <ActivityIndicator size="large" hidesWhenStopped="true"/>
                 : <View>
-                    {gameGenreResults()}
+                    {gameResults(pageDescription, tagSelected, chosenTagsArray, tagsNewArray, removeChosenTagData, gameArray, confirmTagSelection, buttonGroup)}
                 </View>
             }
             </SafeAreaViewContainer>

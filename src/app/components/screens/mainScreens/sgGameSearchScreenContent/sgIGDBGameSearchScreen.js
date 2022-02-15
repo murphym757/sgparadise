@@ -91,7 +91,7 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
     const [gameSummary, setIgdbGameSummary] = useState()
     const [igdbUnixTimestamp, setIgdbUnixTimestamp]= useState()
     const igdbSearchPlatforms = `(${JSON.stringify(route.params.igdbConsoleId)})`
-    const igdbTestField = 'fields name, cover, rating, age_ratings, genres, screenshots, summary, first_release_date; search ' + '"' + igdbSearch + '"' + '; limit 20; where platforms =' + igdbSearchPlatforms + '& cover != null;'
+    const igdbTestField = `fields name, cover, rating, age_ratings, genres, screenshots, summary, first_release_date; search "${igdbSearch}"; limit 20; where platforms =${igdbSearchPlatforms}& cover != null;`
 
     function igdbGameData(item) {
         setIgdbGameId(item.id)
@@ -136,7 +136,7 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
             headers: {
                 'Accept': 'application/json',
                 "Client-ID": route.params.clientIdIGDB,
-                "Authorization": "Bearer " + route.params.accessTokenIGDB
+                "Authorization": `Bearer ${route.params.accessTokenIGDB}`
             }
         })
         api.post('https://api.igdb.com/v4/games', igdbTestField)
@@ -429,7 +429,7 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
                                     height: 60
                                 }}
                                 source={{
-                                    uri: "" + selectedSystemLogo + "",
+                                    uri: `${selectedSystemLogo}`,
                                 }}
                             />
                             <Text>Test</Text>

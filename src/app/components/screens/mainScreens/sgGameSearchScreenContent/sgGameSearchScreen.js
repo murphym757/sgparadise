@@ -146,7 +146,7 @@ export default function SgGameSearchScreen({route, navigation}, props) {
                     height: 60
                 }}
                 source={{
-                    uri: "" + selectedSystemLogo + "",
+                    uri: `${selectedSystemLogo}`,
                 }}
             />
         )

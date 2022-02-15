@@ -23,8 +23,8 @@ export function manualColorSet() {
 
 export function loadingScreen() {
     const baseLink = "../../../../../assets/images/"
-    const dayImage = baseLink + "lottieLoadingDay.json"
-    const nightImage = baseLink + "lottieLoadingNight.json"
+    const dayImage = `${baseLink}lottieLoadingDay.json`
+    const nightImage = `${baseLink}lottieLoadingNight.json`
 
     function loadingIcon() {
       if (nightTime) {

@@ -52,7 +52,7 @@ export function AuthProvider({ children }) {
         return auth.currentUser.delete().then(() => {
             navigation.navigate('Home')
           }).catch((err) => {
-            setError(""+ err +"")
+            setError(`${err}`)
           })
     }
 
@@ -60,7 +60,7 @@ export function AuthProvider({ children }) {
         return sgDB.collection("users").doc(userId).delete().then(() => {
             console.log("User successfully deleted!")
         }).catch((err) => {
-          setError(""+ err +"")
+          setError(`${err}`)
         })
     }
 
@@ -127,7 +127,7 @@ export function AuthProvider({ children }) {
     async function addImagesForGame(collectionName, consoleName, gamesCollection, gameName, imagesCollection) {
         const timestamp = firebase.firestore.FieldValue.serverTimestamp();
         sgDB.collection(collectionName).doc(consoleName).collection(gamesCollection).doc(gameName).collection(imagesCollection).add({
-            gameImage: gameName + " Image",
+            gameImage: `${gameName} Image`,
             postCreator: currentUID,
             createdAt: timestamp
         })
@@ -136,7 +136,7 @@ export function AuthProvider({ children }) {
     async function addCommentsForGame(collectionName, consoleName, gamesCollection, gameName, commentsCollection) {
         const timestamp = firebase.firestore.FieldValue.serverTimestamp();
         sgDB.collection(collectionName).doc(consoleName).collection(gamesCollection).doc(gameName).collection(commentsCollection).add({
-            gameImage: gameName + " Image",
+            gameImage: `${gameName} Image`,
             postCreator: currentUID,
             createdAt: timestamp
         })
@@ -144,7 +144,7 @@ export function AuthProvider({ children }) {
     
     async function addGenreTagsForGame(collectionName, consoleName, gamesCollection, gameName, tagsCollection, genreTagsTitle, genreTagsData) {
         const timestamp = firebase.firestore.FieldValue.serverTimestamp()
-        const gameTags = gameName + "Tags"
+        const gameTags = `${gameName} Tags`
         sgDB.collection(collectionName).doc(consoleName).collection(gamesCollection).doc(gameName).collection(tagsCollection).doc('genreTags').set({
             tagsTitle: genreTagsTitle, 
             tagsData: genreTagsData,
@@ -155,9 +155,9 @@ export function AuthProvider({ children }) {
 
     async function addDescriptionTagsForGame(collectionName, consoleName, gamesCollection, gameName, tagsCollection, descriptionTagsTitle, descriptionTagsData) {
         const timestamp = firebase.firestore.FieldValue.serverTimestamp()
-        const gameTags = gameName + "Tags"
+        const gameTags = `${gameName} Tags`
         sgDB.collection(collectionName).doc(consoleName).collection(gamesCollection).doc(gameName).collection(tagsCollection).doc('descriptionTags').set({
-            gameImage: gameName + " Image",
+            gameImage: `${gameName} Image`,
             tagsTitle: descriptionTagsTitle,
             tagsData: descriptionTagsData,
             postCreator: currentUID,
@@ -211,8 +211,7 @@ export function AuthProvider({ children }) {
     }
 
     async function imageCapture(uploadImageurl, folderName, consoleName, gameName, subFolderName, fileName, fileType) {
-        const filename =  "" + folderName + "/" + consoleName + "/" + gameName + "/" + subFolderName + "/" + fileName + "." + fileType + ""
-       
+        const filename =  `${folderName}/${consoleName}/${gameName}/${subFolderName}/${fileName}.${fileType}`
 
         
     fetch(uploadImageurl).then(res => {
@@ -229,14 +228,14 @@ export function AuthProvider({ children }) {
         console.error(error);
         });
     }
-
+ 
     /*
         function displayData(collectionName, docName, objectName) {
         return sgDB.collection(collectionName).doc(docName)
         .onSnapshot((doc) => {
             if (doc.exists) {
                 console.log("Document data:", doc.data())
-                setStateTest(doc.data() + "." + objectName)
+                setStateTest(`${doc.data()}.${objectName}`)
             } else {
                 console.log("No such document!")
             }
