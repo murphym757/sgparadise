@@ -43,7 +43,8 @@ export default function SgSelectedGameSetGameModesScreen({route, navigation}) {
     } = useAuth()
     const {
         tagCollection,
-        selectedTags
+        selectedTags,
+        gameModesResults
     } = useTags()
     //let { searchBarTitle, searchType, searchQuery } = route.params
     const colors = useContext(CurrentThemeContext)
@@ -55,6 +56,7 @@ export default function SgSelectedGameSetGameModesScreen({route, navigation}) {
         gameCover,
         gameId,
         gameName,
+        gameSlug,
         gameGenre,
         gameSubGenre,
         gameReleaseDate,
@@ -63,38 +65,44 @@ export default function SgSelectedGameSetGameModesScreen({route, navigation}) {
         gameScreenshots
     } = route.params
     const isFocused = useIsFocused()
-    const [ gameModesArray, setGameModesArray ]= useState([])
-    const [ chosenGameModesTagsArray, setChosenGameModeTagsArray ] = useState([])
-    const tagsNewGameModesArray = Array.from(new Set(chosenGameModesTagsArray))
-    const [ gameModeTagsSelected, setGameModeTagsSelected ] = useState(false)
-
-    function buttonGroup() {
-        const pageNumber = 'Page10'
-        const passingContent = {
-            involvesCompanies: involvesCompanies,
-            gameRating: gameRating, 
-            gameCover: gameCover,
-            gameId: gameId,
-            gameName: gameName,
-            gameGenre: gameGenre,
-            gameSubGenre: gameSubGenre,
-            gameReleaseDate: gameReleaseDate,
-            gameModes: chosenGameModesTagsArray,
-            gameStoryline: gameStoryline,
-            gameSummary: gameSummary,
-            gameScreenshots: gameScreenshots
-        }
-        const navigationPass = navigation
-        return (
-            <View>
-                <TouchableButton onPress={() => forwardToNextPage(pageNumber, passingContent, navigationPass)}>
-                    <TouchableButtonFont>Next Page</TouchableButtonFont>
-                </TouchableButton>
-                <TouchableButtonAlt style={{}} onPress={() => backToPreviousPage(navigationPass)}>
-                    <TouchableButtonFontAlt>Previous Page</TouchableButtonFontAlt>
-                </TouchableButtonAlt>
-            </View>
-        )
+    const [ gameArray, setGameArray ]= useState([])
+    const [chosenTagsArray, setChosenTagsArray] = useState([])
+    const tagsNewArray = Array.from(new Set(chosenTagsArray))
+    const [modeTagsSelected, setModeTagsSelected] = useState(false)
+    const [tagSelected, setTagsSelected] = useState(false)
+    const pageDescription = `Finally, what some of the gaming mechanics present in ${gameName}?`
+    const nextPageNumber = 'Page9'
+    const passingContent = {
+        involvesCompanies: involvesCompanies,
+        gameRating: gameRating, 
+        gameCover: gameCover,
+        gameId: gameId,
+        gameName: gameName,
+        gameSlug: gameSlug,
+        gameGenre: gameGenre,
+        gameSubGenre: gameSubGenre,
+        gameReleaseDate: gameReleaseDate,
+        gameModes: chosenTagsArray,
+        gameStoryline: gameStoryline,
+        gameSummary: gameSummary,
+        gameScreenshots: gameScreenshots
+    }
+    const navigationPass = navigation
+    let tagArrayData = {
+        pageDescription, 
+        modeTagsSelected, 
+        chosenTagsArray,
+        tagsNewArray, 
+        removeChosenTagData, 
+        gameArray, 
+        confirmTagSelection, 
+    }
+    const buttonGroupData = {
+        forwardToNextPage, 
+        backToPreviousPage, 
+        nextPageNumber, 
+        passingContent, 
+        navigationPass
     }
 
     useEffect(() => {
@@ -115,41 +123,24 @@ export default function SgSelectedGameSetGameModesScreen({route, navigation}) {
               key: documentSnapshot.id,
             })
           })
-          setGameModesArray(gameModeTags)
+          setGameArray(gameModeTags)
         })
       // Unsubscribe from events when no longer in use
       return () => subscriber();
       }
 
-    async function chosenGameModesTagData(item) {
-        setChosenGameModeTagsArray(chosenGameModesTagsArray => [...chosenGameModesTagsArray, item])
+    async function chosenTagData(item) {
+        setChosenTagsArray(chosenGameModesTagsArray => [...chosenGameModesTagsArray, item])
     }
 
-    async function removeChosenGameModesTagData(item) {
-        setGameModeTagsSelected(false)
-        setChosenGameModeTagsArray(tagsNewGameModesArray.filter(tag => tag !== item))
+    async function removeChosenTagData(item) {
+        setModeTagsSelected(false)
+        setChosenTagsArray(tagsNewArray.filter(tag => tag !== item))
     }
 
     function confirmTagSelection(item){
-        setGameModeTagsSelected(true),
-        chosenGameModesTagData(item)
-    }
-
-      function gameModesResults() { 
-        return (
-            <Container>
-                <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                    <MainFont>Finally, what some of the gaming mechanics present in {gameName}?</MainFont>
-                    {selectedTags(chosenGameModesTagsArray, tagsNewGameModesArray, removeChosenGameModesTagData)}
-                </View>
-                <View>
-                    {tagCollection(gameModesArray, confirmTagSelection)}
-                </View>
-                <View>
-                    {buttonGroup()}
-                </View>
-            </Container>
-          ) 
+        setModeTagsSelected(true),
+        chosenTagData(item)
     }
 
     return (
@@ -158,7 +149,7 @@ export default function SgSelectedGameSetGameModesScreen({route, navigation}) {
             {isLoading == undefined
                 ? <ActivityIndicator size="large" hidesWhenStopped="true"/>
                 : <View>
-                    {gameModesResults()}
+                    {gameModesResults(tagArrayData, buttonGroupData)}
                 </View>
             }
             </SafeAreaViewContainer>

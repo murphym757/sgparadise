@@ -1,40 +1,21 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { 
-    Text,
     View,
-    Image,
-    FlatList,
-    ActivityIndicator,
-    TouchableOpacity
+    ActivityIndicator
 } from 'react-native'
   import{
-    windowHeight,
-    MainFont,
-    MainSubFont,
-    MainHeading,
-    MainHeadingButton,
-    ScrollViewContainer
+    windowHeight
 } from '../../../../../../../assets/styles/globalStyling'
 import {CurrentThemeContext} from '../../../../../../../assets/styles/globalTheme'
 // React Navigation
 import { useIsFocused } from '@react-navigation/native';
 import {
-        SafeAreaViewContainer,
-        Container,
-        TouchableButton,
-        TouchableButtonFont,
-        TouchableButtonAlt,
-        TouchableButtonFontAlt,
-        CustomInputField,
-        FontAwesomeIcon, faTimes
+        SafeAreaViewContainer
   } from '../../../index'
 import { useTags } from '../../../authScreens/tagsContext'
 import { firebase, gamesConfig } from '../../../../../../server/config/config'
 import { useAuth } from '../../../authScreens/authContext'
   
-
-    
-
 export default function SgSelectedGameSetGenreScreen({route, navigation}) {
     const {
         unixTimestampConverter,
@@ -56,6 +37,7 @@ export default function SgSelectedGameSetGenreScreen({route, navigation}) {
         gameCover,
         gameId,
         gameName,
+        gameSlug,
         gameReleaseDate,
         gameStoryline,
         gameSummary,
@@ -68,34 +50,38 @@ export default function SgSelectedGameSetGenreScreen({route, navigation}) {
     const [tagSelected, setTagsSelected] = useState(false)
     const [chosenName, setChosenName] = useState()
     const pageDescription = `What genre does ${gameName} fall under?`
-
-    function buttonGroup() {
-        const pageNumber = 'Page7'
-        const passingContent = {
-            involvesCompanies: involvesCompanies,
-            gameRating: gameRating, 
-            gameCover: gameCover,
-            gameId: gameId,
-            gameName: gameName,
-            gameGenre: chosenGenreName,
-            gameReleaseDate: gameReleaseDate,
-            gameStoryline: gameStoryline,
-            gameSummary: gameSummary,
-            gameScreenshots: gameScreenshots
-        }
-        const navigationPass = navigation
-        return (
-            <View>
-                <TouchableButton onPress={() => forwardToNextPage(pageNumber, passingContent, navigationPass)}>
-                    <TouchableButtonFont>Next Page</TouchableButtonFont>
-                </TouchableButton>
-                <TouchableButtonAlt style={{}} onPress={() => backToPreviousPage(navigationPass)}>
-                    <TouchableButtonFontAlt>Previous Page</TouchableButtonFontAlt>
-                </TouchableButtonAlt>
-            </View>
-        )
+    const nextPageNumber = 'Page7'
+    const passingContent = {
+        involvesCompanies: involvesCompanies,
+        gameRating: gameRating, 
+        gameCover: gameCover,
+        gameId: gameId,
+        gameName: gameName,
+        gameSlug: gameSlug,
+        gameGenre: chosenName,
+        gameReleaseDate: gameReleaseDate,
+        gameStoryline: gameStoryline,
+        gameSummary: gameSummary,
+        gameScreenshots: gameScreenshots
     }
-
+    const navigationPass = navigation
+    let tagArrayData = {
+        pageDescription, 
+        tagSelected, 
+        chosenTagsArray,
+        tagsNewArray, 
+        removeChosenTagData, 
+        gameArray, 
+        confirmTagSelection, 
+    }
+    const buttonGroupData = {
+        forwardToNextPage, 
+        backToPreviousPage, 
+        nextPageNumber, 
+        passingContent, 
+        navigationPass
+    }
+    
     useEffect(() => {
         setTimeout(() => {
             setIsLoading(false)
@@ -141,7 +127,7 @@ export default function SgSelectedGameSetGenreScreen({route, navigation}) {
             {isLoading == undefined
                 ? <ActivityIndicator size="large" hidesWhenStopped="true"/>
                 : <View>
-                    {gameResults(pageDescription, tagSelected, chosenTagsArray, tagsNewArray, removeChosenTagData, gameArray, confirmTagSelection, buttonGroup)}
+                    {gameResults(tagArrayData, buttonGroupData)}
                 </View>
             }
             </SafeAreaViewContainer>

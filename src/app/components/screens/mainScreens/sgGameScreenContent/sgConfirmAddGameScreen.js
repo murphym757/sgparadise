@@ -309,7 +309,6 @@ export default function ConfirmAddGameScreen({navigation, route}, props) {
                 <Stack.Screen name="Page7" component={SgSelectedGameSetSubGenreScreen} />
                 <Stack.Screen name="Page8" component={SgSelectedGameSetGameModesScreen} />
                 <Stack.Screen name="Page9" component={SgSelectedGameConfirmationScreen} />
-                <Stack.Screen name="Page10" component={addGamePage10} />
             </Stack.Navigator>
         )
     }

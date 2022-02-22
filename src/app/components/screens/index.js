@@ -16,7 +16,7 @@
         export { default as SgSelectedGameSetGenreScreen } from './mainScreens/sgGameSearchScreenContent/sgSelectedGameScreens/sgSelectedGameSetGenreScreen'
         export { default as SgSelectedGameSetSubGenreScreen } from './mainScreens/sgGameSearchScreenContent/sgSelectedGameScreens/sgSelectedGameSetSubGenreScreen'
         export { default as SgSelectedGameSetGameModesScreen } from './mainScreens/sgGameSearchScreenContent/sgSelectedGameScreens/sgSelectedGameModesScreen'
-        export { default as SgSelectedGameConfirmationScreen } from './mainScreens/sgGameSearchScreenContent/sgSelectedGameScreens/sgSelectedGameModesScreen'
+        export { default as SgSelectedGameConfirmationScreen } from './mainScreens/sgGameSearchScreenContent/sgSelectedGameScreens/sgSelectedGameConfirmationScreen'
         export { default as SgIGDBGameSearchScreen } from './mainScreens/sgGameSearchScreenContent/sgIGDBGameSearchScreen'   
         export { default as SgConsoleListScreen } from './mainScreens/sgGameScreenContent/sgConsoleListScreen'
         export { default as TestImageDB } from './mainScreens/sgGameScreenContent/TestImageDB'

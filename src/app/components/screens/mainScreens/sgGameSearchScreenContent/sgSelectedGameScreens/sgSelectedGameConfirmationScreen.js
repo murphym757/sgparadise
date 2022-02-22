@@ -42,15 +42,7 @@ export default function SgSelectedGameConfirmationScreen({route, navigation}) {
         backToPreviousPage
     } = useAuth()
     const {
-        selectedParentTag,
-        selectedTags,
-        tagsSelection,
-        chosenTagsArray,
-        parentGenreSelected,
-        childGenreSelected,
-        chosenGenre,
-        childTagCollection,
-        parentTagCollection
+        gameConfirmationResults
     } = useTags()
     //let { searchBarTitle, searchType, searchQuery } = route.params
     const colors = useContext(CurrentThemeContext)
@@ -58,63 +50,55 @@ export default function SgSelectedGameConfirmationScreen({route, navigation}) {
     const [isLoading, setIsLoading] = useState()
     const { 
         involvesCompanies,
-        gameRating, 
         gameCover,
-        gameId,
-        gameName,
         gameGenre,
+        gameId,
+        gameModes,
+        gameName,
+        gameSlug,
+        gameRating, 
         gameReleaseDate,
+        gameSubGenre,
+        gameScreenshots,
         gameStoryline,
         gameSummary,
-        gameScreenshots
     } = route.params
+        console.log("🚀 ~ file: sgSelectedGameConfirmationScreen.js ~ line 65 ~ SgSelectedGameConfirmationScreen ~ gameCover", gameCover)
     const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be read
-
-    function buttonGroup() {
-        const pageNumber = 'Page9'
-        const passingContent = {
-            involvesCompanies: involvesCompanies,
-            gameRating: gameRating, 
-            gameCover: gameCover,
-            gameId: gameId,
-            gameName: gameName,
-            gameGenre: gameGenre,
-            gameSubGenre: gameSubGenre,
-            gameReleaseDate: gameReleaseDate,
-            gameModes: gameModes,
-            gameStoryline: gameStoryline,
-            gameSummary: gameSummary,
-            gameScreenshots: gameScreenshots
-        }
-        const navigationPass = navigation
-        return (
-            <View>
-                <TouchableButton onPress={() => forwardToNextPage(pageNumber, passingContent, navigationPass)}>
-                    <TouchableButtonFont>Next Page</TouchableButtonFont>
-                </TouchableButton>
-                <TouchableButtonAlt style={{}} onPress={() => backToPreviousPage(navigationPass)}>
-                    <TouchableButtonFontAlt>Previous Page</TouchableButtonFontAlt>
-                </TouchableButtonAlt>
-            </View>
-        )
+    const pageDescription = `Display All of the Game's data here. In the form of a list, maybe?`
+    const nextPageNumber = 'Page10'
+    const passingContent = {
+        gameCover: gameCover,
+        gameGenre: gameGenre,
+        gameId: gameId,
+        gameModes: gameModes,
+        gameName: gameName,
+        gameSlug: gameSlug,
+        gameRating: gameRating, 
+        gameReleaseDate: gameReleaseDate,
+        gameScreenshots: gameScreenshots,
+        gameStoryline: gameStoryline,
+        gameSubGenre: gameSubGenre,
+        gameSummary: gameSummary,
+        involvesCompanies: involvesCompanies
+    }
+    const navigationPass = navigation
+    let tagArrayData = {
+        pageDescription,
+        passingContent
+    }
+    const buttonGroupData = {
+        forwardToNextPage, 
+        backToPreviousPage, 
+        nextPageNumber, 
+        navigationPass
     }
 
     useEffect(() => {
         setTimeout(() => {
             setIsLoading(false)
           }, 2000)
-      }, [isFocused]);  
-
-      function gameResults() { 
-        return (
-            <Container>
-                <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                    <MainFont>Display All of the Game's data here. In the form of a list, maybe?</MainFont>
-                </View>
-                {buttonGroup()}
-            </Container>
-          ) 
-    }
+      }, [isFocused]);
 
     return (
         <View style={{ flex: 1, paddingTop: windowHeight/20, paddingBottom: windowHeight/20, backgroundColor: colors.primaryColor }}>
@@ -122,7 +106,7 @@ export default function SgSelectedGameConfirmationScreen({route, navigation}) {
             {isLoading == undefined
                 ? <ActivityIndicator size="large" hidesWhenStopped="true"/>
                 : <View>
-                    {gameResults()}
+                    {gameConfirmationResults(tagArrayData, buttonGroupData, windowHeight, undefined)}
                 </View>
             }
             </SafeAreaViewContainer>

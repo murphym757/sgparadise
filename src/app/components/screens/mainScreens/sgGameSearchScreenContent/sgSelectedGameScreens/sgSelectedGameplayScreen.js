@@ -97,6 +97,7 @@ export default function SgSelectedGameplayScreen({route, navigation}) {
             gameRating: gameRating, 
             gameCover: gameCover,
             gameId: igdbGameId,
+            gameSlug: gameSlug,
             gameName: gameName,
             gameReleaseDate: gameReleaseDate,
             gameStoryline: gameStoryline,

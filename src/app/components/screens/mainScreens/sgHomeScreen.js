@@ -228,7 +228,7 @@ export default function SgHomeScreen({ navigation, route }) {
                                     <GeneralFontColor>Logged In</GeneralFontColor>
                                     <GeneralFontColor>{stateTest}</GeneralFontColor>
                                     <GeneralFontColor>{userInfo}</GeneralFontColor>
-                                    {entries.map((entry, i) => <View key={i}><Text>{entry.id}</Text></View>)}
+                                    {React.Children.toArray(entries.map((entry, i) => <Text>{entry.id}</Text>))}
                                     <Button title="Delete Game" onPress={() => deleteGameFromConsole(collectionName, consoleName, gamesCollection, gameName)}/>
                             </View>
                         :   <View>

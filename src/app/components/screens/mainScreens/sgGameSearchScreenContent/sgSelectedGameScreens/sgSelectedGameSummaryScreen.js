@@ -102,7 +102,8 @@ export default function SgSelectedGameSummaryScreen({route, navigation}) {
     function buttonGroup() {
         const passingContent = {
             involvesCompanies: involvesCompanies,
-            gameRating: gameRating, 
+            gameRating: gameRating,
+            gameCover: gameCover, 
             gameId: igdbGameId,
             gameName: gameName,
             gameReleaseDate: gameReleaseDate,

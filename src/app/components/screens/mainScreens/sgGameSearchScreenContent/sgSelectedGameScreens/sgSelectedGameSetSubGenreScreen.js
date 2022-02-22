@@ -43,7 +43,8 @@ export default function SgSelectedGameSetSubGenreScreen({route, navigation}) {
     } = useAuth()
     const {
         tagCollection,
-        selectedTags
+        selectedTags,
+        gameResults
     } = useTags()
     //let { searchBarTitle, searchType, searchQuery } = route.params
     const colors = useContext(CurrentThemeContext)
@@ -55,6 +56,7 @@ export default function SgSelectedGameSetSubGenreScreen({route, navigation}) {
         gameCover,
         gameId,
         gameName,
+        gameSlug, 
         gameGenre,
         gameReleaseDate,
         gameStoryline,
@@ -62,38 +64,43 @@ export default function SgSelectedGameSetSubGenreScreen({route, navigation}) {
         gameScreenshots
     } = route.params
     const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be read
-    const [ gameSubGenreArray, setGameSubGenreArray ]= useState([])
-    const [ chosenSubGenreTagsArray, setChosenSubGenreTagsArray ] = useState([])
-    const tagsNewSubGenreArray = Array.from(new Set(chosenSubGenreTagsArray))
-    const [ subGenreTagsSelected, setSubGenreTagsSelected ] = useState(false)
-    const [ chosenSubGenreName, setChosenSubGenreName ] = useState()
-
-    function buttonGroup() {
-        const pageNumber = 'Page8'
-        const passingContent = {
-            involvesCompanies: involvesCompanies,
-            gameRating: gameRating, 
-            gameCover: gameCover,
-            gameId: gameId,
-            gameName: gameName,
-            gameGenre: gameGenre,
-            gameSubGenre: chosenSubGenreName,
-            gameReleaseDate: gameReleaseDate,
-            gameStoryline: gameStoryline,
-            gameSummary: gameSummary,
-            gameScreenshots: gameScreenshots
-        }
-        const navigationPass = navigation
-        return (
-            <View>
-                <TouchableButton onPress={() => forwardToNextPage(pageNumber, passingContent, navigationPass)}>
-                    <TouchableButtonFont>Next Page</TouchableButtonFont>
-                </TouchableButton>
-                <TouchableButtonAlt style={{}} onPress={() => backToPreviousPage(navigationPass)}>
-                    <TouchableButtonFontAlt>Previous Page</TouchableButtonFontAlt>
-                </TouchableButtonAlt>
-            </View>
-        )
+    const [ gameArray, setGameArray ]= useState([])
+    const [chosenTagsArray, setChosenTagsArray] = useState([])
+    const tagsNewArray = Array.from(new Set(chosenTagsArray))
+    const [tagSelected, setTagsSelected] = useState(false)
+    const [chosenName, setChosenName] = useState()
+    const pageDescription = `What subgenre is ideal for ${gameName}?`
+    const nextPageNumber = 'Page8'
+    const passingContent = {
+        involvesCompanies: involvesCompanies,
+        gameRating: gameRating, 
+        gameCover: gameCover,
+        gameId: gameId,
+        gameName: gameName,
+        gameSlug: gameSlug,
+        gameGenre: gameGenre,
+        gameSubGenre: chosenName,
+        gameReleaseDate: gameReleaseDate,
+        gameStoryline: gameStoryline,
+        gameSummary: gameSummary,
+        gameScreenshots: gameScreenshots
+    }
+    const navigationPass = navigation
+    let tagArrayData = {
+        pageDescription, 
+        tagSelected, 
+        chosenTagsArray,
+        tagsNewArray, 
+        removeChosenTagData, 
+        gameArray, 
+        confirmTagSelection, 
+    }
+    const buttonGroupData = {
+        forwardToNextPage, 
+        backToPreviousPage, 
+        nextPageNumber, 
+        passingContent, 
+        navigationPass
     }
 
     useEffect(() => {
@@ -114,51 +121,25 @@ export default function SgSelectedGameSetSubGenreScreen({route, navigation}) {
               key: documentSnapshot.id,
             })
           })
-          setGameSubGenreArray(subGenreTags)
+          setGameArray(subGenreTags)
         })
       // Unsubscribe from events when no longer in use
       return () => subscriber();
       }
 
-    async function chosenSubGenreTagData(item) {
-        setChosenSubGenreTagsArray(chosenSubGenreTagsArray => [...chosenSubGenreTagsArray, item])
+    async function chosenTagData(item) {
+        setChosenTagsArray(chosenSubGenreTagsArray => [...chosenSubGenreTagsArray, item])
     }
 
-    async function removeChosenSubGenreTagData(item) {
-        setSubGenreTagsSelected(false)
-        setChosenSubGenreTagsArray(tagsNewSubGenreArray.filter(tag => tag !== item))
+    async function removeChosenTagData(item) {
+        setTagsSelected(false)
+        setChosenTagsArray(tagsNewArray.filter(tag => tag !== item))
     }
 
     function confirmTagSelection(item){
-        setSubGenreTagsSelected(true),
-        chosenSubGenreTagData(item),
-        setChosenSubGenreName(String(item.tagName))
-    }
-
-      function gameGenreResults() { 
-        return (
-            <Container>
-            <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                <MainFont>What subgenre is ideal for {gameName}?</MainFont>
-                {subGenreTagsSelected == false 
-                    ?   <View></View>  
-                    :   selectedTags(chosenSubGenreTagsArray, tagsNewSubGenreArray, removeChosenSubGenreTagData)
-                }
-            </View>
-            <View>
-                {subGenreTagsSelected == false 
-                    ?   tagCollection(gameSubGenreArray, confirmTagSelection)
-                    :   <View></View>
-                }
-            </View>
-            <View>
-                {subGenreTagsSelected == false 
-                    ?   <View></View>
-                    :   buttonGroup()
-                }
-            </View>
-            </Container>
-          ) 
+        setTagsSelected(true),
+        chosenTagData(item),
+        setChosenName(String(item.tagName))
     }
 
     return (
@@ -167,7 +148,7 @@ export default function SgSelectedGameSetSubGenreScreen({route, navigation}) {
             {isLoading == undefined
                 ? <ActivityIndicator size="large" hidesWhenStopped="true"/>
                 : <View>
-                    {gameGenreResults()}
+                    {gameResults(tagArrayData, buttonGroupData)}
                 </View>
             }
             </SafeAreaViewContainer>

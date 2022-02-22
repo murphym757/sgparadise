@@ -2,11 +2,13 @@ import React, { useContext, useEffect, useState } from 'react'
 import { 
     View,
     Text,
+    Image,
     FlatList,
     TouchableOpacity
 } from 'react-native'
 import{
     MainFont,
+    MainSubFont,
     ScrollViewContainer
 } from '../../../../../assets/styles/globalStyling'
 import {CurrentThemeContext} from '../../../../../assets/styles/globalTheme'
@@ -14,6 +16,10 @@ import {
     Container,
     FontAwesomeIcon,
     MainHeadingButton,
+    TouchableButton,
+    TouchableButtonFont,
+    TouchableButtonAlt,
+    TouchableButtonFontAlt,
     faTimesCircle,
 } from '../index'
 
@@ -164,37 +170,122 @@ export function TagsProvider({ children }) {
         )
     }
 
-    function gameResults(pageDescription, tagSelected, chosenTagsArray, tagsNewArray, removeChosenTagData, gameArray, confirmTagSelection, buttonGroup) { 
+    function gameResults(tagArrayData, buttonGroupData) { 
         return (
             <Container>
-            <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                <MainFont>{pageDescription}</MainFont>
-                {tagSelected == false 
-                    ?   <View></View>  
-                    :   selectedTags(chosenTagsArray, tagsNewArray, removeChosenTagData)
-                }
-            </View>
-            <View>
-                {tagSelected == false 
-                    ?   tagCollection(gameArray, confirmTagSelection)
-                    :   <View></View>
-                }
-            </View>
-            <View>
-                {tagSelected == false 
-                    ?   <View></View>
-                    :   buttonGroup
-                }
-            </View>
+                <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                    <MainFont>{tagArrayData.pageDescription}</MainFont>
+                    {tagArrayData.tagSelected == false 
+                        ?   <View></View>  
+                        :   selectedTags(tagArrayData.chosenTagsArray, tagArrayData.tagsNewArray, tagArrayData.removeChosenTagData)
+                    }
+                </View>
+                <View>
+                    {tagArrayData.tagSelected == false 
+                        ?   tagCollection(tagArrayData.gameArray, tagArrayData.confirmTagSelection)
+                        :   <View></View>
+                    }
+                </View>
+                <View>
+                    {tagArrayData.tagSelected == false 
+                        ?   <View></View>
+                        :   buttonGroup(buttonGroupData)
+                    }
+                </View>
             </Container>
           ) 
+    }
+
+    function gameModesResults(tagArrayData, buttonGroupData) { 
+        let initArray = tagArrayData.gameArray
+        let deletionArray = tagArrayData.tagsNewArray
+        let currentTagsArray = [];
+        currentTagsArray = initArray.filter(item => !deletionArray.includes(item))
+        
+        return (
+            <Container>
+                <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                    <MainFont>{tagArrayData.pageDescription}</MainFont>
+                    {selectedTags(tagArrayData.chosenTagsArray, tagArrayData.tagsNewArray, tagArrayData.removeChosenTagData)}
+                </View>
+                <View>
+                    {tagCollection(currentTagsArray, tagArrayData.confirmTagSelection)}
+                </View>
+                <View>
+                    {tagArrayData.modeTagsSelected == false 
+                        ?   <View></View>
+                        :   buttonGroup(buttonGroupData)
+                    }
+                </View>
+            </Container>
+          ) 
+    }
+
+    function gameConfirmationResults(tagArrayData, buttonGroupData, windowHeight, undefined) {
+        return (
+            <Container>
+                <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                    <View style={{paddingBottom: 25}}><MainFont>{tagArrayData.pageDescription}</MainFont></View>
+                    <View style={{flexDirection: 'column', alignItems: 'center', paddingLeft: windowHeight/15, paddingRight: windowHeight/15, paddingBottom: 25}}>
+                        <View style={{paddingBottom: 25}}><MainSubFont>{tagArrayData.passingContent.gameName}</MainSubFont></View>
+                        <View style={{flexDirection: 'row'}}>
+                            <View style={{
+                                paddingLeft: windowHeight/20,
+                                width: 200,
+                                height: undefined,
+                            }}>
+                                <Image
+                                    style={{
+                                        height: 200,
+                                        width: 150,
+                                        marginVertical: 15,
+                                        resizeMode: 'stretch',
+                                        borderRadius: 25,
+                                    }}
+                                    source={{
+                                        uri: `https://images.igdb.com/igdb/image/upload/t_1080p/${tagArrayData.passingContent.gameCover[0].image_id}.jpg`,
+                                    }}
+                                />
+                            </View>
+                            <View style={{width: 200, paddingLeft: windowHeight/20, height: undefined}}>
+                                <View><MainSubFont>{tagArrayData.passingContent.gameId}</MainSubFont></View>
+                                <View><MainSubFont>{tagArrayData.passingContent.gameGenre}</MainSubFont></View>
+                                <View><MainSubFont>{tagArrayData.passingContent.gameRating}</MainSubFont></View>
+                                <View><MainSubFont>{tagArrayData.passingContent.gameReleaseDate}</MainSubFont></View>
+                                <View><MainSubFont>{tagArrayData.passingContent.gameStoryline}</MainSubFont></View>
+                                <View><MainSubFont>{tagArrayData.passingContent.gameSubGenre}</MainSubFont></View>
+                            </View>
+                        </View>
+                    </View>
+                    <MainSubFont>{tagArrayData.passingContent.gameSummary}</MainSubFont>
+                </View>
+                <View>
+                    {buttonGroup(buttonGroupData)}
+                </View>
+            </Container>
+        )
+    }
+
+    function buttonGroup(buttonGroupData) {
+        return (
+            <View>
+                <TouchableButton onPress={() => buttonGroupData.forwardToNextPage(buttonGroupData.nextPageNumber, buttonGroupData.passingContent, buttonGroupData.navigationPass)}>
+                    <TouchableButtonFont>Next Page</TouchableButtonFont>
+                </TouchableButton>
+                <TouchableButtonAlt style={{}} onPress={() => buttonGroupData.backToPreviousPage(buttonGroupData.navigationPass)}>
+                    <TouchableButtonFontAlt>Previous Page</TouchableButtonFontAlt>
+                </TouchableButtonAlt>
+            </View>
+        )
     }
 
     const value = {
         selectedTags,
         tagsSelection,
         tagCollection,
-        gameResults
+        gameResults,
+        gameModesResults,
+        gameConfirmationResults
     }   
 
     return (
