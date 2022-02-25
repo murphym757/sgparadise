@@ -106,6 +106,24 @@ export const TouchableButtonFontAlt = styled(Text) `
     fontFamily: 'SpartanMedium';
 `;
 
+export const TouchableButtonDelete = styled(TouchableOpacity) `
+    backgroundColor: ${currentTheme.primaryColorAltLight};
+    marginLeft: 30px;
+    marginRight: 30px;
+    marginTop: 20px;
+    height: 48px;
+    border: ${currentTheme.secondaryColor};
+    borderRadius: 5px;
+    alignItems: center;
+    justifyContent: center;
+`;
+
+export const TouchableButtonFontDelete = styled(Text) `
+    color: ${currentTheme.primaryColor};
+    fontSize: 15px;
+    fontFamily: 'SpartanMedium';
+`;
+
 export const FooterView = styled(View) `
     flex: 1;
     alignItems: center;

@@ -1,29 +1,18 @@
 
-import React, { useState, useEffect, useContext } from 'react';
-import { 
-    Text,
-    View,
-    FlatList,
-    TouchableOpacity
-} from 'react-native'
-  import{
-    windowHeight,
-    MainFont,
-    MainSubFont,
-    MainHeading,
-    MainHeadingButton,
-    ScrollViewContainer
-} from '../../../../../../assets/styles/globalStyling'
-import {CurrentThemeContext} from '../../../../../../assets/styles/globalTheme'
-  import {
-        SafeAreaViewContainer,
-        Container,
-        TouchableButton,
-        TouchableButtonFont,
-        SearchGameResults
-  } from '../../index'
-  import { useSearchBar } from './searchIndex'
-import { useAuth } from '../../authScreens/authContext'
+import React, { useState, useEffect, useContext } from 'react'
+import { View, FlatList, TouchableOpacity } from 'react-native'
+  import { 
+    Container, 
+    CurrentThemeContext, 
+    MainFont, 
+    MainHeading, 
+    MainSubFont, 
+    SafeAreaViewContainer, 
+    SearchGameResults, 
+    useAuth, 
+    useSearchBar, 
+    windowHeight
+} from '../../index'
   import axios from 'axios'
 
 export default function sgSearchScreen({route, navigation}) {
@@ -39,25 +28,10 @@ export default function sgSearchScreen({route, navigation}) {
     const { clientIdIGDB, accessTokenIGDB, igdbConsoleId, gbConsoleId, selectedSystemLogo, searchType } = route.params
 
 
-    // IGDB search data (Put on confirmation page)
-    const [igdbGameSelected, setigdbGameSelected] = useState(false)
+    // IGDB search data (Put on confirmation pag
     const [igdbSearchResults, setIgdbSearchResults] = useState([])
-    const [igdbCoversResults, setIgdbCoversResults] = useState([])
-    let result = igdbSearchResults.map(({ id }) => id)
-    const [igdbSearch, setIgdbSearch] = useState(sgDbSearchQuery)
-    const [igdbGameId, setIgdbGameId] = useState()
-    const [gameName, setIgdbGameName] = useState()
-    const [igdbGameCover, setIgdbGameCover] = useState()
-    const [igdbGameRating, setIgdbGameRating] = useState()
-    const [igdbGameAgeRating, setIgdbGameAgeRating] = useState()
-    const [igdbGameGenres, setIgdbGameGenres] = useState([])
-    const [igdbGameScreenshots, setIgdbGameScreenshots] = useState([])
-    const [gameSummary, setIgdbGameSummary] = useState()
-    const [igdbUnixTimestamp, setIgdbUnixTimestamp]= useState()
     const igdbSearchPlatforms = `(${JSON.stringify(route.params.igdbConsoleId)})`
-    const igdbTestField = `fields alpha_channel, animated, checksum, game, height, image_id, url, width;  where game = ("${sgDbSearchQuery}");`
     const igdbSearchResultField = `fields name, category, slug, first_release_date, rating, age_ratings, artworks, screenshots, summary, cover; search "${sgDbSearchQuery}"; limit 20; where category != 5 & platforms =${igdbSearchPlatforms}& cover != null;`
-    const igdbCoversResultField = 'fields alpha_channel,animated,checksum,game,height,image_id,url,width;  where game = (9476);'
     
     useEffect(() => {
         function searchTesting() {

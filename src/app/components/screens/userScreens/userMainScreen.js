@@ -10,9 +10,9 @@ export default function UserAddGameScreen({navigation}) {
             scrollEventThrottle={16}
         >
             <View style={{ flex: 1 }}>
-                <Text>
+                <MainFont>
                     Add Games
-                </Text>
+                </MainFont>
             </View>
         </ScrollView>
     </SafeAreaView>

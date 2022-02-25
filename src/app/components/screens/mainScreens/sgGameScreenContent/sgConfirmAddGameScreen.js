@@ -1,63 +1,47 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { 
-    View,
-    Text,
-    Image,
-    FlatList,
-    TouchableOpacity
-} from 'react-native'
-import {CurrentThemeContext} from '../../../../../../assets/styles/globalTheme'
-import{
-    windowHeight,
-    MainFont,
-    MainSubFont,
-    MainHeading,
-    MainHeadingButton,
-    ScrollViewContainer
-} from '../../../../../../assets/styles/globalStyling'
+import React, { useContext, useEffect, useState } from 'react';
+import { View, FlatList, TouchableOpacity } from 'react-native';
 import { useTags } from '../../authScreens/tagsContext'
 import { useSearchBar } from '../sgGameSearchScreenContent/searchIndex'
-import { firebase, gamesConfig } from '../../../../../server/config/config'
-
 
 // React Navigation
 import { createStackNavigator } from '@react-navigation/stack'
-import { NavigationContainer, useIsFocused } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native'
 import {
+    Container,
+    CurrentThemeContext,
+    faBasketballBall,
+    faBook,
+    faChevronLeft,
+    faCrosshairs,
+    faFilter,
+    faFistRaised,
+    faFlagCheckered,
+    faLayerGroup,
+    faMap,
+    faPuzzlePiece,
+    faShieldAlt,
+    faStar,
+    firebase,
+    FontAwesomeIcon,
+    MainFont,
+    MainHeading,
+    MainHeadingButton,
+    SafeAreaViewContainer,
+    ScrollViewContainer,
     SgConsoleListScreen,
-    sgGenresScreen,
-    sgSearchScreen,
     sgSearchResultsScreen,
+    sgSearchScreen,
+    SgSelectedGameConfirmationScreen,
     SgSelectedGameCoverScreen,
-    SgSelectedGameSummaryScreen,
     SgSelectedGameplayScreen,
+    SgSelectedGameSetGameModesScreen,
     SgSelectedGameSetGenreScreen,
     SgSelectedGameSetSubGenreScreen,
-    SgSelectedGameSetGameModesScreen,
-    SgSelectedGameConfirmationScreen,
-    SafeAreaViewContainer,
-    Container,
-    ContentContainer,
-    SearchGameTitle,
-    SearchGameData,
-    FontAwesomeIcon,
-    faChevronLeft,
-    faTimesCircle,
-    faFilter,
-    faStar,
-    faBook,
-    faFistRaised,
-    faLayerGroup,
-    faPuzzlePiece,
-    faFlagCheckered,
-    faShieldAlt,
-    faCrosshairs,
-    faMap,
-    faBasketballBall
+    SgSelectedGameSummaryScreen,
+    windowHeight
 } from '../../index'
-import SgConsoleListScreens from './sgConsoleListScreen'
 
-export default function ConfirmAddGameScreen({navigation, route}, props) {
+export default function ConfirmAddGameScreen({navigation, route}) {
     const {
         selectedTags,
         tagsSelection} = useTags()
@@ -249,11 +233,11 @@ export default function ConfirmAddGameScreen({navigation, route}, props) {
                     {selectedTags(tagData)}
                     <ScrollViewContainer>
                         <View style={{paddingBottom: windowHeight/4}}>
-                            <Text>What genre does {gameName} fall under?</Text>
+                            <MainFont>What genre does {gameName} fall under?</MainFont>
                             {searchResults()}
                             {genreTagCollection()}
                             {searchFilterSelected == false
-                                ?   <Text>Ocean Drive</Text>
+                                ?   <MainFont>Ocean Drive</MainFont>
                                 :   tagsSelection(tagData)
                             }
                         </View>

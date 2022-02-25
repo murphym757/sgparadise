@@ -45,75 +45,96 @@
         //Global Styling
         export {
             Container,
-            ViewContainer,
-            SafeAreaViewContainer,
-            ScrollViewContainer,
             ContentContainer,
-            TextInputSearchBar,
-            ViewSortColumn,
+            CustomTextAreaField,
+            ExpandableHeading,
+            PageContainer,
+            PageContainerCover,
+            GeneralFontColor,
             MainFont,
             MainHeading,
             MainHeadingButton,
             MainHeadingLongTitle,
             MainSubFont,
-            GeneralFontColor,
+            SafeAreaViewContainer,
+            ScrollViewContainer,
             SearchFont,
-            ExpandableHeading,
-            CustomTextAreaField
+            TextInputSearchBar,
+            ViewContainer,
+            ViewSortColumn,
+            ViewSortRow,
+            windowHeight
         } from '../../../../assets/styles/globalStyling'
 
         //Auth Styling
         export {
             CustomInputField,
-            TouchableButton,
-            TouchableButtonFont,
-            TouchableButtonAlt,
-            TouchableButtonFontAlt,
-            FooterView,
             FooterFont,
-            FooterLink
+            FooterLink,
+            FooterView,
+            TouchableButton,
+            TouchableButtonAlt,
+            TouchableButtonDelete,
+            TouchableButtonFont,
+            TouchableButtonFontAlt,
+            TouchableButtonFontDelete
         } from '../../../../assets/styles/authScreensStyling'
 
         //Screens Styling
         export {
-            ViewTopRow,
-            ViewSearchBar,
-            PopGamesView,
             AccordionHeader,
             AccordionView,
-            LastAccordionView,
-            TagFont,
-            GameTitle,
+            CustomFontAwesomeIcon,
             GameDescription,
             GameReleaseDate,
-            CustomFontAwesomeIcon,
-            SearchGameTitle,
+            GameTitle,
+            LastAccordionView,
+            PopGamesView,
             SearchGameData,
-            SearchGameResults
+            SearchGameResults,
+            SearchGameTitle,
+            TagFont,
+            ViewSearchBar,
+            ViewTopRow
         } from '../../../../assets/styles/sgScreensStyling'
+    /*-----------------*/
+    //Context
+        //Auth Context
+        export { useAuth } from './authScreens/authContext'
 
+        //Tags Context
+        export { useTags } from './authScreens/tagsContext'
 
+        //Search Bar Context
+        export { useSearchBar } from './mainScreens/sgGameSearchScreenContent/searchIndex'
+
+        //Game Uploads Context
+        export { confirmGameContext } from '../screens/mainScreens/sgGameSearchScreenContent/sgSelectedGameScreens/sgSelectedGameContext'
+    
+    //Firebase
+    export { firebase } from '../../../server/config/config'
+    
     // Font Awesome
     export { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
     export { 
-        faHome,
-        faFilter,
-        faHeart, 
-        faTimes, 
-        faUser,
+        faBasketballBall,
+        faBook,
         faCaretDown,
         faChevronLeft,
-        faTimesCircle,
-        faStar,
-        faBook,
-        faFistRaised,
-        faLayerGroup,
-        faPuzzlePiece,
-        faFlagCheckered,
-        faShieldAlt,
         faCrosshairs,
+        faFilter,
+        faFistRaised,
+        faFlagCheckered,
+        faHeart, 
+        faHome,
+        faLayerGroup,
         faMap,
-        faBasketballBall
+        faPuzzlePiece,
+        faShieldAlt,
+        faStar,
+        faTimes, 
+        faTimesCircle,
+        faUser
      } from '@fortawesome/free-solid-svg-icons'
 
      // sgGame Titles

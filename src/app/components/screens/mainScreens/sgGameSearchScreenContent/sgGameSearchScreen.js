@@ -159,8 +159,8 @@ export default function SgGameSearchScreen({route, navigation}, props) {
                         icon={ faChevronLeft } color={colors.primaryFontColor} size={50} 
                         onPress={() => navigation.navigate('SgConsoleList')}
                     />
-                    <Text>Received params: {JSON.stringify(route.params)}</Text>
-                    <Text>Your here now</Text>
+                    <MainFont>Received params: {JSON.stringify(route.params)}</MainFont>
+                    <MainFont>Your here now</MainFont>
                         {setConsole()}
                         <CustomInputField
                             placeholderTextColor={colors.primaryColor}
@@ -175,9 +175,9 @@ export default function SgGameSearchScreen({route, navigation}, props) {
                             scrollEventThrottle={16}
                         >
                             <View style={{ flex: 1 }}>
-                                <Text>
+                                <MainFont>
                                     Add Games
-                                </Text>
+                                </MainFont>
                             </View>
                             <View>
                                 {sgGameStack()}

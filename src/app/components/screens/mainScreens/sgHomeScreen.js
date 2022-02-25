@@ -211,7 +211,7 @@ export default function SgHomeScreen({ navigation, route }) {
                         renderItem={({ item }) => (
                         <View>
                             <TouchableOpacity onPress={() => entries(item)}>
-                            <Text>{item.id}</Text>
+                            <MainFont>{item.id}</MainFont>
                             </TouchableOpacity>
                         </View>
                         )}
@@ -228,7 +228,7 @@ export default function SgHomeScreen({ navigation, route }) {
                                     <GeneralFontColor>Logged In</GeneralFontColor>
                                     <GeneralFontColor>{stateTest}</GeneralFontColor>
                                     <GeneralFontColor>{userInfo}</GeneralFontColor>
-                                    {React.Children.toArray(entries.map((entry, i) => <Text>{entry.id}</Text>))}
+                                    {React.Children.toArray(entries.map((entry, i) => <MainFont>{entry.id}</MainFont>))}
                                     <Button title="Delete Game" onPress={() => deleteGameFromConsole(collectionName, consoleName, gamesCollection, gameName)}/>
                             </View>
                         :   <View>

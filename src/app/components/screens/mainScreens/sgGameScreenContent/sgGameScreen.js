@@ -15,9 +15,9 @@ export default function GameScreen({navigation}) {
         icon={ faChevronLeft } color={colors.primaryFontColor} size={50} 
         onPress={() => navigation.goBack('Main')}
     />
-        <Text>
+        <MainFont>
             Game Page
-        </Text>
+        </MainFont>
         <ScrollView 
             scrollEventThrottle={16}
         >

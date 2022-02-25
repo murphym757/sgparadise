@@ -27,11 +27,11 @@ export default function UserProfileScreen({navigation}) {
 
     return (
         <View style={{ flex: 1, backgroundColor: colors.primaryColor, justifyContent: 'center', alignItems: 'center' }}>
-            <Text>Account Screen</Text>
+            <MainFont>Account Screen</MainFont>
             {currentUser !== null
                 ?   <View>
-                        <Text>{error}</Text>
-                        <Text>{JSON.stringify(currentUser)}</Text>
+                        <MainFont>{error}</MainFont>
+                        <MainFont>{JSON.stringify(currentUser)}</MainFont>
                         <TouchableButton 
                             onPress={() => onUpdateUser()}>
                             <TouchableButtonFont>Account</TouchableButtonFont>
@@ -42,7 +42,7 @@ export default function UserProfileScreen({navigation}) {
                         </TouchableButton>
                 </View>
                 :   <View>
-                        <Text>Not Logged In</Text>
+                        <MainFont>Not Logged In</MainFont>
                 </View>
             }
             

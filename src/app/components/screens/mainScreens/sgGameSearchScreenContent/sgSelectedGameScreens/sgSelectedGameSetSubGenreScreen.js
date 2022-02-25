@@ -1,53 +1,16 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { 
-    Text,
-    View,
-    Image,
-    FlatList,
-    ActivityIndicator,
-    TouchableOpacity
-} from 'react-native'
-  import{
-    windowHeight,
-    MainFont,
-    MainSubFont,
-    MainHeading,
-    MainHeadingButton,
-    ScrollViewContainer
-} from '../../../../../../../assets/styles/globalStyling'
-import {CurrentThemeContext} from '../../../../../../../assets/styles/globalTheme'
+import { View, ActivityIndicator } from 'react-native';
 // React Navigation
 import { useIsFocused } from '@react-navigation/native';
-import {
-        SafeAreaViewContainer,
-        Container,
-        TouchableButton,
-        TouchableButtonFont,
-        TouchableButtonAlt,
-        TouchableButtonFontAlt,
-        CustomInputField,
-        FontAwesomeIcon, faTimes
-  } from '../../../index'
-import { useTags } from '../../../authScreens/tagsContext'
-import { firebase, gamesConfig } from '../../../../../../server/config/config'
-import { useAuth } from '../../../authScreens/authContext'
-  
-
-    
+import { confirmGameContext, CurrentThemeContext, firebase, PageContainer, SafeAreaViewContainer, useAuth, windowHeight } from '../../../index';
 
 export default function SgSelectedGameSetSubGenreScreen({route, navigation}) {
     const {
-        unixTimestampConverter,
         forwardToNextPage,
         backToPreviousPage
     } = useAuth()
-    const {
-        tagCollection,
-        selectedTags,
-        gameResults
-    } = useTags()
-    //let { searchBarTitle, searchType, searchQuery } = route.params
     const colors = useContext(CurrentThemeContext)
+    const confirmGame = useContext(confirmGameContext)
     const sgDB = firebase.firestore()
     const [isLoading, setIsLoading] = useState()
     const { 
@@ -143,15 +106,15 @@ export default function SgSelectedGameSetSubGenreScreen({route, navigation}) {
     }
 
     return (
-        <View style={{ flex: 1, paddingTop: windowHeight/20, paddingBottom: windowHeight/20, backgroundColor: colors.primaryColor }}>
+        <PageContainer>
             <SafeAreaViewContainer>
             {isLoading == undefined
                 ? <ActivityIndicator size="large" hidesWhenStopped="true"/>
                 : <View>
-                    {gameResults(tagArrayData, buttonGroupData)}
+                    {confirmGame.gameResults(tagArrayData, buttonGroupData)}
                 </View>
             }
             </SafeAreaViewContainer>
-        </View>
+        </PageContainer>
     )
 }

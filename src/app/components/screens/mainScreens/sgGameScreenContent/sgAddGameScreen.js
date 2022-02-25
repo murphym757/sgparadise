@@ -122,7 +122,7 @@ export default function AddGameScreen({ route, navigation }) {
 
     return (
         <SafeAreaViewContainer>
-            <Text>Moved On</Text>
+            <MainFont>Moved On</MainFont>
         </SafeAreaViewContainer>
     )
 }

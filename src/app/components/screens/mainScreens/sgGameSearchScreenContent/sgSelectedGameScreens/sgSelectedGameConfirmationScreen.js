@@ -1,51 +1,23 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { 
-    Text,
-    View,
-    Image,
-    FlatList,
-    ActivityIndicator,
-    TouchableOpacity
-} from 'react-native'
-  import{
-    windowHeight,
-    MainFont,
-    MainSubFont,
-    MainHeading,
-    MainHeadingButton,
-    ScrollViewContainer
-} from '../../../../../../../assets/styles/globalStyling'
-import {CurrentThemeContext} from '../../../../../../../assets/styles/globalTheme'
+import React, { useState, useEffect, useContext } from 'react'
+import { View, ActivityIndicator } from 'react-native'
 // React Navigation
-import { useIsFocused } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native'
 import {
-        SafeAreaViewContainer,
-        Container,
-        TouchableButton,
-        TouchableButtonFont,
-        TouchableButtonAlt,
-        TouchableButtonFontAlt,
-        CustomInputField,
-        FontAwesomeIcon, faTimes
-  } from '../../../index'
-import { useTags } from '../../../authScreens/tagsContext'
-import { firebase, gamesConfig } from '../../../../../../server/config/config'
-import { useAuth } from '../../../authScreens/authContext'
+    confirmGameContext,
+    firebase,
+    PageContainer,
+    SafeAreaViewContainer,
+    useAuth,
+    windowHeight
+} from '../../../index'
   
-
-    
-
 export default function SgSelectedGameConfirmationScreen({route, navigation}) {
     const {
-        unixTimestampConverter,
         forwardToNextPage,
         backToPreviousPage
     } = useAuth()
-    const {
-        gameConfirmationResults
-    } = useTags()
     //let { searchBarTitle, searchType, searchQuery } = route.params
-    const colors = useContext(CurrentThemeContext)
+    const confirmGame = useContext(confirmGameContext)
     const sgDB = firebase.firestore()
     const [isLoading, setIsLoading] = useState()
     const { 
@@ -63,9 +35,9 @@ export default function SgSelectedGameConfirmationScreen({route, navigation}) {
         gameStoryline,
         gameSummary,
     } = route.params
-        console.log("🚀 ~ file: sgSelectedGameConfirmationScreen.js ~ line 65 ~ SgSelectedGameConfirmationScreen ~ gameCover", gameCover)
+  
     const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be read
-    const pageDescription = `Display All of the Game's data here. In the form of a list, maybe?`
+    const pageDescription = `Here is all the information about ${gameName}. Is there anything you would like to change?`
     const nextPageNumber = 'Page10'
     const passingContent = {
         gameCover: gameCover,
@@ -84,13 +56,13 @@ export default function SgSelectedGameConfirmationScreen({route, navigation}) {
     }
     const navigationPass = navigation
     let tagArrayData = {
-        pageDescription,
-        passingContent
+        pageDescription
     }
     const buttonGroupData = {
         forwardToNextPage, 
         backToPreviousPage, 
-        nextPageNumber, 
+        nextPageNumber,
+        passingContent, 
         navigationPass
     }
 
@@ -101,15 +73,15 @@ export default function SgSelectedGameConfirmationScreen({route, navigation}) {
       }, [isFocused]);
 
     return (
-        <View style={{ flex: 1, paddingTop: windowHeight/20, paddingBottom: windowHeight/20, backgroundColor: colors.primaryColor }}>
+        <PageContainer>
             <SafeAreaViewContainer>
             {isLoading == undefined
                 ? <ActivityIndicator size="large" hidesWhenStopped="true"/>
                 : <View>
-                    {gameConfirmationResults(tagArrayData, buttonGroupData, windowHeight, undefined)}
+                    {confirmGame.gameConfirmationResults(tagArrayData, buttonGroupData, windowHeight, undefined)}
                 </View>
             }
             </SafeAreaViewContainer>
-        </View>
+        </PageContainer>
     )
 }

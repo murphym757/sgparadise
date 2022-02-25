@@ -1,39 +1,8 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { 
-    Text,
-    View,
-    Image,
-    FlatList,
-    ActivityIndicator,
-    TouchableOpacity
-} from 'react-native'
-  import{
-    windowHeight,
-    MainFont,
-    MainSubFont,
-    MainHeading,
-    MainHeadingButton,
-    ScrollViewContainer
-} from '../../../../../../../assets/styles/globalStyling'
-import {CurrentThemeContext} from '../../../../../../../assets/styles/globalTheme'
+import React, { useState, useEffect, useContext } from 'react'
+import { View, ActivityIndicator } from 'react-native'
 // React Navigation
-import { useIsFocused } from '@react-navigation/native';
-import {
-        SafeAreaViewContainer,
-        Container,
-        TouchableButton,
-        TouchableButtonFont,
-        TouchableButtonAlt,
-        TouchableButtonFontAlt,
-        CustomInputField,
-        FontAwesomeIcon, faTimes
-  } from '../../../index'
-import { useTags } from '../../../authScreens/tagsContext'
-import { firebase, gamesConfig } from '../../../../../../server/config/config'
-import { useAuth } from '../../../authScreens/authContext'
-  
-
-    
+import { useIsFocused } from '@react-navigation/native'
+import { confirmGameContext, firebase, PageContainer, SafeAreaViewContainer, useAuth } from '../../../index'
 
 export default function SgSelectedGameSetGameModesScreen({route, navigation}) {
     const {
@@ -41,13 +10,8 @@ export default function SgSelectedGameSetGameModesScreen({route, navigation}) {
         forwardToNextPage,
         backToPreviousPage
     } = useAuth()
-    const {
-        tagCollection,
-        selectedTags,
-        gameModesResults
-    } = useTags()
     //let { searchBarTitle, searchType, searchQuery } = route.params
-    const colors = useContext(CurrentThemeContext)
+    const confirmGame = useContext(confirmGameContext)
     const sgDB = firebase.firestore()
     const [isLoading, setIsLoading] = useState()
     const { 
@@ -69,7 +33,6 @@ export default function SgSelectedGameSetGameModesScreen({route, navigation}) {
     const [chosenTagsArray, setChosenTagsArray] = useState([])
     const tagsNewArray = Array.from(new Set(chosenTagsArray))
     const [modeTagsSelected, setModeTagsSelected] = useState(false)
-    const [tagSelected, setTagsSelected] = useState(false)
     const pageDescription = `Finally, what some of the gaming mechanics present in ${gameName}?`
     const nextPageNumber = 'Page9'
     const passingContent = {
@@ -144,15 +107,15 @@ export default function SgSelectedGameSetGameModesScreen({route, navigation}) {
     }
 
     return (
-        <View style={{ flex: 1, paddingTop: windowHeight/20, paddingBottom: windowHeight/20, backgroundColor: colors.primaryColor }}>
+        <PageContainer>
             <SafeAreaViewContainer>
-            {isLoading == undefined
-                ? <ActivityIndicator size="large" hidesWhenStopped="true"/>
-                : <View>
-                    {gameModesResults(tagArrayData, buttonGroupData)}
-                </View>
-            }
+                {isLoading == undefined
+                    ? <ActivityIndicator size="large" hidesWhenStopped="true"/>
+                    : <View>
+                        {confirmGame.gameModesResults(tagArrayData, buttonGroupData)}
+                    </View>
+                }
             </SafeAreaViewContainer>
-        </View>
+        </PageContainer>
     )
 }

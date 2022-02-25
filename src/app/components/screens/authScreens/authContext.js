@@ -274,6 +274,11 @@ export function AuthProvider({ children }) {
         return humanDateFormat
     }
 
+    //Limits the number of character that can be used
+    function charLimit(string = '', limit = 0) {  
+        return string.substring(0, limit)
+    }  
+
     useEffect(() => {
         const unsubcribe = auth.onAuthStateChanged(user => {
             setCurrentUser(user)
@@ -323,7 +328,8 @@ export function AuthProvider({ children }) {
         backToPreviousPage,
         successAlert,
         failureAlert,
-        unixTimestampConverter
+        unixTimestampConverter,
+        charLimit
     }
 
     return (

@@ -1,75 +1,63 @@
-
 import React, { useState, useEffect, useContext } from 'react';
-import { 
-    Text,
-    View,
-    Image,
-    FlatList,
-    ActivityIndicator,
-    TouchableOpacity
-} from 'react-native'
-  import{
-    windowHeight,
-    MainFont,
-    MainSubFont,
-    MainHeading,
-    MainHeadingButton,
-    ScrollViewContainer
-} from '../../../../../../../assets/styles/globalStyling'
-import {CurrentThemeContext} from '../../../../../../../assets/styles/globalTheme'
-  import {
-        SafeAreaViewContainer,
-        Container,
-        TouchableButton,
-        TouchableButtonFont,
-        TouchableButtonAlt,
-        TouchableButtonFontAlt,
-        CustomInputField,
-        FontAwesomeIcon, faTimes
-  } from '../../../index'
-  import { useAuth } from '../../../authScreens/authContext'
-  import axios from 'axios'
-  import { Rating, AirbnbRating } from 'react-native-ratings';
-  import { FlatGrid } from 'react-native-super-grid';
+import { View, Image, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native'
+import { confirmGameContext, CurrentThemeContext, PageContainer, SafeAreaViewContainer, useAuth } from '../../../index';
 
 export default function SgSelectedGameplayScreen({route, navigation}) {
     const {
-        unixTimestampConverter,
         forwardToNextPage,
         backToPreviousPage
     } = useAuth()
     //let { searchBarTitle, searchType, searchQuery } = route.params
     const colors = useContext(CurrentThemeContext)
+    const confirmGame = useContext(confirmGameContext)
     const [isLoading, setIsLoading] = useState()
-    const { 
-        clientIdIGDB, 
-        accessTokenIGDB, 
-        igdbConsoleId,
-        igdbGameId,
-        gameName,
-        gameSlug,
+    const {
         gameCover,
-        gameRating,
+        gameId,
+        gameName,
+        gameRating, 
         gameReleaseDate,
+        gameScreenshots,
+        gameSlug,
         gameStoryline,
         gameSummary,
-        gameScreenshots,
         involvesCompanies
     } = route.params
 
     const gameNameLastChar = gameName.charAt(gameName.length - 1)
     const [chosenGameplaysArray, setChosenGameplaysArray] = useState([])
+    console.log("🚀 ~ file: sgSelectedGameplayScreen.js ~ line 29 ~ SgSelectedGameplayScreen ~ chosenGameplaysArray", chosenGameplaysArray)
     const [ imageCount, setImageCount ] = useState()
     const gameplaysNewArray = Array.from(new Set(chosenGameplaysArray)); //Removes the ability to add duplicate
-
-    // For adding and removing images from the array
+    const pageDescriptionPluralForS = `Choose ${imageCount} ${confirmGame.imgWordingSelector(imageCount)} that perfectly showcases some of ${gameName}' highlights:`
+    const pageDescriptionPlural = `Choose ${imageCount} ${confirmGame.imgWordingSelector(imageCount)} that perfectly showcases some of ${gameName}'s highlights:`
+    const pageDescription = `To add another image, select one of the chosen images. To remove all images, press the Clear Images Button`
+    const nextPageNumber = 'Page6'
+    const passingContent = {
+        involvesCompanies: involvesCompanies,
+        gameRating: gameRating, 
+        gameCover: gameCover,
+        gameId: gameId,
+        gameName: gameName,
+        gameSlug: gameSlug,
+        gameReleaseDate: gameReleaseDate,
+        gameStoryline: gameStoryline,
+        gameSummary: gameSummary,
+        gameScreenshots: chosenGameplaysArray
+    }
+    const navigationPass = navigation
+    const buttonGroupData = {
+        forwardToNextPage, 
+        backToPreviousPage, 
+        nextPageNumber, 
+        passingContent, 
+        navigationPass
+    }
     let initArray = gameScreenshots
     let deletionArray = gameplaysNewArray
     let currentGameplaysArray = [];
     currentGameplaysArray = initArray.filter(item => !deletionArray.includes(item))
-    /*-------------*/
-   
-    // Adding and removing gameplays from a game (Plus, removing all gameplays all at once)
+    
     async function chosenGameplayData(item) {
         setChosenGameplaysArray(chosenGameplaysArray => [...chosenGameplaysArray, item])
         setImageCount(imageCount - 1 )
@@ -82,64 +70,13 @@ export default function SgSelectedGameplayScreen({route, navigation}) {
 
     function resetChosenGameplayData(){
         setChosenGameplaysArray([])
-        if(gameScreenshots.length <= 3) {
-            return setImageCount(gameScreenshots.length)
-        } else {
-            return setImageCount(3)
-        }
+            if(gameScreenshots.length <= 3) {
+                return setImageCount(gameScreenshots.length)
+            } else {
+                return setImageCount(3)
+            }
     }
     /*----------*/
-
-    function buttonGroup() {
-        const pageNumber = 'Page6'
-        const passingContent = {
-            involvesCompanies: involvesCompanies,
-            gameRating: gameRating, 
-            gameCover: gameCover,
-            gameId: igdbGameId,
-            gameSlug: gameSlug,
-            gameName: gameName,
-            gameReleaseDate: gameReleaseDate,
-            gameStoryline: gameStoryline,
-            gameSummary: gameSummary,
-            gameScreenshots: gameScreenshots
-        }
-        const navigationPass = navigation
-        return (
-            <View>
-                <TouchableButton onPress={() => forwardToNextPage(pageNumber, passingContent, navigationPass)}>
-                    <TouchableButtonFont>Next Page</TouchableButtonFont>
-                </TouchableButton>
-                <TouchableButtonAlt style={{}} onPress={() => backToPreviousPage(navigationPass)}>
-                    <TouchableButtonFontAlt>Previous Page</TouchableButtonFontAlt>
-                </TouchableButtonAlt>
-            </View>
-        )
-    }
-
-    function imgWordingSelector() {
-        const imgSingular = 'more image'
-        const imgPlural = 'images'
-        if (imageCount == 1) return imgSingular
-        if (imageCount != 1) return imgPlural
-    }
-
-    function chooseImages(){
-        return (
-            <View> 
-                {gameScreenshots.length <= 3
-                    ?   <Text>Yep</Text>
-                    :   <Text>YeSSSS</Text>
-                }
-                {gameNameLastChar == 's'
-                    ?   <MainFont>Choose {imageCount} {imgWordingSelector()} that perfectly showcases some of {gameName}' highlights: </MainFont>
-                    :   <MainFont>Choose {imageCount} {imgWordingSelector()} that perfectly showcases some of {gameName}'s highlights: </MainFont>
-                } 
-                {chooseImagesList()}
-            </View>
-        )
-    }
-
     function chooseImagesList(){
         return (
             <FlatList
@@ -183,19 +120,6 @@ export default function SgSelectedGameplayScreen({route, navigation}) {
                     </View>
                 )}
             />
-        )
-    }
-
-    function chosenImages(){
-        return (
-            <View>
-                <MainFont>To add another image, select one of the chosen images. To remove all images, press the Clear Images Button</MainFont>
-                {chosenImagesList()}
-                <TouchableButton style={{backgroundColor: colors.primaryColorAltLight}} onPress={() => resetChosenGameplayData()}>
-                    <TouchableButtonFont style={{color: colors.primaryColor}}>Clear Images</TouchableButtonFont>
-                </TouchableButton>
-                {buttonGroup()}
-            </View>
         )
     }
 
@@ -261,29 +185,16 @@ export default function SgSelectedGameplayScreen({route, navigation}) {
               })
             }, [])
             
-    function gameplayResults() { 
-        return (
-            <Container>
-                <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                    {imageCount < 1
-                        ?   chosenImages()
-                        :   chooseImages()
-                    }
-                </View>
-            </Container>
-          ) 
-    }
-
     return (
-        <View style={{ flex: 1, paddingTop: windowHeight/20, paddingBottom: windowHeight/20, backgroundColor: colors.primaryColor }}>
+        <PageContainer>
             <SafeAreaViewContainer>
-            {isLoading == undefined
-                ? <ActivityIndicator size="large" hidesWhenStopped="true"/>
-                : <View>
-                    {gameplayResults()}
-                </View>
-            }
+                {isLoading == undefined
+                    ? <ActivityIndicator size="large" hidesWhenStopped="true"/>
+                    : <View>
+                        {confirmGame.gameplayResults(buttonGroupData, imageCount, pageDescription, pageDescriptionPluralForS, pageDescriptionPlural, gameNameLastChar, chooseImagesList, resetChosenGameplayData, chosenImagesList)}
+                    </View>
+                }
             </SafeAreaViewContainer>
-        </View>
+        </PageContainer>
     )
 }

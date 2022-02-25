@@ -29,6 +29,10 @@ export const ScrollViewContainer = styled(ScrollView) `
 
 `;
 
+export const ViewSortRow = styled(View) `
+    flexDirection: row;
+`;
+
 export const ViewSortColumn = styled(View) `
     flexDirection: column;
 `;
@@ -89,3 +93,17 @@ export const ExpandableHeading = styled(Text) `
     margin: auto;
     color: ${currentTheme.secondaryFontColor};
 `; 
+
+export const PageContainer = styled(View) `
+    flex: 1;
+    paddingTop: ${windowHeight/20}px;
+    paddingBottom: ${windowHeight/20}px;
+    backgroundColor: ${currentTheme.primaryColor};
+`;
+
+export const PageContainerCover = styled(View) `
+    flex: 1;
+    paddingTop: ${windowHeight/20}px;
+    paddingBottom: ${windowHeight/40}px;
+    backgroundColor: ${currentTheme.primaryColor};
+`;

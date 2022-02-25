@@ -17,11 +17,11 @@ export default function UserSavesScreen() {
         {currentUser !== null
         ?   <View style={{ flex: 1 }}>
                 <MainFont>Saves Screen</MainFont>
-                <Text>Logged In</Text>
+                <MainFont>Logged In</MainFont>
             </View>
         :   <View style={{ flex: 1 }}>
                 <MainFont>Saves Screen</MainFont>
-                <Text>Not Logged In</Text>
+                <MainFont>Not Logged In</MainFont>
             </View>
         } 
     </SafeAreaView>

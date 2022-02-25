@@ -273,9 +273,9 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
                         scrollEventThrottle={16}
                     >
                         <View style={{ flex: 1 }}>
-                            <Text>
+                            <MainFont>
                                 Add Games
-                            </Text>
+                            </MainFont>
                             <Button title="Get data from Twitch API" onPress={() => igdbSearchFuction()}/>
                             <Button title="Add Game here" onPress={() => confirmSetGameId()}/>
                             <MainFont>Home Screen</MainFont>
@@ -288,7 +288,7 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
                                         renderItem={({ item }) => (
                                         <View>
                                             <TouchableOpacity onPress={() => igdbGameData(item)}>
-                                                <Text>{item.name}</Text>
+                                                <MainFont>{item.name}</MainFont>
                                             </TouchableOpacity>
                                         </View>
                                         )}
@@ -432,7 +432,7 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
                                     uri: `${selectedSystemLogo}`,
                                 }}
                             />
-                            <Text>Test</Text>
+                            <MainFont>Test</MainFont>
                             {isLoading && (
                                 <ActivityIndicator size="small" />
                             )}
@@ -441,11 +441,11 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
                             {selectedTags(tagData)}
                             <ScrollViewContainer>
                                 <View style={{paddingBottom: windowHeight/8}}>
-                                    <Text>This is where youll confirm your chose</Text>
+                                    <MainFont>This is where youll confirm your chose</MainFont>
                                     {searchResults()}
                                     {genreTagCollection()}
                                     {searchFilterSelected == false
-                                        ?   <Text>Ocean Drive</Text>
+                                        ?   <MainFont>Ocean Drive</MainFont>
                                         :   tagsSelection(tagData)
                                     }
                                 </View>

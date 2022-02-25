@@ -53,7 +53,7 @@ export default function EditGameScreen() {
     const [tagsDescription10, setTagsDescription10] = useState('')
     return (
         <SafeAreaViewContainer>
-        <Text>Moovie Night</Text>
+        <MainFont>Moovie Night</MainFont>
             <ScrollView 
                 scrollEventThrottle={16}
             >

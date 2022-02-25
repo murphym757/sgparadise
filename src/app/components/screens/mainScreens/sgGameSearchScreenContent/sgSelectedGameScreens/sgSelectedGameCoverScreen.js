@@ -1,62 +1,27 @@
 
-import React, { useState, useEffect, useContext } from 'react';
-import { 
-    Text,
-    View,
-    Image,
-    FlatList,
-    ActivityIndicator,
-    TouchableOpacity
-} from 'react-native'
-  import{
-    windowHeight,
-    MainFont,
-    MainSubFont,
-    MainHeading,
-    MainHeadingButton,
-    MainHeadingLongTitle,
-    ScrollViewContainer
-} from '../../../../../../../assets/styles/globalStyling'
-import {CurrentThemeContext} from '../../../../../../../assets/styles/globalTheme'
-  import {
-        SafeAreaViewContainer,
-        Container,
-        TouchableButton,
-        TouchableButtonFont,
-        TouchableButtonAlt,
-        TouchableButtonFontAlt,
-        CustomInputField,
-        FontAwesomeIcon, faTimes
-  } from '../../../index'
-  import { useAuth } from '../../../authScreens/authContext'
-  import axios from 'axios'
-  import { Rating, AirbnbRating } from 'react-native-ratings';
-  import { FlatGrid } from 'react-native-super-grid';
+import React, { useState, useEffect, useContext } from 'react'
+import { View, Image, FlatList, ActivityIndicator } from 'react-native'
+import { confirmGameContext, ContentContainer, PageContainerCover, CurrentThemeContext, SafeAreaViewContainer, useAuth, windowHeight } from '../../../index'
+import axios from 'axios'
 
 export default function SgSelectedGameCoverScreen({route, navigation}) {
     const {
-        unixTimestampConverter,
         forwardToNextPage,
         backToPreviousPage,
     } = useAuth()
     //let { searchBarTitle, searchType, searchQuery } = route.params
     const colors = useContext(CurrentThemeContext)
+    const confirmGame = useContext(confirmGameContext)
     const [isLoading, setIsLoading] = useState()
     const { 
-        clientIdIGDB, 
-        accessTokenIGDB, 
-        igdbConsoleId,
         igdbGameId,
         gameName,
         gameSlug,
-        gameRating,
         gameReleaseDate,
         gameStoryline,
         gameSummary
     } = route.params
 
-
-    // IGDB search data (Put on confirmation page)
     const [coversResults, setCoversResults] = useState([])
     const [involvesCompanies, setInvolvesCompaniesResults] = useState([])
     const [gameScreenshots, setGameScreenshots] = useState([])
@@ -121,84 +86,7 @@ export default function SgSelectedGameCoverScreen({route, navigation}) {
     }, [])
 
     function coverData() {
-        return (
-            <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-            <FlatList
-                  data={coversResults}
-                  keyboardShouldPersistTaps="always" 
-                  contentContainerStyle={{
-                      justifyContent: 'center'
-                  }}
-                  scrollEnabled={false}
-                  keyExtractor={item => item.id}
-                  renderItem={({ item }) => (
-                    <View style={{
-                        width: '100%',
-                        height: undefined,
-                    }}>
-                        <Image
-                            style={{
-                                height: 500,
-                                width: 380,
-                                marginVertical: 15,
-                                resizeMode: 'stretch',
-                                borderRadius: 25,
-                            }}
-                            source={{
-                                uri: `https://images.igdb.com/igdb/image/upload/t_1080p/${item.image_id}.jpg`,
-                            }}
-                            onLoadStart={() => {setIsLoading(true)}}
-                            onLoadEnd={() => {setIsLoading(false)}}
-                        />
-                        {generalInfo()}
-                        {buttonGroup()}
-                           {isLoading && (
-                            <ActivityIndicator size="large" />
-                        )}
-                    </View>
-                  )}
-              />
-              </View>
-          ) 
-    }
-
-    function generalInfo() {
-        return (
-            <View>
-                {gameName.length < 29
-                    ?   <MainHeading>{gameName}</MainHeading>
-                    :   <MainHeadingLongTitle>{gameName}</MainHeadingLongTitle>
-                }
-                <MainSubFont>{gameReleaseDate}</MainSubFont>
-                {updatedGameRating == undefined
-                    ?   <MainFont>{"Tap to rate: "}</MainFont>
-                    :   <View>
-                        {updatedGameRating == 1
-                            ?   <MainFont>{`Tap to rate: ${updatedGameRating} Star`}</MainFont>
-                            :   <MainFont>{`Tap to rate: ${updatedGameRating} Stars`}</MainFont>
-                        }
-                    </View>
-                }
-                
-                        <AirbnbRating
-                            selectedColor={colors.secondaryColor}
-                            unSelectedColor={colors.primaryColorAlt}
-                            ratingContainerStyle={{
-                                alignItems: 'left'
-                            }}
-                            count={5}
-                            onFinishRating={setUpdatedGameRating}
-                            showRating={false}
-                            reviews={["Bad", "Mediocre", "Good", "Exceptional", "Classic"]}
-                            defaultRating={0}
-                            size={25}
-                        />
-            </View>
-        )
-    }
-
-    function buttonGroup() {
-        const pageNumber = 'Page4'
+        const nextPageNumber = 'Page4'
         const passingContent = {
             involvesCompanies: involvesCompanies,
             gameRating: updatedGameRating,
@@ -212,28 +100,64 @@ export default function SgSelectedGameCoverScreen({route, navigation}) {
             gameScreenshots: gameScreenshots
         }
         const navigationPass = navigation
+        const buttonGroupData = {
+            backToPreviousPage, 
+            forwardToNextPage, 
+            navigationPass,
+            nextPageNumber,
+            passingContent
+        }
         return (
-            <View>
-                <TouchableButton onPress={() => forwardToNextPage(pageNumber, passingContent, navigationPass)}>
-                    <TouchableButtonFont>Next Page</TouchableButtonFont>
-                </TouchableButton>
-                <TouchableButtonAlt style={{}} onPress={() => backToPreviousPage(navigationPass)}>
-                    <TouchableButtonFontAlt>Previous Page</TouchableButtonFontAlt>
-                </TouchableButtonAlt>
-            </View>
-        )
+            <ContentContainer>
+                <FlatList
+                    data={coversResults}
+                    keyboardShouldPersistTaps="always" 
+                    contentContainerStyle={{
+                        justifyContent: 'center'
+                    }}
+                    scrollEnabled={false}
+                    keyExtractor={item => item.id}
+                    renderItem={({ item }) => (
+                        <View style={{
+                            width: '100%',
+                            height: undefined,
+                        }}>
+                            <Image
+                                style={{
+                                    height: 500,
+                                    width: 380,
+                                    marginVertical: 15,
+                                    resizeMode: 'stretch',
+                                    borderRadius: 25,
+                                }}
+                                source={{
+                                    uri: `https://images.igdb.com/igdb/image/upload/t_1080p/${item.image_id}.jpg`,
+                                }}
+                                onLoadStart={() => {setIsLoading(true)}}
+                                onLoadEnd={() => {setIsLoading(false)}}
+                            />
+                            {confirmGame.starRatingSystem(buttonGroupData, updatedGameRating, setUpdatedGameRating, colors)}
+                            {confirmGame.buttonGroup(buttonGroupData)}
+                            {isLoading && (
+                                <ActivityIndicator size="large" />
+                            )}
+                        </View>
+                    )}
+                />
+              </ContentContainer>
+          ) 
     }
 
     return (
-        <View style={{ flex: 1, paddingTop: windowHeight/20, paddingBottom: windowHeight/40, backgroundColor: colors.primaryColor }}>
+        <PageContainerCover>
             <SafeAreaViewContainer>
-            {isLoading == undefined
-                ? <ActivityIndicator size="large" hidesWhenStopped="true"/>
-                : <View>
-                    {coverData()}
-                </View>
-            }
+                {isLoading == undefined
+                    ? <ActivityIndicator size="large" hidesWhenStopped="true"/>
+                    : <View>
+                        {coverData()}
+                    </View>
+                }
             </SafeAreaViewContainer>
-        </View>
+        </PageContainerCover>
     )
 }
