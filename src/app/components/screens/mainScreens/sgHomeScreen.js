@@ -1,27 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { 
-    View, 
-    Text, 
-    Button, 
-    Image, 
-    FlatList, 
-    SafeAreaView, 
-    TouchableOpacity 
-} from 'react-native'
-import axios from 'axios'
+import { View, Button, FlatList, TouchableOpacity } from 'react-native';
 import { useAuth } from '../authScreens/authContext'
 import { useSearchBar } from './sgGameSearchScreenContent/searchIndex'
 
-import { firebase } from '../../../../server/config/config';
-
-import { manualColorSet, loadingScreen } from '../authScreens/loadingScreen' //Loader
+import { loadingScreen } from '../authScreens/loadingScreen'; //Loader
 
 // App Styling & Screens
 import {
-    SearchBar,
-    AddGameScreen,
-    ConfirmAddGameScreen,
-    SgConsoleListScreen,
     ContentContainer,
     SafeAreaViewContainer,
     ScrollViewContainer,
@@ -29,21 +14,9 @@ import {
     Container,
     MainFont,
     GeneralFontColor,
-    MainHeadingButton,
     TouchableButton,
     TouchableButtonFont,
-    FontAwesomeIcon,
-    faStar,
-    faBook,
-    faFistRaised,
-    faLayerGroup,
-    faPuzzlePiece,
-    faFlagCheckered,
-    faShieldAlt,
-    faCrosshairs,
-    faMap,
-    faBasketballBall
-} from '../index.js'
+} from '../index.js';
 
 
 // React Navigation

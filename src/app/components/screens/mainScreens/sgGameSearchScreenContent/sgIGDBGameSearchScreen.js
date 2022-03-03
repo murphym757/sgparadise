@@ -199,7 +199,7 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
         navigation.navigate('SgAddGameConfirm', { 
             igdbGameId: igdbGameId,
             gameName: gameName,
-           gameCover:gameCover,
+            gameCover:gameCover,
             igdbGameRating: igdbGameRating,
             igdbGameAgeRating: igdbGameAgeRating,
             igdbGameGenres: igdbGameGenres,

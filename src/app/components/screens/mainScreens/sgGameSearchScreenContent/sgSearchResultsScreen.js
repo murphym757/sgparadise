@@ -89,16 +89,17 @@ export default function sgSearchScreen({route, navigation}) {
 
     function chosenGame(item) {
         navigation.navigate('Page3', {
-            igdbGameId: item.id,
-            gameName: item.name,
-            gameSlug: item.slug,
-            gameCover: item.cover,
-            gameReleaseDate: unixTimestampConverter(item),
-            gameSummary: item.summary,
-            gameScreenshots: item.screenshots,
-            clientIdIGDB: clientIdIGDB,
             accessTokenIGDB: accessTokenIGDB, 
-            igdbConsoleId: igdbConsoleId
+            clientIdIGDB: clientIdIGDB,
+            gameCover: item.cover,
+            gameName: item.name,
+            gameReleaseDate: unixTimestampConverter(item),
+            gameScreenshots: item.screenshots,
+            gameSlug: item.slug,
+            gameSummary: item.summary,
+            gbConsoleId: gbConsoleId,
+            igdbConsoleId: igdbConsoleId,
+            igdbGameId: item.id
         })
     }
     

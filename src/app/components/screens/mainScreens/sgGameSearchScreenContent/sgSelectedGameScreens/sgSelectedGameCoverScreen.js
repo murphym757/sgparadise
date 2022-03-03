@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useContext } from 'react'
 import { View, Image, FlatList, ActivityIndicator } from 'react-native'
-import { confirmGameContext, ContentContainer, PageContainerCover, CurrentThemeContext, SafeAreaViewContainer, useAuth, windowHeight } from '../../../index'
+import { confirmGameContext, ContentContainer, PageContainerCover, CurrentThemeContext, SafeAreaViewContainer, useAuth } from '../../../index'
 import axios from 'axios'
 
 export default function SgSelectedGameCoverScreen({route, navigation}) {
@@ -14,23 +14,52 @@ export default function SgSelectedGameCoverScreen({route, navigation}) {
     const confirmGame = useContext(confirmGameContext)
     const [isLoading, setIsLoading] = useState()
     const { 
-        igdbGameId,
+        accessTokenIGDB,
+        clientIdIGDB,
         gameName,
-        gameSlug,
         gameReleaseDate,
-        gameStoryline,
-        gameSummary
+        gameSlug,
+        gameSummary,
+        igdbConsoleId,
+        igdbGameId
     } = route.params
 
     const [coversResults, setCoversResults] = useState([])
-    const [involvesCompanies, setInvolvesCompaniesResults] = useState([])
+    const gameCover = coversResults.map(game => game.image_id)
+    const [gameDevelopers, setGameDevelopersResults] = useState([])
+    const [gamePublishers, setGamePublishersResults] = useState([])
     const [gameScreenshots, setGameScreenshots] = useState([])
     const [updatedGameRating, setUpdatedGameRating] = useState()
-    const [unixTimestamp, setUnixTimestamp]= useState()
-    const igdbCoversResultsField = `fields alpha_channel,animated,checksum,game,height,image_id,url,width; where game = (${igdbGameId});`
-    const igdbScreenshotsResultsField = `fields alpha_channel,animated,checksum,game,height,image_id,url,width; where game = (${igdbGameId});`
-    const igdbInvolvesCompaniesResultsField =`fields company,developer,game,publisher,supporting; where game = (${igdbGameId});`
+    const igdbCoversResultsField = `fields image_id; where game = (${igdbGameId});`
+    const igdbScreenshotsResultsField = `fields image_id; where game = (${igdbGameId});`
+    const igdbInvolvesCompaniesResultsPubField =`fields company,publisher; where publisher = true & game = (${igdbGameId});`
+    const igdbInvolvesCompaniesResultsDevField =`fields company,developer; where developer = true & game = (${igdbGameId});`
+    const nextPageNumber = 'Page4'
+    const passingContent = {
+        accessTokenIGDB: accessTokenIGDB, 
+        clientIdIGDB: clientIdIGDB,
+        gameCover: gameCover, 
+        gameDevelopers: gameDevelopers.map(game => game.company),
+        gameId: igdbGameId,
+        gameName: gameName,
+        gamePublishers: gamePublishers.map(game => game.company),
+        gameRating: updatedGameRating,
+        gameReleaseDate: gameReleaseDate,
+        gameScreenshots: gameScreenshots.map(game => game.image_id),
+        gameSlug: gameSlug,
+        gameSummary: gameSummary,
+        igdbConsoleId: igdbConsoleId
 
+    }
+    console.log("🚀 ~ file: sgSelectedGameCoverScreen.js ~ line 53 ~ SgSelectedGameCoverScreen ~ passingContent", passingContent)
+    const navigationPass = navigation
+    const buttonGroupData = {
+        backToPreviousPage, 
+        forwardToNextPage, 
+        navigationPass,
+        nextPageNumber,
+        passingContent
+    }
     useEffect(() => {
         function searchTesting() {
             let api = axios.create({
@@ -63,9 +92,19 @@ export default function SgSelectedGameCoverScreen({route, navigation}) {
                         .then(function () {
                             // always executed
                         }),
-                    api.post('https://api.igdb.com/v4/involved_companies', igdbInvolvesCompaniesResultsField, {timeout: 2000})
+                    api.post('https://api.igdb.com/v4/involved_companies', igdbInvolvesCompaniesResultsPubField, {timeout: 2000})
                         .then(res => {
-                            setInvolvesCompaniesResults(res.data)
+                            setGamePublishersResults(res.data)
+                        }, [])
+                        .catch(err => {
+                            console.log(err);
+                        })
+                        .then(function () {
+                            // always executed
+                        }),
+                        api.post('https://api.igdb.com/v4/involved_companies', igdbInvolvesCompaniesResultsDevField, {timeout: 2000})
+                        .then(res => {
+                            setGameDevelopersResults(res.data)
                         }, [])
                         .catch(err => {
                             console.log(err);
@@ -85,28 +124,7 @@ export default function SgSelectedGameCoverScreen({route, navigation}) {
         
     }, [])
 
-    function coverData() {
-        const nextPageNumber = 'Page4'
-        const passingContent = {
-            involvesCompanies: involvesCompanies,
-            gameRating: updatedGameRating,
-            gameCover: coversResults, 
-            gameId: igdbGameId,
-            gameName: gameName,
-            gameSlug: gameSlug,
-            gameReleaseDate: gameReleaseDate,
-            gameStoryline: gameStoryline,
-            gameSummary: gameSummary,
-            gameScreenshots: gameScreenshots
-        }
-        const navigationPass = navigation
-        const buttonGroupData = {
-            backToPreviousPage, 
-            forwardToNextPage, 
-            navigationPass,
-            nextPageNumber,
-            passingContent
-        }
+    function gameCoverImage(buttonGroupData, updatedGameRating, setUpdatedGameRating, colors) {
         return (
             <ContentContainer>
                 <FlatList
@@ -131,7 +149,7 @@ export default function SgSelectedGameCoverScreen({route, navigation}) {
                                     borderRadius: 25,
                                 }}
                                 source={{
-                                    uri: `https://images.igdb.com/igdb/image/upload/t_1080p/${item.image_id}.jpg`,
+                                    uri: `https://images.igdb.com/igdb/image/upload/t_1080p/${gameCover}.jpg`,
                                 }}
                                 onLoadStart={() => {setIsLoading(true)}}
                                 onLoadEnd={() => {setIsLoading(false)}}
@@ -144,8 +162,8 @@ export default function SgSelectedGameCoverScreen({route, navigation}) {
                         </View>
                     )}
                 />
-              </ContentContainer>
-          ) 
+            </ContentContainer>
+        )
     }
 
     return (
@@ -154,7 +172,7 @@ export default function SgSelectedGameCoverScreen({route, navigation}) {
                 {isLoading == undefined
                     ? <ActivityIndicator size="large" hidesWhenStopped="true"/>
                     : <View>
-                        {coverData()}
+                        {gameCoverImage(buttonGroupData, updatedGameRating, setUpdatedGameRating, colors)}
                     </View>
                 }
             </SafeAreaViewContainer>

@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
+import { View, Image, FlatList, ActivityIndicator } from 'react-native'
 import { firebase } from '../../../../server/config/config'
 import { auth } from '../../../../server/config/config'
 import {
@@ -7,6 +8,13 @@ import {
     CustomSuccessAlert,
     CustomSuccessAlertFont
   } from '../../../../../assets/styles/authScreensStyling'
+
+  import {
+    TouchableButton,
+    TouchableButtonFont,
+    TouchableButtonAlt,
+    TouchableButtonFontAlt
+  } from '../index'
 
 const AuthContext = React.createContext()
 
@@ -114,14 +122,17 @@ export function AuthProvider({ children }) {
         });
     }
 
-    async function addData(collectionName) {
-        const timestamp = firebase.firestore.FieldValue.serverTimestamp();
-        sgDB.collection('sgAPI').doc('sg1000').collection('games').add({
-            will: 'this work',
-            age: 'too damn old',
-            postCreator: currentUID,
-            createdAt: timestamp
-        })
+    async function addGameToConsoleButtonGroup(buttonGroupData) {
+        return (
+            <View>
+                <TouchableButton onPress={() => uploadGameToFirebase(buttonGroupData.nextPageNumber, buttonGroupData.passingContent, buttonGroupData.navigationPass)}>
+                    <TouchableButtonFont>Upload Game</TouchableButtonFont>
+                </TouchableButton>
+                <TouchableButtonAlt style={{}} onPress={() => buttonGroupData.backToPreviousPage(buttonGroupData.navigationPass)}>
+                    <TouchableButtonFontAlt>Previous Page</TouchableButtonFontAlt>
+                </TouchableButtonAlt>
+            </View>
+        )
     }
 
     async function addImagesForGame(collectionName, consoleName, gamesCollection, gameName, imagesCollection) {
@@ -165,15 +176,55 @@ export function AuthProvider({ children }) {
         })
     }
 
-    // Add Game to sgDB
-    async function addGameToConsole(collectionName, consoleName, gamesCollection, gameName) {
+    async function uploadGameToFirebase(buttonGroupData) {
         const timestamp = firebase.firestore.FieldValue.serverTimestamp();
-        sgDB.collection(collectionName).doc(consoleName).collection(gamesCollection).doc(gameName).set({
-            sgID: complexID(20),
-            name: gameName,
-            views: viewCountFirebase,
-            postCreator: currentUID,
+        sgDB.collection('sgAPI').doc(`sg${buttonGroupData.passingContent.firebaseConsoleName}`).collection('games').add({
+            gameName: buttonGroupData.passingContent.gameName,
+            gameDevelopers: buttonGroupData.passingContent.gameDevelopers,
+            gamePublishers: buttonGroupData.passingContent.gamePublishers,
+            gameReleaseDate: buttonGroupData.passingContent.gameReleaseDate,
+            releaseDate: "Dec 20, 1992",
+            releaseYear: "1992",
+            gameSummary: buttonGroupData.passingContent.gameSummary,
+            gameGenre: buttonGroupData.passingContent.gameGenre,
+            gameSubGenre: buttonGroupData.passingContent.gameSubGenre,
+            gameModes: buttonGroupData.passingContent.gameModes,
+            gameRating: buttonGroupData.passingContent.gameRating, 
+            gameCover: buttonGroupData.passingContent.gameCover,
+            gameScreenshots: buttonGroupData.passingContent.gameScreenshots,
+            gameSlug: buttonGroupData.passingContent.gameSlug,
+            gameUploaded: buttonGroupData.passingContent.gameUploaded,
+            firebaseConsoleName: buttonGroupData.passingContent.firebaseConsoleName,
+            postCreator:  buttonGroupData.passingContent.gameUploadedBy,
             createdAt: timestamp
+        })
+        {forwardToNextPage(buttonGroupData.nextPageNumber, buttonGroupData.passingContent, buttonGroupData.navigationPass)}
+    }
+
+    // Add Game to sgDB
+    async function addGameToConsole(buttonGroupData) {
+        const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+        sgDB.collection('sgAPI').doc(`sg${buttonGroupData.passingContent.firebaseConsoleName}`).collection('games').doc(buttonGroupData.passingContent.gameSlug).set({
+            sgID: complexID(20),
+            gameName: buttonGroupData.passingContent.gameName,
+            gameDevelopers: buttonGroupData.passingContent.gameDevelopers,
+            gamePublishers: buttonGroupData.passingContent.gamePublishers,
+            gameReleaseDate: buttonGroupData.passingContent.gameReleaseDate,
+            releaseDate: "Dec 20, 1992",
+            releaseYear: "1992",
+            gameSummary: buttonGroupData.passingContent.gameSummary,
+            gameGenre: buttonGroupData.passingContent.gameGenre,
+            gameSubGenre: buttonGroupData.passingContent.gameSubGenre,
+            gameModes: buttonGroupData.passingContent.gameModes,
+            gameRating: buttonGroupData.passingContent.gameRating, 
+            gameCover: buttonGroupData.passingContent.gameCover,
+            gameScreenshots: buttonGroupData.passingContent.gameScreenshots,
+            gameSlug: buttonGroupData.passingContent.gameSlug,
+            gameUploaded: buttonGroupData.passingContent.gameUploaded,
+            firebaseConsoleName: buttonGroupData.passingContent.firebaseConsoleName,
+            postCreator:  buttonGroupData.passingContent.gameUploadedBy,
+            createdAt: timestamp,
+            views: viewCountFirebase
         })
     }
 
@@ -312,7 +363,7 @@ export function AuthProvider({ children }) {
         updatePassword,
         displayData,
         getGameData,
-        addData,
+        addGameToConsoleButtonGroup,
         addGameToConsole,
         deleteGameFromConsole,
         addImagesForGame,

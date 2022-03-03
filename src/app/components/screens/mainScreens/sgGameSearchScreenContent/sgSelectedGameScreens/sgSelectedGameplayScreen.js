@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react'
 import { View, Image, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native'
-import { confirmGameContext, CurrentThemeContext, PageContainer, SafeAreaViewContainer, useAuth } from '../../../index';
+import { confirmGameContext, CurrentThemeContext, PageContainer, SafeAreaViewContainer, useAuth } from '../../../index'
 
 export default function SgSelectedGameplayScreen({route, navigation}) {
     const {
@@ -13,20 +13,20 @@ export default function SgSelectedGameplayScreen({route, navigation}) {
     const [isLoading, setIsLoading] = useState()
     const {
         gameCover,
+        gameDevelopers,
         gameId,
         gameName,
         gameRating, 
         gameReleaseDate,
         gameScreenshots,
+        gamePublishers,
         gameSlug,
-        gameStoryline,
         gameSummary,
-        involvesCompanies
+        igdbConsoleId
     } = route.params
 
     const gameNameLastChar = gameName.charAt(gameName.length - 1)
     const [chosenGameplaysArray, setChosenGameplaysArray] = useState([])
-    console.log("🚀 ~ file: sgSelectedGameplayScreen.js ~ line 29 ~ SgSelectedGameplayScreen ~ chosenGameplaysArray", chosenGameplaysArray)
     const [ imageCount, setImageCount ] = useState()
     const gameplaysNewArray = Array.from(new Set(chosenGameplaysArray)); //Removes the ability to add duplicate
     const pageDescriptionPluralForS = `Choose ${imageCount} ${confirmGame.imgWordingSelector(imageCount)} that perfectly showcases some of ${gameName}' highlights:`
@@ -34,16 +34,17 @@ export default function SgSelectedGameplayScreen({route, navigation}) {
     const pageDescription = `To add another image, select one of the chosen images. To remove all images, press the Clear Images Button`
     const nextPageNumber = 'Page6'
     const passingContent = {
-        involvesCompanies: involvesCompanies,
-        gameRating: gameRating, 
         gameCover: gameCover,
+        gameDevelopers: gameDevelopers,
         gameId: gameId,
         gameName: gameName,
-        gameSlug: gameSlug,
+        gamePublishers: gamePublishers,
+        gameRating: gameRating, 
         gameReleaseDate: gameReleaseDate,
-        gameStoryline: gameStoryline,
+        gameScreenshots: chosenGameplaysArray,
+        gameSlug: gameSlug,
         gameSummary: gameSummary,
-        gameScreenshots: chosenGameplaysArray
+        igdbConsoleId: igdbConsoleId
     }
     const navigationPass = navigation
     const buttonGroupData = {
@@ -108,7 +109,7 @@ export default function SgSelectedGameplayScreen({route, navigation}) {
                                     borderRadius: 25,
                                 }}
                                 source={{
-                                    uri: `https://images.igdb.com/igdb/image/upload/t_1080p/${item.image_id}.jpg`,
+                                    uri: `https://images.igdb.com/igdb/image/upload/t_1080p/${item}.jpg`,
                                 }}
                                 onLoadStart={() => {setIsLoading(true)}}
                                 onLoadEnd={() => {setIsLoading(false)}}
@@ -156,7 +157,7 @@ export default function SgSelectedGameplayScreen({route, navigation}) {
                                     borderColor: colors.secondaryColor,
                                 }}
                                 source={{
-                                    uri: `https://images.igdb.com/igdb/image/upload/t_1080p/${item.image_id}.jpg`,
+                                    uri: `https://images.igdb.com/igdb/image/upload/t_1080p/${item}.jpg`,
                                 }}
                                 onLoadStart={() => {setIsLoading(true)}}
                                 onLoadEnd={() => {setIsLoading(false)}}

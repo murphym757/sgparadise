@@ -2,29 +2,29 @@ import React, { useState, useEffect, useContext } from 'react';
 import { View, ActivityIndicator } from 'react-native';
 // React Navigation
 import { useIsFocused } from '@react-navigation/native';
-import { confirmGameContext, CurrentThemeContext, firebase, PageContainer, SafeAreaViewContainer, useAuth, windowHeight } from '../../../index';
+import { confirmGameContext, firebase, PageContainer, SafeAreaViewContainer, useAuth } from '../../../index';
 
 export default function SgSelectedGameSetSubGenreScreen({route, navigation}) {
     const {
         forwardToNextPage,
         backToPreviousPage
     } = useAuth()
-    const colors = useContext(CurrentThemeContext)
     const confirmGame = useContext(confirmGameContext)
     const sgDB = firebase.firestore()
     const [isLoading, setIsLoading] = useState()
     const { 
-        involvesCompanies,
-        gameRating, 
         gameCover,
+        gameDevelopers,
+        gameGenre,
         gameId,
         gameName,
-        gameSlug, 
-        gameGenre,
+        gamePublishers,
+        gameRating, 
         gameReleaseDate,
-        gameStoryline,
+        gameScreenshots,
+        gameSlug,
         gameSummary,
-        gameScreenshots
+        igdbConsoleId
     } = route.params
     const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be read
     const [ gameArray, setGameArray ]= useState([])
@@ -35,18 +35,19 @@ export default function SgSelectedGameSetSubGenreScreen({route, navigation}) {
     const pageDescription = `What subgenre is ideal for ${gameName}?`
     const nextPageNumber = 'Page8'
     const passingContent = {
-        involvesCompanies: involvesCompanies,
-        gameRating: gameRating, 
         gameCover: gameCover,
+        gameDevelopers: gameDevelopers,
+        gameGenre: gameGenre,
         gameId: gameId,
         gameName: gameName,
-        gameSlug: gameSlug,
-        gameGenre: gameGenre,
-        gameSubGenre: chosenName,
+        gamePublishers: gamePublishers,
+        gameRating: gameRating, 
         gameReleaseDate: gameReleaseDate,
-        gameStoryline: gameStoryline,
+        gameScreenshots: gameScreenshots,
+        gameSlug: gameSlug,
+        gameSubGenre: chosenName,
         gameSummary: gameSummary,
-        gameScreenshots: gameScreenshots
+        igdbConsoleId: igdbConsoleId
     }
     const navigationPass = navigation
     let tagArrayData = {

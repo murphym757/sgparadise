@@ -26,7 +26,6 @@
 
         // Game Screens
         export { default as GameScreen } from './mainScreens/sgGameScreenContent/sgGameScreen'
-        export { default as AddGameScreen } from './mainScreens/sgGameScreenContent/sgAddGameScreen'
         export { default as ConfirmAddGameScreen } from './mainScreens/sgGameScreenContent/sgConfirmAddGameScreen'
         export { default as EditGameScreen } from './mainScreens/sgGameScreenContent/sgEditGameScreen'
         

@@ -9,6 +9,7 @@ import {
     useAuth,
     windowHeight,
 } from '../../../index';
+import axios from 'axios'
 
 export default function SgSelectedGameSummaryScreen({route, navigation}) {
     const {
@@ -21,34 +22,37 @@ export default function SgSelectedGameSummaryScreen({route, navigation}) {
     const confirmGame = useContext(confirmGameContext)
     const [isLoading, setIsLoading] = useState()
     const { 
-        igdbGameId,
-        gameName,
-        gameSlug,
         gameCover,
+        gameDevelopers,
+        gameId,
+        gameName,
+        gamePublishers,
         gameRating,
         gameReleaseDate,
-        gameStoryline,
-        gameSummary,
         gameScreenshots,
-        involvesCompanies
+        gameSlug,
+        gameSummary,
+        igdbConsoleId
     } = route.params
-
 
     // IGDB search data (Put on confirmation page)
     const [updatedGameSummary, setUpdatedGameSummary] = useState(gameSummary)
+    const [chosenPublishersArray, setChosenPublishersArray] = useState([])
+    const [chosenDevelopersArray, setChosenDevelopersArray] = useState([])
     const pageDescription = `What is ${gameName} about, exactly?`
     const [nextPageNumber, setNextPageNumber] = useState('Page5')
     const passingContent = {
-        involvesCompanies: involvesCompanies,
-        gameRating: gameRating,
         gameCover: gameCover, 
-        gameId: igdbGameId,
+        gameDevelopers: chosenDevelopersArray,
+        gameId: gameId,
         gameName: gameName,
-        gameSlug: gameSlug,
+        gamePublishers: chosenPublishersArray,
+        gameRating: gameRating,
         gameReleaseDate: gameReleaseDate,
-        gameStoryline: gameStoryline,
+        gameScreenshots: gameScreenshots,
+        gameSlug: gameSlug,
         gameSummary: updatedGameSummary,
-        gameScreenshots: gameScreenshots
+        igdbConsoleId: igdbConsoleId
     }
     const navigationPass = navigation
     const buttonGroupData = {
@@ -62,20 +66,61 @@ export default function SgSelectedGameSummaryScreen({route, navigation}) {
     }
 
     useEffect(() => {
+        function searchTesting() {
+            let api = axios.create({
+                headers: {
+                    'Accept': 'application/json',
+                    "Client-ID": route.params.clientIdIGDB,
+                    "Authorization": `Bearer ${route.params.accessTokenIGDB}`
+                }
+            })
+            let gamePubParams = []
+            let gameDevParams = []
             return new Promise(resolve => {
                 setTimeout(() => {
                   resolve(
-                        setIsLoading(false),
-                        setUpdatedGameSummary(charLimit(gameSummary, 500))
-                        )
-                        if (gameScreenshots == 0) {
-                            return setNextPageNumber('Page6')
-                       } else {
-                            return nextPageNumber
-                       }
-                }, 2000)
+                    gamePublishers.map(item => gamePubParams.push(
+                        api.post('https://api.igdb.com/v4/companies', `fields country,name;  where id = (${item});`, {timeout: 2000})
+                        .then(res => {
+                            setChosenPublishersArray(gamePublishersNameInfo => [...gamePublishersNameInfo, res.data])
+                        }, [])
+                        .catch(err => {
+                            console.log(err);
+                        })
+                        .then(function () {
+                            // always executed
+                        }),
+                    )),
+                    gameDevelopers.map(item => gameDevParams.push(
+                        api.post('https://api.igdb.com/v4/companies', `fields country,name;  where id = (${item});`, {timeout: 2000})
+                        .then(res => {
+                            setChosenDevelopersArray(gameDevelopersNameInfo => [...gameDevelopersNameInfo, res.data])
+                        }, [])
+                        .catch(err => {
+                            console.log(err);
+                        })
+                        .then(function () {
+                            // always executed
+                        }),
+                    )),
+                    setIsLoading(false),
+                    setUpdatedGameSummary(charLimit(gameSummary, 500))
+                )
+                if (gameScreenshots == 0) {
+                    return setNextPageNumber('Page6')
+                } else {
+                    return nextPageNumber
+                }
+            }, 2000)
               })
-            }, [])
+            }
+
+        async function sgLoader() {
+            await searchTesting()
+        }
+        sgLoader()
+        
+    }, [])
 
     return (
         <PageContainer>

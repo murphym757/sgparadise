@@ -6,7 +6,6 @@ import { confirmGameContext, firebase, PageContainer, SafeAreaViewContainer, use
 
 export default function SgSelectedGameSetGameModesScreen({route, navigation}) {
     const {
-        unixTimestampConverter,
         forwardToNextPage,
         backToPreviousPage
     } = useAuth()
@@ -15,18 +14,19 @@ export default function SgSelectedGameSetGameModesScreen({route, navigation}) {
     const sgDB = firebase.firestore()
     const [isLoading, setIsLoading] = useState()
     const { 
-        involvesCompanies,
-        gameRating, 
         gameCover,
+        gameDevelopers,
+        gameGenre,
         gameId,
         gameName,
-        gameSlug,
-        gameGenre,
-        gameSubGenre,
+        gamePublishers,
+        gameRating, 
         gameReleaseDate,
-        gameStoryline,
+        gameScreenshots,
+        gameSlug,
+        gameSubGenre,
         gameSummary,
-        gameScreenshots
+        igdbConsoleId
     } = route.params
     const isFocused = useIsFocused()
     const [ gameArray, setGameArray ]= useState([])
@@ -36,19 +36,20 @@ export default function SgSelectedGameSetGameModesScreen({route, navigation}) {
     const pageDescription = `Finally, what some of the gaming mechanics present in ${gameName}?`
     const nextPageNumber = 'Page9'
     const passingContent = {
-        involvesCompanies: involvesCompanies,
-        gameRating: gameRating, 
         gameCover: gameCover,
-        gameId: gameId,
-        gameName: gameName,
-        gameSlug: gameSlug,
+        gameDevelopers: gameDevelopers,
         gameGenre: gameGenre,
-        gameSubGenre: gameSubGenre,
-        gameReleaseDate: gameReleaseDate,
+        gameId: gameId,
         gameModes: chosenTagsArray,
-        gameStoryline: gameStoryline,
+        gameName: gameName,
+        gamePublishers: gamePublishers,
+        gameRating: gameRating, 
+        gameReleaseDate: gameReleaseDate,
+        gameScreenshots: gameScreenshots,
+        gameSlug: gameSlug,
+        gameSubGenre: gameSubGenre,
         gameSummary: gameSummary,
-        gameScreenshots: gameScreenshots
+        igdbConsoleId: igdbConsoleId
     }
     const navigationPass = navigation
     let tagArrayData = {
@@ -97,7 +98,11 @@ export default function SgSelectedGameSetGameModesScreen({route, navigation}) {
     }
 
     async function removeChosenTagData(item) {
-        setModeTagsSelected(false)
+        if (chosenTagsArray == null) {
+            setModeTagsSelected(false)
+        } else {
+            setModeTagsSelected(true)
+        }
         setChosenTagsArray(tagsNewArray.filter(tag => tag !== item))
     }
 

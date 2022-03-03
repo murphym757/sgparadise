@@ -15,6 +15,7 @@ import {
     TouchableButtonFontAlt,
     TouchableButtonFontDelete,
     useTags,
+    useAuth,
     ViewSortColumn,
     ViewSortRow
 } from '../../../index';
@@ -78,7 +79,7 @@ function gameSummaryResults(buttonGroupData, updatedGameSummary, setUpdatedGameS
     )
 }
 
-function gameConfirmationResults(tagArrayData, buttonGroupData, windowHeight, undefined) {
+function gameConfirmationResults(tagArrayData, buttonGroupData, windowHeight, confirmationPage, undefined) {
     return (
         <Container>
             <View style={{paddingBottom: 25}}><MainFont>{tagArrayData.pageDescription}</MainFont></View>
@@ -98,7 +99,7 @@ function gameConfirmationResults(tagArrayData, buttonGroupData, windowHeight, un
                                 borderRadius: 25,
                             }}
                             source={{
-                                uri: `https://images.igdb.com/igdb/image/upload/t_1080p/${buttonGroupData.passingContent.gameCover[0].image_id}.jpg`,
+                                uri: `https://images.igdb.com/igdb/image/upload/t_1080p/${buttonGroupData.passingContent.gameCover}.jpg`,
                             }}
                         />
                     </View>
@@ -116,9 +117,6 @@ function gameConfirmationResults(tagArrayData, buttonGroupData, windowHeight, un
             <ContentContainer>
                 <ViewSortRow><MainSubFont>{buttonGroupData.passingContent.gameSummary}</MainSubFont></ViewSortRow>
             </ContentContainer>
-            <View>
-                {buttonGroup(buttonGroupData)}
-            </View>
         </Container>
     )
 }
@@ -176,11 +174,14 @@ function gameModesResults(tagArrayData, buttonGroupData) {
       ) 
 }
 
-function buttonGroup(buttonGroupData) {
+function buttonGroup(buttonGroupData, confirmationPage) {
     return (
         <View>
             <TouchableButton onPress={() => buttonGroupData.forwardToNextPage(buttonGroupData.nextPageNumber, buttonGroupData.passingContent, buttonGroupData.navigationPass)}>
-                <TouchableButtonFont>Next Page</TouchableButtonFont>
+                {confirmationPage == true
+                    ?   <TouchableButtonFont>Upload Game</TouchableButtonFont>
+                    :   <TouchableButtonFont>Next Page</TouchableButtonFont>
+                }
             </TouchableButton>
             <TouchableButtonAlt style={{}} onPress={() => buttonGroupData.backToPreviousPage(buttonGroupData.navigationPass)}>
                 <TouchableButtonFontAlt>Previous Page</TouchableButtonFontAlt>
@@ -237,12 +238,7 @@ function buttonGroupImages(buttonGroupData, resetChosenGameplayData) {
             <TouchableButtonDelete onPress={() => resetChosenGameplayData()}>
                 <TouchableButtonFontDelete>Clear Images</TouchableButtonFontDelete>
             </TouchableButtonDelete>
-            <TouchableButton onPress={() => buttonGroupData.forwardToNextPage(buttonGroupData.nextPageNumber, buttonGroupData.passingContent, buttonGroupData.navigationPass)}>
-                <TouchableButtonFont>Next Page</TouchableButtonFont>
-            </TouchableButton>
-            <TouchableButtonAlt style={{}} onPress={() => buttonGroupData.backToPreviousPage(buttonGroupData.navigationPass)}>
-                <TouchableButtonFontAlt>Previous Page</TouchableButtonFontAlt>
-            </TouchableButtonAlt>
+            {buttonGroup(buttonGroupData)}
         </View>
     )
 }

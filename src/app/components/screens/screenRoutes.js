@@ -124,14 +124,6 @@ export default function App() {
             component={SgConsoleListScreen} 
         />
         <Stack.Screen 
-            name="SgAddGame"
-            options={{ 
-                headerShown: false,
-                gestureEnabled: false 
-            }}
-            component={AddGameScreen} 
-        />
-        <Stack.Screen 
             name="SgAddGameConfirm"
             options={{ headerShown: false }}
             component={ConfirmAddGameScreen} 
