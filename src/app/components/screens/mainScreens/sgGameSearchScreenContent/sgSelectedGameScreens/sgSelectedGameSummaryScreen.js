@@ -22,6 +22,8 @@ export default function SgSelectedGameSummaryScreen({route, navigation}) {
     const confirmGame = useContext(confirmGameContext)
     const [isLoading, setIsLoading] = useState()
     const { 
+        consoleName,
+        firebaseConsoleName,
         gameCover,
         gameDevelopers,
         gameId,
@@ -32,7 +34,6 @@ export default function SgSelectedGameSummaryScreen({route, navigation}) {
         gameScreenshots,
         gameSlug,
         gameSummary,
-        igdbConsoleId
     } = route.params
 
     // IGDB search data (Put on confirmation page)
@@ -42,6 +43,8 @@ export default function SgSelectedGameSummaryScreen({route, navigation}) {
     const pageDescription = `What is ${gameName} about, exactly?`
     const [nextPageNumber, setNextPageNumber] = useState('Page5')
     const passingContent = {
+        consoleName: consoleName,
+        firebaseConsoleName: firebaseConsoleName,
         gameCover: gameCover, 
         gameDevelopers: chosenDevelopersArray,
         gameId: gameId,
@@ -51,8 +54,7 @@ export default function SgSelectedGameSummaryScreen({route, navigation}) {
         gameReleaseDate: gameReleaseDate,
         gameScreenshots: gameScreenshots,
         gameSlug: gameSlug,
-        gameSummary: updatedGameSummary,
-        igdbConsoleId: igdbConsoleId
+        gameSummary: updatedGameSummary
     }
     const navigationPass = navigation
     const buttonGroupData = {

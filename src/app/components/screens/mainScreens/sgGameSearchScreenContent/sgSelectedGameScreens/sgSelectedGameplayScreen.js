@@ -12,6 +12,8 @@ export default function SgSelectedGameplayScreen({route, navigation}) {
     const confirmGame = useContext(confirmGameContext)
     const [isLoading, setIsLoading] = useState()
     const {
+        consoleName,
+        firebaseConsoleName,
         gameCover,
         gameDevelopers,
         gameId,
@@ -21,8 +23,7 @@ export default function SgSelectedGameplayScreen({route, navigation}) {
         gameScreenshots,
         gamePublishers,
         gameSlug,
-        gameSummary,
-        igdbConsoleId
+        gameSummary
     } = route.params
 
     const gameNameLastChar = gameName.charAt(gameName.length - 1)
@@ -34,6 +35,8 @@ export default function SgSelectedGameplayScreen({route, navigation}) {
     const pageDescription = `To add another image, select one of the chosen images. To remove all images, press the Clear Images Button`
     const nextPageNumber = 'Page6'
     const passingContent = {
+        consoleName: consoleName,
+        firebaseConsoleName: firebaseConsoleName,
         gameCover: gameCover,
         gameDevelopers: gameDevelopers,
         gameId: gameId,
@@ -43,8 +46,7 @@ export default function SgSelectedGameplayScreen({route, navigation}) {
         gameReleaseDate: gameReleaseDate,
         gameScreenshots: chosenGameplaysArray,
         gameSlug: gameSlug,
-        gameSummary: gameSummary,
-        igdbConsoleId: igdbConsoleId
+        gameSummary: gameSummary
     }
     const navigationPass = navigation
     const buttonGroupData = {

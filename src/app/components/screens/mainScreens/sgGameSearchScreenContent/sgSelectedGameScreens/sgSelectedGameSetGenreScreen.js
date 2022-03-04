@@ -22,6 +22,8 @@ export default function SgSelectedGameSetGenreScreen({route, navigation}) {
     const sgDB = firebase.firestore()
     const [isLoading, setIsLoading] = useState()
     const { 
+        consoleName,
+        firebaseConsoleName,
         gameCover,
         gameDevelopers,
         gameId,
@@ -31,8 +33,7 @@ export default function SgSelectedGameSetGenreScreen({route, navigation}) {
         gameReleaseDate,
         gameScreenshots,
         gameSlug,
-        gameSummary,
-        igdbConsoleId
+        gameSummary
     } = route.params
     const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be read
     const [ gameArray, setGameArray ]= useState([])
@@ -43,6 +44,8 @@ export default function SgSelectedGameSetGenreScreen({route, navigation}) {
     const pageDescription = `What genre does ${gameName} fall under?`
     const nextPageNumber = 'Page7'
     const passingContent = {
+        consoleName: consoleName,
+        firebaseConsoleName: firebaseConsoleName,
         gameCover: gameCover,
         gameDevelopers: gameDevelopers,
         gameGenre: chosenName,
@@ -53,8 +56,7 @@ export default function SgSelectedGameSetGenreScreen({route, navigation}) {
         gameReleaseDate: gameReleaseDate,
         gameScreenshots: gameScreenshots,
         gameSlug: gameSlug,
-        gameSummary: gameSummary,
-        igdbConsoleId: igdbConsoleId,
+        gameSummary: gameSummary
     }
     const navigationPass = navigation
     let tagArrayData = {

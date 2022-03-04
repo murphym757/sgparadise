@@ -341,7 +341,7 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
     }
     function confirmGenreSelection(item){
         navigation.navigate('Page1')
-        setChosenGenre(item.tagName)
+        setChosenGenre(item)
     }
     
 
@@ -375,7 +375,7 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
     }
 
     function setDBWithGenre(item) {
-        setSearchQuery(item.tagName)
+        setSearchQuery(item)
     }
 
 
@@ -403,7 +403,7 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
                             backgroundColor: colors.secondaryColor,
                         }} 
                         onPress={() => confirmGenreSelection(item)}>
-                            <MainHeadingButton style={{justifyContent: 'center', alignItems: 'center',}}>{item.tagName}</MainHeadingButton>
+                            <MainHeadingButton style={{justifyContent: 'center', alignItems: 'center',}}>{item}</MainHeadingButton>
                             <View style={{ justifyContent: 'center', alignItems: 'center', margin: 7 }}>
                                 <FontAwesomeIcon 
                                     icon={ item.tagIcon } color={colors.primaryColorLight} size={35} 

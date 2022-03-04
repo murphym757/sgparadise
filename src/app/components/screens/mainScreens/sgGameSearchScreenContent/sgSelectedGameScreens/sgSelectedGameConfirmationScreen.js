@@ -15,15 +15,16 @@ export default function SgSelectedGameConfirmationScreen({route, navigation}) {
     const {
         backToPreviousPage,
         currentUID,
-        forwardToNextPage,
+        toNewStack,
         addGameToConsoleButtonGroup
     } = useAuth()
     //let { searchBarTitle, searchType, searchQuery } = route.params
     const confirmGame = useContext(confirmGameContext)
-    const sgDB = firebase.firestore()
     const [isLoading, setIsLoading] = useState()
     
     const { 
+        firebaseConsoleName,
+        consoleName,
         gameCover,
         gameDevelopers,
         gameGenre,
@@ -35,16 +36,14 @@ export default function SgSelectedGameConfirmationScreen({route, navigation}) {
         gameScreenshots,
         gameSlug,
         gameSubGenre,
-        gameSummary,
-        igdbConsoleId
+        gameSummary
     } = route.params
   
     const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be read
-    const [consoleName, setConsoleName] = useState()
-    const [firebaseConsoleName, setFirebaseConsoleName] = useState()
     const [gameUploaded, setGameUploaded] = useState(false)
     const pageDescription = `Here is all the information about ${gameName}. Is there anything you would like to change?`
-    const nextPageNumber = 'Page10'
+    const stackName = 'Game'
+    const screenName = 'sgUserStackNavbar'
     const confirmationPage = true
     const passingContent = {
         consoleName: consoleName,
@@ -61,38 +60,26 @@ export default function SgSelectedGameConfirmationScreen({route, navigation}) {
         gameSlug: gameSlug,
         gameSubGenre: gameSubGenre,
         gameSummary: gameSummary,
-        gameUploadedBy: currentUID,
-        gameUploaded: gameUploaded
+        gameUploadedBy: currentUID
     }
-    console.log("🚀 ~ file: sgSelectedGameConfirmationScreen.js ~ line 67 ~ SgSelectedGameConfirmationScreen ~ passingContent", passingContent)
     const navigationPass = navigation
     let tagArrayData = {
         pageDescription
     }
     const buttonGroupData = {
-        forwardToNextPage, 
+        toNewStack, 
         backToPreviousPage, 
-        nextPageNumber,
+        stackName,
+        screenName,
         passingContent, 
         navigationPass
     }
 
     useEffect(() => {
         setTimeout(() => {
-            setIsLoading(false),
-            findConsoleName(igdbConsoleId)
+            setIsLoading(false)
           }, 2000)
       }, [isFocused]);
-
-    function findConsoleName(igdbConsoleId) {
-        if (igdbConsoleId == 29) return  setConsoleName('Genesis'), setFirebaseConsoleName('sgGenesis')
-        if (igdbConsoleId == 84) return  setConsoleName('SG-1000'), setFirebaseConsoleName('sg1000')
-        if (igdbConsoleId == 64) return  setConsoleName('Master System'), setFirebaseConsoleName('sgMS')
-        if (igdbConsoleId == 35) return  setConsoleName('Game Gear'), setFirebaseConsoleName('sgGG')
-        if (igdbConsoleId == 32) return  setConsoleName('Saturn'), setFirebaseConsoleName('sgSat')
-        if (igdbConsoleId == 31) return  setConsoleName('32x'), setFirebaseConsoleName('sgG32X')
-        if (igdbConsoleId == 78) return  setConsoleName('Sega CD'), setFirebaseConsoleName('sgCD')
-    }
 
     return (
         <PageContainer>
@@ -101,6 +88,7 @@ export default function SgSelectedGameConfirmationScreen({route, navigation}) {
                 ? <ActivityIndicator size="large" hidesWhenStopped="true"/>
                 : <View>
                     {confirmGame.gameConfirmationResults(tagArrayData, buttonGroupData, windowHeight, confirmationPage, undefined)}
+                    {addGameToConsoleButtonGroup(buttonGroupData)}
                 </View>
             }
             </SafeAreaViewContainer>

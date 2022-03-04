@@ -14,6 +14,8 @@ export default function SgSelectedGameSetGameModesScreen({route, navigation}) {
     const sgDB = firebase.firestore()
     const [isLoading, setIsLoading] = useState()
     const { 
+        consoleName,
+        firebaseConsoleName,
         gameCover,
         gameDevelopers,
         gameGenre,
@@ -25,8 +27,7 @@ export default function SgSelectedGameSetGameModesScreen({route, navigation}) {
         gameScreenshots,
         gameSlug,
         gameSubGenre,
-        gameSummary,
-        igdbConsoleId
+        gameSummary
     } = route.params
     const isFocused = useIsFocused()
     const [ gameArray, setGameArray ]= useState([])
@@ -36,6 +37,8 @@ export default function SgSelectedGameSetGameModesScreen({route, navigation}) {
     const pageDescription = `Finally, what some of the gaming mechanics present in ${gameName}?`
     const nextPageNumber = 'Page9'
     const passingContent = {
+        consoleName: consoleName,
+        firebaseConsoleName: firebaseConsoleName,
         gameCover: gameCover,
         gameDevelopers: gameDevelopers,
         gameGenre: gameGenre,
@@ -48,8 +51,7 @@ export default function SgSelectedGameSetGameModesScreen({route, navigation}) {
         gameScreenshots: gameScreenshots,
         gameSlug: gameSlug,
         gameSubGenre: gameSubGenre,
-        gameSummary: gameSummary,
-        igdbConsoleId: igdbConsoleId
+        gameSummary: gameSummary
     }
     const navigationPass = navigation
     let tagArrayData = {

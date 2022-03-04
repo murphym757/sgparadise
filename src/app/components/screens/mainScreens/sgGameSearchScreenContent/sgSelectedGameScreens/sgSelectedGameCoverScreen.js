@@ -28,6 +28,8 @@ export default function SgSelectedGameCoverScreen({route, navigation}) {
     const gameCover = coversResults.map(game => game.image_id)
     const [gameDevelopers, setGameDevelopersResults] = useState([])
     const [gamePublishers, setGamePublishersResults] = useState([])
+    const [consoleName, setConsoleName] = useState()
+    const [firebaseConsoleName, setFirebaseConsoleName] = useState()
     const [gameScreenshots, setGameScreenshots] = useState([])
     const [updatedGameRating, setUpdatedGameRating] = useState()
     const igdbCoversResultsField = `fields image_id; where game = (${igdbGameId});`
@@ -38,6 +40,8 @@ export default function SgSelectedGameCoverScreen({route, navigation}) {
     const passingContent = {
         accessTokenIGDB: accessTokenIGDB, 
         clientIdIGDB: clientIdIGDB,
+        consoleName: consoleName,
+        firebaseConsoleName: firebaseConsoleName,
         gameCover: gameCover, 
         gameDevelopers: gameDevelopers.map(game => game.company),
         gameId: igdbGameId,
@@ -47,11 +51,8 @@ export default function SgSelectedGameCoverScreen({route, navigation}) {
         gameReleaseDate: gameReleaseDate,
         gameScreenshots: gameScreenshots.map(game => game.image_id),
         gameSlug: gameSlug,
-        gameSummary: gameSummary,
-        igdbConsoleId: igdbConsoleId
-
+        gameSummary: gameSummary
     }
-    console.log("🚀 ~ file: sgSelectedGameCoverScreen.js ~ line 53 ~ SgSelectedGameCoverScreen ~ passingContent", passingContent)
     const navigationPass = navigation
     const buttonGroupData = {
         backToPreviousPage, 
@@ -112,7 +113,8 @@ export default function SgSelectedGameCoverScreen({route, navigation}) {
                         .then(function () {
                             // always executed
                         }),
-                        setIsLoading(false))
+                        setIsLoading(false)),
+                        findConsoleName(igdbConsoleId)
                 }, 2000)
               })
             }
@@ -164,6 +166,16 @@ export default function SgSelectedGameCoverScreen({route, navigation}) {
                 />
             </ContentContainer>
         )
+    }
+
+    function findConsoleName(igdbConsoleId) {
+        if (igdbConsoleId == 29) return  setConsoleName('Genesis'), setFirebaseConsoleName('sgGenesis')
+        if (igdbConsoleId == 84) return  setConsoleName('SG-1000'), setFirebaseConsoleName('sg1000')
+        if (igdbConsoleId == 64) return  setConsoleName('Master System'), setFirebaseConsoleName('sgMS')
+        if (igdbConsoleId == 35) return  setConsoleName('Game Gear'), setFirebaseConsoleName('sgGG')
+        if (igdbConsoleId == 32) return  setConsoleName('Saturn'), setFirebaseConsoleName('sgSat')
+        if (igdbConsoleId == 31) return  setConsoleName('32x'), setFirebaseConsoleName('sgG32X')
+        if (igdbConsoleId == 78) return  setConsoleName('Sega CD'), setFirebaseConsoleName('sgCD')
     }
 
     return (

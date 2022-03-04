@@ -122,10 +122,45 @@ export function AuthProvider({ children }) {
         });
     }
 
-    async function addGameToConsoleButtonGroup(buttonGroupData) {
+    function addGameToConsoleButtonGroup(buttonGroupData) {
+        const sgConsoleName = buttonGroupData.passingContent.consoleName
+        const sgGameCover = buttonGroupData.passingContent.gameCover
+        const sgFirebaseConsoleName = buttonGroupData.passingContent.firebaseConsoleName
+        const sgGameDevelopers = buttonGroupData.passingContent.gameDevelopers
+        const sgGameGenre = buttonGroupData.passingContent.gameGenre
+        const sgGameModes = buttonGroupData.passingContent.gameModes
+        const sgGameName = buttonGroupData.passingContent.gameName
+        const sgGamePublishers = buttonGroupData.passingContent.gamePublishers
+        const sgGameRating = buttonGroupData.passingContent.gameRating
+        const sgGameReleaseDate = buttonGroupData.passingContent.gameReleaseDate
+        const sgGameScreenshots = buttonGroupData.passingContent.gameScreenshots
+        const sgGameSlug = buttonGroupData.passingContent.gameSlug
+        const sgGameSubGenre = buttonGroupData.passingContent.gameSubGenre
+        const sgGameSummary = buttonGroupData.passingContent.gameSummary
+        const sgCurrentUID = currentUID
+        const passingContent = {
+            sgGameName: sgGameName,
+            sgGameDevelopers: sgGameDevelopers,
+            sgGamePublishers: sgGamePublishers,
+            sgGameReleaseDate: sgGameReleaseDate,
+            sgGameSummary: sgGameSummary,
+            sgGameGenre: sgGameGenre,
+            sgGameSubGenre: sgGameSubGenre,
+            sgGameModes: sgGameModes,
+            sgGameRating: sgGameRating, 
+            sgGameCover: sgGameCover,
+            sgGameScreenshots: sgGameScreenshots,
+            sgGameSlug: sgGameSlug,
+            sgConsoleName: sgConsoleName,
+            sgFirebaseConsoleName: sgFirebaseConsoleName,
+            sgPostCreator:  sgCurrentUID,
+        }
+        setTimeout(() => {
+            addGameToConsole(passingContent)
+        }, 3000)
         return (
             <View>
-                <TouchableButton onPress={() => uploadGameToFirebase(buttonGroupData.nextPageNumber, buttonGroupData.passingContent, buttonGroupData.navigationPass)}>
+                <TouchableButton onPress={() => buttonGroupData.toNewStack(buttonGroupData.stackName, buttonGroupData.screenName, buttonGroupData.navigationPass)}>
                     <TouchableButtonFont>Upload Game</TouchableButtonFont>
                 </TouchableButton>
                 <TouchableButtonAlt style={{}} onPress={() => buttonGroupData.backToPreviousPage(buttonGroupData.navigationPass)}>
@@ -176,53 +211,25 @@ export function AuthProvider({ children }) {
         })
     }
 
-    async function uploadGameToFirebase(buttonGroupData) {
-        const timestamp = firebase.firestore.FieldValue.serverTimestamp();
-        sgDB.collection('sgAPI').doc(`sg${buttonGroupData.passingContent.firebaseConsoleName}`).collection('games').add({
-            gameName: buttonGroupData.passingContent.gameName,
-            gameDevelopers: buttonGroupData.passingContent.gameDevelopers,
-            gamePublishers: buttonGroupData.passingContent.gamePublishers,
-            gameReleaseDate: buttonGroupData.passingContent.gameReleaseDate,
-            releaseDate: "Dec 20, 1992",
-            releaseYear: "1992",
-            gameSummary: buttonGroupData.passingContent.gameSummary,
-            gameGenre: buttonGroupData.passingContent.gameGenre,
-            gameSubGenre: buttonGroupData.passingContent.gameSubGenre,
-            gameModes: buttonGroupData.passingContent.gameModes,
-            gameRating: buttonGroupData.passingContent.gameRating, 
-            gameCover: buttonGroupData.passingContent.gameCover,
-            gameScreenshots: buttonGroupData.passingContent.gameScreenshots,
-            gameSlug: buttonGroupData.passingContent.gameSlug,
-            gameUploaded: buttonGroupData.passingContent.gameUploaded,
-            firebaseConsoleName: buttonGroupData.passingContent.firebaseConsoleName,
-            postCreator:  buttonGroupData.passingContent.gameUploadedBy,
-            createdAt: timestamp
-        })
-        {forwardToNextPage(buttonGroupData.nextPageNumber, buttonGroupData.passingContent, buttonGroupData.navigationPass)}
-    }
-
     // Add Game to sgDB
-    async function addGameToConsole(buttonGroupData) {
+    async function addGameToConsole(passingContent) {
         const timestamp = firebase.firestore.FieldValue.serverTimestamp();
-        sgDB.collection('sgAPI').doc(`sg${buttonGroupData.passingContent.firebaseConsoleName}`).collection('games').doc(buttonGroupData.passingContent.gameSlug).set({
+        sgDB.collection('sgAPI').doc(passingContent.sgFirebaseConsoleName).collection('games').doc(passingContent.sgGameSlug).set({
             sgID: complexID(20),
-            gameName: buttonGroupData.passingContent.gameName,
-            gameDevelopers: buttonGroupData.passingContent.gameDevelopers,
-            gamePublishers: buttonGroupData.passingContent.gamePublishers,
-            gameReleaseDate: buttonGroupData.passingContent.gameReleaseDate,
-            releaseDate: "Dec 20, 1992",
-            releaseYear: "1992",
-            gameSummary: buttonGroupData.passingContent.gameSummary,
-            gameGenre: buttonGroupData.passingContent.gameGenre,
-            gameSubGenre: buttonGroupData.passingContent.gameSubGenre,
-            gameModes: buttonGroupData.passingContent.gameModes,
-            gameRating: buttonGroupData.passingContent.gameRating, 
-            gameCover: buttonGroupData.passingContent.gameCover,
-            gameScreenshots: buttonGroupData.passingContent.gameScreenshots,
-            gameSlug: buttonGroupData.passingContent.gameSlug,
-            gameUploaded: buttonGroupData.passingContent.gameUploaded,
-            firebaseConsoleName: buttonGroupData.passingContent.firebaseConsoleName,
-            postCreator:  buttonGroupData.passingContent.gameUploadedBy,
+            gameName: passingContent.sgGameName,
+            gameDevelopers: passingContent.sgGameDevelopers,
+            gamePublishers: passingContent.sgGamePublishers,
+            gameReleaseDate: passingContent.sgGameReleaseDate,
+            gameSummary: passingContent.sgGameSummary,
+            gameGenre: passingContent.sgGameGenre,
+            gameSubGenre: passingContent.sgGameSubGenre,
+            gameModes: passingContent.sgGameModes,
+            gameRating: passingContent.sgGameRating, 
+            gameCover: passingContent.sgGameCover,
+            gameScreenshots: passingContent.sgGameScreenshots,
+            gameSlug: passingContent.sgGameSlug,
+            postCreator: passingContent.sgPostCreator,
+            gameUploaded: true,
             createdAt: timestamp,
             views: viewCountFirebase
         })
@@ -296,6 +303,14 @@ export function AuthProvider({ children }) {
     }
     */
     ///Buttons for navigating through uploading games process
+    function toNewSection(screenName, navigationPass) {
+        navigationPass.navigate(screenName)
+    }
+
+    function toNewStack(stackName, screenName, navigationPass) {
+        navigationPass.navigate(stackName, { screen: screenName })
+    }
+
     function forwardToNextPage(pageNumber, passingContent, navigationPass) {
         navigationPass.navigate(pageNumber, passingContent)
     }
@@ -375,6 +390,8 @@ export function AuthProvider({ children }) {
         entries,
         imageCapture,
         viewCountFirebase,
+        toNewSection,
+        toNewStack,
         forwardToNextPage,
         backToPreviousPage,
         successAlert,
