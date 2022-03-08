@@ -98,6 +98,9 @@
         } from '../../../../assets/styles/sgScreensStyling'
     /*-----------------*/
     //Context
+        //Axios Context
+        export { axiosSearchContext } from './mainScreens/sgGameSearchScreenContent/axiosSearchContext'
+        
         //Auth Context
         export { useAuth } from './authScreens/authContext'
 

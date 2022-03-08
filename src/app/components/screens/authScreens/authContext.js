@@ -126,10 +126,14 @@ export function AuthProvider({ children }) {
         const sgConsoleName = buttonGroupData.passingContent.consoleName
         const sgGameCover = buttonGroupData.passingContent.gameCover
         const sgFirebaseConsoleName = buttonGroupData.passingContent.firebaseConsoleName
+        const sgFirebaseStorageConsoleName = buttonGroupData.passingContent.firebaseStorageConsoleName
         const sgGameDevelopers = buttonGroupData.passingContent.gameDevelopers
         const sgGameGenre = buttonGroupData.passingContent.gameGenre
         const sgGameModes = buttonGroupData.passingContent.gameModes
         const sgGameName = buttonGroupData.passingContent.gameName
+        const sgGameNameBRZ = buttonGroupData.passingContent.gameNameBRZ
+        const sgGameNameEUR = buttonGroupData.passingContent.gameNameEUR
+        const sgGameNameJPN = buttonGroupData.passingContent.gameNameJPN
         const sgGamePublishers = buttonGroupData.passingContent.gamePublishers
         const sgGameRating = buttonGroupData.passingContent.gameRating
         const sgGameReleaseDate = buttonGroupData.passingContent.gameReleaseDate
@@ -140,6 +144,9 @@ export function AuthProvider({ children }) {
         const sgCurrentUID = currentUID
         const passingContent = {
             sgGameName: sgGameName,
+            sgGameNameBRZ: sgGameNameBRZ,
+            sgGameNameEUR: sgGameNameEUR,
+            sgGameNameJPN: sgGameNameJPN,
             sgGameDevelopers: sgGameDevelopers,
             sgGamePublishers: sgGamePublishers,
             sgGameReleaseDate: sgGameReleaseDate,
@@ -153,14 +160,22 @@ export function AuthProvider({ children }) {
             sgGameSlug: sgGameSlug,
             sgConsoleName: sgConsoleName,
             sgFirebaseConsoleName: sgFirebaseConsoleName,
+            sgFirebaseStorageConsoleName: sgFirebaseStorageConsoleName,
             sgPostCreator:  sgCurrentUID,
         }
-        setTimeout(() => {
-            addGameToConsole(passingContent)
-        }, 3000)
+        
+
+        function pathToUploadViaFirebase() {
+            setTimeout(() => {
+                addGameToConsole(passingContent)
+            }, 3000)
+            return(
+                buttonGroupData.toNewStack(buttonGroupData.stackName, buttonGroupData.screenName, buttonGroupData.navigationPass)
+            )
+        }
         return (
             <View>
-                <TouchableButton onPress={() => buttonGroupData.toNewStack(buttonGroupData.stackName, buttonGroupData.screenName, buttonGroupData.navigationPass)}>
+                <TouchableButton onPress={() => pathToUploadViaFirebase()}>
                     <TouchableButtonFont>Upload Game</TouchableButtonFont>
                 </TouchableButton>
                 <TouchableButtonAlt style={{}} onPress={() => buttonGroupData.backToPreviousPage(buttonGroupData.navigationPass)}>
@@ -217,6 +232,9 @@ export function AuthProvider({ children }) {
         sgDB.collection('sgAPI').doc(passingContent.sgFirebaseConsoleName).collection('games').doc(passingContent.sgGameSlug).set({
             sgID: complexID(20),
             gameName: passingContent.sgGameName,
+            gameNameBRZ: passingContent.sgGameNameBRZ,
+            gameNameEUR: passingContent.sgGameNameEUR,
+            gameNameJPN: passingContent.sgGameNameJPN,
             gameDevelopers: passingContent.sgGameDevelopers,
             gamePublishers: passingContent.sgGamePublishers,
             gameReleaseDate: passingContent.sgGameReleaseDate,

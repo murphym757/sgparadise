@@ -22,12 +22,18 @@ export default function SgSelectedGameSummaryScreen({route, navigation}) {
     const confirmGame = useContext(confirmGameContext)
     const [isLoading, setIsLoading] = useState()
     const { 
+        accessTokenIGDB,
+        clientIdIGDB,
         consoleName,
         firebaseConsoleName,
+        firebaseStorageConsoleName,
         gameCover,
         gameDevelopers,
         gameId,
         gameName,
+        gameNameBRZ,
+        gameNameEUR,
+        gameNameJPN,
         gamePublishers,
         gameRating,
         gameReleaseDate,
@@ -40,15 +46,22 @@ export default function SgSelectedGameSummaryScreen({route, navigation}) {
     const [updatedGameSummary, setUpdatedGameSummary] = useState(gameSummary)
     const [chosenPublishersArray, setChosenPublishersArray] = useState([])
     const [chosenDevelopersArray, setChosenDevelopersArray] = useState([])
+    const igdbCompaniesURL = 'https://api.igdb.com/v4/companies'
+    const igdbCompaniesResultsField = `fields country,name; where id =`
+    const axiosTimeout = {timeout: 2000}
     const pageDescription = `What is ${gameName} about, exactly?`
     const [nextPageNumber, setNextPageNumber] = useState('Page5')
     const passingContent = {
         consoleName: consoleName,
         firebaseConsoleName: firebaseConsoleName,
+        firebaseStorageConsoleName: firebaseStorageConsoleName,
         gameCover: gameCover, 
         gameDevelopers: chosenDevelopersArray,
         gameId: gameId,
         gameName: gameName,
+        gameNameBRZ: gameNameBRZ,
+        gameNameEUR: gameNameEUR,
+        gameNameJPN: gameNameJPN,
         gamePublishers: chosenPublishersArray,
         gameRating: gameRating,
         gameReleaseDate: gameReleaseDate,
@@ -72,8 +85,8 @@ export default function SgSelectedGameSummaryScreen({route, navigation}) {
             let api = axios.create({
                 headers: {
                     'Accept': 'application/json',
-                    "Client-ID": route.params.clientIdIGDB,
-                    "Authorization": `Bearer ${route.params.accessTokenIGDB}`
+                    'Client-ID': clientIdIGDB,
+                    'Authorization': `Bearer ${accessTokenIGDB}`
                 }
             })
             let gamePubParams = []
@@ -82,28 +95,28 @@ export default function SgSelectedGameSummaryScreen({route, navigation}) {
                 setTimeout(() => {
                   resolve(
                     gamePublishers.map(item => gamePubParams.push(
-                        api.post('https://api.igdb.com/v4/companies', `fields country,name;  where id = (${item});`, {timeout: 2000})
-                        .then(res => {
-                            setChosenPublishersArray(gamePublishersNameInfo => [...gamePublishersNameInfo, res.data])
-                        }, [])
-                        .catch(err => {
-                            console.log(err);
-                        })
-                        .then(function () {
-                            // always executed
-                        }),
+                        api.post(igdbCompaniesURL, `${igdbCompaniesResultsField}(${item});`, axiosTimeout)
+                            .then(res => {
+                                setChosenPublishersArray(gamePublishersNameInfo => [...gamePublishersNameInfo, res.data])
+                            }, [])
+                            .catch(err => {
+                                console.log(err);
+                            })
+                            .then(function () {
+                                // always executed
+                            })
                     )),
                     gameDevelopers.map(item => gameDevParams.push(
-                        api.post('https://api.igdb.com/v4/companies', `fields country,name;  where id = (${item});`, {timeout: 2000})
-                        .then(res => {
-                            setChosenDevelopersArray(gameDevelopersNameInfo => [...gameDevelopersNameInfo, res.data])
-                        }, [])
-                        .catch(err => {
-                            console.log(err);
-                        })
-                        .then(function () {
-                            // always executed
-                        }),
+                        api.post(igdbCompaniesURL, `${igdbCompaniesResultsField}(${item});`, axiosTimeout)
+                            .then(res => {
+                                setChosenDevelopersArray(gameDevelopersNameInfo => [...gameDevelopersNameInfo, res.data])
+                            }, [])
+                            .catch(err => {
+                                console.log(err);
+                            })
+                            .then(function () {
+                                // always executed
+                            }) 
                     )),
                     setIsLoading(false),
                     setUpdatedGameSummary(charLimit(gameSummary, 500))

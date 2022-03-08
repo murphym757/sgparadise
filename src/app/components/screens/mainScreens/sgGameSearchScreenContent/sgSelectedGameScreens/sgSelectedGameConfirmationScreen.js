@@ -24,12 +24,16 @@ export default function SgSelectedGameConfirmationScreen({route, navigation}) {
     
     const { 
         firebaseConsoleName,
+        firebaseStorageConsoleName,
         consoleName,
         gameCover,
         gameDevelopers,
         gameGenre,
         gameModes,
         gameName,
+        gameNameBRZ,
+        gameNameEUR,
+        gameNameJPN,
         gamePublishers,
         gameRating, 
         gameReleaseDate,
@@ -48,11 +52,15 @@ export default function SgSelectedGameConfirmationScreen({route, navigation}) {
     const passingContent = {
         consoleName: consoleName,
         firebaseConsoleName: firebaseConsoleName,
+        firebaseStorageConsoleName: firebaseStorageConsoleName,
         gameCover: gameCover,
         gameDevelopers: gameDevelopers.map(game => game[0].name),
         gameGenre: gameGenre,
         gameModes: gameModes.map(game => game.tagName),
         gameName: gameName,
+        gameNameBRZ: gameNameBRZ,
+        gameNameEUR: gameNameEUR,
+        gameNameJPN: gameNameJPN,
         gamePublishers: gamePublishers.map(game => game[0].name),
         gameRating: gameRating, 
         gameReleaseDate: gameReleaseDate,
@@ -62,6 +70,7 @@ export default function SgSelectedGameConfirmationScreen({route, navigation}) {
         gameSummary: gameSummary,
         gameUploadedBy: currentUID
     }
+    console.log("🚀 ~ file: sgSelectedGameConfirmationScreen.js ~ line 67 ~ SgSelectedGameConfirmationScreen ~ passingContent", passingContent)
     const navigationPass = navigation
     let tagArrayData = {
         pageDescription
