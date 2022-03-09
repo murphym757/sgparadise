@@ -1,8 +1,7 @@
 import styled from 'styled-components';
-import { View, Text, Button, Image, ScrollView, SafeAreaView, Dimensions } from 'react-native'
-import { RFPercentage, RFValue } from "react-native-responsive-fontsize"
+import { View, Text, Dimensions } from 'react-native';
+import { RFValue } from "react-native-responsive-fontsize";
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-
 import {
     currentTheme
 } from './globalTheme';

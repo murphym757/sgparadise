@@ -1,39 +1,21 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { View, Text, Button, FlatList, Image, ScrollView, SafeAreaView, TouchableOpacity, ActivityIndicator } from 'react-native'
-import {CurrentThemeContext} from '../../../../../../assets/styles/globalTheme'
-import { consoleImages } from './sgAPIIndex'
+import { View, FlatList, Image, SafeAreaView, TouchableOpacity, ActivityIndicator } from 'react-native'
 import axios from 'axios'
-
-// React Navigation
 import { createStackNavigator } from '@react-navigation/stack'
-import { useIsFocused } from "@react-navigation/native";
-
-import { firebase, gamesConfig } from '../../../../../server/config/config'
-
-// App Styling
+import { useIsFocused } from "@react-navigation/native"
 import {
-    SgGameSearchScreen,
-    SafeAreaViewContainer,
-    Container,
-    ContentContainer,
-    MainFont,
-    CustomInputField,
-    TouchableButton,
-    TouchableButtonFont,
+    CurrentThemeContext,
     dayTime,
+    faChevronLeft,
+    firebase,
+    FontAwesomeIcon, 
+    gamesConfig,
+    MainFont,
     nightTime,
     sg32XNATitles
-} from '../../index'
-
-import {
-    setImage,
-    modalConfirmation
-} from './sgAPIIndex'
-
+} from 'index'
+import { modalConfirmation } from './sgAPIIndex'
 import stringSimilarity from 'string-similarity'
-
-//FontAwesome searchType
-import { FontAwesomeIcon, faChevronLeft } from '../../index'
 
 export default function SgConsoleListScreens({route, navigation}, props) {
     const colors = useContext(CurrentThemeContext)
@@ -66,10 +48,10 @@ export default function SgConsoleListScreens({route, navigation}, props) {
     }
 
     async function igbdbAPI() {
-        let accessToken;
+        let accessToken
         await axios.post(`https://id.twitch.tv/oauth2/token?client_id=${clientIdIGDB}&client_secret=${clientSecretIGDB}&grant_type=client_credentials`)
             .then(res => {
-                accessToken = res.data.access_token;
+                accessToken = res.data.access_token
                 setAccessTokenIGDB(accessToken)
             })
     }
@@ -78,12 +60,12 @@ export default function SgConsoleListScreens({route, navigation}, props) {
         const nightImages = await sgDB.collection("sgAPI").orderBy('sgId', 'asc')
         .get()
         .then(querySnapshot => {
-            const objectsArray = [];
+            const objectsArray = []
             querySnapshot.forEach((doc) => {
-                objectsArray.push(doc.data());
-            });
+                objectsArray.push(doc.data())
+            })
             setSgConsoleIcons(objectsArray)
-        });
+        })
     }
         
     useEffect(() => {
@@ -102,14 +84,14 @@ export default function SgConsoleListScreens({route, navigation}, props) {
             })
       
             setSgConsoleIcons(consoles)
-          });
+          })
           if(isFocused){  
             setModalSelected(false)
             igbdbAPI()
         }
         // Unsubscribe from events when no longer in use
-        return () => subscriber();
-      }, [isFocused]);    
+        return () => subscriber()
+      }, [isFocused])    
 
     function setConsoleId(item) {
         navigation.navigate('MyModal')
@@ -158,7 +140,7 @@ export default function SgConsoleListScreens({route, navigation}, props) {
             <View style={{ flex: 1, backgroundColor: colors.primaryColor }}>
                 {setConsoleConfirmation()}
             </View>
-        );
+        )
     }
 
    function sgConsolesStack() {
@@ -244,6 +226,6 @@ export default function SgConsoleListScreens({route, navigation}, props) {
             </View>
         }
     </SafeAreaView>
-  );
+  )
  }
  

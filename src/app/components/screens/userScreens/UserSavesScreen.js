@@ -1,13 +1,7 @@
-import React, { useState, useEffect } from 'react'
-import { View, Text, Button, Image, ScrollView, SafeAreaView } from 'react-native'
-import axios from 'axios'
-import { useAuth } from '../authScreens/authContext'
-
-// App Styling
-import {
-  MainContainer,
-  MainFont
-} from '../index.js'
+import React, { useState } from 'react';
+import { View, SafeAreaView } from 'react-native';
+import { useAuth } from 'auth/authContext'
+import { MainFont } from 'index';
 
 export default function UserSavesScreen() {
     const { currentUser, logOut } = useAuth()
@@ -25,5 +19,5 @@ export default function UserSavesScreen() {
             </View>
         } 
     </SafeAreaView>
-  );
+  )
 }

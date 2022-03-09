@@ -1,17 +1,9 @@
-import React, { useState, useEffect, useContext } from 'react'
-import { View, Text, Button, Image, ScrollView, SafeAreaView } from 'react-native'
+import React, { useState, useContext } from 'react';
+import { ScrollView } from 'react-native';
 import {CurrentThemeContext} from '../../../../../../assets/styles/globalTheme'
-import axios from 'axios'
 
 // App Styling
-import {
-    SafeAreaViewContainer,
-    Container,
-    MainFont,
-    CustomInputField,
-    TouchableButton,
-    TouchableButtonFont
-} from '../../index'
+import { SafeAreaViewContainer, Container, MainFont, CustomInputField } from 'index';
 
 export default function EditGameScreen() {
     const colors = useContext(CurrentThemeContext)

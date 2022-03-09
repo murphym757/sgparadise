@@ -1,37 +1,12 @@
-import React, { useState, useEffect, useContext } from 'react'
-import { 
-    View, 
-    Text, 
-    Button, 
-    Image,
-    FlatList, 
-    ScrollView, 
-    SafeAreaView,
-    TouchableOpacity 
-} from 'react-native'
-import axios from 'axios'
+import React, { useState, useEffect, useContext } from 'react';
+import { View, Image, FlatList, ScrollView, SafeAreaView, TouchableOpacity } from 'react-native';
 // React Navigation
 import { createStackNavigator } from '@react-navigation/stack'
 import {
     modalConfirmation,
     searchGameIcon
 } from '../sgGameScreenContent/sgAPIIndex'
-import {
-    ConfirmAddGameScreen,
-    SafeAreaViewContainer,
-    ContentContainer,
-    TestImageDB,
-    SearchBar,
-    SgSearchQuery,
-    SearchGameTitle,
-    SearchGameData,
-    FontAwesomeIcon,
-    faChevronLeft
-} from '../../index'
-import {CurrentThemeContext} from '../../../../../../assets/styles/globalTheme'
-import {
-    CustomInputField
-  } from '../../../../../../assets/styles/authScreensStyling'
+import { SafeAreaViewContainer, CurrentThemeContext, TestImageDB, FontAwesomeIcon, faChevronLeft, CustomInputField } from 'index';
 
 export default function SgGameSearchScreen({route, navigation}, props) {
     const colors = useContext(CurrentThemeContext)

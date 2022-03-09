@@ -1,11 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { View, Button, FlatList, TouchableOpacity } from 'react-native';
-import { useAuth } from '../authScreens/authContext'
-import { useSearchBar } from './sgGameSearchScreenContent/searchIndex'
-
-import { loadingScreen } from '../authScreens/loadingScreen'; //Loader
-
-// App Styling & Screens
+import { View, Button, FlatList, TouchableOpacity } from 'react-native'
+import { useAuth } from 'auth/authContext'
+import { useSearchBar } from 'main/sgGameSearchScreenContent/searchIndex'
+import { loadingScreen } from 'auth/loadingScreen'
 import {
     ContentContainer,
     SafeAreaViewContainer,
@@ -16,10 +13,7 @@ import {
     GeneralFontColor,
     TouchableButton,
     TouchableButtonFont,
-} from '../index.js';
-
-
-// React Navigation
+} from 'index'
 import { createStackNavigator } from '@react-navigation/stack'
 const Stack = createStackNavigator()
 
@@ -152,7 +146,7 @@ export default function SgHomeScreen({ navigation, route }) {
             setProfileImageUrl(url),
             setProfileImageUrl2(url)
         })
-        .catch((e) => console.log('getting downloadURL of image error => ', e));
+        .catch((e) => console.log('getting downloadURL of image error => ', e))
     }
 
     function confirmViewGames() {
@@ -222,5 +216,5 @@ export default function SgHomeScreen({ navigation, route }) {
             </ContentContainer>
     }
     </SafeAreaViewContainer>
-  );
+  )
 }

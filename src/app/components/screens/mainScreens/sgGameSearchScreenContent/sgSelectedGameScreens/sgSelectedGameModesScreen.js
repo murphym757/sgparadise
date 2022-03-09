@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react'
 import { View, ActivityIndicator } from 'react-native'
 // React Navigation
 import { useIsFocused } from '@react-navigation/native'
-import { confirmGameContext, firebase, PageContainer, SafeAreaViewContainer, useAuth } from '../../../index'
+import { confirmGameContext, firebase, PageContainer, SafeAreaViewContainer, useAuth } from 'index'
 
 export default function SgSelectedGameSetGameModesScreen({route, navigation}) {
     const {
@@ -84,7 +84,7 @@ export default function SgSelectedGameSetGameModesScreen({route, navigation}) {
             setIsLoading(false)
           }, 2000)
           firebaseGameModeCollection()
-      }, [isFocused]);  
+      }, [isFocused])  
 
       function firebaseGameModeCollection() {
         const subscriber = sgDB
@@ -100,7 +100,7 @@ export default function SgSelectedGameSetGameModesScreen({route, navigation}) {
           setGameArray(gameModeTags)
         })
       // Unsubscribe from events when no longer in use
-      return () => subscriber();
+      return () => subscriber()
       }
 
     async function chosenTagData(item) {

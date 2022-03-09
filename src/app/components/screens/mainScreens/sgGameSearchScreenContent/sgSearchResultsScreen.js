@@ -12,7 +12,7 @@ import { View, FlatList, TouchableOpacity } from 'react-native'
     useAuth, 
     useSearchBar, 
     windowHeight
-} from '../../index'
+} from 'index'
   import axios from 'axios'
 
 export default function sgSearchScreen({route, navigation}) {

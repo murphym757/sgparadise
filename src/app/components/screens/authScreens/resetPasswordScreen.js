@@ -1,22 +1,20 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { Image, Text, TextInput, TouchableOpacity, View, SafeAreaView } from 'react-native';
-import {CurrentThemeContext} from '../../../../../assets/styles/globalTheme';
-import { useAuth } from './authContext'
-import { firebase } from '../../../../server/config/config';
-// App Styling
-import {
-    FormHeadingFontContainer,
-    FormHeadingFont,
-    CustomInputField,
-    TouchableButton,
-    TouchableButtonFont,
-    FooterView,
-    FooterFont,
-    FooterLink
-  } from '../../../../../assets/styles/authScreensStyling';
-  
-//FontAwesome
-import { FontAwesomeIcon, faTimes } from '../index'
+import React, { useState, useEffect, useContext } from 'react'
+import { View, SafeAreaView } from 'react-native'
+import { 
+  CurrentThemeContext,
+  CustomInputField,
+  faTimes,
+  firebase,
+  FontAwesomeIcon, 
+  FooterFont,
+  FooterLink,
+  FooterView,
+  FormHeadingFont,
+  FormHeadingFontContainer,
+  TouchableButton,
+  TouchableButtonFont,
+  useAuth
+ } from 'index'
 
 export default function ResetPasswordScreen({navigation}) {
     const { resetPassword, successAlert, failureAlert } = useAuth()

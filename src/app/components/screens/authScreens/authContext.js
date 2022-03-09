@@ -1,20 +1,16 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { View, Image, FlatList, ActivityIndicator } from 'react-native'
-import { firebase } from '../../../../server/config/config'
-import { auth } from '../../../../server/config/config'
+import { View } from 'react-native'
+import { firebase } from 'server/config/config'
 import {
-    CustomFailureAlert,
-    CustomFailureAlertFont,
-    CustomSuccessAlert,
-    CustomSuccessAlertFont
-  } from '../../../../../assets/styles/authScreensStyling'
-
-  import {
-    TouchableButton,
-    TouchableButtonFont,
-    TouchableButtonAlt,
-    TouchableButtonFontAlt
-  } from '../index'
+  CustomFailureAlert,
+  CustomFailureAlertFont,
+  CustomSuccessAlert,
+  CustomSuccessAlertFont,
+  TouchableButton,
+  TouchableButtonAlt,
+  TouchableButtonFont,
+  TouchableButtonFontAlt
+} from 'index'
 
 const AuthContext = React.createContext()
 
@@ -43,9 +39,9 @@ export function AuthProvider({ children }) {
     const sgSatIGDB = '32'
 
     const randomString = (n, r='') => {
-        while (n--) r += String.fromCharCode((r=Math.random()*62|0, r+=r>9?(r<36?55:61):48));
-        return r;
-    };
+        while (n--) r += String.fromCharCode((r=Math.random()*62|0, r+=r>9?(r<36?55:61):48))
+        return r
+    }
     
 
     function complexID(characterLength) {
@@ -101,7 +97,7 @@ export function AuthProvider({ children }) {
                 const entry = doc.data()
                 entry.id = doc.id
                 newEntries.push(entry)
-            });
+            })
             setEntries(newEntries)
         }, err => {
             console.log("Error getting document:", err)
@@ -115,11 +111,11 @@ export function AuthProvider({ children }) {
             country: "Japan"
         })
         .then(() => {
-            console.log("Document successfully written!");
+            console.log("Document successfully written!")
         })
         .catch((err) => {
-            console.error("Error writing document: ", err);
-        });
+            console.error("Error writing document: ", err)
+        })
     }
 
     function addGameToConsoleButtonGroup(buttonGroupData) {
@@ -141,6 +137,15 @@ export function AuthProvider({ children }) {
         const sgGameSlug = buttonGroupData.passingContent.gameSlug
         const sgGameSubGenre = buttonGroupData.passingContent.gameSubGenre
         const sgGameSummary = buttonGroupData.passingContent.gameSummary
+        const sgUploadImageurl = buttonGroupData.imageContent.uploadImageurl
+        const sgFolderName = buttonGroupData.imageContent.folderName
+        const sgConsoleNameFolder = buttonGroupData.imageContent.consoleNameFolder
+        const sgGameNameFolder = buttonGroupData.imageContent.gameNameFolder
+        const sgSubFolderName = buttonGroupData.imageContent.subFolderName
+        const sgCoverArtFolder = buttonGroupData.imageContent.coverArtFolder
+        const sgScreenshotFolder = buttonGroupData.imageContent.screenshotFolder
+        const sgCoverArtFileName = buttonGroupData.imageContent.coverArtFileName
+        const sgFileType = buttonGroupData.imageContent.fileType
         const sgCurrentUID = currentUID
         const passingContent = {
             sgGameName: sgGameName,
@@ -163,11 +168,25 @@ export function AuthProvider({ children }) {
             sgFirebaseStorageConsoleName: sgFirebaseStorageConsoleName,
             sgPostCreator:  sgCurrentUID,
         }
+        const imageContent = {
+            sgUploadImageurl,
+            sgFolderName,
+            sgConsoleNameFolder,
+            sgSubFolderName,
+            sgGameNameFolder,
+            sgCoverArtFolder,
+            sgScreenshotFolder,
+            sgCoverArtFileName,
+            sgGameCover,
+            sgGameScreenshots,
+            sgFileType
+         }
         
 
         function pathToUploadViaFirebase() {
             setTimeout(() => {
-                addGameToConsole(passingContent)
+                addGameToConsole(passingContent),
+                imageCapture(imageContent)
             }, 3000)
             return(
                 buttonGroupData.toNewStack(buttonGroupData.stackName, buttonGroupData.screenName, buttonGroupData.navigationPass)
@@ -186,7 +205,7 @@ export function AuthProvider({ children }) {
     }
 
     async function addImagesForGame(collectionName, consoleName, gamesCollection, gameName, imagesCollection) {
-        const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+        const timestamp = firebase.firestore.FieldValue.serverTimestamp()
         sgDB.collection(collectionName).doc(consoleName).collection(gamesCollection).doc(gameName).collection(imagesCollection).add({
             gameImage: `${gameName} Image`,
             postCreator: currentUID,
@@ -195,7 +214,7 @@ export function AuthProvider({ children }) {
     }
 
     async function addCommentsForGame(collectionName, consoleName, gamesCollection, gameName, commentsCollection) {
-        const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+        const timestamp = firebase.firestore.FieldValue.serverTimestamp()
         sgDB.collection(collectionName).doc(consoleName).collection(gamesCollection).doc(gameName).collection(commentsCollection).add({
             gameImage: `${gameName} Image`,
             postCreator: currentUID,
@@ -228,7 +247,7 @@ export function AuthProvider({ children }) {
 
     // Add Game to sgDB
     async function addGameToConsole(passingContent) {
-        const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+        const timestamp = firebase.firestore.FieldValue.serverTimestamp()
         sgDB.collection('sgAPI').doc(passingContent.sgFirebaseConsoleName).collection('games').doc(passingContent.sgGameSlug).set({
             sgID: complexID(20),
             gameName: passingContent.sgGameName,
@@ -286,23 +305,37 @@ export function AuthProvider({ children }) {
         sgDB.collection(collectionName).doc(consoleName).collection(gamesCollection).doc(gameName).delete()
     }
 
-    async function imageCapture(uploadImageurl, folderName, consoleName, gameName, subFolderName, fileName, fileType) {
-        const filename =  `${folderName}/${consoleName}/${gameName}/${subFolderName}/${fileName}.${fileType}`
+    async function imageCapture(imageContent) {
+        const uploadImageurl = imageContent.sgUploadImageurl
+        const folderName = imageContent.sgFolderName
+        const consoleNameFolder = imageContent.sgConsoleNameFolder
+        const subFolderName = imageContent.sgSubFolderName
+        const gameNameFolder = imageContent.sgGameNameFolder
+        const coverArtFolder = imageContent.sgCoverArtFolder
+        const screenshotFolder = imageContent.sgScreenshotFolder
+        const coverArtFileName = imageContent.sgCoverArtFileName
+        const gameCover = imageContent.sgGameCover
+        const gameScreenshots = imageContent.sgGameScreenshots
+        const fileType = imageContent.sgFileType
+        const coverArtFileRoute = `${folderName}/${consoleNameFolder}/${subFolderName}/${gameNameFolder}/${coverArtFolder}/${gameCover}.${fileType}`
+        const screenshotFileROute = `${folderName}/${consoleNameFolder}/${subFolderName}/${gameNameFolder}/${screenshotFolder}/${gameScreenshots}.${fileType}`
 
-        
-    fetch(uploadImageurl).then(res => {
-            return res.blob();
-        }).then(blob => {
-            //uploading blob to firebase storage
-        firebase.storage().ref().child(filename).put(blob).then(function(snapshot) {
-            return snapshot.ref.getDownloadURL()
-        })
-        .then(url => {
-        console.log("Firebase storage image uploaded : ", url); 
-        }) 
-        }).catch(error => {
-        console.error(error);
-        });
+        fetch(uploadImageurl)
+            .then(res => {
+                return res.blob()
+            })
+            .then(blob => {
+                //uploading blob to firebase storage
+                firebase.storage().ref().child(filename).put(blob).then(function(snapshot) {
+                    return snapshot.ref.getDownloadURL()
+                })
+                .then(url => {
+                console.log("Firebase storage image uploaded : ", url) 
+                }) 
+            })
+            .catch(error => {
+            console.error(error)
+            })
     }
  
     /*

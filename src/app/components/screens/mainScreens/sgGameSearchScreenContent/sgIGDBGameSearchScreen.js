@@ -1,52 +1,40 @@
-import React, { useState, useEffect, useContext } from 'react'
-import { 
-    View, 
-    Text, 
-    Button, 
+import React, { useState, useEffect, useContext } from 'react';
+import {
+    View,
+    Button,
     Image,
-    FlatList, 
-    ScrollView, 
+    FlatList,
+    ScrollView,
     SafeAreaView,
     TouchableOpacity,
-    ActivityIndicator
-} from 'react-native'
+    ActivityIndicator,
+} from 'react-native';
 import axios from 'axios'
 // React Navigation
 import { createStackNavigator } from '@react-navigation/stack'
-import { NavigationContainer, useIsFocused } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
 import {
     modalConfirmation,
     searchGameIcon
 } from '../sgGameScreenContent/sgAPIIndex'
 import {
-    ConfirmAddGameScreen,
-    SafeAreaViewContainer,
-    ContentContainer,
     Container,
-    TestImageDB,
-    MainFont,
-    SgSearchQuery,
-    SearchGameTitle,
-    SearchGameData,
-    FontAwesomeIcon,
+    CurrentThemeContext,
+    CustomInputField,
     faChevronLeft,
-    faFilter
-} from '../../index'
-import {CurrentThemeContext} from '../../../../../../assets/styles/globalTheme'
-import {
-    CustomInputField
-  } from '../../../../../../assets/styles/authScreensStyling'
-  import{
-    windowHeight,
-    MainSubFont,
+    faFilter,
+    firebase,
+    FontAwesomeIcon,
+    MainFont,
     MainHeading,
     MainHeadingButton,
-    ScrollViewContainer
-} from '../../../../../../assets/styles/globalStyling'
-import { useTags } from '../../authScreens/tagsContext'
-import { useSearchBar } from '../sgGameSearchScreenContent/searchIndex'
-import { firebase, gamesConfig } from '../../../../../server/config/config'
-
+    SafeAreaViewContainer,
+    ScrollViewContainer,
+    TestImageDB,
+    useSearchBar,
+    useTags,
+    windowHeight,
+} from 'index';
 
 export default function SgIGDBGameSearchScreen({route, navigation}, props) {
     const {

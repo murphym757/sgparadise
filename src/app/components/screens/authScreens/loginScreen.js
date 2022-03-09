@@ -1,19 +1,17 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { Image, Text, TextInput, TouchableOpacity, View, SafeAreaView } from 'react-native'
-import {CurrentThemeContext} from '../../../../../assets/styles/globalTheme'
-import { useAuth } from './authContext'
-import { firebase } from '../../../../server/config/config'
-// App Styling
+import { View, SafeAreaView } from 'react-native'
 import {
-    CustomInputField,
-    TouchableButton,
-    TouchableButtonFont,
-    FooterView,
-    FooterFont,
-    FooterLink
-  } from '../../../../../assets/styles/authScreensStyling'
-  
-import { ContentContainer, FontAwesomeIcon, faTimes } from '../index'
+  CurrentThemeContext,
+  CustomInputField,
+  faTimes,
+  FontAwesomeIcon,
+  FooterFont,
+  FooterLink,
+  FooterView,
+  TouchableButton,
+  TouchableButtonFont,
+  useAuth,
+} from 'index'
 
 export default function LoginScreen({navigation, route}) {
     const { sgDB, logIn, currentUser, successAlert, failureAlert } = useAuth()
@@ -46,13 +44,13 @@ export default function LoginScreen({navigation, route}) {
                 .then(firestoreDocument => {
                     if (!firestoreDocument.exists) {
                         alert("User does not exist anymore.")
-                        return;
+                        return
                     }
                     navigation.navigate('Home')
                 })
                 .catch(err => {
                     alert(err)
-                });
+                })
           })
         .catch((err) => {
           setError(`${err}`)

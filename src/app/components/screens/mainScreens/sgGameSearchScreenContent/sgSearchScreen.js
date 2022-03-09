@@ -1,28 +1,17 @@
 
 import React, { useState, useEffect, useContext } from 'react';
-import { 
-    Text,
-    View,
-    FlatList,
-    TouchableOpacity
-} from 'react-native'
-  import{
+import { View } from 'react-native';
+import {
     windowHeight,
-    MainFont,
-    MainSubFont,
     MainHeading,
-    MainHeadingButton,
-    ScrollViewContainer
-} from '../../../../../../assets/styles/globalStyling'
-import {CurrentThemeContext} from '../../../../../../assets/styles/globalTheme'
-  import {
-        SafeAreaViewContainer,
-        Container,
-        TouchableButton,
-        TouchableButtonFont,
-  } from '../../index'
-  import { useSearchBar } from './searchIndex'
-  import axios from 'axios'
+    Container,
+    CurrentThemeContext,
+    SafeAreaViewContainer,
+    TouchableButton,
+    TouchableButtonFont,
+    useSearchBar,
+} from 'index';
+import axios from 'axios'
 
 export default function sgSearchScreen({route, navigation}) {
     const { 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { View, Image, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native'
-import { confirmGameContext, CurrentThemeContext, PageContainer, SafeAreaViewContainer, useAuth } from '../../../index'
+import { confirmGameContext, CurrentThemeContext, PageContainer, SafeAreaViewContainer, useAuth } from 'index'
 
 export default function SgSelectedGameplayScreen({route, navigation}) {
     const {
@@ -33,7 +33,7 @@ export default function SgSelectedGameplayScreen({route, navigation}) {
     const gameNameLastChar = gameName.charAt(gameName.length - 1)
     const [chosenGameplaysArray, setChosenGameplaysArray] = useState([])
     const [ imageCount, setImageCount ] = useState()
-    const gameplaysNewArray = Array.from(new Set(chosenGameplaysArray)); //Removes the ability to add duplicate
+    const gameplaysNewArray = Array.from(new Set(chosenGameplaysArray)) //Removes the ability to add duplicate
     const pageDescriptionPluralForS = `Choose ${imageCount} ${confirmGame.imgWordingSelector(imageCount)} that perfectly showcases some of ${gameName}' highlights:`
     const pageDescriptionPlural = `Choose ${imageCount} ${confirmGame.imgWordingSelector(imageCount)} that perfectly showcases some of ${gameName}'s highlights:`
     const pageDescription = `To add another image, select one of the chosen images. To remove all images, press the Clear Images Button`
@@ -66,7 +66,7 @@ export default function SgSelectedGameplayScreen({route, navigation}) {
     }
     let initArray = gameScreenshots
     let deletionArray = gameplaysNewArray
-    let currentGameplaysArray = [];
+    let currentGameplaysArray = []
     currentGameplaysArray = initArray.filter(item => !deletionArray.includes(item))
     
     async function chosenGameplayData(item) {

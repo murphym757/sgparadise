@@ -1,7 +1,6 @@
 import * as firebase from 'firebase'
 import '@firebase/auth'
 import '@firebase/firestore'
-
 import {
     FIREBASE_API_KEY,
     FIREBASE_AUTH_DOMAIN,
@@ -91,7 +90,7 @@ const firebaseConfig = {
 }
 
 if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
+  firebase.initializeApp(firebaseConfig)
 }
 
 export { imagesConfig, gamesConfig, firebase }

@@ -1,26 +1,10 @@
-import React, { useState, useEffect, useContext } from 'react'
-import { 
-    View, 
-    Text, 
-    Button, 
-    Image, 
-    ScrollView, 
-    SafeAreaView, 
-    TouchableOpacity 
-} from 'react-native'
-import axios from 'axios'
-import { useAuth } from '../authScreens/authContext'
+import React, { useState, useContext } from 'react';
+import { View, SafeAreaView } from 'react-native';
+import { useAuth } from 'auth/authContext'
 
 
 // App Styling & Screens
-import {
-    SgHomeScreen,
-    SgConsoleListScreen,
-    AddGameScreen,
-    ConfirmAddGameScreen,
-    EditGameScreen,
-    CurrentThemeContext,
-} from '../index.js'
+import { CurrentThemeContext, SgHomeScreen } from 'index';
 
 // React Navigation
 import { createStackNavigator } from '@react-navigation/stack'
@@ -68,5 +52,5 @@ export default function SgMainScreen({ navigation, route }) {
             {sgHomeStack()}
         </View>
     </SafeAreaView>
-  );
+  )
 }

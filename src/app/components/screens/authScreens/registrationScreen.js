@@ -1,18 +1,17 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { Image, Text, TextInput, TouchableOpacity, View, SafeAreaView } from 'react-native'
-import {CurrentThemeContext} from '../../../../../assets/styles/globalTheme'
-import { useAuth } from './authContext'
-import { firebase } from '../../../../server/config/config'
-import { // App Styling
+import { View, SafeAreaView } from 'react-native'
+import { 
+  CurrentThemeContext,
   CustomInputField,
+  faTimes,
+  FontAwesomeIcon, 
+  FooterFont,
+  FooterLink,
+  FooterView,
   TouchableButton,
   TouchableButtonFont,
-  FooterView,
-  FooterFont,
-  FooterLink
-} from '../index.js'
-//FontAwesome
-import { FontAwesomeIcon, faTimes } from '../index'
+  useAuth
+} from 'index'
 
 export default function RegistrationScreen({navigation}) {
   const { sgDB, signUp, currentUser, failureAlert } = useAuth()
@@ -46,7 +45,7 @@ export default function RegistrationScreen({navigation}) {
               id: uid,
               email,
               fullName,
-            };
+            }
             sgDB.collection('users')
               .doc(uid)
               .set(data)
@@ -55,7 +54,7 @@ export default function RegistrationScreen({navigation}) {
               })
               .catch((err) => {
                   alert(err)
-              });
+              })
         })
         .catch((err) => {
           setError(`${err}`)
@@ -161,7 +160,7 @@ function onRegisterPress() {
               id: uid,
               email,
               fullName,
-          };
+          }
           const usersRef = firebase.firestore().collection('users')
           usersRef
               .doc(uid)
@@ -171,7 +170,7 @@ function onRegisterPress() {
               })
               .catch((error) => {
                   alert(error)
-              });
+              })
       })
       .catch((error) => {
           alert(error)

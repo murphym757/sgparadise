@@ -1,12 +1,11 @@
-import React, { useState, useEffect, useContext } from 'react'
-import { View, Text, Button, Image, ScrollView, SafeAreaView } from 'react-native'
-import axios from 'axios'
+import React, { useContext } from 'react';
+import { View, ScrollView, SafeAreaView } from 'react-native';
 
 import {
     CurrentThemeContext,
     FontAwesomeIcon,
     faChevronLeft
-} from '../../index'
+} from 'index'
 export default function GameScreen({navigation}) {
     const colors = useContext(CurrentThemeContext)
   return (
@@ -26,6 +25,6 @@ export default function GameScreen({navigation}) {
             </View>
         </ScrollView>
     </SafeAreaView>
-  );
+  )
 }
 

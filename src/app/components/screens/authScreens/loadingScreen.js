@@ -1,10 +1,10 @@
-import React from 'react';
-import { View } from 'react-native';
+import React from 'react'
+import { View } from 'react-native'
 import LottieView from 'lottie-react-native' //Loader
 import {
     dayTime,
     nightTime
-} from '../index'
+} from 'index'
 
 export function manualColorSet() {
     const day = {

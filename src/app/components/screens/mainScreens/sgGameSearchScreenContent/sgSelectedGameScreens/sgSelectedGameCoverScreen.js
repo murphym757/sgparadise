@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useContext } from 'react'
 import { View, Image, FlatList, ActivityIndicator } from 'react-native'
-import { axiosSearchContext, confirmGameContext, ContentContainer, PageContainerCover, CurrentThemeContext, SafeAreaViewContainer, useAuth } from '../../../index'
+import { axiosSearchContext, confirmGameContext, ContentContainer, PageContainerCover, CurrentThemeContext, SafeAreaViewContainer, useAuth } from 'index'
 import axios from 'axios'
 
 export default function SgSelectedGameCoverScreen({route, navigation}) {

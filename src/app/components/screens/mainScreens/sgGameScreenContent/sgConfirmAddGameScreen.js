@@ -1,9 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { View, FlatList, TouchableOpacity } from 'react-native';
-import { useTags } from '../../authScreens/tagsContext'
-import { useSearchBar } from '../sgGameSearchScreenContent/searchIndex'
-
-// React Navigation
+import React, { useContext, useEffect, useState } from 'react'
+import { View, FlatList, TouchableOpacity } from 'react-native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { useIsFocused } from '@react-navigation/native'
 import {
@@ -38,8 +34,10 @@ import {
     SgSelectedGameSetGenreScreen,
     SgSelectedGameSetSubGenreScreen,
     SgSelectedGameSummaryScreen,
+    useSearchBar,
+    useTags,
     windowHeight
-} from '../../index'
+} from 'index'
 
 export default function ConfirmAddGameScreen({navigation, route}) {
     const {
@@ -82,13 +80,13 @@ export default function ConfirmAddGameScreen({navigation, route}) {
             })
       
             setSgConsoleIcons(consoles)
-          });
+          })
           if(isFocused){  
             setModalSelected(false)
         }
         // Unsubscribe from events when no longer in use
-        return () => subscriber();
-      }, [isFocused]);  
+        return () => subscriber()
+      }, [isFocused])  
 
     const [genreTags, setGenreTags] = useState([
         {
@@ -275,7 +273,7 @@ export default function ConfirmAddGameScreen({navigation, route}) {
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.primaryColor }}>
                 <MainHeading>{"This is the page where the user adds the game info to firebase"}</MainHeading>
             </View>
-        );
+        )
     }
 
 

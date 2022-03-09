@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Image } from 'react-native';
+import React from 'react'
+import { View, Image } from 'react-native'
 import {
     Container,
     ContentContainer,
@@ -18,8 +18,8 @@ import {
     useAuth,
     ViewSortColumn,
     ViewSortRow
-} from '../../../index';
-import { AirbnbRating } from 'react-native-ratings';
+} from 'index'
+import { AirbnbRating } from 'react-native-ratings'
 
 function starRatingSystem(buttonGroupData, updatedGameRating, setUpdatedGameRating, colors) {
     return (
@@ -152,7 +152,7 @@ function gameModesResults(tagArrayData, buttonGroupData) {
     const { selectedTags, tagCollection } = useTags() 
     let initArray = tagArrayData.gameArray
     let deletionArray = tagArrayData.tagsNewArray
-    let currentTagsArray = [];
+    let currentTagsArray = []
     currentTagsArray = initArray.filter(item => !deletionArray.includes(item))
 
     return (

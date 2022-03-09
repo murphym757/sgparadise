@@ -1,29 +1,13 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { 
-    View,
-    Text,
-    Image,
-    FlatList,
-    TouchableOpacity
-} from 'react-native'
-import{
-    MainFont,
-    MainSubFont,
-    ScrollViewContainer
-} from '../../../../../assets/styles/globalStyling'
-import {CurrentThemeContext} from '../../../../../assets/styles/globalTheme'
+import React, { useContext, useState } from 'react'
+import { View, FlatList, TouchableOpacity } from 'react-native'
 import {
-    Container,
-    confirmGameContext,
-    FontAwesomeIcon,
-    MainHeadingButton,
-    TouchableButton,
-    TouchableButtonFont,
-    TouchableButtonAlt,
-    TouchableButtonFontAlt,
+    CurrentThemeContext,
     faTimesCircle,
-    faStar
-} from '../index'
+    FontAwesomeIcon,
+    MainFont,
+    MainHeadingButton,
+    ScrollViewContainer,
+} from 'index'
 
 const TagsContext = React.createContext()
 
@@ -34,7 +18,7 @@ export function useTags() {
 export function TagsProvider({ children }) {
     const colors = useContext(CurrentThemeContext)
     const [chosenTagsArray, setChosenTagsArray] = useState([])
-    const tagsNewArray = Array.from(new Set(chosenTagsArray)); //Removes the ability to add dulicate
+    const tagsNewArray = Array.from(new Set(chosenTagsArray)) //Removes the ability to add dulicate
     const [resetData, setResetData] = useState(false)
 
     function selectedTags(initArray, deleArray, resetArray) {
@@ -91,7 +75,7 @@ export function TagsProvider({ children }) {
     function tagsSelection(initArray, deleArray) {
         let initialArray = initArray
         let deletionArray = deleArray
-        let currentTagsArray = [];
+        let currentTagsArray = []
         currentTagsArray = initialArray.filter(item => !deletionArray.includes(item))
             return (
                 <FlatList
@@ -136,7 +120,7 @@ export function TagsProvider({ children }) {
     function tagCollection(tagData, tagDataConfirmation) {
         let initArray = tagData
         let deletionArray = tagsNewArray
-        let currentTagsArray = [];
+        let currentTagsArray = []
         currentTagsArray = initArray.filter(item => !deletionArray.includes(item))
         return (
             <FlatList

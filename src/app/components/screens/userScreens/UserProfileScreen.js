@@ -1,11 +1,11 @@
 
-import React, { useState, useEffect, useContext } from 'react';
-import { Text, View } from 'react-native';
-import { useAuth } from '../authScreens/authContext'
+import React, { useState } from 'react';
+import { View } from 'react-native';
+import { useAuth } from 'auth/authContext'
 import { // App Styling
     TouchableButton,
     TouchableButtonFont
-  } from '../../../../../assets/styles/authScreensStyling'
+  } from 'assets/styles/authScreensStyling'
 
 export default function UserProfileScreen({navigation}) {
     const { currentUser, logOut } = useAuth()

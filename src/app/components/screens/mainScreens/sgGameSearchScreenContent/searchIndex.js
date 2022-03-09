@@ -21,7 +21,7 @@ import {
     MainHeading
 } from '../../../../../../assets/styles/globalStyling'
 
-  import { TestImageDB } from '../../index'
+  import { TestImageDB } from 'index'
 
 const SearchContext = React.createContext()
 
@@ -65,7 +65,7 @@ export function SearchBarProvider({ children, navigation }) {
             chosenItem.name //Looks thorough database for anything matching the same "Name"
                 .toLowerCase()
                 .includes(sgDbSearchQuery.toLowerCase())
-        );
+        )
     }
 
     const value = {

@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { View, Text, Button, Image, ScrollView, SafeAreaView } from 'react-native'
-import axios from 'axios'
-
+import React from 'react'
+import { View, ScrollView, SafeAreaView } from 'react-native';
 
 export default function UserAddGameScreen({navigation}) {
   return (
@@ -16,5 +14,5 @@ export default function UserAddGameScreen({navigation}) {
             </View>
         </ScrollView>
     </SafeAreaView>
-  );
+  )
 }

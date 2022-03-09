@@ -1,18 +1,18 @@
 
-import React, { useState, useEffect, useContext } from 'react';
-import { Text, View, SafeAreaView } from 'react-native';
-import { useAuth } from '../authScreens/authContext'
-import { firebase } from '../../../../server/config/config';
-import { // App Styling
-    CustomInputField,
-    TouchableButton,
-    TouchableButtonFont,
-    FooterView,
-    FooterFont,
-    FooterLink
-  } from '../../../../../assets/styles/authScreensStyling'
-//FontAwesome
-import { FontAwesomeIcon, faTimes } from '../index'
+import React, { useState, useEffect } from 'react';
+import { View, SafeAreaView } from 'react-native';
+import {
+  CustomInputField,
+  faTimes, 
+  firebase, 
+  FontAwesomeIcon, 
+  FooterFont,
+  FooterLink, 
+  FooterView,
+  TouchableButton,
+  TouchableButtonFont,
+  useAuth
+} from 'index'
 
 export default function UpdateUserScreen({navigation}) {
     const { 
@@ -81,9 +81,7 @@ export default function UpdateUserScreen({navigation}) {
           setIsLoading(false)
         })
     }
-
     
-
     function successAlertMessage(message) {
         return successAlert(message)
       }

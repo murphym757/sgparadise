@@ -1,6 +1,6 @@
 
-import React, { useState, useEffect, useContext } from 'react';
-import { View, ActivityIndicator } from 'react-native';
+import React, { useState, useEffect, useContext } from 'react'
+import { View, ActivityIndicator } from 'react-native'
 import {
     confirmGameContext,
     CurrentThemeContext,
@@ -8,7 +8,7 @@ import {
     SafeAreaViewContainer,
     useAuth,
     windowHeight,
-} from '../../../index';
+} from 'index'
 import axios from 'axios'
 
 export default function SgSelectedGameSummaryScreen({route, navigation}) {
@@ -100,7 +100,7 @@ export default function SgSelectedGameSummaryScreen({route, navigation}) {
                                 setChosenPublishersArray(gamePublishersNameInfo => [...gamePublishersNameInfo, res.data])
                             }, [])
                             .catch(err => {
-                                console.log(err);
+                                console.log(err)
                             })
                             .then(function () {
                                 // always executed
@@ -112,7 +112,7 @@ export default function SgSelectedGameSummaryScreen({route, navigation}) {
                                 setChosenDevelopersArray(gameDevelopersNameInfo => [...gameDevelopersNameInfo, res.data])
                             }, [])
                             .catch(err => {
-                                console.log(err);
+                                console.log(err)
                             })
                             .then(function () {
                                 // always executed

@@ -1,36 +1,29 @@
-import 'react-native-gesture-handler';
+import 'react-native-gesture-handler'
 import React, { useState, useContext } from 'react'
-import { useColorScheme } from 'react-native';
-// React Navigation
-import {
-  NavigationContainer,
-  DefaultTheme,
-  DarkTheme,
-} from '@react-navigation/native';
+import { useColorScheme } from 'react-native'
+import { NavigationContainer, DefaultTheme } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
-
-import {CurrentThemeContext} from '../../../../assets/styles/globalTheme'
-import { 
-  LoginScreen, 
-  RegistrationScreen,
-  GameScreen,
-  AddGameScreen,
+import {
   ConfirmAddGameScreen,
-  SgConsoleListScreen,
+  CurrentThemeContext,
   EditGameScreen,
-  SgMainScreen,
-  SgHomeScreen,
-  SgGameSearchScreen,
-  SgIGDBGameSearchScreen,
-  UserProfileScreen,
-  UpdateUserScreen,
-  UserSavesScreen,
-  ResetPasswordScreen,
+  faHeart,
+  faHome,
+  faUser,
   FontAwesomeIcon,
-  faHome, faHeart, faUser
-} from './index.js'
-import{ useAuth } from './authScreens/authContext'
+  GameScreen,
+  LoginScreen,
+  RegistrationScreen,
+  ResetPasswordScreen,
+  SgConsoleListScreen,
+  SgGameSearchScreen,
+  SgHomeScreen,
+  SgIGDBGameSearchScreen,
+  useAuth,
+  UserProfileScreen,
+  UserSavesScreen,
+} from 'index'
 import {decode, encode} from 'base-64'
 if (!global.btoa) { global.btoa = encode }
 if (!global.atob) { global.atob = decode }
@@ -42,7 +35,7 @@ export default function App() {
   const { currentUser } = useAuth()
   const [notLoggingIn, setNotLoggingIn] = useState(false)
   const colors = useContext(CurrentThemeContext) 
-  const scheme = useColorScheme();
+  const scheme = useColorScheme()
   const ReactNavTheme = {
     ...DefaultTheme,
     colors: {
@@ -184,6 +177,6 @@ export default function App() {
           />
         </Stack.Navigator>
       </NavigationContainer>
-  );
+  )
 }
 

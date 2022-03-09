@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { View, ActivityIndicator } from 'react-native';
+import React, { useState, useEffect, useContext } from 'react'
+import { View, ActivityIndicator } from 'react-native'
 // React Navigation
-import { useIsFocused } from '@react-navigation/native';
-import { confirmGameContext, firebase, PageContainer, SafeAreaViewContainer, useAuth } from '../../../index';
+import { useIsFocused } from '@react-navigation/native'
+import { confirmGameContext, firebase, PageContainer, SafeAreaViewContainer, useAuth } from 'index'
 
 export default function SgSelectedGameSetSubGenreScreen({route, navigation}) {
     const {
@@ -82,7 +82,7 @@ export default function SgSelectedGameSetSubGenreScreen({route, navigation}) {
             setIsLoading(false)
           }, 2000)
           firebaseSubGenreCollection()
-      }, [isFocused]);  
+      }, [isFocused])  
 
       function firebaseSubGenreCollection() {
         const subscriber = sgDB
@@ -98,7 +98,7 @@ export default function SgSelectedGameSetSubGenreScreen({route, navigation}) {
           setGameArray(subGenreTags)
         })
       // Unsubscribe from events when no longer in use
-      return () => subscriber();
+      return () => subscriber()
       }
 
     async function chosenTagData(item) {
