@@ -22,8 +22,6 @@ export default function SgHomeScreen({ navigation, route }) {
         currentUID, displayData,
         addData,
         getGameData,
-        //For Images
-        imageCapture,
         /*--------*/ 
         addGameToConsole, 
         deleteGameFromConsole,
@@ -76,10 +74,10 @@ export default function SgHomeScreen({ navigation, route }) {
     const chosenDb = testDb
 
     // For Image Image Uploads
-    const [uploadImageurl, setImageurl] = useState('https://upload.wikimedia.org/wikipedia/en/7/79/Tiny_Toon_Adventures_MegaDrive_PAL.jpg')
+    const [uploadImageurl, setImageurl] = useState('https://images.igdb.com/igdb/image/upload/t_1080p/co4erc.jpg')
     const [folderName, setFolderName] = useState('images')
     const [subFolderName, setSubFolderName] = useState('boxArtImage')
-    const [fileName, setFileName] = useState(`${gameName}boxArt`)
+    const [fileName, setFileName] = useState(`tester`)
     const [fileType, setFileType] = useState(uploadImageurl.slice(-3))
 
     // For Referencing Images
@@ -89,6 +87,14 @@ export default function SgHomeScreen({ navigation, route }) {
     const sgGameImages = [imagesRef, imagesRef2]
     const [profileImageUrl, setProfileImageUrl] = useState('')
     const [profileImageUrl2, setProfileImageUrl2] = useState('')
+
+    let ranks = [1, 2, 3];
+
+    ranks.forEach(numberAdder)
+
+    function numberAdder(item) {
+        console.log(item + 1)
+    }
 
     useEffect(() => {
         function loadingTime() {

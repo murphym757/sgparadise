@@ -1,6 +1,14 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { View, Image, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native'
-import { confirmGameContext, CurrentThemeContext, PageContainer, SafeAreaViewContainer, useAuth } from 'index'
+import { View, Text, Image, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native'
+import { 
+    confirmGameContext, 
+    CurrentThemeContext, 
+    TouchableButtonDelete,
+    TouchableButtonFontDelete,
+    PageContainer, 
+    SafeAreaViewContainer, 
+    useAuth 
+} from 'index'
 
 export default function SgSelectedGameplayScreen({route, navigation}) {
     const {
@@ -32,6 +40,7 @@ export default function SgSelectedGameplayScreen({route, navigation}) {
 
     const gameNameLastChar = gameName.charAt(gameName.length - 1)
     const [chosenGameplaysArray, setChosenGameplaysArray] = useState([])
+    const {0: gameScreenshot1, 1: gameScreenshot2, 2: gameScreenshot3 } = chosenGameplaysArray
     const [ imageCount, setImageCount ] = useState()
     const gameplaysNewArray = Array.from(new Set(chosenGameplaysArray)) //Removes the ability to add duplicate
     const pageDescriptionPluralForS = `Choose ${imageCount} ${confirmGame.imgWordingSelector(imageCount)} that perfectly showcases some of ${gameName}' highlights:`
@@ -39,22 +48,24 @@ export default function SgSelectedGameplayScreen({route, navigation}) {
     const pageDescription = `To add another image, select one of the chosen images. To remove all images, press the Clear Images Button`
     const nextPageNumber = 'Page6'
     const passingContent = {
-        consoleName: consoleName,
-        firebaseConsoleName: firebaseConsoleName,
-        firebaseStorageConsoleName: firebaseStorageConsoleName,
-        gameCover: gameCover,
-        gameDevelopers: gameDevelopers,
-        gameId: gameId,
-        gameName: gameName,
-        gameNameBRZ: gameNameBRZ,
-        gameNameEUR: gameNameEUR,
-        gameNameJPN: gameNameJPN,
-        gamePublishers: gamePublishers,
-        gameRating: gameRating, 
-        gameReleaseDate: gameReleaseDate,
-        gameScreenshots: chosenGameplaysArray,
-        gameSlug: gameSlug,
-        gameSummary: gameSummary
+        consoleName,
+        firebaseConsoleName,
+        firebaseStorageConsoleName,
+        gameCover,
+        gameDevelopers,
+        gameId,
+        gameName,
+        gameNameBRZ,
+        gameNameEUR,
+        gameNameJPN,
+        gamePublishers,
+        gameRating, 
+        gameReleaseDate,
+        gameScreenshot1,
+        gameScreenshot2,
+        gameScreenshot3,
+        gameSlug,
+        gameSummary
     }
     const navigationPass = navigation
     const buttonGroupData = {
@@ -70,7 +81,7 @@ export default function SgSelectedGameplayScreen({route, navigation}) {
     currentGameplaysArray = initArray.filter(item => !deletionArray.includes(item))
     
     async function chosenGameplayData(item) {
-        setChosenGameplaysArray(chosenGameplaysArray => [...chosenGameplaysArray, item])
+        setChosenGameplaysArray(gameplaysArray => [...gameplaysArray, item])
         setImageCount(imageCount - 1 )
     }
 
@@ -88,10 +99,17 @@ export default function SgSelectedGameplayScreen({route, navigation}) {
             }
     }
     /*----------*/
+    function imageCounter(){
+        if(imageCount == 0) {
+            return currentGameplaysArray.slice(10)
+        } else {
+            return currentGameplaysArray
+        }
+    }
     function chooseImagesList(){
         return (
             <FlatList
-                data={currentGameplaysArray}
+                data={imageCounter()}
                 keyboardShouldPersistTaps="always" 
                 contentContainerStyle={{
                     justifyContent: 'space-between'
@@ -181,6 +199,20 @@ export default function SgSelectedGameplayScreen({route, navigation}) {
             />
         )
     }
+    function pickPageDescription(pageDescriptionPluralForS, pageDescriptionPlural, gameNameLastChar, pageDescription){
+        if(imageCount == 0) {
+            return confirmGame.chosenImages(pageDescription)
+        } else {
+            return confirmGame.chooseImages(pageDescriptionPluralForS, pageDescriptionPlural, gameNameLastChar)
+        }
+    }
+    function pickButtons(buttonGroupData, resetChosenGameplayData){
+        if(imageCount == 0) {
+            return confirmGame.buttonGroupImages(buttonGroupData, resetChosenGameplayData)
+        } else {
+            return null
+        }
+    }
 
     useEffect(() => {
             return new Promise(resolve => {
@@ -201,10 +233,13 @@ export default function SgSelectedGameplayScreen({route, navigation}) {
             <SafeAreaViewContainer>
                 {isLoading == undefined
                     ? <ActivityIndicator size="large" hidesWhenStopped="true"/>
-                    : <View>
-                        {confirmGame.gameplayResults(buttonGroupData, imageCount, pageDescription, pageDescriptionPluralForS, pageDescriptionPlural, gameNameLastChar, chooseImagesList, resetChosenGameplayData, chosenImagesList)}
+                    : <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                        {pickPageDescription(pageDescriptionPluralForS, pageDescriptionPlural, gameNameLastChar, pageDescription)}
+                        {chooseImagesList()}
+                        {chosenImagesList()}
                     </View>
                 }
+                {pickButtons(buttonGroupData, resetChosenGameplayData)}
             </SafeAreaViewContainer>
         </PageContainer>
     )

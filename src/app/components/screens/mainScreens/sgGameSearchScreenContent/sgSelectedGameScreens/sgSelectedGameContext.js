@@ -190,19 +190,6 @@ function buttonGroup(buttonGroupData, confirmationPage) {
     )
 }
 
-function gameplayResults(buttonGroupData, imageCount, pageDescription, pageDescriptionPluralForS, pageDescriptionPlural, gameNameLastChar, chooseImagesList, resetChosenGameplayData, chosenImagesList) { 
-    return (
-        <Container>
-            <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                {imageCount < 1
-                    ?   chosenImages(pageDescription, buttonGroupData, resetChosenGameplayData, chosenImagesList)
-                    :   chooseImages(pageDescriptionPluralForS, pageDescriptionPlural, gameNameLastChar, chooseImagesList)
-                }
-            </View>
-        </Container>
-      ) 
-}
-
 function imgWordingSelector(imageCount) {
     const imgSingular = 'more image'
     const imgPlural = 'images'
@@ -210,24 +197,21 @@ function imgWordingSelector(imageCount) {
     if (imageCount != 1) return imgPlural
 }
 
-function chooseImages(pageDescriptionPluralForS, pageDescriptionPlural, gameNameLastChar, chooseImagesList){
+function chooseImages(pageDescriptionPluralForS, pageDescriptionPlural, gameNameLastChar){
     return (
         <View> 
             {gameNameLastChar == 's'
                 ?   <MainFont>{pageDescriptionPluralForS} </MainFont>
                 :   <MainFont>{pageDescriptionPlural} </MainFont>
             } 
-            {chooseImagesList()}
         </View>
     )
 }
 
-function chosenImages(pageDescription, buttonGroupData, resetChosenGameplayData, chosenImagesList){
+function chosenImages(pageDescription){
     return (
         <View>
             <MainFont>{pageDescription}</MainFont>
-            {chosenImagesList()}
-            {buttonGroupImages(buttonGroupData, resetChosenGameplayData)}
         </View>
     )
 }
@@ -250,7 +234,6 @@ export const confirmGame = {
     gameResults,
     starRatingSystem,
     buttonGroup,
-    gameplayResults,
     imgWordingSelector,
     chooseImages,
     chosenImages,

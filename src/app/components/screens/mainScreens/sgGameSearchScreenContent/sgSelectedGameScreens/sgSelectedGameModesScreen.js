@@ -28,7 +28,9 @@ export default function SgSelectedGameSetGameModesScreen({route, navigation}) {
         gamePublishers,
         gameRating, 
         gameReleaseDate,
-        gameScreenshots,
+        gameScreenshot1,
+        gameScreenshot2,
+        gameScreenshot3,
         gameSlug,
         gameSubGenre,
         gameSummary
@@ -41,25 +43,27 @@ export default function SgSelectedGameSetGameModesScreen({route, navigation}) {
     const pageDescription = `Finally, what some of the gaming mechanics present in ${gameName}?`
     const nextPageNumber = 'Page9'
     const passingContent = {
-        consoleName: consoleName,
-        firebaseConsoleName: firebaseConsoleName,
-        firebaseStorageConsoleName: firebaseStorageConsoleName,
-        gameCover: gameCover,
-        gameDevelopers: gameDevelopers,
-        gameGenre: gameGenre,
-        gameId: gameId,
+        consoleName,
+        firebaseConsoleName,
+        firebaseStorageConsoleName,
+        gameCover,
+        gameDevelopers,
+        gameGenre,
+        gameId,
         gameModes: chosenTagsArray,
-        gameName: gameName,
-        gameNameBRZ: gameNameBRZ,
-        gameNameEUR: gameNameEUR,
-        gameNameJPN: gameNameJPN,
-        gamePublishers: gamePublishers,
-        gameRating: gameRating, 
-        gameReleaseDate: gameReleaseDate,
-        gameScreenshots: gameScreenshots,
-        gameSlug: gameSlug,
-        gameSubGenre: gameSubGenre,
-        gameSummary: gameSummary
+        gameName,
+        gameNameBRZ,
+        gameNameEUR,
+        gameNameJPN,
+        gamePublishers,
+        gameRating, 
+        gameReleaseDate,
+        gameScreenshot1,
+        gameScreenshot2,
+        gameScreenshot3,
+        gameSlug,
+        gameSubGenre,
+        gameSummary
     }
     const navigationPass = navigation
     let tagArrayData = {

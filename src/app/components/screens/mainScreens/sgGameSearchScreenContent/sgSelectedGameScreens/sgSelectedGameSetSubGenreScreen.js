@@ -27,7 +27,9 @@ export default function SgSelectedGameSetSubGenreScreen({route, navigation}) {
         gamePublishers,
         gameRating, 
         gameReleaseDate,
-        gameScreenshots,
+        gameScreenshot1,
+        gameScreenshot2,
+        gameScreenshot3,
         gameSlug,
         gameSummary
     } = route.params
@@ -40,24 +42,26 @@ export default function SgSelectedGameSetSubGenreScreen({route, navigation}) {
     const pageDescription = `What subgenre is ideal for ${gameName}?`
     const nextPageNumber = 'Page8'
     const passingContent = {
-        consoleName: consoleName,
-        firebaseConsoleName: firebaseConsoleName,
-        firebaseStorageConsoleName: firebaseStorageConsoleName,
-        gameCover: gameCover,
-        gameDevelopers: gameDevelopers,
-        gameGenre: gameGenre,
-        gameId: gameId,
-        gameName: gameName,
-        gameNameBRZ: gameNameBRZ,
-        gameNameEUR: gameNameEUR,
-        gameNameJPN: gameNameJPN,
-        gamePublishers: gamePublishers,
-        gameRating: gameRating, 
-        gameReleaseDate: gameReleaseDate,
-        gameScreenshots: gameScreenshots,
-        gameSlug: gameSlug,
+        consoleName,
+        firebaseConsoleName,
+        firebaseStorageConsoleName,
+        gameCover,
+        gameDevelopers,
+        gameGenre,
+        gameId,
+        gameName,
+        gameNameBRZ,
+        gameNameEUR,
+        gameNameJPN,
+        gamePublishers,
+        gameRating, 
+        gameReleaseDate,
+        gameScreenshot1,
+        gameScreenshot2,
+        gameScreenshot3,
+        gameSlug,
         gameSubGenre: chosenName,
-        gameSummary: gameSummary
+        gameSummary
     }
     const navigationPass = navigation
     let tagArrayData = {

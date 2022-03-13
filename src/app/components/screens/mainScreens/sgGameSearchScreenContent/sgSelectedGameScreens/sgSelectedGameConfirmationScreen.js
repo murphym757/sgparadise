@@ -13,10 +13,11 @@ import {
   
 export default function SgSelectedGameConfirmationScreen({route, navigation}) {
     const {
+        addGameToConsoleButtonGroup,
         backToPreviousPage,
         currentUID,
-        toNewStack,
-        addGameToConsoleButtonGroup
+        imageCapture,
+        toNewStack
     } = useAuth()
     //let { searchBarTitle, searchType, searchQuery } = route.params
     const confirmGame = useContext(confirmGameContext)
@@ -37,7 +38,9 @@ export default function SgSelectedGameConfirmationScreen({route, navigation}) {
         gamePublishers,
         gameRating, 
         gameReleaseDate,
-        gameScreenshots,
+        gameScreenshot1,
+        gameScreenshot2,
+        gameScreenshot3,
         gameSlug,
         gameSubGenre,
         gameSummary
@@ -51,7 +54,7 @@ export default function SgSelectedGameConfirmationScreen({route, navigation}) {
 
 
      // For Image Image Uploads
-     const [uploadImageurl, setImageurl] = useState(`https://images.igdb.com/igdb/image/upload/t_1080p/${gameCover}${fileType}`)
+     const [uploadImageurl, setImageurl] = useState(`https://images.igdb.com/igdb/image/upload/t_1080p/${gameCover}.jpg`)
      const [folderName, setFolderName] = useState('images')
      const [consoleNameFolder, setConsoleNameFolder] = useState(firebaseStorageConsoleName)
      const [subFolderName, setSubFolderName] = useState('Uploaded Games')
@@ -59,8 +62,8 @@ export default function SgSelectedGameConfirmationScreen({route, navigation}) {
      const [coverArtFolder, setCoverArtFolder] = useState('coverArt')
      const [screenshotFolder, setScreenshotFolder] = useState('screenshots')
      const [coverArtFileName, setCoverArtFileName] = useState(`${gameSlug}-(coverArt)`)
-     const [fileType, setFileType] = useState('.jpg')
-
+     const [screenshotFileName, setScreenshotFileName] = useState(`${gameSlug}-(screenshot)`)
+     const [fileType, setFileType] = useState(uploadImageurl.slice(-3))
      const imageContent = {
         uploadImageurl,
         folderName,
@@ -70,11 +73,9 @@ export default function SgSelectedGameConfirmationScreen({route, navigation}) {
         coverArtFolder,
         screenshotFolder,
         coverArtFileName,
+        screenshotFileName,
         fileType
      }
-
-
-
     const confirmationPage = true
     const passingContent = {
         consoleName,
@@ -91,12 +92,16 @@ export default function SgSelectedGameConfirmationScreen({route, navigation}) {
         gamePublishers: gamePublishers.map(game => game[0].name),
         gameRating, 
         gameReleaseDate,
-        gameScreenshots,
+        gameScreenshot1,
+        gameScreenshot2,
+        gameScreenshot3,
         gameSlug,
         gameSubGenre,
         gameSummary,
         gameUploadedBy: currentUID
     }
+    console.log("🚀 ~ file: sgSelectedGameConfirmationScreen.js ~ line 80 ~ SgSelectedGameConfirmationScreen ~ passingContent", passingContent)
+    
     const navigationPass = navigation
     let tagArrayData = {
         pageDescription
