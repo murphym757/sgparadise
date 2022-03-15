@@ -34,6 +34,7 @@ export default function SgSelectedGameSummaryScreen({route, navigation}) {
         gameNameBRZ,
         gameNameEUR,
         gameNameJPN,
+        gameNameMatchInSgDB,
         gamePublishers,
         gameRating,
         gameReleaseDate,
@@ -52,23 +53,25 @@ export default function SgSelectedGameSummaryScreen({route, navigation}) {
     const pageDescription = `What is ${gameName} about, exactly?`
     const [nextPageNumber, setNextPageNumber] = useState('Page5')
     const passingContent = {
-        consoleName: consoleName,
-        firebaseConsoleName: firebaseConsoleName,
-        firebaseStorageConsoleName: firebaseStorageConsoleName,
-        gameCover: gameCover, 
+        consoleName,
+        firebaseConsoleName,
+        firebaseStorageConsoleName,
+        gameCover, 
         gameDevelopers: chosenDevelopersArray,
-        gameId: gameId,
-        gameName: gameName,
-        gameNameBRZ: gameNameBRZ,
-        gameNameEUR: gameNameEUR,
-        gameNameJPN: gameNameJPN,
+        gameId,
+        gameName,
+        gameNameBRZ,
+        gameNameEUR,
+        gameNameJPN,
+        gameNameMatchInSgDB,
         gamePublishers: chosenPublishersArray,
-        gameRating: gameRating,
-        gameReleaseDate: gameReleaseDate,
-        gameScreenshots: gameScreenshots,
-        gameSlug: gameSlug,
+        gameRating,
+        gameReleaseDate,
+        gameScreenshots,
+        gameSlug,
         gameSummary: updatedGameSummary
     }
+    console.log("🚀 ~ file: sgSelectedGameSummaryScreen.js ~ line 56 ~ SgSelectedGameSummaryScreen ~ passingContent", passingContent)
     const navigationPass = navigation
     const buttonGroupData = {
         backToPreviousPage, 

@@ -1,8 +1,9 @@
 
 import React, { useState, useEffect, useContext } from 'react'
 import { View, Image, FlatList, ActivityIndicator } from 'react-native'
-import { axiosSearchContext, confirmGameContext, ContentContainer, PageContainerCover, CurrentThemeContext, SafeAreaViewContainer, useAuth } from 'index'
+import { axiosSearchContext, confirmGameContext, ContentContainer, sgGenNATitles, PageContainerCover, CurrentThemeContext, SafeAreaViewContainer, useAuth } from 'index'
 import axios from 'axios'
+import stringSimilarity from 'string-similarity'
 
 export default function SgSelectedGameCoverScreen({route, navigation}) {
     const {
@@ -37,26 +38,28 @@ export default function SgSelectedGameCoverScreen({route, navigation}) {
     const [firebaseStorageConsoleName, setFirebaseStorageConsoleName] = useState()
     const [gameScreenshots, setGameScreenshots] = useState([])
     const [updatedGameRating, setUpdatedGameRating] = useState()
+    const [gameNameMatchInSgDB, setGameNameMatchInSgDB] = useState('')
     const nextPageNumber = 'Page4'
     const passingContent = {
-        accessTokenIGDB: accessTokenIGDB, 
-        clientIdIGDB: clientIdIGDB,
-        consoleName: consoleName,
-        firebaseConsoleName: firebaseConsoleName,
-        firebaseStorageConsoleName: firebaseStorageConsoleName,
-        gameCover: gameCover, 
+        accessTokenIGDB, 
+        clientIdIGDB,
+        consoleName,
+        firebaseConsoleName,
+        firebaseStorageConsoleName,
+        gameCover, 
         gameDevelopers: gameDevelopers.map(game => game.company),
         gameId: igdbGameId,
-        gameName: gameName,
-        gameNameJPN: gameNameJPNAlt.map(game => game.name),
-        gameNameEUR: gameNameEURAlt.map(game => game.name),
+        gameName,
         gameNameBRZ: gameNameBRZAlt.map(game => game.name),
+        gameNameEUR: gameNameEURAlt.map(game => game.name),
+        gameNameJPN: gameNameJPNAlt.map(game => game.name),
+        gameNameMatchInSgDB,
         gamePublishers: gamePublishers.map(game => game.company),
         gameRating: updatedGameRating,
-        gameReleaseDate: gameReleaseDate,
+        gameReleaseDate,
         gameScreenshots: gameScreenshots.map(game => game.image_id),
-        gameSlug: gameSlug,
-        gameSummary: gameSummary
+        gameSlug,
+        gameSummary
     }
     const navigationPass = navigation
     const buttonGroupData = {
@@ -65,6 +68,13 @@ export default function SgSelectedGameCoverScreen({route, navigation}) {
         navigationPass,
         nextPageNumber,
         passingContent
+    }
+
+    function setFirebaseGameName() {
+        let matches = stringSimilarity.findBestMatch(gameName, sgGenNATitles)
+        return (
+            setGameNameMatchInSgDB(matches.bestMatch.target)
+        )
     }
     
     useEffect(() => {
@@ -89,6 +99,7 @@ export default function SgSelectedGameCoverScreen({route, navigation}) {
                         setIsLoading(false)),
                         findConsoleName(igdbConsoleId)
                 }, 2000)
+                setFirebaseGameName()
               })
             }
 

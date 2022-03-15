@@ -90,7 +90,11 @@ export default function SgHomeScreen({ navigation, route }) {
 
     let ranks = [1, 2, 3];
 
-    ranks.forEach(numberAdder)
+    
+
+    function looop() {
+        ranks.forEach(numberAdder)
+    }
 
     function numberAdder(item) {
         console.log(item + 1)
@@ -117,7 +121,8 @@ export default function SgHomeScreen({ navigation, route }) {
             return 
                 displayData(collectionName),
                 // This function will run as many times as the app renders, the function runs twice here
-                updateGameViewCount(collectionName, consoleName, gamesCollection, gameName) 
+                updateGameViewCount(collectionName, consoleName, gamesCollection, gameName),
+                looop() 
                
     })
 

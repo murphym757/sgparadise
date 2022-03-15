@@ -24,9 +24,9 @@ export default function SgSelectedGameConfirmationScreen({route, navigation}) {
     const [isLoading, setIsLoading] = useState()
     
     const { 
+        consoleName,
         firebaseConsoleName,
         firebaseStorageConsoleName,
-        consoleName,
         gameCover,
         gameDevelopers,
         gameGenre,
@@ -35,6 +35,7 @@ export default function SgSelectedGameConfirmationScreen({route, navigation}) {
         gameNameBRZ,
         gameNameEUR,
         gameNameJPN,
+        gameNameMatchInSgDB,
         gamePublishers,
         gameRating, 
         gameReleaseDate,
@@ -54,7 +55,10 @@ export default function SgSelectedGameConfirmationScreen({route, navigation}) {
 
 
      // For Image Image Uploads
-     const [uploadImageurl, setImageurl] = useState(`https://images.igdb.com/igdb/image/upload/t_1080p/${gameCover}.jpg`)
+     const [coverUrl, setCoveUrl] = useState(`https://images.igdb.com/igdb/image/upload/t_1080p/${gameCover}.jpg`)
+     const [screenshot1Url, setScreenshot1Url] = useState(`https://images.igdb.com/igdb/image/upload/t_1080p/${gameScreenshot1}.jpg`)
+     const [screenshot2Url, setScreenshot2Url] = useState(`https://images.igdb.com/igdb/image/upload/t_1080p/${gameScreenshot2}.jpg`)
+     const [screenshot3Url, setScreenshot3Url] = useState(`https://images.igdb.com/igdb/image/upload/t_1080p/${gameScreenshot3}.jpg`)
      const [folderName, setFolderName] = useState('images')
      const [consoleNameFolder, setConsoleNameFolder] = useState(firebaseStorageConsoleName)
      const [subFolderName, setSubFolderName] = useState('Uploaded Games')
@@ -63,9 +67,12 @@ export default function SgSelectedGameConfirmationScreen({route, navigation}) {
      const [screenshotFolder, setScreenshotFolder] = useState('screenshots')
      const [coverArtFileName, setCoverArtFileName] = useState(`${gameSlug}-(coverArt)`)
      const [screenshotFileName, setScreenshotFileName] = useState(`${gameSlug}-(screenshot)`)
-     const [fileType, setFileType] = useState(uploadImageurl.slice(-3))
+     const [fileType, setFileType] = useState(coverUrl.slice(-3))
      const imageContent = {
-        uploadImageurl,
+        coverUrl,
+        screenshot1Url,
+        screenshot2Url,
+        screenshot3Url,
         folderName,
         consoleNameFolder,
         subFolderName,
@@ -89,6 +96,7 @@ export default function SgSelectedGameConfirmationScreen({route, navigation}) {
         gameNameBRZ,
         gameNameEUR,
         gameNameJPN,
+        gameNameMatchInSgDB,
         gamePublishers: gamePublishers.map(game => game[0].name),
         gameRating, 
         gameReleaseDate,

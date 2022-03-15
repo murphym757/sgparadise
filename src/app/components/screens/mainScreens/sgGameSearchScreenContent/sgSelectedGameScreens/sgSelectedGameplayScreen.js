@@ -30,10 +30,11 @@ export default function SgSelectedGameplayScreen({route, navigation}) {
         gameNameBRZ,
         gameNameEUR,
         gameNameJPN,
+        gameNameMatchInSgDB,
+        gamePublishers,
         gameRating, 
         gameReleaseDate,
         gameScreenshots,
-        gamePublishers,
         gameSlug,
         gameSummary
     } = route.params
@@ -58,6 +59,7 @@ export default function SgSelectedGameplayScreen({route, navigation}) {
         gameNameBRZ,
         gameNameEUR,
         gameNameJPN,
+        gameNameMatchInSgDB,
         gamePublishers,
         gameRating, 
         gameReleaseDate,

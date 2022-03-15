@@ -24,6 +24,7 @@ export default function SgSelectedGameSetSubGenreScreen({route, navigation}) {
         gameNameBRZ,
         gameNameEUR,
         gameNameJPN,
+        gameNameMatchInSgDB,
         gamePublishers,
         gameRating, 
         gameReleaseDate,
@@ -53,6 +54,7 @@ export default function SgSelectedGameSetSubGenreScreen({route, navigation}) {
         gameNameBRZ,
         gameNameEUR,
         gameNameJPN,
+        gameNameMatchInSgDB,
         gamePublishers,
         gameRating, 
         gameReleaseDate,
@@ -63,6 +65,7 @@ export default function SgSelectedGameSetSubGenreScreen({route, navigation}) {
         gameSubGenre: chosenName,
         gameSummary
     }
+    console.log("🚀 ~ file: sgSelectedGameSetSubGenreScreen.js ~ line 46 ~ SgSelectedGameSetSubGenreScreen ~ passingContent", passingContent)
     const navigationPass = navigation
     let tagArrayData = {
         pageDescription, 

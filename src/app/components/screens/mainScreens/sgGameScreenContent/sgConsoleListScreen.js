@@ -11,11 +11,9 @@ import {
     FontAwesomeIcon, 
     gamesConfig,
     MainFont,
-    nightTime,
-    sg32XNATitles
+    nightTime
 } from 'index'
 import { modalConfirmation } from './sgAPIIndex'
-import stringSimilarity from 'string-similarity'
 
 export default function SgConsoleListScreens({route, navigation}, props) {
     const colors = useContext(CurrentThemeContext)
@@ -35,11 +33,7 @@ export default function SgConsoleListScreens({route, navigation}, props) {
     // For IGDB API Search Endpoint
     const clientIdIGDB = `${gamesConfig.igdbClientId}`
     const clientSecretIGDB = `${gamesConfig.igdbClientSecret}`
-
-        // Finds the clostest game title
-        let matches = stringSimilarity.findBestMatch("The Amazing Spider-Man: Web of Fire", sg32XNATitles)
   
-
     function consoleLogo() {
         const nightImages = sgDB.collection("sgAPI").orderBy("systemLogoNight", "asc")
         const dayImages = sgDB.collection("sgAPI")
