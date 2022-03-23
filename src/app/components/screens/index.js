@@ -114,7 +114,7 @@
         export { confirmGameContext } from 'main/sgGameSearchScreenContent/sgSelectedGameScreens/sgSelectedGameContext'
     
     //Firebase
-    export { firebase, gamesConfig } from 'server/config/config'
+    export { firebase, gamesConfig, getStorage, ref, getDownloadURL } from 'server/config/config'
     
     // Font Awesome
     export { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'

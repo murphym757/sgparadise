@@ -14,6 +14,7 @@ import {
     TouchableButton,
     TouchableButtonFont,
 } from 'index'
+import { useIsFocused } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 const Stack = createStackNavigator()
 
@@ -21,7 +22,6 @@ export default function SgHomeScreen({ navigation, route }) {
     const { sgDB, sgImageStorage, currentUser, 
         currentUID, displayData,
         addData,
-        getGameData,
         /*--------*/ 
         addGameToConsole, 
         deleteGameFromConsole,
@@ -34,39 +34,16 @@ export default function SgHomeScreen({ navigation, route }) {
         entries, stateTest, logOut } = useAuth()
     const { 
         searchBar,  
-        gameName, 
         gamesFilterListName,
         testDb,
         } = useSearchBar()
-    const [error, setError] = useState('')
-    const colors = useContext(CurrentThemeContext)
-    const [addGame, setGame] = useState('')
+    const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be read
     const [isLoading, setIsLoading] = useState(true)
-    const [entities, setEntities] = useState([])
     const [userInfo, setUserInfo] = useState()
-    const [testData, setTestData] = useState('')
     const [collectionName, setCollectionName] = useState('sgAPI')
-    const [consoleName, setConsoleName] = useState('sg1000')
+    const [consoleName, setConsoleName] = useState('sgGenesis')
     const [gamesCollection, setGamesCollection] = useState('games')
-    //const [gameName, setGameName] = useState('tinyToon')
-    const [imagesCollection, setImagesCollection] = useState('images')
-    const [commentsCollection, setCommentsCollection] = useState('comments')
-    const [tagsCollection, setTagsCollection] = useState('tags')
-    const genreTagsTitle = 'Genre'
-    const descriptionTagsTitle = 'Description'
-    const [descriptionTagsData, setDescriptionTagsData] = useState([
-        "Great Soundtrack",
-        "Multiplayer",
-        "Co-op",
-        "Story Rich",
-        "Pick up and play",
-    ])
-
-    const [docName, setDocName] = useState('bscOg6nL1akXjGIpk1oz')
-    const [secondaryCollectionName, setSecondaryCollectionName] = useState('games')
-    const [secondaryDocName, setSecondaryDocName] = useState('bscOg6nL1akXjGIpk1oz')
-    const [objectName, setObjectName]= useState('newTest')
-
+    const [gameName, setGameName] = useState('tiny-toon-adventures-busters-hidden-treasure')
     // For Search Bar
     const [searchType, setSearchType] = useState('sgDBSearch')
     const [searchBarTitle, setSearchBarTitle] = useState('Search Games')
@@ -82,23 +59,14 @@ export default function SgHomeScreen({ navigation, route }) {
 
     // For Referencing Images
     const sgImageStorageRef = sgImageStorage.ref()
-    const imagesRef  = sgImageStorageRef.child('images/tinyToon/boxArtImage/tinyToonboxArt.jpg')
-    const imagesRef2  = sgImageStorageRef.child('images/tinyToon/boxArtImage/Vice-city-cover.jpg')
-    const sgGameImages = [imagesRef, imagesRef2]
     const [profileImageUrl, setProfileImageUrl] = useState('')
-    const [profileImageUrl2, setProfileImageUrl2] = useState('')
 
-    let ranks = [1, 2, 3];
-
-    
-
-    function looop() {
-        ranks.forEach(numberAdder)
-    }
-
-    function numberAdder(item) {
-        console.log(item + 1)
-    }
+    const [gamesArray1, setGamesArray1] = useState([])
+    console.log("🚀 ~ file: sgHomeScreen.js ~ line 65 ~ SgHomeScreen ~ gamesArray1", gamesArray1)
+    gamesArray1.forEach(obj => {
+        obj.color = 'white'}
+    )
+    const [fullGamesArray1, setFullGamesArray1] = useState([])
 
     useEffect(() => {
         function loadingTime() {
@@ -107,11 +75,12 @@ export default function SgHomeScreen({ navigation, route }) {
                 resolve(
                     setUserInfo(currentUID),
                     setIsLoading(false),
-                    imageCatcher(),
+                    foundCoverData(),
                     //imageCapture(uploadImageurl, folderName, consoleName, gameName, subFolderName, fileName, fileType)
                     )
               }, 2000)
-            })
+              getGameDataPlatformers()
+            }, [])
         }
         async function sgLoader() {
             await loadingTime()
@@ -121,10 +90,69 @@ export default function SgHomeScreen({ navigation, route }) {
             return 
                 displayData(collectionName),
                 // This function will run as many times as the app renders, the function runs twice here
-                updateGameViewCount(collectionName, consoleName, gamesCollection, gameName),
-                looop() 
+                updateGameViewCount(collectionName, consoleName, gamesCollection, gameName)
                
-    })
+    }, [isFocused])
+
+    async function getGameDataPlatformers() {
+        let platformerGames = []
+        const gameRef = sgDB.collection('sgAPI').doc('sgGenesis').collection('games').orderBy('gameRating', 'desc').limit(5)
+        const snapshot = await gameRef.where('gameSubGenre', '==', 'Platformer').get()
+        if (snapshot.empty) {
+            console.log('No matching documents.')
+        return
+        }  
+        snapshot.forEach(doc => {
+            platformerGames.push(doc.data())
+        });
+        setGamesArray1(platformerGames)
+    }
+
+    function imageCatcher(item) {
+        const initialFolderName = 'images'
+        const consoleFolderName = 'sgGen'
+        const UploadedFolderName = 'Uploaded Games'
+        const gameNameFolderName = item.gameSlug
+        const secondaryImageTypeFolderName = 'coverArt'
+        const imagesRef = sgImageStorageRef.child(`${initialFolderName}/${consoleFolderName}/${UploadedFolderName}/${gameNameFolderName}/${secondaryImageTypeFolderName}/${gameNameFolderName}-(${secondaryImageTypeFolderName}).jpg`)
+        imagesRef.getDownloadURL()
+        .then((url) => {
+            setFullGamesArray1(...gamesArray1, url)
+            console.log(url)
+            //from url you can fetched the uploaded image easily
+            setProfileImageUrl(url)
+        })
+        .catch((e) => console.log('getting downloadURL of image error => ', e))
+    }
+
+    function setPlatformersCover(item) {
+        imageCatcher(item)
+    }
+
+    function foundCoverData() {
+        gamesArray1.forEach(setPlatformersCover)
+     }
+
+    function platformersList() {
+        return (
+            <FlatList
+            showsHorizontalScrollIndicator={false}
+            scrollEnabled={false}
+            data={gamesArray1}
+            keyboardShouldPersistTaps="always"
+            keyExtractor={item => item.id}
+            renderItem={({ item }) => (
+            <View>
+                <TouchableOpacity onPress={() => gamesArray1(item)}>
+                    <MainFont>{item.gameName}</MainFont>
+                    <MainFont>{item.gameReleaseDate}</MainFont>
+                    <MainFont>{item.gameGenre}</MainFont>
+                </TouchableOpacity>
+            </View>
+            )}
+        />
+        )
+    }
 
     function searchResults() {
         return (
@@ -149,17 +177,6 @@ export default function SgHomeScreen({ navigation, route }) {
           ) 
     }
 
-    function imageCatcher() {
-        return imagesRef 
-        .getDownloadURL()
-        .then((url) => {
-            //from url you can fetched the uploaded image easily
-            setProfileImageUrl(url),
-            setProfileImageUrl2(url)
-        })
-        .catch((e) => console.log('getting downloadURL of image error => ', e))
-    }
-
     function confirmViewGames() {
         navigation.navigate('SgConsoleList',{
             searchType: searchType
@@ -179,21 +196,7 @@ export default function SgHomeScreen({ navigation, route }) {
                 {searchBar(searchBarTitle, searchType, searchQuery)}
                 <ScrollViewContainer>
                 {searchResults()}
-                    <MainFont>Home Screen</MainFont>
-                    <FlatList
-                        showsHorizontalScrollIndicator={false}
-                        scrollEnabled={false}
-                        data={entries}
-                        keyboardShouldPersistTaps="always"
-                        keyExtractor={item => item.id}
-                        renderItem={({ item }) => (
-                        <View>
-                            <TouchableOpacity onPress={() => entries(item)}>
-                            <MainFont>{item.id}</MainFont>
-                            </TouchableOpacity>
-                        </View>
-                        )}
-                    />
+                {platformersList()}
                     {currentUser !== null
                         ?   <View>
                                 <TouchableButton onPress={() => confirmAddNewGame()}>

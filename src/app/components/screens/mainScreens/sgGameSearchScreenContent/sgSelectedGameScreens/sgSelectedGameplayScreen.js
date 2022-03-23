@@ -47,7 +47,7 @@ export default function SgSelectedGameplayScreen({route, navigation}) {
     const pageDescriptionPluralForS = `Choose ${imageCount} ${confirmGame.imgWordingSelector(imageCount)} that perfectly showcases some of ${gameName}' highlights:`
     const pageDescriptionPlural = `Choose ${imageCount} ${confirmGame.imgWordingSelector(imageCount)} that perfectly showcases some of ${gameName}'s highlights:`
     const pageDescription = `To add another image, select one of the chosen images. To remove all images, press the Clear Images Button`
-    const nextPageNumber = 'Page6'
+    const nextPageNumber = 'Page5'
     const passingContent = {
         consoleName,
         firebaseConsoleName,

@@ -28,9 +28,10 @@ export default function SgSelectedGameSetSubGenreScreen({route, navigation}) {
         gamePublishers,
         gameRating, 
         gameReleaseDate,
-        gameScreenshot1,
-        gameScreenshot2,
-        gameScreenshot3,
+        firebaseCoverUrl,
+        firebaseScreenshot1Url,
+        firebaseScreenshot2Url,
+        firebaseScreenshot3Url,
         gameSlug,
         gameSummary
     } = route.params
@@ -45,6 +46,10 @@ export default function SgSelectedGameSetSubGenreScreen({route, navigation}) {
     const passingContent = {
         consoleName,
         firebaseConsoleName,
+        firebaseCoverUrl,
+        firebaseScreenshot1Url,
+        firebaseScreenshot2Url,
+        firebaseScreenshot3Url,
         firebaseStorageConsoleName,
         gameCover,
         gameDevelopers,
@@ -58,9 +63,6 @@ export default function SgSelectedGameSetSubGenreScreen({route, navigation}) {
         gamePublishers,
         gameRating, 
         gameReleaseDate,
-        gameScreenshot1,
-        gameScreenshot2,
-        gameScreenshot3,
         gameSlug,
         gameSubGenre: chosenName,
         gameSummary

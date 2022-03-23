@@ -285,8 +285,8 @@ export default function ConfirmAddGameScreen({navigation, route}) {
                 <Stack.Screen name="Page1" component={sgSearchScreen} />
                 <Stack.Screen name="Page2" component={sgSearchResultsScreen} />
                 <Stack.Screen name="Page3" component={SgSelectedGameCoverScreen} />
-                <Stack.Screen name="Page4" component={SgSelectedGameSummaryScreen} />
-                <Stack.Screen name="Page5" component={SgSelectedGameplayScreen} />
+                <Stack.Screen name="Page4" component={SgSelectedGameplayScreen} />
+                <Stack.Screen name="Page5" component={SgSelectedGameSummaryScreen} />
                 <Stack.Screen name="Page6" component={SgSelectedGameSetGenreScreen} />
                 <Stack.Screen name="Page7" component={SgSelectedGameSetSubGenreScreen} />
                 <Stack.Screen name="Page8" component={SgSelectedGameSetGameModesScreen} />

@@ -36,14 +36,35 @@ export default function SgSelectedGameSummaryScreen({route, navigation}) {
         gameNameJPN,
         gameNameMatchInSgDB,
         gamePublishers,
-        gameRating,
+        gameRating, 
         gameReleaseDate,
         gameScreenshots,
-        gameSlug,
+        gameScreenshot1,
+        gameScreenshot2,
+        gameScreenshot3,
         gameSummary,
+        gameSlug
     } = route.params
 
     // IGDB search data (Put on confirmation page)
+    const [adminUser, setAdminUser] = useState(true)
+    const [firebaseCoverUrl, setFirebaseCoverUrl] = useState('')
+    const [firebaseScreenshot1Url, setFirebaseScreenshot1Url] = useState('')
+    const [firebaseScreenshot2Url, setFirebaseScreenshot2Url] = useState('')
+    const [firebaseScreenshot3Url, setFirebaseScreenshot3Url] = useState('')
+    const [coverUrl, setCoverUrl] = useState(`https://images.igdb.com/igdb/image/upload/t_1080p/${gameCover}.jpg`)
+    const [screenshot1Url, setScreenshot1Url] = useState(`https://images.igdb.com/igdb/image/upload/t_1080p/${gameScreenshot1}.jpg`)
+    const [screenshot2Url, setScreenshot2Url] = useState(`https://images.igdb.com/igdb/image/upload/t_1080p/${gameScreenshot2}.jpg`)
+    const [screenshot3Url, setScreenshot3Url] = useState(`https://images.igdb.com/igdb/image/upload/t_1080p/${gameScreenshot3}.jpg`)
+    const [folderName, setFolderName] = useState('images')
+    const [consoleNameFolder, setConsoleNameFolder] = useState(firebaseStorageConsoleName)
+    const [subFolderName, setSubFolderName] = useState('Uploaded Games')
+    const [gameNameFolder, setGameNameFolder] = useState(gameSlug)
+    const [coverArtFolder, setCoverArtFolder] = useState('coverArt')
+    const [screenshotFolder, setScreenshotFolder] = useState('screenshots')
+    const [coverArtFileName, setCoverArtFileName] = useState(`${gameSlug}-(coverArt)`)
+    const [screenshotFileName, setScreenshotFileName] = useState(`${gameSlug}-(screenshot)`)
+    const [fileType, setFileType] = useState(coverUrl.slice(-3))
     const [updatedGameSummary, setUpdatedGameSummary] = useState(gameSummary)
     const [chosenPublishersArray, setChosenPublishersArray] = useState([])
     const [chosenDevelopersArray, setChosenDevelopersArray] = useState([])
@@ -51,12 +72,40 @@ export default function SgSelectedGameSummaryScreen({route, navigation}) {
     const igdbCompaniesResultsField = `fields country,name; where id =`
     const axiosTimeout = {timeout: 2000}
     const pageDescription = `What is ${gameName} about, exactly?`
-    const [nextPageNumber, setNextPageNumber] = useState('Page5')
+    const [nextPageNumber, setNextPageNumber] = useState('Page6')
+    const passingImageData = {
+        coverUrl,
+        screenshot1Url,
+        screenshot2Url,
+        screenshot3Url,
+        folderName,
+        consoleNameFolder,
+        subFolderName,
+        gameNameFolder,
+        coverArtFolder,
+        screenshotFolder,
+        coverArtFileName,
+        screenshotFileName,
+        fileType,
+        firebaseCoverUrl,
+        firebaseScreenshot1Url,
+        firebaseScreenshot2Url,
+        firebaseScreenshot3Url,
+        setFirebaseCoverUrl,
+        setFirebaseScreenshot1Url,
+        setFirebaseScreenshot2Url,
+        setFirebaseScreenshot3Url
+    }
     const passingContent = {
+        adminUser,
         consoleName,
         firebaseConsoleName,
+        firebaseCoverUrl,
+        firebaseScreenshot1Url,
+        firebaseScreenshot2Url,
+        firebaseScreenshot3Url,
         firebaseStorageConsoleName,
-        gameCover, 
+        gameCover,
         gameDevelopers: chosenDevelopersArray,
         gameId,
         gameName,
@@ -67,7 +116,6 @@ export default function SgSelectedGameSummaryScreen({route, navigation}) {
         gamePublishers: chosenPublishersArray,
         gameRating,
         gameReleaseDate,
-        gameScreenshots,
         gameSlug,
         gameSummary: updatedGameSummary
     }
@@ -85,6 +133,8 @@ export default function SgSelectedGameSummaryScreen({route, navigation}) {
 
     useEffect(() => {
         function searchTesting() {
+            confirmGame.coverImageCapture(passingImageData),
+            confirmGame.screenshotUpload(passingImageData)
             let api = axios.create({
                 headers: {
                     'Accept': 'application/json',

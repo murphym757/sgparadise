@@ -120,8 +120,11 @@ export function AuthProvider({ children }) {
 
     function addGameToConsoleButtonGroup(buttonGroupData) {
         const sgConsoleName = buttonGroupData.passingContent.consoleName
-        const sgGameCover = buttonGroupData.passingContent.gameCover
         const sgFirebaseConsoleName = buttonGroupData.passingContent.firebaseConsoleName
+        const sgFirebaseCoverUrl = buttonGroupData.passingContent.firebaseCoverUrl
+        const sgFirebaseScreenshot1Url = buttonGroupData.passingContent.firebaseScreenshot1Url
+        const sgFirebaseScreenshot2Url = buttonGroupData.passingContent.firebaseScreenshot2Url
+        const sgFirebaseScreenshot3Url = buttonGroupData.passingContent.firebaseScreenshot3Url
         const sgFirebaseStorageConsoleName = buttonGroupData.passingContent.firebaseStorageConsoleName
         const sgGameDevelopers = buttonGroupData.passingContent.gameDevelopers
         const sgGameGenre = buttonGroupData.passingContent.gameGenre
@@ -134,34 +137,18 @@ export function AuthProvider({ children }) {
         const sgGamePublishers = buttonGroupData.passingContent.gamePublishers
         const sgGameRating = buttonGroupData.passingContent.gameRating
         const sgGameReleaseDate = buttonGroupData.passingContent.gameReleaseDate
-        const sgGameScreenshot1 = buttonGroupData.passingContent.gameScreenshot1
-        const sgGameScreenshot2 = buttonGroupData.passingContent.gameScreenshot2
-        const sgGameScreenshot3 = buttonGroupData.passingContent.gameScreenshot3
         const sgGameSlug = buttonGroupData.passingContent.gameSlug
         const sgGameSubGenre = buttonGroupData.passingContent.gameSubGenre
         const sgGameSummary = buttonGroupData.passingContent.gameSummary
-        const sgCoverUrl = buttonGroupData.imageContent.coverUrl
-        const sgScreenshot1Url = buttonGroupData.imageContent.screenshot1Url
-        const sgScreenshot2Url = buttonGroupData.imageContent.screenshot2Url
-        const sgScreenshot3Url = buttonGroupData.imageContent.screenshot3Url
-        const sgFolderName = buttonGroupData.imageContent.folderName
-        const sgConsoleNameFolder = buttonGroupData.imageContent.consoleNameFolder
-        const sgGameNameFolder = buttonGroupData.imageContent.gameNameFolder
-        const sgSubFolderName = buttonGroupData.imageContent.subFolderName
-        const sgCoverArtFolder = buttonGroupData.imageContent.coverArtFolder
-        const sgScreenshotFolder = buttonGroupData.imageContent.screenshotFolder
-        const sgCoverArtFileName = buttonGroupData.imageContent.coverArtFileName
-        const sgScreenshotFileName = buttonGroupData.imageContent.screenshotFileName
-        const sgFileType = buttonGroupData.imageContent.fileType
         const sgCurrentUID = currentUID
         const passingContent = {
             sgConsoleName,
             sgFirebaseConsoleName,
+            sgFirebaseCoverUrl,
+            sgFirebaseScreenshot1Url,
+            sgFirebaseScreenshot2Url,
+            sgFirebaseScreenshot3Url,
             sgFirebaseStorageConsoleName,
-            sgGameCover,
-            sgScreenshot1Url,
-            sgScreenshot2Url,
-            sgScreenshot3Url,
             sgGameDevelopers,
             sgGameGenre,
             sgGameModes,
@@ -173,47 +160,15 @@ export function AuthProvider({ children }) {
             sgGamePublishers,
             sgGameRating, 
             sgGameReleaseDate,
-            sgGameScreenshot1,
-            sgGameScreenshot2,
-            sgGameScreenshot3,
             sgGameSlug,
             sgGameSubGenre,
             sgGameSummary,
             sgPostCreator:  sgCurrentUID
         }
-        const imageContent = {
-            sgConsoleNameFolder,
-            sgCoverArtFileName,
-            sgCoverArtFolder,
-            sgFileType,
-            sgFolderName,
-            sgGameCover,
-            sgGameNameFolder,
-            sgScreenshotFileName,
-            sgScreenshotFolder,
-            sgSubFolderName,
-            sgCoverUrl
-         }
-
-         let sgGameScreenshot1Data = {...imageContent, imageNumber: 1, imageName: sgGameScreenshot1, imageUrl: sgScreenshot1Url, gameNameCharCount: sgGameNameFolder.length}
-         let sgGameScreenshot2Data = {...imageContent, imageNumber: 2, imageName: sgGameScreenshot2, imageUrl: sgScreenshot2Url, gameNameCharCount: sgGameNameFolder.length}
-         let sgGameScreenshot3Data = {...imageContent, imageNumber: 3, imageName: sgGameScreenshot3, imageUrl: sgScreenshot3Url, gameNameCharCount: sgGameNameFolder.length}
-         const screenShotDataArray = [sgGameScreenshot1Data, sgGameScreenshot2Data, sgGameScreenshot3Data];
-         
-
-         function screenshotUpload() {
-            screenShotDataArray.forEach(setFirebaseScreenShotData)
-         }
-
-         function setFirebaseScreenShotData(item) {
-            screenshotImageCapture(item)
-         }
 
         function pathToUploadViaFirebase() {
             setTimeout(() => {
-                addGameToConsole(passingContent),
-                coverImageCapture(imageContent),
-                screenshotUpload()
+                addGameToConsole(passingContent)
             }, 3000)
             return(
                 buttonGroupData.toNewStack(buttonGroupData.stackName, buttonGroupData.screenName, buttonGroupData.navigationPass)
@@ -277,6 +232,10 @@ export function AuthProvider({ children }) {
         const timestamp = firebase.firestore.FieldValue.serverTimestamp()
         sgDB.collection('sgAPI').doc(passingContent.sgFirebaseConsoleName).collection('games').doc(passingContent.sgGameSlug).set({
             createdAt: timestamp,
+            firebaseCoverUrl: passingContent.sgFirebaseCoverUrl,
+            firebaseScreenshot1Url: passingContent.sgFirebaseScreenshot1Url,
+            firebaseScreenshot2Url: passingContent.sgFirebaseScreenshot2Url,
+            firebaseScreenshot3Url: passingContent.sgFirebaseScreenshot3Url,
             gameDevelopers: passingContent.sgGameDevelopers,
             gameGenre: passingContent.sgGameGenre,
             gameModes: passingContent.sgGameModes,
@@ -330,67 +289,7 @@ export function AuthProvider({ children }) {
     async function deleteGameFromConsole(collectionName, consoleName, gamesCollection, gameName) {
         sgDB.collection(collectionName).doc(consoleName).collection(gamesCollection).doc(gameName).delete()
     }
-
-    async function coverImageCapture(imageContent) {
-        const coverUrl = imageContent.sgCoverUrl
-        const folderName = imageContent.sgFolderName
-        const consoleNameFolder = imageContent.sgConsoleNameFolder
-        const subFolderName = imageContent.sgSubFolderName
-        const gameNameFolder = imageContent.sgGameNameFolder
-        const coverArtFolder = imageContent.sgCoverArtFolder
-        const coverArtFileName = imageContent.sgCoverArtFileName
-        const fileType = imageContent.sgFileType
-        const coverArtFileRoute = `${folderName}/${consoleNameFolder}/${subFolderName}/${gameNameFolder}/${coverArtFolder}/${coverArtFileName}.${fileType}`
-        
-
-        fetch(coverUrl)
-            .then(res => {
-                return res.blob()
-            })
-            .then(blob => {
-                //uploading blob to firebase storage
-                firebase.storage().ref().child(coverArtFileRoute).put(blob).then(function(snapshot) {
-                    return snapshot.ref.getDownloadURL()
-                })
-                .then(url => {
-                console.log("Firebase storage image uploaded : ", url) 
-                }) 
-            })
-            .catch(error => {
-            console.error(error)
-            })
-    }
-
-    async function screenshotImageCapture(item) {
-        const screenshotUrl = item.imageUrl
-        const folderName = item.sgFolderName
-        const consoleNameFolder = item.sgConsoleNameFolder
-        const subFolderName = item.sgSubFolderName
-        const gameNameFolder = item.sgGameNameFolder
-        const screenshotFolder = item.sgScreenshotFolder
-        const gameNameLength = item.gameNameCharCount
-        const screenshotFileName = `${gameNameFolder.substring(0, gameNameLength)}-(screenshot${item.imageNumber})`
-        const fileType = item.sgFileType
-        const screenshotFileRoute = `${folderName}/${consoleNameFolder}/${subFolderName}/${gameNameFolder}/${screenshotFolder}/${screenshotFileName}.${fileType}`
-
-        fetch(screenshotUrl)
-            .then(res => {
-                return res.blob()
-            })
-            .then(blob => {
-                //uploading blob to firebase storage
-                firebase.storage().ref().child(screenshotFileRoute).put(blob).then(function(snapshot) {
-                    return snapshot.ref.getDownloadURL()
-                })
-                .then(url => {
-                console.log("Firebase storage image uploaded : ", url) 
-                }) 
-            })
-            .catch(error => {
-            console.error(error)
-            })
-    }
- 
+    
     /*
         function displayData(collectionName, docName, objectName) {
         return sgDB.collection(collectionName).doc(docName)
@@ -492,8 +391,6 @@ export function AuthProvider({ children }) {
         updateGameViewCount,
         deleteData,
         entries,
-        coverImageCapture,
-        screenshotImageCapture,
         viewCountFirebase,
         toNewSection,
         toNewStack,

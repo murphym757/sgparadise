@@ -4,6 +4,7 @@ import {
     Container,
     ContentContainer,
     CustomInputField,
+    firebase,
     MainFont,
     MainHeading,
     MainHeadingLongTitle,
@@ -14,8 +15,8 @@ import {
     TouchableButtonFont,
     TouchableButtonFontAlt,
     TouchableButtonFontDelete,
-    useTags,
     useAuth,
+    useTags,
     ViewSortColumn,
     ViewSortRow
 } from 'index'
@@ -227,6 +228,80 @@ function buttonGroupImages(buttonGroupData, resetChosenGameplayData) {
     )
 }
 
+function coverImageCapture(passingImageData) {
+    const coverUrl = passingImageData.coverUrl
+    const folderName = passingImageData.folderName
+    const consoleNameFolder = passingImageData.consoleNameFolder
+    const subFolderName = passingImageData.subFolderName
+    const gameNameFolder = passingImageData.gameNameFolder
+    const coverArtFolder = passingImageData.coverArtFolder
+    const coverArtFileName = passingImageData.coverArtFileName
+    const fileType = passingImageData.fileType
+    const coverArtFileRoute = `${folderName}/${consoleNameFolder}/${subFolderName}/${gameNameFolder}/${coverArtFolder}/${coverArtFileName}.${fileType}`
+    fetch(coverUrl)
+        .then(res => {
+            return res.blob()
+        })
+        .then(blob => {
+            //uploading blob to firebase storage
+            firebase.storage().ref().child(coverArtFileRoute).put(blob).then(function(snapshot) {
+                return snapshot.ref.getDownloadURL()
+            })
+            .then(url => {
+                console.log("Firebase storage image uploaded : ", url)
+                passingImageData.setFirebaseCoverUrl(url) 
+            }) 
+        })
+        .catch(error => {
+        console.error(error)
+        })
+}
+
+    function screenshotUpload(passingImageData) {
+        let sgGameScreenshot1Data = {...passingImageData, imageNumber: 1, imageName: passingImageData.gameScreenshot1, imageUrl: passingImageData.screenshot1Url, gameNameCharCount: passingImageData.gameNameFolder.length}
+        let sgGameScreenshot2Data = {...passingImageData, imageNumber: 2, imageName: passingImageData.gameScreenshot2, imageUrl: passingImageData.screenshot2Url, gameNameCharCount: passingImageData.gameNameFolder.length}
+        let sgGameScreenshot3Data = {...passingImageData, imageNumber: 3, imageName: passingImageData.gameScreenshot3, imageUrl: passingImageData.screenshot3Url, gameNameCharCount: passingImageData.gameNameFolder.length}
+        const screenShotDataArray = [sgGameScreenshot1Data, sgGameScreenshot2Data, sgGameScreenshot3Data];
+        screenShotDataArray.forEach(setFirebaseScreenShotData)
+    }
+
+    function setFirebaseScreenShotData(item) {
+        screenshotImageCapture(item)
+    }
+
+    function screenshotImageCapture(item) {
+        const screenshotUrl = item.imageUrl
+        const folderName = item.folderName
+        const consoleNameFolder = item.consoleNameFolder
+        const subFolderName = item.subFolderName
+        const gameNameFolder = item.gameNameFolder
+        const screenshotFolder = item.screenshotFolder
+        const gameNameLength = item.gameNameCharCount
+        const screenshotFileName = `${gameNameFolder.substring(0, gameNameLength)}-(screenshot${item.imageNumber})`
+        const fileType = item.fileType
+        const screenshotFileRoute = `${folderName}/${consoleNameFolder}/${subFolderName}/${gameNameFolder}/${screenshotFolder}/${screenshotFileName}.${fileType}`
+
+        fetch(screenshotUrl)
+            .then(res => {
+                return res.blob()
+            })
+            .then(blob => {
+                //uploading blob to firebase storage
+                firebase.storage().ref().child(screenshotFileRoute).put(blob).then(function(snapshot) {
+                    return snapshot.ref.getDownloadURL()
+                })
+                .then(url => {
+                    console.log("Firebase storage image uploaded : ", url)
+                    if (item.imageNumber == 1) return item.setFirebaseScreenshot1Url(url)
+                    if (item.imageNumber == 2) return item.setFirebaseScreenshot2Url(url)
+                    if (item.imageNumber == 3) return item.setFirebaseScreenshot3Url(url)
+                }) 
+            })
+            .catch(error => {
+            console.error(error)
+            })
+    }
+
 export const confirmGame = {
     gameConfirmationResults,
     gameSummaryResults,
@@ -237,7 +312,9 @@ export const confirmGame = {
     imgWordingSelector,
     chooseImages,
     chosenImages,
-    buttonGroupImages
+    buttonGroupImages,
+    coverImageCapture,
+    screenshotUpload
 }
 
 export const confirmGameContext = React.createContext(confirmGame)
