@@ -25,7 +25,7 @@ export default function SgSelectedGameCoverScreen({route, navigation}) {
         igdbConsoleId,
         igdbGameId
     } = route.params
-
+    
     const [coversResults, setCoversResults] = useState([])
     const gameCover = coversResults.map(game => game.image_id)
     const [gameDevelopers, setGameDevelopersResults] = useState([])
@@ -61,6 +61,7 @@ export default function SgSelectedGameCoverScreen({route, navigation}) {
         gameSlug,
         gameSummary
     }
+    console.log("🚀 ~ file: sgSelectedGameCoverScreen.js ~ line 44 ~ SgSelectedGameCoverScreen ~ passingContent", passingContent)
     const navigationPass = navigation
     const buttonGroupData = {
         backToPreviousPage, 
@@ -96,8 +97,8 @@ export default function SgSelectedGameCoverScreen({route, navigation}) {
                     searchAxios.findGameNameJPN(api, igdbGameId, setGameNameJPNAlt),
                     searchAxios.findGameNameEUR(api, igdbGameId, setGameNameEURAlt),
                     searchAxios.findGameNameBRZ(api, igdbGameId, setGameNameBRZAlt),
-                        setIsLoading(false)),
-                        findConsoleName(igdbConsoleId)
+                    setIsLoading(false)),
+                    findConsoleName(igdbConsoleId)
                 }, 2000)
                 setFirebaseGameName()
               })

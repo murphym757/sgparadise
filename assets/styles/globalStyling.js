@@ -37,6 +37,17 @@ export const ViewSortColumn = styled(View) `
     flexDirection: column;
 `;
 
+export const BackButtonTopLayer = styled(View) `
+    marginLeft: 30;
+    paddingTop: 25; 
+    position: absolute;
+`;
+
+export const BackButtonBottomLayer = styled(View) `
+    marginLeft: 40;
+    position: relative;
+`;
+
 export const GeneralFontColor = styled(Text) `
     color: ${currentTheme.primaryFontColor};
 `;

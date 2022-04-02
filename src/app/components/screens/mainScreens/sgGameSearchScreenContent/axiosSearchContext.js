@@ -1,5 +1,11 @@
 import React from 'react';
 
+function removeDupPubsandDevs(data, key) {
+    return [...new Map(
+        data.map(x => [key(x), x])
+    ).values()]
+}
+
 function findCover(api, igdbGameId, setCoversResults) {
     const igdbCoversURL = 'https://api.igdb.com/v4/covers'
     const igdbCoversResultsField = `fields image_id; where game = (${igdbGameId});`
@@ -38,7 +44,7 @@ function findScreenshots(api, igdbGameId, setGameScreenshots) {
 
 function findPublishers(api, igdbGameId, setGamePublishersResults) {
     const igdbInvolvesCompaniesURL = 'https://api.igdb.com/v4/involved_companies'
-    const igdbInvolvesCompaniesResultsPubField =`fields company,publisher; where publisher = true & game = (${igdbGameId});`
+    const igdbInvolvesCompaniesResultsPubField = `fields company,publisher; where publisher = true & game = (${igdbGameId});`
     const axiosTimeout = {timeout: 2000}
     return(
         api.post(igdbInvolvesCompaniesURL, igdbInvolvesCompaniesResultsPubField, axiosTimeout)
@@ -54,9 +60,31 @@ function findPublishers(api, igdbGameId, setGamePublishersResults) {
     )
 }
 
+function findPublishersName(api, gamePublishers, setChosenPublishersArray) {
+    let gamePubParams = []
+    const igdbCompaniesURL = 'https://api.igdb.com/v4/companies'
+    const igdbCompaniesResultsField = `fields country,name; where id = `
+    const axiosTimeout = {timeout: 2000}
+    return (
+        gamePublishers.map(item => gamePubParams.push(
+            api.post(igdbCompaniesURL, `${igdbCompaniesResultsField}(${item});`, axiosTimeout)
+                .then(res => {
+                    setChosenPublishersArray(gamePublishersNameInfo => [...gamePublishersNameInfo, res.data])
+                }, [])
+                .catch(err => {
+                    console.log(err)
+                })
+                .then(function () {
+                    // always executed
+                })
+            )
+        )
+    )
+}
+
 function findDevelopers(api, igdbGameId, setGameDevelopersResults) {
     const igdbInvolvesCompaniesURL = 'https://api.igdb.com/v4/involved_companies'
-    const igdbInvolvesCompaniesResultsDevField =`fields company,developer; where developer = true & game = (${igdbGameId});`
+    const igdbInvolvesCompaniesResultsDevField = `fields company,developer; where developer = true & game = (${igdbGameId});`
     const axiosTimeout = {timeout: 2000}
     return(
         api.post(igdbInvolvesCompaniesURL, igdbInvolvesCompaniesResultsDevField, axiosTimeout)
@@ -69,6 +97,28 @@ function findDevelopers(api, igdbGameId, setGameDevelopersResults) {
             .then(function () {
                 // always executed
             })
+    )
+}
+
+function findDevelopersName(api, gameDevelopers, setChosenDevelopersArray) {
+    let gameDevParams = []
+    const igdbCompaniesURL = 'https://api.igdb.com/v4/companies'
+    const igdbCompaniesResultsField = `fields country,name; where id = `
+    const axiosTimeout = {timeout: 2000}
+    return (
+        gameDevelopers.map(item => gameDevParams.push(
+            api.post(igdbCompaniesURL, `${igdbCompaniesResultsField}(${item});`, axiosTimeout)
+                .then(res => {
+                    setChosenDevelopersArray(gameDevelopersNameInfo => [...gameDevelopersNameInfo, res.data])
+                }, [])
+                .catch(err => {
+                    console.log(err)
+                })
+                .then(function () {
+                    // always executed
+                }) 
+            )
+        )
     )
 }
 
@@ -127,10 +177,13 @@ function findGameNameBRZ(api, igdbGameId, setGameNameBRZAlt) {
 }
 
 export const axiosSearch = {
+    removeDupPubsandDevs,
     findCover,
     findScreenshots,
     findPublishers,
+    findPublishersName,
     findDevelopers,
+    findDevelopersName,
     findGameNameJPN,
     findGameNameEUR,
     findGameNameBRZ

@@ -26,11 +26,7 @@ export default function SgHomeScreen({ navigation, route }) {
         addGameToConsole, 
         deleteGameFromConsole,
         updateGameViewCount,
-        addImagesForGame,
-        addCommentsForGame,
-        addGenreTagsForGame,
-        addDescriptionTagsForGame,
-        deleteData, viewCountFirebase,
+        toNewSection,
         entries, stateTest, logOut } = useAuth()
     const { 
         searchBar,  
@@ -62,11 +58,20 @@ export default function SgHomeScreen({ navigation, route }) {
     const [profileImageUrl, setProfileImageUrl] = useState('')
 
     const [gamesArray1, setGamesArray1] = useState([])
-    console.log("🚀 ~ file: sgHomeScreen.js ~ line 65 ~ SgHomeScreen ~ gamesArray1", gamesArray1)
     gamesArray1.forEach(obj => {
         obj.color = 'white'}
     )
     const [fullGamesArray1, setFullGamesArray1] = useState([])
+
+    const navigationPass = navigation
+    const toGameData = {
+        navigationPass,
+        nextPage: 'sgGamePage'
+    }
+    const toConsoleList = {
+        navigationPass,
+        nextPage: 'SgAddGameConfirm'
+    }
 
     useEffect(() => {
         function loadingTime() {
@@ -143,7 +148,7 @@ export default function SgHomeScreen({ navigation, route }) {
             keyExtractor={item => item.id}
             renderItem={({ item }) => (
             <View>
-                <TouchableOpacity onPress={() => gamesArray1(item)}>
+                <TouchableOpacity onPress={() => toNewSection(toGameData.nextPage, toGameData.navigationPass)}>
                     <MainFont>{item.gameName}</MainFont>
                     <MainFont>{item.gameReleaseDate}</MainFont>
                     <MainFont>{item.gameGenre}</MainFont>
@@ -199,7 +204,7 @@ export default function SgHomeScreen({ navigation, route }) {
                 {platformersList()}
                     {currentUser !== null
                         ?   <View>
-                                <TouchableButton onPress={() => confirmAddNewGame()}>
+                                <TouchableButton onPress={() => toNewSection(toConsoleList.nextPage, toConsoleList.navigationPass)}>
                                     <TouchableButtonFont>Add Game</TouchableButtonFont>
                                 </TouchableButton>
                                 <TouchableButton onPress={() => confirmViewGames()}>

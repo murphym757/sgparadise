@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { View, ActivityIndicator } from 'react-native'
 import {
+    axiosSearchContext,
     confirmGameContext,
     CurrentThemeContext,
     PageContainer,
@@ -20,6 +21,7 @@ export default function SgSelectedGameSummaryScreen({route, navigation}) {
     //let { searchBarTitle, searchType, searchQuery } = route.params
     const colors = useContext(CurrentThemeContext)
     const confirmGame = useContext(confirmGameContext)
+    const searchAxios = useContext(axiosSearchContext)
     const [isLoading, setIsLoading] = useState()
     const { 
         accessTokenIGDB,
@@ -45,8 +47,7 @@ export default function SgSelectedGameSummaryScreen({route, navigation}) {
         gameSummary,
         gameSlug
     } = route.params
-
-    // IGDB search data (Put on confirmation page)
+    
     const [adminUser, setAdminUser] = useState(true)
     const [firebaseCoverUrl, setFirebaseCoverUrl] = useState('')
     const [firebaseScreenshot1Url, setFirebaseScreenshot1Url] = useState('')
@@ -68,9 +69,6 @@ export default function SgSelectedGameSummaryScreen({route, navigation}) {
     const [updatedGameSummary, setUpdatedGameSummary] = useState(gameSummary)
     const [chosenPublishersArray, setChosenPublishersArray] = useState([])
     const [chosenDevelopersArray, setChosenDevelopersArray] = useState([])
-    const igdbCompaniesURL = 'https://api.igdb.com/v4/companies'
-    const igdbCompaniesResultsField = `fields country,name; where id =`
-    const axiosTimeout = {timeout: 2000}
     const pageDescription = `What is ${gameName} about, exactly?`
     const [nextPageNumber, setNextPageNumber] = useState('Page6')
     const passingImageData = {
@@ -119,7 +117,6 @@ export default function SgSelectedGameSummaryScreen({route, navigation}) {
         gameSlug,
         gameSummary: updatedGameSummary
     }
-    console.log("🚀 ~ file: sgSelectedGameSummaryScreen.js ~ line 56 ~ SgSelectedGameSummaryScreen ~ passingContent", passingContent)
     const navigationPass = navigation
     const buttonGroupData = {
         backToPreviousPage, 
@@ -142,35 +139,11 @@ export default function SgSelectedGameSummaryScreen({route, navigation}) {
                     'Authorization': `Bearer ${accessTokenIGDB}`
                 }
             })
-            let gamePubParams = []
-            let gameDevParams = []
             return new Promise(resolve => {
                 setTimeout(() => {
                   resolve(
-                    gamePublishers.map(item => gamePubParams.push(
-                        api.post(igdbCompaniesURL, `${igdbCompaniesResultsField}(${item});`, axiosTimeout)
-                            .then(res => {
-                                setChosenPublishersArray(gamePublishersNameInfo => [...gamePublishersNameInfo, res.data])
-                            }, [])
-                            .catch(err => {
-                                console.log(err)
-                            })
-                            .then(function () {
-                                // always executed
-                            })
-                    )),
-                    gameDevelopers.map(item => gameDevParams.push(
-                        api.post(igdbCompaniesURL, `${igdbCompaniesResultsField}(${item});`, axiosTimeout)
-                            .then(res => {
-                                setChosenDevelopersArray(gameDevelopersNameInfo => [...gameDevelopersNameInfo, res.data])
-                            }, [])
-                            .catch(err => {
-                                console.log(err)
-                            })
-                            .then(function () {
-                                // always executed
-                            }) 
-                    )),
+                    searchAxios.findPublishersName(api, gamePublishers, setChosenPublishersArray),
+                    searchAxios.findDevelopersName(api, gameDevelopers, setChosenDevelopersArray),
                     setIsLoading(false),
                     setUpdatedGameSummary(charLimit(gameSummary, 500))
                 )
@@ -187,7 +160,6 @@ export default function SgSelectedGameSummaryScreen({route, navigation}) {
             await searchTesting()
         }
         sgLoader()
-        
     }, [])
 
     return (

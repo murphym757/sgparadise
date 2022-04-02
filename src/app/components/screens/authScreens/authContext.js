@@ -259,7 +259,7 @@ export function AuthProvider({ children }) {
 
     // Update the game's view count
     async function updateGameViewCount(collectionName, consoleName, gamesCollection, gameName) {
-        const increment = firebase.firestore.FieldValue.increment(0.5) // The page loads twice, so increased the increments by half to make a whole view
+        const increment = firebase.firestore.FieldValue.increment(1) // The page loads twice, so increased the increments by half to make a whole view
         sgDB.collection(collectionName).doc(consoleName).collection(gamesCollection).doc(gameName).update({    
             views: increment
         })

@@ -20,6 +20,8 @@ export default function SgSelectedGameplayScreen({route, navigation}) {
     const confirmGame = useContext(confirmGameContext)
     const [isLoading, setIsLoading] = useState()
     const {
+        accessTokenIGDB,
+        clientIdIGDB,
         consoleName,
         firebaseConsoleName,
         firebaseStorageConsoleName,
@@ -38,7 +40,7 @@ export default function SgSelectedGameplayScreen({route, navigation}) {
         gameSlug,
         gameSummary
     } = route.params
-
+    
     const gameNameLastChar = gameName.charAt(gameName.length - 1)
     const [chosenGameplaysArray, setChosenGameplaysArray] = useState([])
     const {0: gameScreenshot1, 1: gameScreenshot2, 2: gameScreenshot3 } = chosenGameplaysArray
@@ -48,19 +50,37 @@ export default function SgSelectedGameplayScreen({route, navigation}) {
     const pageDescriptionPlural = `Choose ${imageCount} ${confirmGame.imgWordingSelector(imageCount)} that perfectly showcases some of ${gameName}'s highlights:`
     const pageDescription = `To add another image, select one of the chosen images. To remove all images, press the Clear Images Button`
     const nextPageNumber = 'Page5'
+
+    //Finds Duplicate Developers and removes them
+    const uniqueDevValuesSet = new Set();
+    const filteredDevs = gameDevelopers.filter((item) => {
+        const isPresentInDevSet = uniqueDevValuesSet.has(item)
+        uniqueDevValuesSet.add(item)
+        return !isPresentInDevSet
+    })
+
+    //Finds Duplicate Publishers and removes them
+    const uniquePubValuesSet = new Set();
+    const filteredPubs = gamePublishers.filter((item) => {
+        const isPresentInPubSet = uniquePubValuesSet.has(item)
+        uniquePubValuesSet.add(item)
+        return !isPresentInPubSet
+    })
     const passingContent = {
+        accessTokenIGDB,
+        clientIdIGDB,
         consoleName,
         firebaseConsoleName,
         firebaseStorageConsoleName,
         gameCover,
-        gameDevelopers,
+        gameDevelopers: filteredDevs,
         gameId,
         gameName,
         gameNameBRZ,
         gameNameEUR,
         gameNameJPN,
         gameNameMatchInSgDB,
-        gamePublishers,
+        gamePublishers: filteredPubs,
         gameRating, 
         gameReleaseDate,
         gameScreenshot1,
@@ -69,6 +89,7 @@ export default function SgSelectedGameplayScreen({route, navigation}) {
         gameSlug,
         gameSummary
     }
+    console.log("🚀 ~ file: sgSelectedGameplayScreen.js ~ line 55 ~ SgSelectedGameplayScreen ~ passingContent", passingContent)
     const navigationPass = navigation
     const buttonGroupData = {
         forwardToNextPage, 
