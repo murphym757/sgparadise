@@ -49,6 +49,7 @@
             ContentContainer,
             CustomTextAreaField,
             ExpandableHeading,
+            GamePageImageBackground,
             GeneralFontColor,
             MainFont,
             MainHeading,

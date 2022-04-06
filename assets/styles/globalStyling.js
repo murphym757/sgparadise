@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { View, Text, ScrollView, SafeAreaView, Dimensions } from 'react-native';
+import { View, Text, ScrollView, SafeAreaView, Dimensions, ImageBackground } from 'react-native';
 import { RFValue } from "react-native-responsive-fontsize";
 import {
     currentTheme
@@ -117,4 +117,11 @@ export const PageContainerCover = styled(View) `
     paddingTop: ${windowHeight/20}px;
     paddingBottom: ${windowHeight/40}px;
     backgroundColor: ${currentTheme.primaryColor};
+`;
+
+export const GamePageImageBackground = styled(ImageBackground) `
+    flex: 1;
+    justifyContent: center;
+    paddingTop: ${windowHeight/20}px;
+    paddingBottom: ${windowHeight/20}px;
 `;

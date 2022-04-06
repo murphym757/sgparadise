@@ -10,10 +10,15 @@ import {
     faChevronLeft,
     faCircle,
     FontAwesomeIcon,
+    GamePageImageBackground,
     MainFont,
+    MainHeading,
+    MainHeadingLongTitle,
+    MainSubFont,
     PageContainer,
     SafeAreaViewContainer,
-    useAuth
+    useAuth,
+    ViewTopRow
 } from 'index'
 import { useIsFocused } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
@@ -33,10 +38,12 @@ export default function GameScreen({navigation}) {
     console.log("🚀 ~ file: sgGameScreen.js ~ line 27 ~ GameScreen ~ currentGameArray", currentGameArray)
     
     const [consoleName, setConsoleName] = useState('sgGenesis')
-    const [gameName, setGameName] = useState('sonic-and-knuckles')
+    const [gameName, setGameName] = useState('streets-of-rage-2')
     const [gameGenre, setGameGenre] = useState('') //For recommended related games
     const [gameSubGenre, setGameSubGenre] = useState('') //For recommended related games
     const [gameReleaseDate, setGameReleaseDate] = useState('') //For recommended related games
+    const [gameHomeScreenShot, setGameHomeScreenShot] = useState('')
+    console.log("🚀 ~ file: sgGameScreen.js ~ line 46 ~ GameScreen ~ gameHomeScreenShot", gameHomeScreenShot)
     const collectionName = 'sgAPI'
     const gamesCollection = 'games'
     
@@ -67,6 +74,7 @@ export default function GameScreen({navigation}) {
         let currentGameGenre = ''
         let currentGameSubGenre = ''
         let currentGameReleaseDate = ''
+        let currentGameHomeScreenshot = ''
         const gameRef = sgDB.collection(collectionName).doc(consoleName).collection(gamesCollection).doc(gameName)
         gameRef.get().then((doc) => {
             if (doc.exists) {
@@ -85,6 +93,7 @@ export default function GameScreen({navigation}) {
         setGameGenre(currentGameGenre)
         setGameSubGenre(currentGameSubGenre)
         setGameReleaseDate(currentGameReleaseDate)
+        
     }
 
     function backArrow() {
@@ -134,6 +143,85 @@ export default function GameScreen({navigation}) {
         )
     }
 
+    // Detailed Data for returnedGameInfo()
+    function detailedGameName(item) {
+        setGameHomeScreenShot(item.firebaseScreenshot1Url)
+        return (
+            <View style={{paddingTop:5, paddingBottom: 5, justifyContent: 'center', alignItems: 'center'}}>
+                {item.gameName.length < 29
+                    ?   <MainHeading>{item.gameName}</MainHeading>
+                    :   <MainHeadingLongTitle>{item.gameName}</MainHeadingLongTitle>
+                }
+            </View>
+        )
+    }
+
+    function detailedGameReleaseDate(item) {
+        return (
+            <View style={{paddingTop:5, paddingBottom: 5, justifyContent: 'center', alignItems: 'center'}}>
+                <MainSubFont>{`Release Date`}</MainSubFont>
+                <MainFont>{item.gameReleaseDate}</MainFont>
+            </View>
+        )
+    }
+
+    function sortInfoByStringLength(unsortedArray) {
+        const sortedArray = unsortedArray.sort((a, b) => a.length - b.length)
+        const sortedMap = [...new Map(sortedArray.map(i => [i]))]
+        return (
+            sortedMap
+        )
+    }
+
+    function detailedPublishers(item) {
+        const unsortedArray = [...item.gamePublishers]
+        return (
+            <View style={{paddingTop:5, paddingBottom: 5, justifyContent: 'center', alignItems: 'center'}}>
+                {item.gamePublishers.length > 1
+                    ?   <MainSubFont>{`Publishers`}</MainSubFont>
+                    :   <MainSubFont>{`Publisher`}</MainSubFont>
+                }
+                {sortInfoByStringLength(unsortedArray).map((gamePublisher) => (
+                    <MainFont>{gamePublisher}</MainFont>
+                ))}
+            </View>
+        )
+    }
+
+    function detailedDevelopers(item) {
+        const unsortedArray = [...item.gameDevelopers]
+        return (
+            <View style={{paddingTop:5, paddingBottom: 5, justifyContent: 'center', alignItems: 'center'}}>
+                {item.gameDevelopers.length > 1
+                    ?   <MainSubFont>{`Developers`}</MainSubFont>
+                    :   <MainSubFont>{`Developer`}</MainSubFont>
+                }
+                {sortInfoByStringLength(unsortedArray).map((gameDeveloper) => (
+                      <MainFont>{gameDeveloper}</MainFont>
+                  ))}
+            </View>
+        )
+    }
+
+    function detailedGameRating(item) {
+        return (
+            <View style={{paddingTop:5, paddingBottom: 5, justifyContent: 'center', alignItems: 'center'}}>
+                <MainSubFont>{`Rating`}</MainSubFont>
+                <MainFont>{item.gameRating} Stars</MainFont>
+            </View>
+        )
+    }
+
+    function detailedPostCreator(item) {
+        return (
+            <View style={{paddingTop:5, paddingBottom: 5, justifyContent: 'center', alignItems: 'center'}}>
+                <MainSubFont>{`Posted Creator`}</MainSubFont>
+                <MainFont>{item.postCreator}</MainFont>
+            </View>
+        )
+    }
+    
+
     function returnedGameInfo() {
         return (
             <FlatList
@@ -145,24 +233,32 @@ export default function GameScreen({navigation}) {
                 keyExtractor={item => item.id}
                 renderItem={({ item }) => (
                     <Container>
-                        <View style={{ flex: 1 }}>
-                            <ContentContainer>
-                                <MainFont>{item.gameName}</MainFont>
-                                <MainFont>{item.gameReleaseDate}</MainFont>
-                                <MainFont>{item.gamePublishers}</MainFont>
-                                <MainFont>{item.gameDevelopers}</MainFont>
-                                <MainFont>{item.gameRating}</MainFont>
-                                <MainFont>{item.postCreator}</MainFont>
+                        <ContentContainer style={{borderRadius: 25}}>
+                            <View style={{flex: 1,  padding: 20}}>
+                                {detailedGameName(item)}
+                                {detailedGameReleaseDate(item)}
+                                <ViewTopRow style={{justifyContent: 'space-between'}}>
+                                    <View>
+                                        {detailedPublishers(item)}
+                                    </View>
+                                    <View>
+                                        {detailedDevelopers(item)}
+                                    </View>
+                                </ViewTopRow>
+                                {detailedGameRating(item)}
+                                {detailedPostCreator(item)}
                                 {isLoading && (
                                     <ActivityIndicator size="large" />
                                 )}
-                            </ContentContainer>
-                        </View>
+                            </View>
+                        </ContentContainer>
                     </Container>
                 )}
             />
         )
     }
+
+    /*----------------------------------------------*/
 
     function returnedGameSummary() {
         return (
@@ -244,48 +340,57 @@ export default function GameScreen({navigation}) {
 
     function returnedGameGameDescription() {
         return (
-            <ScrollView>
-                <FlatList
-                    nestedScrollEnabled
-                    showsHorizontalScrollIndicator={false}
-                    scrollEnabled={false}
-                    data={currentGameArray}
-                    keyboardShouldPersistTaps="always"
-                    keyExtractor={item => item.id}
-                    renderItem={({ item }) => (
-                        <Container>
-                            <View style={{ flex: 1 }}>
-                                <ContentContainer>
-                                    <MainFont>{item.gameGenre}</MainFont>
-                                    <MainFont>{item.gameSubGenre}</MainFont>
-                                    <MainFont>{item.gameModes}</MainFont>
-                                    {isLoading && (
-                                        <ActivityIndicator size="large" />
-                                    )}
-                                </ContentContainer>
-                            </View>
-                        </Container>
-                    )}
-                />
+            <FlatList
+                nestedScrollEnabled
+                showsHorizontalScrollIndicator={false}
+                scrollEnabled={false}
+                data={currentGameArray}
+                keyboardShouldPersistTaps="always"
+                keyExtractor={item => item.id}
+                renderItem={({ item }) => (
+                    <Container>
+                        <View style={{ flex: 1 }}>
+                            <ContentContainer>
+                                <MainFont>{item.gameGenre}</MainFont>
+                                <MainFont>{item.gameSubGenre}</MainFont>
+                                <MainFont>{item.gameModes}</MainFont>
+                                {isLoading && (
+                                    <ActivityIndicator size="large" />
+                                )}
+                            </ContentContainer>
+                        </View>
+                    </Container>
+                )}
+            />
+        )
+    }
+
+    function gamePageScrollView() {
+        return (
+            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+                {returnedGameInfo()}
+                {returnedGameInfo()}
+                {returnedGameInfo()}
             </ScrollView>
         )
     }
     
     function gamePageStructure() {
+        const image = { uri: gameHomeScreenShot };
         return (
-            <PageContainer>
+            <GamePageImageBackground source={image} resizeMode="cover" imageStyle={{opacity: 0.45}}>
                 {isLoading == true
                     ? <SafeAreaView style={{ flex: 1, justifyContent: 'center', backgroundColor: colors.primaryColor }}>
                         <ActivityIndicator size="large" hidesWhenStopped="true"/>
                     </SafeAreaView>
                     : <View>
                         {backArrow()}
-                        <View style={{position: 'relative'}}>
-                            {returnedGameInfo()}
+                        <View style={{position: 'relative', paddingTop: 400}}>
+                            {gamePageScrollView()}
                         </View>
                     </View>
                 }
-            </PageContainer>
+            </GamePageImageBackground>
         )
     }
 
