@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, ScrollView, FlatList, SafeAreaView, ActivityIndicator } from 'react-native';
+import { View, ScrollView, FlatList, SafeAreaView, StyleSheet, ActivityIndicator } from 'react-native';
 
 import {
     BackButtonBottomLayer,
     BackButtonTopLayer,
+    Card,
+    CardContent,
     Container,
     ContentContainer,
     CurrentThemeContext,
@@ -46,7 +48,12 @@ export default function GameScreen({navigation}) {
     console.log("🚀 ~ file: sgGameScreen.js ~ line 46 ~ GameScreen ~ gameHomeScreenShot", gameHomeScreenShot)
     const collectionName = 'sgAPI'
     const gamesCollection = 'games'
-    
+    const styles = StyleSheet.create({
+        cardStyle: {
+            flexGrow: 1,
+            flex: 1
+        }
+        });
     useEffect(() => {
         function loadingTime() {
             return new Promise(resolve => {
@@ -147,21 +154,21 @@ export default function GameScreen({navigation}) {
     function detailedGameName(item) {
         setGameHomeScreenShot(item.firebaseScreenshot1Url)
         return (
-            <View style={{paddingTop:5, paddingBottom: 5, justifyContent: 'center', alignItems: 'center'}}>
+            <CardContent>
                 {item.gameName.length < 29
                     ?   <MainHeading>{item.gameName}</MainHeading>
                     :   <MainHeadingLongTitle>{item.gameName}</MainHeadingLongTitle>
                 }
-            </View>
+            </CardContent>
         )
     }
 
     function detailedGameReleaseDate(item) {
         return (
-            <View style={{paddingTop:5, paddingBottom: 5, justifyContent: 'center', alignItems: 'center'}}>
+            <CardContent>
                 <MainSubFont>{`Release Date`}</MainSubFont>
                 <MainFont>{item.gameReleaseDate}</MainFont>
-            </View>
+            </CardContent>
         )
     }
 
@@ -176,7 +183,7 @@ export default function GameScreen({navigation}) {
     function detailedPublishers(item) {
         const unsortedArray = [...item.gamePublishers]
         return (
-            <View style={{paddingTop:5, paddingBottom: 5, justifyContent: 'center', alignItems: 'center'}}>
+            <CardContent>
                 {item.gamePublishers.length > 1
                     ?   <MainSubFont>{`Publishers`}</MainSubFont>
                     :   <MainSubFont>{`Publisher`}</MainSubFont>
@@ -184,14 +191,14 @@ export default function GameScreen({navigation}) {
                 {sortInfoByStringLength(unsortedArray).map((gamePublisher) => (
                     <MainFont>{gamePublisher}</MainFont>
                 ))}
-            </View>
+            </CardContent>
         )
     }
 
     function detailedDevelopers(item) {
         const unsortedArray = [...item.gameDevelopers]
         return (
-            <View style={{paddingTop:5, paddingBottom: 5, justifyContent: 'center', alignItems: 'center'}}>
+            <CardContent>
                 {item.gameDevelopers.length > 1
                     ?   <MainSubFont>{`Developers`}</MainSubFont>
                     :   <MainSubFont>{`Developer`}</MainSubFont>
@@ -199,28 +206,51 @@ export default function GameScreen({navigation}) {
                 {sortInfoByStringLength(unsortedArray).map((gameDeveloper) => (
                       <MainFont>{gameDeveloper}</MainFont>
                   ))}
-            </View>
+            </CardContent>
         )
     }
 
     function detailedGameRating(item) {
         return (
-            <View style={{paddingTop:5, paddingBottom: 5, justifyContent: 'center', alignItems: 'center'}}>
+            <CardContent>
                 <MainSubFont>{`Rating`}</MainSubFont>
                 <MainFont>{item.gameRating} Stars</MainFont>
-            </View>
+            </CardContent>
         )
     }
 
     function detailedPostCreator(item) {
         return (
-            <View style={{paddingTop:5, paddingBottom: 5, justifyContent: 'center', alignItems: 'center'}}>
+            <CardContent>
                 <MainSubFont>{`Posted Creator`}</MainSubFont>
                 <MainFont>{item.postCreator}</MainFont>
-            </View>
+            </CardContent>
         )
     }
-    
+
+    function detailedGameInfo(item) {
+        return (
+            <Container>
+                <View style={{paddingTop: 35}}>
+                    {detailedGameName(item)}
+                    {detailedGameReleaseDate(item)}
+                    <ViewTopRow style={{justifyContent: 'space-between'}}>
+                        <View>
+                            {detailedPublishers(item)}
+                        </View>
+                        <View>
+                            {detailedDevelopers(item)}
+                        </View>
+                    </ViewTopRow>
+                    {detailedGameRating(item)}
+                    {detailedPostCreator(item)}
+                    {isLoading && (
+                        <ActivityIndicator size="large" />
+                    )}
+                </View>
+            </Container>
+        )
+    }
 
     function returnedGameInfo() {
         return (
@@ -232,33 +262,37 @@ export default function GameScreen({navigation}) {
                 keyboardShouldPersistTaps="always"
                 keyExtractor={item => item.id}
                 renderItem={({ item }) => (
-                    <Container>
-                        <ContentContainer style={{borderRadius: 25}}>
-                            <View style={{flex: 1,  padding: 20}}>
-                                {detailedGameName(item)}
-                                {detailedGameReleaseDate(item)}
-                                <ViewTopRow style={{justifyContent: 'space-between'}}>
-                                    <View>
-                                        {detailedPublishers(item)}
-                                    </View>
-                                    <View>
-                                        {detailedDevelopers(item)}
-                                    </View>
-                                </ViewTopRow>
-                                {detailedGameRating(item)}
-                                {detailedPostCreator(item)}
-                                {isLoading && (
-                                    <ActivityIndicator size="large" />
-                                )}
-                            </View>
-                        </ContentContainer>
-                    </Container>
+                    <Card style={styles.cardStyle}>
+                        {detailedGameInfo(item)}
+                    </Card>
                 )}
             />
         )
     }
 
     /*----------------------------------------------*/
+
+    // Detailed Data for returnedGameSummary()
+    function detailedGameSummary(item) {
+        return (
+            <View style={{paddingTop:5}}>
+                <MainFont>{item.gameSummary}</MainFont>
+            </View>
+        )
+    }
+
+    function detailedGameSummaryInfo(item) {
+        return (
+            <Container>
+                <View style={{paddingTop: 35}}>
+                    {detailedGameSummary(item)}
+                    {isLoading && (
+                        <ActivityIndicator size="large" />
+                    )}
+                </View>
+            </Container>
+        )
+    }
 
     function returnedGameSummary() {
         return (
@@ -270,20 +304,16 @@ export default function GameScreen({navigation}) {
                 keyboardShouldPersistTaps="always"
                 keyExtractor={item => item.id}
                 renderItem={({ item }) => (
-                    <Container>
-                        <View style={{ flex: 1 }}>
-                            <ContentContainer>
-                                <MainFont>{item.gameSummary}</MainFont>
-                                {isLoading && (
-                                    <ActivityIndicator size="large" />
-                                )}
-                            </ContentContainer>
+                    <View style={{paddingHorizontal: 20}}>
+                        <Card style={styles.cardStyle}>
+                            {detailedGameSummaryInfo(item)}
+                        </Card>
                         </View>
-                    </Container>
                 )}
             />
         )
     }
+    /*----------------------------------------------*/
 
     function returnedGameScreenshots() {
         return (
@@ -367,10 +397,13 @@ export default function GameScreen({navigation}) {
 
     function gamePageScrollView() {
         return (
-            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                {returnedGameInfo()}
-                {returnedGameInfo()}
-                {returnedGameInfo()}
+            <ScrollView 
+                horizontal={true} 
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{flexWrap: "wrap", paddingHorizontal: 20}}>
+                    {returnedGameInfo()}
+                    {returnedGameSummary()}
+                    {returnedGameInfo()}
             </ScrollView>
         )
     }

@@ -21,6 +21,18 @@ export const ContentContainer = styled(ViewContainer) `
 	alignItems: center;
 `;
 
+export const Card = styled(View) `
+    backgroundColor: ${currentTheme.primaryColor};
+	alignItems: center;
+    borderRadius: 25;
+    width: ${RFValue(375, windowHeight)}px;
+    height: ${RFValue(375, windowHeight)}px;
+`;
+
+export const CardContent = styled(ContentContainer) `
+    marginVertical: 5;
+`;
+
 export const SafeAreaViewContainer = styled(SafeAreaView) `
     backgroundColor: ${currentTheme.primaryColor};
 `;

@@ -45,6 +45,8 @@
         export {
             BackButtonBottomLayer,
             BackButtonTopLayer,
+            Card,
+            CardContent,
             Container,
             ContentContainer,
             CustomTextAreaField,
