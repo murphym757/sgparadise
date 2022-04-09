@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, ScrollView, FlatList, SafeAreaView, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Image, ScrollView, FlatList, TouchableOpacity, SafeAreaView, StyleSheet, ActivityIndicator } from 'react-native';
 
 import {
     BackButtonBottomLayer,
@@ -37,15 +37,18 @@ export default function GameScreen({navigation}) {
     const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be read
     const [isLoading, setIsLoading] = useState(true)
     const [currentGameArray, setCurrentGameArray] = useState([])
-    console.log("🚀 ~ file: sgGameScreen.js ~ line 27 ~ GameScreen ~ currentGameArray", currentGameArray)
     
     const [consoleName, setConsoleName] = useState('sgGenesis')
     const [gameName, setGameName] = useState('streets-of-rage-2')
     const [gameGenre, setGameGenre] = useState('') //For recommended related games
     const [gameSubGenre, setGameSubGenre] = useState('') //For recommended related games
     const [gameReleaseDate, setGameReleaseDate] = useState('') //For recommended related games
+    const [gameScreenshot1, setGameScreenshot1] = useState([])
+    const [gameScreenshot2, setGameScreenshot2] = useState([])
+    const [gameScreenshot3, setGameScreenshot3] = useState([])
+    const gameScreenshots = [gameScreenshot1.toString(), gameScreenshot2.toString(), gameScreenshot3.toString()]
     const [gameHomeScreenShot, setGameHomeScreenShot] = useState('')
-    console.log("🚀 ~ file: sgGameScreen.js ~ line 46 ~ GameScreen ~ gameHomeScreenShot", gameHomeScreenShot)
+    const [gamePageNewHomeScreen, setGamePageNewHomeScreen] = useState('')
     const collectionName = 'sgAPI'
     const gamesCollection = 'games'
     const styles = StyleSheet.create({
@@ -82,13 +85,16 @@ export default function GameScreen({navigation}) {
         let currentGameSubGenre = ''
         let currentGameReleaseDate = ''
         let currentGameHomeScreenshot = ''
+        let currentGameScreenshot1 = []
+        let currentGameScreenshot2 = []
+        let currentGameScreenshot3 = []
         const gameRef = sgDB.collection(collectionName).doc(consoleName).collection(gamesCollection).doc(gameName)
         gameRef.get().then((doc) => {
             if (doc.exists) {
                 currentGameData.push(doc.data())
-                currentGameGenre.push(doc.data().gameGenre)
-                currentGameSubGenre.push(doc.data().gameSubGenre)
-                currentGameReleaseDate.push(doc.data().gameReleaseDate)
+                currentGameScreenshot1.push(doc.data().firebaseScreenshot1Url)
+                currentGameScreenshot2.push(doc.data().firebaseScreenshot2Url)
+                currentGameScreenshot3.push(doc.data().firebaseScreenshot3Url)
             } else {
                 // doc.data() will be undefined in this case
                 console.log("No such document!");
@@ -97,9 +103,9 @@ export default function GameScreen({navigation}) {
             console.log("Error getting document:", error);
         });
         setCurrentGameArray(currentGameData)
-        setGameGenre(currentGameGenre)
-        setGameSubGenre(currentGameSubGenre)
-        setGameReleaseDate(currentGameReleaseDate)
+        setGameScreenshot1(currentGameScreenshot1)
+        setGameScreenshot2(currentGameScreenshot2)
+        setGameScreenshot3(currentGameScreenshot3)
         
     }
 
@@ -308,39 +314,72 @@ export default function GameScreen({navigation}) {
                         <Card style={styles.cardStyle}>
                             {detailedGameSummaryInfo(item)}
                         </Card>
-                        </View>
+                    </View>
                 )}
             />
         )
     }
     /*----------------------------------------------*/
-
-    function returnedGameScreenshots() {
+    // Detailed Data for returnedGameScreenshots()
+    function selectedGameScreenshot(item) {
         return (
-            <FlatList
-                nestedScrollEnabled
-                showsHorizontalScrollIndicator={false}
-                scrollEnabled={false}
-                data={currentGameArray}
-                keyboardShouldPersistTaps="always"
-                keyExtractor={item => item.id}
-                renderItem={({ item }) => (
-                    <Container>
-                        <View style={{ flex: 1 }}>
-                            <ContentContainer>
-                                <MainFont>{item.firebaseScreenshot1Url}</MainFont>
-                                <MainFont>{item.firebaseScreenshot2Url}</MainFont>
-                                <MainFont>{item.firebaseScreenshot3Url}</MainFont>
-                                {isLoading && (
-                                    <ActivityIndicator size="large" />
-                                )}
-                            </ContentContainer>
-                        </View>
-                    </Container>
-                )}
-            />
+            setGamePageNewHomeScreen(item)
         )
     }
+    function detailedGameScreenshot(item) {
+        return (
+            <View style={{paddingTop:5}}>
+                <View style={{height: 110}}>
+                {gameScreenshots.map((item) =>
+                    <TouchableOpacity
+                        onPress={() => selectedGameScreenshot(item)}>
+                            <View style={{marginVertical: 5}}>
+                                <Image
+                                    style={{
+                                        height: 75,
+                                        width: 155,
+                                        resizeMode: 'stretch',
+                                        borderRadius: 20,
+                                        borderWidth: 7,
+                                        borderColor: colors.secondaryColor,
+                                    }}
+                                    source={{
+                                        uri: `${item}`,
+                                    }}
+                                />
+                                
+                            </View>
+                    </TouchableOpacity>
+                )}
+                </View>
+            </View>
+        )
+    }
+
+    function detailedGameScreenshotInfo(item) {
+        return (
+            <Container>
+                <View style={{paddingTop: 35}}>
+                    {detailedGameScreenshot(item)}
+                    {isLoading && (
+                        <ActivityIndicator size="large" />
+                    )}
+                </View>
+            </Container>
+        )
+    }
+
+    function returnedGameScreenshots(item) {
+        return (
+                    <View style={{paddingHorizontal: 20}}>
+                        <Card style={styles.cardStyle}>
+                            {detailedGameScreenshotInfo(item)}
+                        </Card>
+                    </View>
+        )
+    }
+
+    /*----------------------------------------------*/
 
     function returnedGameImages() {
         return (
@@ -403,13 +442,13 @@ export default function GameScreen({navigation}) {
                 contentContainerStyle={{flexWrap: "wrap", paddingHorizontal: 20}}>
                     {returnedGameInfo()}
                     {returnedGameSummary()}
-                    {returnedGameInfo()}
+                    {returnedGameScreenshots()}
             </ScrollView>
         )
     }
-    
-    function gamePageStructure() {
-        const image = { uri: gameHomeScreenShot };
+
+    function preDeterminedGameHomeScreen() {
+        let image = { uri: gameHomeScreenShot };
         return (
             <GamePageImageBackground source={image} resizeMode="cover" imageStyle={{opacity: 0.45}}>
                 {isLoading == true
@@ -426,6 +465,31 @@ export default function GameScreen({navigation}) {
             </GamePageImageBackground>
         )
     }
+
+    function updatedGameHomeScreen() {
+        let image = { uri: gamePageNewHomeScreen };
+        return (
+            <GamePageImageBackground source={image} resizeMode="cover" imageStyle={{opacity: 0.45}}>
+                {isLoading == true
+                    ? <SafeAreaView style={{ flex: 1, justifyContent: 'center', backgroundColor: colors.primaryColor }}>
+                        <ActivityIndicator size="large" hidesWhenStopped="true"/>
+                    </SafeAreaView>
+                    : <View>
+                        {backArrow()}
+                        <View style={{position: 'relative', paddingTop: 400}}>
+                            {gamePageScrollView()}
+                        </View>
+                    </View>
+                }
+            </GamePageImageBackground>
+        )
+    }
+    
+    function gamePageStructure() {
+        if (gamePageNewHomeScreen == '') return preDeterminedGameHomeScreen()
+        if (gamePageNewHomeScreen != '') return updatedGameHomeScreen()
+    }
+    
 
     function selectedGameStack() {
         const Stack = createStackNavigator()
