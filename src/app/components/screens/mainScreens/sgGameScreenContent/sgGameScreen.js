@@ -41,7 +41,7 @@ export default function GameScreen({navigation}) {
     const [consoleName, setConsoleName] = useState('sgGenesis')
     const [gameName, setGameName] = useState('streets-of-rage-2')
     const [gameGenre, setGameGenre] = useState('') //For recommended related games
-    const [gameSubGenre, setGameSubGenre] = useState('') //For recommended related games
+    const [gameSubgenre, setGameSubgenre] = useState('') //For recommended related games
     const [gameReleaseDate, setGameReleaseDate] = useState('') //For recommended related games
     const [gameScreenshot1, setGameScreenshot1] = useState([])
     const [gameScreenshot2, setGameScreenshot2] = useState([])
@@ -82,7 +82,7 @@ export default function GameScreen({navigation}) {
     async function getCurrentGameData() {
         let currentGameData = []
         let currentGameGenre = ''
-        let currentGameSubGenre = ''
+        let currentGameSubgenre = ''
         let currentGameReleaseDate = ''
         let currentGameHomeScreenshot = ''
         let currentGameScreenshot1 = []
@@ -127,32 +127,6 @@ export default function GameScreen({navigation}) {
                     </BackButtonBottomLayer>
                 </View>
             </Container>
-        )
-    }
-
-    function returnedGameFlatlist(gameFunction) {
-        return (
-            <FlatList
-                nestedScrollEnabled
-                showsHorizontalScrollIndicator={false}
-                scrollEnabled={false}
-                data={currentGameArray}
-                keyboardShouldPersistTaps="always"
-                keyExtractor={item => item.id}
-                renderItem={({ item }) => (
-                    <Container>
-                        <View style={{ flex: 1 }}>
-                            <ContentContainer>
-                                <MainFont>{item.gameName}</MainFont>
-                                <MainFont>{item.gameSummary}</MainFont>
-                                {isLoading && (
-                                    <ActivityIndicator size="large" />
-                                )}
-                            </ContentContainer>
-                        </View>
-                    </Container>
-                )}
-            />
         )
     }
 
@@ -381,6 +355,81 @@ export default function GameScreen({navigation}) {
 
     /*----------------------------------------------*/
 
+     // Detailed Data for returnedGameGenresAndModes()
+    function detailedGameGenre(item) {
+        return (
+            <View style={{paddingTop:5}}>
+                <MainSubFont>{`Genre`}</MainSubFont>
+                <MainFont>{item.gameGenre}</MainFont>
+            </View>
+        )
+    }
+    function detailedGameSubgenre(item) {
+        return (
+            <View style={{paddingTop:5}}>
+                <MainSubFont>{`Subgenre`}</MainSubFont>
+                <MainFont>{item.gameSubgenre}</MainFont>
+            </View>
+        )
+    }
+
+    function detailedGameModes(item) {
+        return (
+            <View style={{paddingTop:5}}>
+                <MainSubFont>{`Game Modes`}</MainSubFont>
+                <MainFont>{`The game modes array goes here`}</MainFont>
+            </View>
+        )
+    }
+
+    function detailedGameGenresAndModesInfo(item) {
+        return (
+            <Container>
+                <View style={{paddingTop: 35}}>
+                    <ViewTopRow style={{justifyContent: 'space-between'}}>
+                        <View>
+                            {detailedGameGenre(item)}
+                        </View>
+                    </ViewTopRow>
+                    <ViewTopRow style={{justifyContent: 'space-between'}}>
+                        <View>
+                            {detailedGameSubgenre(item)}
+                        </View>
+                    </ViewTopRow>
+                    <ViewTopRow style={{justifyContent: 'space-between'}}>
+                        <View>
+                            {detailedGameModes(item)}
+                        </View>
+                    </ViewTopRow>
+                    {isLoading && (
+                        <ActivityIndicator size="large" />
+                    )}
+                </View>
+            </Container>
+        )
+    }
+
+    function returnedGameGenresAndModes() {
+        return (
+            <FlatList
+                nestedScrollEnabled
+                showsHorizontalScrollIndicator={false}
+                scrollEnabled={false}
+                data={currentGameArray}
+                keyboardShouldPersistTaps="always"
+                keyExtractor={item => item.id}
+                renderItem={({ item }) => (
+                    <View style={{paddingHorizontal: 20}}>
+                        <Card style={styles.cardStyle}>
+                        {detailedGameGenresAndModesInfo(item)}
+                        </Card>
+                    </View>
+                )}
+            />
+        )
+    }
+     /*----------------------------------------------*/
+
     function returnedGameImages() {
         return (
             <FlatList
@@ -421,7 +470,7 @@ export default function GameScreen({navigation}) {
                         <View style={{ flex: 1 }}>
                             <ContentContainer>
                                 <MainFont>{item.gameGenre}</MainFont>
-                                <MainFont>{item.gameSubGenre}</MainFont>
+                                <MainFont>{item.gameSubgenre}</MainFont>
                                 <MainFont>{item.gameModes}</MainFont>
                                 {isLoading && (
                                     <ActivityIndicator size="large" />
@@ -443,6 +492,7 @@ export default function GameScreen({navigation}) {
                     {returnedGameInfo()}
                     {returnedGameSummary()}
                     {returnedGameScreenshots()}
+                    {returnedGameGenresAndModes()}
             </ScrollView>
         )
     }

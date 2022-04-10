@@ -102,7 +102,7 @@ export default function SgHomeScreen({ navigation, route }) {
     async function getGameDataPlatformers() {
         let platformerGames = []
         const gameRef = sgDB.collection('sgAPI').doc('sgGenesis').collection('games').orderBy('gameRating', 'desc').limit(5)
-        const snapshot = await gameRef.where('gameSubGenre', '==', 'Platformer').get()
+        const snapshot = await gameRef.where('gameSubgenre', '==', 'Beat ‘em Up').get()
         if (snapshot.empty) {
             console.log('No matching documents.')
         return

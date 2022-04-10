@@ -107,7 +107,7 @@ function gameConfirmationResults(tagArrayData, buttonGroupData, windowHeight, co
                     <View style={{width: 200, paddingLeft: windowHeight/20, height: undefined}}>
                         <ViewSortRow><MainSubFont>{buttonGroupData.passingContent.gameId}</MainSubFont></ViewSortRow>
                         <ViewSortRow style={{paddingTop: windowHeight/25}}><MainSubFont>{buttonGroupData.passingContent.gameGenre}</MainSubFont></ViewSortRow>
-                        <ViewSortRow style={{paddingTop: windowHeight/50}}><MainSubFont>{buttonGroupData.passingContent.gameSubGenre}</MainSubFont></ViewSortRow>
+                        <ViewSortRow style={{paddingTop: windowHeight/50}}><MainSubFont>{buttonGroupData.passingContent.gameSubgenre}</MainSubFont></ViewSortRow>
                         <ViewSortRow style={{paddingTop: windowHeight/50, paddingBottom: windowHeight/50}}>
                             <MainSubFont>{buttonGroupData.passingContent.gameRating} Stars</MainSubFont>
                         </ViewSortRow>

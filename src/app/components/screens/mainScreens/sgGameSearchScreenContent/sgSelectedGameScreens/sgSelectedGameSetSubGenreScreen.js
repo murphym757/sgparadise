@@ -4,7 +4,7 @@ import { View, ActivityIndicator } from 'react-native'
 import { useIsFocused } from '@react-navigation/native'
 import { confirmGameContext, firebase, PageContainer, SafeAreaViewContainer, useAuth } from 'index'
 
-export default function SgSelectedGameSetSubGenreScreen({route, navigation}) {
+export default function sgSelectedGameSetSubgenreScreen({route, navigation}) {
     const {
         forwardToNextPage,
         backToPreviousPage
@@ -64,10 +64,10 @@ export default function SgSelectedGameSetSubGenreScreen({route, navigation}) {
         gameRating, 
         gameReleaseDate,
         gameSlug,
-        gameSubGenre: chosenName,
+        gameSubgenre: chosenName,
         gameSummary
     }
-    console.log("🚀 ~ file: sgSelectedGameSetSubGenreScreen.js ~ line 46 ~ SgSelectedGameSetSubGenreScreen ~ passingContent", passingContent)
+    console.log("🚀 ~ file: sgSelectedGameSetSubgenreScreen.js ~ line 46 ~ sgSelectedGameSetSubgenreScreen ~ passingContent", passingContent)
     const navigationPass = navigation
     let tagArrayData = {
         pageDescription, 
@@ -90,10 +90,10 @@ export default function SgSelectedGameSetSubGenreScreen({route, navigation}) {
         setTimeout(() => {
             setIsLoading(false)
           }, 2000)
-          firebaseSubGenreCollection()
+          firebaseSubgenreCollection()
       }, [isFocused])  
 
-      function firebaseSubGenreCollection() {
+      function firebaseSubgenreCollection() {
         const subscriber = sgDB
         .collection('sgAPI').doc('sgTags').collection('genreTags').doc(gameGenre).collection('genreSpecificTags').orderBy('tagName', 'asc')
         .onSnapshot(querySnapshot => {
@@ -111,7 +111,7 @@ export default function SgSelectedGameSetSubGenreScreen({route, navigation}) {
       }
 
     async function chosenTagData(item) {
-        setChosenTagsArray(chosenSubGenreTagsArray => [...chosenSubGenreTagsArray, item])
+        setChosenTagsArray(chosenSubgenreTagsArray => [...chosenSubgenreTagsArray, item])
     }
 
     async function removeChosenTagData(item) {

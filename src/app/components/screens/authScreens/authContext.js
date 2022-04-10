@@ -138,7 +138,7 @@ export function AuthProvider({ children }) {
         const sgGameRating = buttonGroupData.passingContent.gameRating
         const sgGameReleaseDate = buttonGroupData.passingContent.gameReleaseDate
         const sgGameSlug = buttonGroupData.passingContent.gameSlug
-        const sgGameSubGenre = buttonGroupData.passingContent.gameSubGenre
+        const sgGameSubgenre = buttonGroupData.passingContent.gameSubgenre
         const sgGameSummary = buttonGroupData.passingContent.gameSummary
         const sgCurrentUID = currentUID
         const passingContent = {
@@ -161,7 +161,7 @@ export function AuthProvider({ children }) {
             sgGameRating, 
             sgGameReleaseDate,
             sgGameSlug,
-            sgGameSubGenre,
+            sgGameSubgenre,
             sgGameSummary,
             sgPostCreator:  sgCurrentUID
         }
@@ -248,7 +248,7 @@ export function AuthProvider({ children }) {
             gameRating: passingContent.sgGameRating, 
             gameReleaseDate: passingContent.sgGameReleaseDate,
             gameSlug: passingContent.sgGameSlug,
-            gameSubGenre: passingContent.sgGameSubGenre,
+            gameSubgenre: passingContent.sgGameSubgenre,
             gameSummary: passingContent.sgGameSummary,
             gameUploaded: true,
             postCreator: passingContent.sgPostCreator,

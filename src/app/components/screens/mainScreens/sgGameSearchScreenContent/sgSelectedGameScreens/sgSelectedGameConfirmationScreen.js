@@ -43,7 +43,7 @@ export default function SgSelectedGameConfirmationScreen({route, navigation}) {
         gameRating, 
         gameReleaseDate,
         gameSlug,
-        gameSubGenre,
+        gameSubgenre,
         gameSummary
     } = route.params
   
@@ -74,7 +74,7 @@ export default function SgSelectedGameConfirmationScreen({route, navigation}) {
         gameRating, 
         gameReleaseDate,
         gameSlug,
-        gameSubGenre,
+        gameSubgenre,
         gameSummary,
         gameUploadedBy: currentUID
     }
