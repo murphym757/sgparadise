@@ -1,6 +1,7 @@
 import React from 'react'
 import { View, Image } from 'react-native'
 import {
+    CenterContent,
     Container,
     ContentContainer,
     CustomInputField,
@@ -126,13 +127,13 @@ function gameResults(tagArrayData, buttonGroupData) {
     const { selectedTags, tagCollection } = useTags() 
     return (
         <Container>
-            <View style={{justifyContent: 'center', alignItems: 'center'}}>
+            <CenterContent>
                 <MainFont>{tagArrayData.pageDescription}</MainFont>
                 {tagArrayData.tagSelected == undefined 
                     ?   <View></View>  
                     :   selectedTags(tagArrayData.chosenTagsArray, tagArrayData.tagsNewArray, tagArrayData.removeChosenTagData)
                 }
-            </View>
+            </CenterContent>
             <View>
                 {tagArrayData.tagSelected == false 
                     ?   tagCollection(tagArrayData.gameArray, tagArrayData.confirmTagSelection)
@@ -158,10 +159,10 @@ function gameModesResults(tagArrayData, buttonGroupData) {
 
     return (
         <Container>
-            <View style={{justifyContent: 'center', alignItems: 'center'}}>
+            <CenterContent>
                 <MainFont>{tagArrayData.pageDescription}</MainFont>
                 {selectedTags(tagArrayData.chosenTagsArray, tagArrayData.tagsNewArray, tagArrayData.removeChosenTagData)}
-            </View>
+            </CenterContent>
             <View>
                 {tagCollection(currentTagsArray, tagArrayData.confirmTagSelection)}
             </View>

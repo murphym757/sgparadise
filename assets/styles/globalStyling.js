@@ -21,6 +21,11 @@ export const ContentContainer = styled(ViewContainer) `
 	alignItems: center;
 `;
 
+export const CenterContent = styled(View) `
+	justifyContent: center;
+	alignItems: center;
+`;
+
 export const Card = styled(View) `
     backgroundColor: ${currentTheme.primaryColor};
 	alignItems: center;
@@ -31,6 +36,11 @@ export const Card = styled(View) `
 
 export const CardContent = styled(ContentContainer) `
     marginVertical: 5;
+`;
+
+export const CardLinksView = styled(ContentContainer) `
+    flexDirection: 'row';
+    flexWrap: 'wrap';
 `;
 
 export const SafeAreaViewContainer = styled(SafeAreaView) `
@@ -60,6 +70,14 @@ export const BackButtonBottomLayer = styled(View) `
     position: relative;
 `;
 
+export const LinkedContentGenreView = styled(View) `
+    paddingVertical: 20;
+`;
+
+export const LinkedContentGeneralInfoView = styled(View) `
+    paddingVertical: 5;
+`;
+
 export const GeneralFontColor = styled(Text) `
     color: ${currentTheme.primaryFontColor};
 `;
@@ -69,6 +87,22 @@ export const MainFont = styled(Text) `
 	fontWeight: 500;
     fontFamily: 'SpartanRegular';
     color: ${currentTheme.primaryFontColor};
+`;
+
+export const MainFontLinkView = styled(View) `
+    justifyContent: center;
+	alignItems: center;
+    flexDirection: row;
+    flexWrap: wrap;
+`;
+
+export const MainFontLink = styled(MainFont) `
+    textDecorationLine: underline;
+`;
+
+export const MainFontArrayLinks = styled(MainFontLink) `
+    paddingHorizontal: 25;
+    paddingBottom: 25;
 `;
 
 export const MainSubFont = styled(Text) `

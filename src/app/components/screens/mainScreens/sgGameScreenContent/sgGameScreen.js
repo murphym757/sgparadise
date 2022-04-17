@@ -6,6 +6,7 @@ import {
     BackButtonTopLayer,
     Card,
     CardContent,
+    CenterContent,
     Container,
     ContentContainer,
     CurrentThemeContext,
@@ -13,7 +14,12 @@ import {
     faCircle,
     FontAwesomeIcon,
     GamePageImageBackground,
+    LinkedContentGeneralInfoView,
+    LinkedContentGenreView,
     MainFont,
+    MainFontArrayLinks,
+    MainFontLink,
+    MainFontLinkView,
     MainHeading,
     MainHeadingLongTitle,
     MainSubFont,
@@ -152,6 +158,29 @@ export default function GameScreen({navigation}) {
         )
     }
 
+    function detailedGameImage(item) {
+        return (
+            <CardContent>
+                <View style={{
+                    width: '100%',
+                    height: undefined,
+                }}>
+                    <Image
+                        style={{
+                            height: 150,
+                            width: 125,
+                            resizeMode: 'stretch',
+                            borderRadius: 5,
+                        }}
+                        source={{
+                            uri: `${item.firebaseCoverUrl}`,
+                        }}
+                    />
+                </View>
+            </CardContent>
+        )
+    }
+
     function sortInfoByStringLength(unsortedArray) {
         const sortedArray = unsortedArray.sort((a, b) => a.length - b.length)
         const sortedMap = [...new Map(sortedArray.map(i => [i]))]
@@ -161,32 +190,22 @@ export default function GameScreen({navigation}) {
     }
 
     function detailedPublishers(item) {
+        const linkedData = item.gamePublishers
+        const linkedDataTitleSingular = `Publisher`
+        const linkedDataTitlePlural = `Publishers`
         const unsortedArray = [...item.gamePublishers]
         return (
-            <CardContent>
-                {item.gamePublishers.length > 1
-                    ?   <MainSubFont>{`Publishers`}</MainSubFont>
-                    :   <MainSubFont>{`Publisher`}</MainSubFont>
-                }
-                {sortInfoByStringLength(unsortedArray).map((gamePublisher) => (
-                    <MainFont>{gamePublisher}</MainFont>
-                ))}
-            </CardContent>
+            mutliLinkedContent(linkedData, linkedDataTitleSingular, linkedDataTitlePlural, unsortedArray)
         )
     }
 
     function detailedDevelopers(item) {
+        const linkedData = item.gameDevelopers
+        const linkedDataTitleSingular = `Developer`
+        const linkedDataTitlePlural = `Developers`
         const unsortedArray = [...item.gameDevelopers]
         return (
-            <CardContent>
-                {item.gameDevelopers.length > 1
-                    ?   <MainSubFont>{`Developers`}</MainSubFont>
-                    :   <MainSubFont>{`Developer`}</MainSubFont>
-                }
-                {sortInfoByStringLength(unsortedArray).map((gameDeveloper) => (
-                      <MainFont>{gameDeveloper}</MainFont>
-                  ))}
-            </CardContent>
+            mutliLinkedContent(linkedData, linkedDataTitleSingular, linkedDataTitlePlural, unsortedArray)
         )
     }
 
@@ -211,19 +230,22 @@ export default function GameScreen({navigation}) {
     function detailedGameInfo(item) {
         return (
             <Container>
-                <View style={{paddingTop: 35}}>
-                    {detailedGameName(item)}
-                    {detailedGameReleaseDate(item)}
+                <View style={{paddingTop: 15}}>
+                    <View style={{paddingBottom: 15}}>
+                        {detailedGameName(item)}
+                    </View>
                     <ViewTopRow style={{justifyContent: 'space-between'}}>
                         <View>
-                            {detailedPublishers(item)}
+                            {detailedGameImage(item)}
                         </View>
-                        <View>
-                            {detailedDevelopers(item)}
+                        <View style={{paddingTop: 35}}>
+                            {detailedGameReleaseDate(item)}
+                            {detailedGameRating(item)}
                         </View>
                     </ViewTopRow>
-                    {detailedGameRating(item)}
-                    {detailedPostCreator(item)}
+                    <ViewTopRow style={{paddingTop: 25}}>
+                        {detailedPostCreator(item)}
+                    </ViewTopRow>
                     {isLoading && (
                         <ActivityIndicator size="large" />
                     )}
@@ -242,9 +264,56 @@ export default function GameScreen({navigation}) {
                 keyboardShouldPersistTaps="always"
                 keyExtractor={item => item.id}
                 renderItem={({ item }) => (
-                    <Card style={styles.cardStyle}>
-                        {detailedGameInfo(item)}
-                    </Card>
+                    <View style={{paddingRight: 20}}>
+                        <Card style={styles.cardStyle}>
+                            {detailedGameInfo(item)}
+                        </Card>
+                    </View>
+                )}
+            />
+        )
+    }
+
+    /*----------------------------------------------*/
+    // Detailed Data for returnedGamePubDev()
+
+    function detailedGamePubDevInfo(item) {
+        return (
+            <Container>
+                <View>
+                    <View style={{justifyContent: 'space-between'}}>
+                        <View>
+                            {detailedDevelopers(item)}
+                        </View>
+                    </View>
+                    <View style={{justifyContent: 'space-between'}}>
+                        <View>
+                            {detailedDevelopers(item)}
+                        </View>
+                    </View>
+                    {isLoading && (
+                        <ActivityIndicator size="large" />
+                    )}
+                </View>
+            </Container>
+        )
+    }
+
+    function returnedGamePubDevInfo() {
+        return (
+            <FlatList
+                nestedScrollEnabled
+                showsHorizontalScrollIndicator={false}
+                scrollEnabled={false}
+                data={currentGameArray}
+                keyboardShouldPersistTaps="always"
+                keyExtractor={item => item.id}
+                renderItem={({ item }) => (
+                    <View style={{paddingHorizontal: 20}}>
+                        <Card style={styles.cardStyle}>
+                            {detailedGamePubDevInfo(item)}
+                        </Card>
+                    </View>
                 )}
             />
         )
@@ -255,7 +324,7 @@ export default function GameScreen({navigation}) {
     // Detailed Data for returnedGameSummary()
     function detailedGameSummary(item) {
         return (
-            <View style={{paddingTop:5}}>
+            <View>
                 <MainFont>{item.gameSummary}</MainFont>
             </View>
         )
@@ -264,7 +333,7 @@ export default function GameScreen({navigation}) {
     function detailedGameSummaryInfo(item) {
         return (
             <Container>
-                <View style={{paddingTop: 35}}>
+                <View style={{paddingTop: 20}}>
                     {detailedGameSummary(item)}
                     {isLoading && (
                         <ActivityIndicator size="large" />
@@ -345,60 +414,86 @@ export default function GameScreen({navigation}) {
 
     function returnedGameScreenshots(item) {
         return (
-                    <View style={{paddingHorizontal: 20}}>
-                        <Card style={styles.cardStyle}>
-                            {detailedGameScreenshotInfo(item)}
-                        </Card>
-                    </View>
+            <View style={{paddingHorizontal: 20}}>
+                <Card style={styles.cardStyle}>
+                    {detailedGameScreenshotInfo(item)}
+                </Card>
+            </View>
         )
     }
 
     /*----------------------------------------------*/
 
      // Detailed Data for returnedGameGenresAndModes()
-    function detailedGameGenre(item) {
+    function linkedContent(linkedData, linkedDataTitleSingular) {
         return (
-            <View style={{paddingTop:5}}>
-                <MainSubFont>{`Genre`}</MainSubFont>
-                <MainFont>{item.gameGenre}</MainFont>
-            </View>
+            <LinkedContentGenreView>
+                <CenterContent>
+                    <MainSubFont>{linkedDataTitleSingular}</MainSubFont>
+                </CenterContent>
+                <MainFontLinkView>
+                    <MainFontLink>{linkedData}</MainFontLink>
+                </MainFontLinkView>
+            </LinkedContentGenreView>
+        )
+    }
+    function mutliLinkedContent(linkedData, linkedDataTitleSingular, linkedDataTitlePlural, unsortedArray) {
+        return (
+            <LinkedContentGenreView>
+                <CenterContent>
+                    {linkedData.length > 1
+                        ?   <MainSubFont>{linkedDataTitlePlural}</MainSubFont>
+                        :   <MainSubFont>{linkedDataTitleSingular}</MainSubFont>
+                    }
+                </CenterContent>
+                <MainFontLinkView>
+                    {sortInfoByStringLength(unsortedArray).map((item) => (
+                        <MainFontArrayLinks>{item}</MainFontArrayLinks>
+                    ))}
+                </MainFontLinkView>
+            </LinkedContentGenreView>
+        )
+    }
+    function detailedGameGenre(item) {
+        const linkedDataTitleSingular = `Genre`
+        const linkedData = item.gameGenre
+        return (
+            linkedContent(linkedData, linkedDataTitleSingular)
         )
     }
     function detailedGameSubgenre(item) {
+        const linkedDataTitleSingular = `Subgenre`
+        const linkedData = item.gameSubgenre
         return (
-            <View style={{paddingTop:5}}>
-                <MainSubFont>{`Subgenre`}</MainSubFont>
-                <MainFont>{item.gameSubgenre}</MainFont>
-            </View>
+            linkedContent(linkedData, linkedDataTitleSingular)
         )
     }
 
     function detailedGameModes(item) {
+        const linkedData = item.gameModes
+        const linkedDataTitleSingular = `Game Mode`
+        const linkedDataTitlePlural = `Game Modes`
+        const unsortedArray = [...item.gameModes]
         return (
-            <View style={{paddingTop:5}}>
-                <MainSubFont>{`Game Modes`}</MainSubFont>
-                <MainFont>{`The game modes array goes here`}</MainFont>
-            </View>
+            mutliLinkedContent(linkedData, linkedDataTitleSingular, linkedDataTitlePlural, unsortedArray)
         )
     }
 
     function detailedGameGenresAndModesInfo(item) {
         return (
             <Container>
-                <View style={{paddingTop: 35}}>
+                <View>
                     <ViewTopRow style={{justifyContent: 'space-between'}}>
                         <View>
-                            {detailedGameGenre(item)}
-                        </View>
-                    </ViewTopRow>
-                    <ViewTopRow style={{justifyContent: 'space-between'}}>
-                        <View>
-                            {detailedGameSubgenre(item)}
-                        </View>
-                    </ViewTopRow>
-                    <ViewTopRow style={{justifyContent: 'space-between'}}>
-                        <View>
-                            {detailedGameModes(item)}
+                            <View>
+                                {detailedGameGenre(item)}
+                            </View>
+                            <View style={{paddingVertical: 20}}>
+                                {detailedGameSubgenre(item)}
+                            </View>
+                            <View>
+                                {detailedGameModes(item)}
+                            </View>
                         </View>
                     </ViewTopRow>
                     {isLoading && (
@@ -421,7 +516,7 @@ export default function GameScreen({navigation}) {
                 renderItem={({ item }) => (
                     <View style={{paddingHorizontal: 20}}>
                         <Card style={styles.cardStyle}>
-                        {detailedGameGenresAndModesInfo(item)}
+                            {detailedGameGenresAndModesInfo(item)}
                         </Card>
                     </View>
                 )}
@@ -429,59 +524,6 @@ export default function GameScreen({navigation}) {
         )
     }
      /*----------------------------------------------*/
-
-    function returnedGameImages() {
-        return (
-            <FlatList
-                nestedScrollEnabled
-                showsHorizontalScrollIndicator={false}
-                scrollEnabled={false}
-                data={currentGameArray}
-                keyboardShouldPersistTaps="always"
-                keyExtractor={item => item.id}
-                renderItem={({ item }) => (
-                    <Container>
-                        <View style={{ flex: 1 }}>
-                            <ContentContainer>
-                                <MainFont>{item.gameCoverURL}</MainFont>
-                                {/* Game Logo from Firebase */}
-                                {isLoading && (
-                                    <ActivityIndicator size="large" />
-                                )}
-                            </ContentContainer>
-                        </View>
-                    </Container>
-                )}
-            />
-        )
-    }
-
-    function returnedGameGameDescription() {
-        return (
-            <FlatList
-                nestedScrollEnabled
-                showsHorizontalScrollIndicator={false}
-                scrollEnabled={false}
-                data={currentGameArray}
-                keyboardShouldPersistTaps="always"
-                keyExtractor={item => item.id}
-                renderItem={({ item }) => (
-                    <Container>
-                        <View style={{ flex: 1 }}>
-                            <ContentContainer>
-                                <MainFont>{item.gameGenre}</MainFont>
-                                <MainFont>{item.gameSubgenre}</MainFont>
-                                <MainFont>{item.gameModes}</MainFont>
-                                {isLoading && (
-                                    <ActivityIndicator size="large" />
-                                )}
-                            </ContentContainer>
-                        </View>
-                    </Container>
-                )}
-            />
-        )
-    }
 
     function gamePageScrollView() {
         return (
@@ -492,6 +534,7 @@ export default function GameScreen({navigation}) {
                     {returnedGameInfo()}
                     {returnedGameSummary()}
                     {returnedGameScreenshots()}
+                    {returnedGamePubDevInfo()}
                     {returnedGameGenresAndModes()}
             </ScrollView>
         )
