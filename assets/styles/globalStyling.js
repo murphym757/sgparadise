@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { View, Text, ScrollView, SafeAreaView, Dimensions, ImageBackground } from 'react-native';
+import { View, Text, ScrollView, SafeAreaView, Dimensions, ImageBackground, StyleSheet } from 'react-native';
 import { RFValue } from "react-native-responsive-fontsize";
 import {
     currentTheme
@@ -43,6 +43,17 @@ export const CardLinksView = styled(ContentContainer) `
     flexWrap: 'wrap';
 `;
 
+export const Styles = StyleSheet.create({
+    CardStyle: {
+        flexGrow: 1,
+        flex: 1,
+        shadowColor: '#171717',
+        shadowOffset: {width: 6, height: 4},
+        shadowOpacity: 0.2,
+        shadowRadius: 3,
+    }
+});
+
 export const SafeAreaViewContainer = styled(SafeAreaView) `
     backgroundColor: ${currentTheme.primaryColor};
 `;
@@ -60,13 +71,13 @@ export const ViewSortColumn = styled(View) `
 `;
 
 export const BackButtonTopLayer = styled(View) `
-    marginLeft: 30;
-    paddingTop: 25; 
+    marginLeft: ${RFValue(30, windowHeight)}px;
+    paddingTop: ${RFValue(5, windowHeight)}px; 
     position: absolute;
 `;
 
 export const BackButtonBottomLayer = styled(View) `
-    marginLeft: 40;
+    marginLeft:${RFValue(40, windowHeight)}px;
     position: relative;
 `;
 

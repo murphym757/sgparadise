@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Image, ScrollView, FlatList, TouchableOpacity, SafeAreaView, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Image, ScrollView, FlatList, TouchableOpacity, SafeAreaView, Button, StyleSheet, ActivityIndicator } from 'react-native';
 
 import {
     BackButtonBottomLayer,
@@ -25,11 +25,13 @@ import {
     MainSubFont,
     PageContainer,
     SafeAreaViewContainer,
+    Styles,
     useAuth,
     ViewTopRow
 } from 'index'
 import { useIsFocused } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
+import { HeaderBackButton } from '@react-navigation/elements'
 
 export default function GameScreen({navigation}) {
     const { 
@@ -37,7 +39,8 @@ export default function GameScreen({navigation}) {
         sgImageStorage, 
         currentUser, 
         currentUID,
-        updateGameViewCount
+        updateGameViewCount,
+        updateGameViewCountReset
     } = useAuth()
     const colors = useContext(CurrentThemeContext)
     const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be read
@@ -55,21 +58,15 @@ export default function GameScreen({navigation}) {
     const gameScreenshots = [gameScreenshot1.toString(), gameScreenshot2.toString(), gameScreenshot3.toString()]
     const [gameHomeScreenShot, setGameHomeScreenShot] = useState('')
     const [gamePageNewHomeScreen, setGamePageNewHomeScreen] = useState('')
+    const [gamePageView, setGamePageViews]  = useState('')
     const collectionName = 'sgAPI'
     const gamesCollection = 'games'
-    const styles = StyleSheet.create({
-        cardStyle: {
-            flexGrow: 1,
-            flex: 1
-        }
-        });
     useEffect(() => {
         function loadingTime() {
             return new Promise(resolve => {
               setTimeout(() => {
                 resolve(
-                    setIsLoading(false),
-                    updateGameViewCount(collectionName, consoleName, gamesCollection, gameName)
+                    setIsLoading(false)
                     )
               }, 2000)
               getCurrentGameData()
@@ -82,7 +79,6 @@ export default function GameScreen({navigation}) {
         if(currentUID !== undefined) 
             return 
                 displayData(collectionName)
-               
     }, [isFocused])
 
     async function getCurrentGameData() {
@@ -112,10 +108,9 @@ export default function GameScreen({navigation}) {
         setGameScreenshot1(currentGameScreenshot1)
         setGameScreenshot2(currentGameScreenshot2)
         setGameScreenshot3(currentGameScreenshot3)
-        
     }
 
-    function backArrow() {
+    function BackArrow() {
         return (
             <Container style={{paddingTop: 40}}>
                 <View style={{ flex: 1, alignItems: 'left', justifyContent: 'center', backgroundColor: colors.primaryColor }}> 
@@ -181,6 +176,15 @@ export default function GameScreen({navigation}) {
         )
     }
 
+    function detailedGameViews(item) {
+        return (
+            <CardContent>
+                <MainSubFont>{`Views`}</MainSubFont>
+                <MainFont>{item.views + 1}</MainFont>
+            </CardContent>
+        )
+    }
+
     function sortInfoByStringLength(unsortedArray) {
         const sortedArray = unsortedArray.sort((a, b) => a.length - b.length)
         const sortedMap = [...new Map(sortedArray.map(i => [i]))]
@@ -238,9 +242,10 @@ export default function GameScreen({navigation}) {
                         <View>
                             {detailedGameImage(item)}
                         </View>
-                        <View style={{paddingTop: 35}}>
+                        <View style={{paddingTop: 15}}>
                             {detailedGameReleaseDate(item)}
                             {detailedGameRating(item)}
+                            {detailedGameViews(item)}
                         </View>
                     </ViewTopRow>
                     <ViewTopRow style={{paddingTop: 25}}>
@@ -265,7 +270,7 @@ export default function GameScreen({navigation}) {
                 keyExtractor={item => item.id}
                 renderItem={({ item }) => (
                     <View style={{paddingRight: 20}}>
-                        <Card style={styles.cardStyle}>
+                        <Card style={Styles.CardStyle}>
                             {detailedGameInfo(item)}
                         </Card>
                     </View>
@@ -283,7 +288,7 @@ export default function GameScreen({navigation}) {
                 <View>
                     <View style={{justifyContent: 'space-between'}}>
                         <View>
-                            {detailedDevelopers(item)}
+                            {detailedPublishers(item)}
                         </View>
                     </View>
                     <View style={{justifyContent: 'space-between'}}>
@@ -310,7 +315,7 @@ export default function GameScreen({navigation}) {
                 keyExtractor={item => item.id}
                 renderItem={({ item }) => (
                     <View style={{paddingHorizontal: 20}}>
-                        <Card style={styles.cardStyle}>
+                        <Card style={Styles.CardStyle}>
                             {detailedGamePubDevInfo(item)}
                         </Card>
                     </View>
@@ -334,7 +339,12 @@ export default function GameScreen({navigation}) {
         return (
             <Container>
                 <View style={{paddingTop: 20}}>
-                    {detailedGameSummary(item)}
+                    <CenterContent>
+                        <MainSubFont>{`Description`}</MainSubFont>
+                    </CenterContent>
+                    <View style={{paddingTop: 15}}>
+                    <MainFont>{detailedGameSummary(item)}</MainFont>
+                    </View>
                     {isLoading && (
                         <ActivityIndicator size="large" />
                     )}
@@ -354,7 +364,7 @@ export default function GameScreen({navigation}) {
                 keyExtractor={item => item.id}
                 renderItem={({ item }) => (
                     <View style={{paddingHorizontal: 20}}>
-                        <Card style={styles.cardStyle}>
+                        <Card style={Styles.CardStyle}>
                             {detailedGameSummaryInfo(item)}
                         </Card>
                     </View>
@@ -366,34 +376,55 @@ export default function GameScreen({navigation}) {
     // Detailed Data for returnedGameScreenshots()
     function selectedGameScreenshot(item) {
         return (
-            setGamePageNewHomeScreen(item)
+            setIsLoading(true),
+            setTimeout(() => {
+                    setIsLoading(false),
+                    setGamePageNewHomeScreen(item)
+              }, 2000)
         )
     }
     function detailedGameScreenshot(item) {
         return (
-            <View style={{paddingTop:5}}>
+            <View style={{paddingTop: 20}}>
                 <View style={{height: 110}}>
-                {gameScreenshots.map((item) =>
-                    <TouchableOpacity
-                        onPress={() => selectedGameScreenshot(item)}>
-                            <View style={{marginVertical: 5}}>
-                                <Image
-                                    style={{
-                                        height: 75,
-                                        width: 155,
-                                        resizeMode: 'stretch',
-                                        borderRadius: 20,
-                                        borderWidth: 7,
-                                        borderColor: colors.secondaryColor,
-                                    }}
-                                    source={{
-                                        uri: `${item}`,
-                                    }}
-                                />
-                                
-                            </View>
-                    </TouchableOpacity>
-                )}
+                    <CenterContent>
+                        <MainSubFont>{`Choose One`}</MainSubFont>
+                    </CenterContent>
+                    <View style={{paddingTop: 15}}>
+                        {gameScreenshots.map((item) =>
+                            <TouchableOpacity
+                                onPress={() => selectedGameScreenshot(item)}>
+                                    <View style={{marginVertical: 5}}>
+                                        {gamePageNewHomeScreen == item
+                                            ?    <Image
+                                                    style={{
+                                                        height: 75,
+                                                        width: 155,
+                                                        resizeMode: 'stretch',
+                                                        borderRadius: 20,
+                                                        borderWidth: 7,
+                                                        borderColor: colors.secondaryColor,
+                                                    }}
+                                                    source={{
+                                                        uri: `${item}`,
+                                                    }}
+                                                />
+                                            :    <Image
+                                                    style={{
+                                                        height: 75,
+                                                        width: 155,
+                                                        resizeMode: 'stretch',
+                                                        borderRadius: 20
+                                                    }}
+                                                    source={{
+                                                        uri: `${item}`,
+                                                    }}
+                                                />
+                                        }  
+                                    </View>
+                            </TouchableOpacity>
+                        )}
+                    </View>
                 </View>
             </View>
         )
@@ -402,7 +433,7 @@ export default function GameScreen({navigation}) {
     function detailedGameScreenshotInfo(item) {
         return (
             <Container>
-                <View style={{paddingTop: 35}}>
+                <View>
                     {detailedGameScreenshot(item)}
                     {isLoading && (
                         <ActivityIndicator size="large" />
@@ -415,7 +446,7 @@ export default function GameScreen({navigation}) {
     function returnedGameScreenshots(item) {
         return (
             <View style={{paddingHorizontal: 20}}>
-                <Card style={styles.cardStyle}>
+                <Card style={Styles.CardStyle}>
                     {detailedGameScreenshotInfo(item)}
                 </Card>
             </View>
@@ -515,7 +546,7 @@ export default function GameScreen({navigation}) {
                 keyExtractor={item => item.id}
                 renderItem={({ item }) => (
                     <View style={{paddingHorizontal: 20}}>
-                        <Card style={styles.cardStyle}>
+                        <Card style={Styles.CardStyle}>
                             {detailedGameGenresAndModesInfo(item)}
                         </Card>
                     </View>
@@ -549,7 +580,6 @@ export default function GameScreen({navigation}) {
                         <ActivityIndicator size="large" hidesWhenStopped="true"/>
                     </SafeAreaView>
                     : <View>
-                        {backArrow()}
                         <View style={{position: 'relative', paddingTop: 400}}>
                             {gamePageScrollView()}
                         </View>
@@ -567,8 +597,7 @@ export default function GameScreen({navigation}) {
                     ? <SafeAreaView style={{ flex: 1, justifyContent: 'center', backgroundColor: colors.primaryColor }}>
                         <ActivityIndicator size="large" hidesWhenStopped="true"/>
                     </SafeAreaView>
-                    : <View>
-                        {backArrow()}
+                    : <View style={{position: 'relative'}}>
                         <View style={{position: 'relative', paddingTop: 400}}>
                             {gamePageScrollView()}
                         </View>
@@ -583,12 +612,30 @@ export default function GameScreen({navigation}) {
         if (gamePageNewHomeScreen != '') return updatedGameHomeScreen()
     }
     
-
     function selectedGameStack() {
         const Stack = createStackNavigator()
         return (
-            <Stack.Navigator headerMode="none" initialRouteName="Home">
-                <Stack.Screen name="Home" component={gamePageStructure} />
+            <Stack.Navigator initialRouteName="Home">
+                <Stack.Screen 
+                    name="Home" 
+                    component={gamePageStructure}
+                    options={{
+                        title: '',
+                        headerTransparent: true,
+                        label: false,
+                        headerLeft: isLoading == true
+                            ?   ''
+                            : (props) => (
+                                <TouchableOpacity onPress={() => {
+                                    navigation.goBack('Main')
+                                    updateGameViewCount(collectionName, consoleName, gamesCollection, gameName) // The view count is updated here, but falsely updated on the page. The process was done this way because there was next to no way to properly updated the state in Firebase and have that number represented on the page.
+                                }}>
+                                    <BackArrow {...props} />
+                                </TouchableOpacity>
+                            )
+                    
+                    }}
+                />
             </Stack.Navigator>
         )
     }

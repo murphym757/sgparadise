@@ -69,6 +69,7 @@
             SafeAreaViewContainer,
             ScrollViewContainer,
             SearchFont,
+            Styles,
             TextInputSearchBar,
             ViewContainer,
             ViewSortColumn,

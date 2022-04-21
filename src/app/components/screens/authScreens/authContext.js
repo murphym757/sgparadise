@@ -259,11 +259,17 @@ export function AuthProvider({ children }) {
 
     // Update the game's view count
     async function updateGameViewCount(collectionName, consoleName, gamesCollection, gameName) {
-        const increment = firebase.firestore.FieldValue.increment(1) // The page loads twice, so increased the increments by half to make a whole view
+        const increment = firebase.firestore.FieldValue.increment(1)
         sgDB.collection(collectionName).doc(consoleName).collection(gamesCollection).doc(gameName).update({    
             views: increment
         })
-          
+    }
+
+    async function updateGameViewCountReset(collectionName, consoleName, gamesCollection, gameName) {
+        const decrement = firebase.firestore.FieldValue.increment(-1)
+        sgDB.collection(collectionName).doc(consoleName).collection(gamesCollection).doc(gameName).update({    
+            views: decrement
+        })
     }
 
     // Gets General Game Data
@@ -389,6 +395,7 @@ export function AuthProvider({ children }) {
         addGenreTagsForGame,
         addDescriptionTagsForGame,
         updateGameViewCount,
+        updateGameViewCountReset,
         deleteData,
         entries,
         viewCountFirebase,

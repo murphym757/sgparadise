@@ -25,7 +25,6 @@ export default function SgHomeScreen({ navigation, route }) {
         /*--------*/ 
         addGameToConsole, 
         deleteGameFromConsole,
-        updateGameViewCount,
         toNewSection,
         entries, stateTest, logOut } = useAuth()
     const { 
@@ -93,9 +92,7 @@ export default function SgHomeScreen({ navigation, route }) {
         sgLoader()
         if(currentUID !== undefined) 
             return 
-                displayData(collectionName),
-                // This function will run as many times as the app renders, the function runs twice here
-                updateGameViewCount(collectionName, consoleName, gamesCollection, gameName)
+                displayData(collectionName)
                
     }, [isFocused])
 
@@ -141,21 +138,21 @@ export default function SgHomeScreen({ navigation, route }) {
     function platformersList() {
         return (
             <FlatList
-            showsHorizontalScrollIndicator={false}
-            scrollEnabled={false}
-            data={gamesArray1}
-            keyboardShouldPersistTaps="always"
-            keyExtractor={item => item.id}
-            renderItem={({ item }) => (
-            <View>
-                <TouchableOpacity onPress={() => toNewSection(toGameData.nextPage, toGameData.navigationPass)}>
-                    <MainFont>{item.gameName}</MainFont>
-                    <MainFont>{item.gameReleaseDate}</MainFont>
-                    <MainFont>{item.gameGenre}</MainFont>
-                </TouchableOpacity>
-            </View>
-            )}
-        />
+                showsHorizontalScrollIndicator={false}
+                scrollEnabled={false}
+                data={gamesArray1}
+                keyboardShouldPersistTaps="always"
+                keyExtractor={item => item.id}
+                renderItem={({ item }) => (
+                <View>
+                    <TouchableOpacity onPress={() => toNewSection(toGameData.nextPage, toGameData.navigationPass)}>
+                        <MainFont>{item.gameName}</MainFont>
+                        <MainFont>{item.gameReleaseDate}</MainFont>
+                        <MainFont>{item.gameGenre}</MainFont>
+                    </TouchableOpacity>
+                </View>
+                )}
+            />
         )
     }
 

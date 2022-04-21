@@ -98,7 +98,7 @@ export default function App() {
         />
         <Stack.Screen 
           name="sgGamePage" 
-          options={{ headerShown: false }} 
+          options={{ headerShown: false, gestureEnabled: false }} 
           component={GameScreen}
         />
         <Stack.Screen //For sg Paradise search
