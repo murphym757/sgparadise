@@ -124,7 +124,10 @@
 
         //Game Uploads Context
         export { confirmGameContext } from 'main/sgGameSearchScreenContent/sgSelectedGameScreens/sgSelectedGameContext'
-    
+
+        //Uploaded Game Context
+        export { gameScreenContext } from 'main/sgGameScreenContent/sgGameScreenContext'    
+
     //Firebase
     export { firebase, gamesConfig, getStorage, ref, getDownloadURL } from 'server/config/config'
     
