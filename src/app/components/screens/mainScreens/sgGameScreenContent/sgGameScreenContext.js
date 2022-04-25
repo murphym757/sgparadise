@@ -4,18 +4,19 @@ import { View, Image, ScrollView, FlatList, TouchableOpacity, SafeAreaView, Butt
 import {
     Card,
     CardContent,
-    MainFont,
-    MainSubFont,
-    Styles,
-    Container,
-    LinkedContentGenreView,
-    MainFontLinkView,
-    MainFontLink,
-    MainFontArrayLinks,
     CenterContent,
+    Container,
+    GamePageImageBackground,
+    LinkedContentGenreView,
+    MainFont,
+    MainFontArrayLinks,
+    MainFontLink,
+    MainFontLinkView,
     MainHeading,
     MainHeadingLongTitle,
-    GamePageImageBackground,
+    MainSubFont,
+    SafeAreaViewLoader,
+    Styles,
     ViewTopRow
 } from 'index'
 
@@ -425,9 +426,11 @@ function returnedGameScreenshots(item, gameScreenshots, gamePageNewHomeScreen, s
     return (
         <GamePageImageBackground source={image} resizeMode="cover" imageStyle={{opacity: 0.45}}>
             {isLoading == true
-                ? <SafeAreaView style={{ flex: 1, justifyContent: 'center', backgroundColor: colors.primaryColor }}>
-                    <ActivityIndicator size="large" hidesWhenStopped="true"/>
-                </SafeAreaView>
+                ? <View style={{ backgroundColor: colors.primaryColor }}>
+                    <SafeAreaViewLoader>
+                        <ActivityIndicator size="large" hidesWhenStopped="true"/>
+                    </SafeAreaViewLoader>
+                </View>
                 : <View>
                     <View style={{position: 'relative', paddingTop: 400}}>
                         {gamePageScrollView()}
@@ -443,9 +446,11 @@ function updatedGameHomeScreen(gamePageNewHomeScreen, gamePageScrollView, isLoad
     return (
         <GamePageImageBackground source={image} resizeMode="cover" imageStyle={{opacity: 0.45}}>
             {isLoading == true
-                ? <SafeAreaView style={{ flex: 1, justifyContent: 'center', backgroundColor: colors.primaryColor }}>
-                    <ActivityIndicator size="large" hidesWhenStopped="true"/>
-                </SafeAreaView>
+                ? <View style={{ backgroundColor: colors.primaryColor }}>
+                    <SafeAreaViewLoader>
+                        <ActivityIndicator size="large" hidesWhenStopped="true"/>
+                    </SafeAreaViewLoader>
+                </View>
                 : <View style={{position: 'relative'}}>
                     <View style={{position: 'relative', paddingTop: 400}}>
                         {gamePageScrollView()}

@@ -67,6 +67,7 @@
             PageContainer,
             PageContainerCover,
             SafeAreaViewContainer,
+            SafeAreaViewLoader,
             ScrollViewContainer,
             SearchFont,
             Styles,

@@ -58,6 +58,11 @@ export const SafeAreaViewContainer = styled(SafeAreaView) `
     backgroundColor: ${currentTheme.primaryColor};
 `;
 
+export const SafeAreaViewLoader = styled(SafeAreaViewContainer) `
+    justifyContent: center
+    height: ${windowHeight};
+`;
+
 export const ScrollViewContainer = styled(ScrollView) `
 
 `;
