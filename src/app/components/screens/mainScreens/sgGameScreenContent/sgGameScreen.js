@@ -133,6 +133,12 @@ export default function GameScreen({navigation}) {
         )
     }
 
+    function chosenDataOption(item) {
+        navigation.navigate('sgMainGamePage', {
+            keySearchData: item
+        })
+    }
+
     /*----------------------------------------------*/
     // Changes page's background
     function selectedGameScreenshot(item) {
@@ -155,8 +161,8 @@ export default function GameScreen({navigation}) {
                     {gameScreenFunc.returnedGameInfo(currentGameArray, isLoading, setGameHomeScreenShot)}
                     {gameScreenFunc.returnedGameSummary(currentGameArray)}
                     {gameScreenFunc.returnedGameScreenshots(gameScreenshots, isLoading, selectedGameScreenshot, colors)}
-                    {gameScreenFunc.returnedGamePubDevInfo(currentGameArray)}
-                    {gameScreenFunc.returnedGameGenresAndModes(currentGameArray)}
+                    {gameScreenFunc.returnedGamePubDevInfo(currentGameArray, chosenDataOption)}
+                    {gameScreenFunc.returnedGameGenresAndModes(currentGameArray, chosenDataOption)}
             </ScrollView>
         )
     }

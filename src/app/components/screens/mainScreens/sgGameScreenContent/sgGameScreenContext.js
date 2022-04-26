@@ -21,19 +21,22 @@ import {
 } from 'index'
 
 // Detailed Data for linking data
-function linkedContent(linkedData, linkedDataTitleSingular) {
+
+function linkedContent(linkedData, linkedDataTitleSingular, chosenDataOption) {
     return (
         <LinkedContentGenreView>
             <CenterContent>
                 <MainSubFont>{linkedDataTitleSingular}</MainSubFont>
             </CenterContent>
             <MainFontLinkView>
-                <MainFontLink>{linkedData}</MainFontLink>
+                <TouchableOpacity onPress={() => chosenDataOption(linkedData)}>
+                    <MainFontLink>{linkedData}</MainFontLink>
+                </TouchableOpacity>
             </MainFontLinkView>
         </LinkedContentGenreView>
     )
 }
-function mutliLinkedContent(linkedData, linkedDataTitleSingular, linkedDataTitlePlural, unsortedArray) {
+function mutliLinkedContent(linkedData, linkedDataTitleSingular, linkedDataTitlePlural, unsortedArray, chosenDataOption) {
     return (
         <LinkedContentGenreView>
             <CenterContent>
@@ -44,7 +47,9 @@ function mutliLinkedContent(linkedData, linkedDataTitleSingular, linkedDataTitle
             </CenterContent>
             <MainFontLinkView>
                 {sortInfoByStringLength(unsortedArray).map((item) => (
-                    <MainFontArrayLinks>{item}</MainFontArrayLinks>
+                    <TouchableOpacity onPress={() => chosenDataOption(item)}>
+                        <MainFontArrayLinks>{item}</MainFontArrayLinks>
+                    </TouchableOpacity>
                 ))}
             </MainFontLinkView>
         </LinkedContentGenreView>
@@ -104,7 +109,6 @@ function detailedGameViews(item) {
         </CardContent>
     )
 }
-
 
 function detailedGameRating(item) {
     return (
@@ -178,38 +182,38 @@ function returnedGameInfo(currentGameArray, isLoading, setGameHomeScreenShot) {
     )
 }
 
-function detailedPublishers(item) {
+function detailedPublishers(item, chosenDataOption) {
     const linkedData = item.gamePublishers
     const linkedDataTitleSingular = `Publisher`
     const linkedDataTitlePlural = `Publishers`
     const unsortedArray = [...item.gamePublishers]
     return (
-        mutliLinkedContent(linkedData, linkedDataTitleSingular, linkedDataTitlePlural, unsortedArray)
+        mutliLinkedContent(linkedData, linkedDataTitleSingular, linkedDataTitlePlural, unsortedArray, chosenDataOption)
     )
 }
 
-function detailedDevelopers(item) {
+function detailedDevelopers(item, chosenDataOption) {
     const linkedData = item.gameDevelopers
     const linkedDataTitleSingular = `Developer`
     const linkedDataTitlePlural = `Developers`
     const unsortedArray = [...item.gameDevelopers]
     return (
-        mutliLinkedContent(linkedData, linkedDataTitleSingular, linkedDataTitlePlural, unsortedArray)
+        mutliLinkedContent(linkedData, linkedDataTitleSingular, linkedDataTitlePlural, unsortedArray, chosenDataOption)
     )
 }
 
-function detailedGamePubDevInfo(item) {
+function detailedGamePubDevInfo(item, chosenDataOption) {
     return (
         <Container>
             <View>
                 <View style={{justifyContent: 'space-between'}}>
                     <View>
-                        {detailedPublishers(item)}
+                        {detailedPublishers(item, chosenDataOption)}
                     </View>
                 </View>
                 <View style={{justifyContent: 'space-between'}}>
                     <View>
-                        {detailedDevelopers(item)}
+                        {detailedDevelopers(item, chosenDataOption)}
                     </View>
                 </View>
             </View>
@@ -217,7 +221,7 @@ function detailedGamePubDevInfo(item) {
     )
 }
 
-function returnedGamePubDevInfo(currentGameArray) {
+function returnedGamePubDevInfo(currentGameArray, chosenDataOption) {
     return (
         <FlatList
             nestedScrollEnabled
@@ -229,7 +233,7 @@ function returnedGamePubDevInfo(currentGameArray) {
             renderItem={({ item }) => (
                 <View style={{paddingHorizontal: 20}}>
                     <Card style={Styles.CardStyle}>
-                        {detailedGamePubDevInfo(item, currentGameArray)}
+                        {detailedGamePubDevInfo(item, chosenDataOption)}
                     </Card>
                 </View>
             )}
@@ -238,45 +242,45 @@ function returnedGamePubDevInfo(currentGameArray) {
 }
 /*----------------------------------------------*/
  // Detailed Data for returnedGameGenresAndModes()
- function detailedGameGenre(item) {
+ function detailedGameGenre(item, chosenDataOption) {
     const linkedDataTitleSingular = `Genre`
     const linkedData = item.gameGenre
     return (
-        linkedContent(linkedData, linkedDataTitleSingular)
+        linkedContent(linkedData, linkedDataTitleSingular, chosenDataOption)
     )
 }
-function detailedGameSubgenre(item) {
+function detailedGameSubgenre(item, chosenDataOption) {
     const linkedDataTitleSingular = `Subgenre`
     const linkedData = item.gameSubgenre
     return (
-        linkedContent(linkedData, linkedDataTitleSingular)
+        linkedContent(linkedData, linkedDataTitleSingular, chosenDataOption)
     )
 }
 
-function detailedGameModes(item) {
+function detailedGameModes(item, chosenDataOption) {
     const linkedData = item.gameModes
     const linkedDataTitleSingular = `Game Mode`
     const linkedDataTitlePlural = `Game Modes`
     const unsortedArray = [...item.gameModes]
     return (
-        mutliLinkedContent(linkedData, linkedDataTitleSingular, linkedDataTitlePlural, unsortedArray)
+        mutliLinkedContent(linkedData, linkedDataTitleSingular, linkedDataTitlePlural, unsortedArray, chosenDataOption)
     )
 }
 
-function detailedGameGenresAndModesInfo(item) {
+function detailedGameGenresAndModesInfo(item, chosenDataOption) {
     return (
         <Container>
             <View>
                 <ViewTopRow style={{justifyContent: 'space-between'}}>
                     <View>
                         <View>
-                            {detailedGameGenre(item)}
+                            {detailedGameGenre(item, chosenDataOption)}
                         </View>
                         <View style={{paddingVertical: 20}}>
-                            {detailedGameSubgenre(item)}
+                            {detailedGameSubgenre(item, chosenDataOption)}
                         </View>
                         <View>
-                            {detailedGameModes(item)}
+                            {detailedGameModes(item, chosenDataOption)}
                         </View>
                     </View>
                 </ViewTopRow>
@@ -285,7 +289,7 @@ function detailedGameGenresAndModesInfo(item) {
     )
 }
 
-function returnedGameGenresAndModes(currentGameArray) {
+function returnedGameGenresAndModes(currentGameArray, chosenDataOption) {
     return (
         <FlatList
             nestedScrollEnabled
@@ -297,7 +301,7 @@ function returnedGameGenresAndModes(currentGameArray) {
             renderItem={({ item }) => (
                 <View style={{paddingHorizontal: 20}}>
                     <Card style={Styles.CardStyle}>
-                        {detailedGameGenresAndModesInfo(item, currentGameArray)}
+                        {detailedGameGenresAndModesInfo(item, chosenDataOption)}
                     </Card>
                 </View>
             )}
