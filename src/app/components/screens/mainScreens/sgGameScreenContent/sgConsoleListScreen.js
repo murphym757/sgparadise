@@ -21,7 +21,7 @@ export default function SgConsoleListScreens({route, navigation}, props) {
     const consoleData = sgDB.collection("sgAPI").get()
     const { addGameLinkPressed } = route.params
     const [isLoading, setIsLoading] = useState()
-    const [searchType, setSearchType] = useState('sgDBSearch')
+    const [searchType, setSearchType] = useState('sgIGDBSearch')
     const [selectedSystemLogo, setSelectedSystemLogo] = useState('')
     const [accessTokenIGDB, setAccessTokenIGDB] = useState('')
     const [gbConsoleId, setGbConsoleId] = useState()
@@ -103,7 +103,7 @@ export default function SgConsoleListScreens({route, navigation}, props) {
 
     function confirmSetConsoleId(){
         {addGameLinkPressed !== true
-            ?   navigation.navigate('sgDBSearch',{
+            ?   navigation.navigate('sgIGDBSearch',{
                 clientIdIGDB: clientIdIGDB,
                 accessTokenIGDB: accessTokenIGDB, 
                 igdbConsoleId: igdbConsoleId,

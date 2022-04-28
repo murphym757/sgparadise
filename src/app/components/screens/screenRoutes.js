@@ -107,7 +107,7 @@ export default function App() {
             component={SgGameSearchScreen} 
         />
         <Stack.Screen //For IGDB search
-            name="sgDBSearch"
+            name="sgIGDBSearch"
             options={{ headerShown: false }}
             component={SgIGDBGameSearchScreen} 
         />

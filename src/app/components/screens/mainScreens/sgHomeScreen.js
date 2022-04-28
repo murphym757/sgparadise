@@ -40,7 +40,7 @@ export default function SgHomeScreen({ navigation, route }) {
     const [gamesCollection, setGamesCollection] = useState('games')
     const [gameName, setGameName] = useState('tiny-toon-adventures-busters-hidden-treasure')
     // For Search Bar
-    const [searchType, setSearchType] = useState('sgDBSearch')
+    const [searchType, setSearchType] = useState('sgIGDBSearch')
     const [searchBarTitle, setSearchBarTitle] = useState('Search Games')
     const [searchQuery, setSearchQuery] = useState('')
     const chosenDb = testDb

@@ -21,7 +21,7 @@ export default function sgSearchScreen({route, navigation}) {
     } = useAuth()
     const { 
         gamesFilterListName,
-        sgDbSearchQuery
+        sgIGDBSearchQuery
      } = useSearchBar()
     //let { searchBarTitle, searchType, searchQuery } = route.params
     const colors = useContext(CurrentThemeContext)
@@ -31,7 +31,7 @@ export default function sgSearchScreen({route, navigation}) {
     // IGDB search data (Put on confirmation pag
     const [igdbSearchResults, setIgdbSearchResults] = useState([])
     const igdbSearchPlatforms = `(${JSON.stringify(route.params.igdbConsoleId)})`
-    const igdbSearchResultField = `fields name, category, slug, first_release_date, alternative_names, rating, age_ratings, artworks, screenshots, summary, cover; search "${sgDbSearchQuery}"; limit 20; where category != 5 & platforms =${igdbSearchPlatforms}& cover != null;`
+    const igdbSearchResultField = `fields name, category, slug, first_release_date, alternative_names, rating, age_ratings, artworks, screenshots, summary, cover; search "${sgIGDBSearchQuery}"; limit 20; where category != 5 & platforms =${igdbSearchPlatforms}& cover != null;`
     
     useEffect(() => {
         function searchTesting() {

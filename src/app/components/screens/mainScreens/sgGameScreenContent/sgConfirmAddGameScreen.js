@@ -54,7 +54,7 @@ export default function ConfirmAddGameScreen({navigation, route}) {
     const [isLoading, setIsLoading] = useState(true)
     
     // For Search Bar
-    const [searchType, setSearchType] = useState('sgDBSearch')
+    const [searchType, setSearchType] = useState('sgIGDBSearch')
     const [searchBarTitle, setSearchBarTitle] = useState('Search Games')
     const [searchQuery, setSearchQuery] = useState('')
     const chosenDb = testDb

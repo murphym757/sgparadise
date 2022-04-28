@@ -33,24 +33,24 @@ export function SearchBarProvider({ children, navigation }) {
     const colors = useContext(CurrentThemeContext)
     const testDb = TestImageDB.results
     const [ gameName, setGameName ] = useState('')
-    const [ sgDbSearchQuery, setSgDbSearchQuery ] = useState('')
+    const [ sgIGDBSearchQuery, setsgIGDBSearchQuery ] = useState('')
     const [ addGameSearchQuery, setAddGameSearchQuery ] = useState('') 
 
     function searchBar(searchBarTitle, searchType, searchQuery) {
         function onSearchFinder() {
-            if (searchType == 'sgDBSearch') return (searchQuery) => setSgDbSearchQuery(searchQuery)
+            if (searchType == 'sgIGDBSearch') return (searchQuery) => setsgIGDBSearchQuery(searchQuery)
             return (searchQuery) => setAddGameSearchQuery(searchQuery)
         }
         
         function searchBarState() {
-            if (searchType == 'sgDBSearch') return sgDbSearchQuery
+            if (searchType == 'sgIGDBSearch') return sgIGDBSearchQuery
             return addGameSearchQuery
         }
        return <View>
                 <CustomInputField
                     placeholderTextColor={colors.primaryColor}
                     placeholder={searchBarTitle}
-                    onChangeText={setSgDbSearchQuery}
+                    onChangeText={setsgIGDBSearchQuery}
                     value={searchBarState()}
                     color={colors.primaryColor}
                     underlineColorAndroid="transparent"
@@ -64,14 +64,14 @@ export function SearchBarProvider({ children, navigation }) {
         (chosenItem) =>
             chosenItem.name //Looks thorough database for anything matching the same "Name"
                 .toLowerCase()
-                .includes(sgDbSearchQuery.toLowerCase())
+                .includes(sgIGDBSearchQuery.toLowerCase())
         )
     }
 
     const value = {
         searchBar,
         gamesFilterListName,
-        sgDbSearchQuery,
+        sgIGDBSearchQuery,
         testDb,
         gameName
     }

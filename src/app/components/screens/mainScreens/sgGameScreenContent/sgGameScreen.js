@@ -1,54 +1,36 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { View, Image, ScrollView, FlatList, TouchableOpacity, SafeAreaView, Button, StyleSheet, ActivityIndicator } from 'react-native';
-
+import { useState, useEffect, useContext } from 'react';
+import { View, ScrollView, TouchableOpacity } from 'react-native';
 import {
     BackButtonBottomLayer,
     BackButtonTopLayer,
-    Card,
-    CardContent,
-    CenterContent,
     Container,
-    ContentContainer,
     CurrentThemeContext,
-    gameScreenContext,
     faChevronLeft,
     faCircle,
     FontAwesomeIcon,
-    GamePageImageBackground,
-    LinkedContentGeneralInfoView,
-    LinkedContentGenreView,
-    MainFont,
-    MainFontArrayLinks,
-    MainFontLink,
-    MainFontLinkView,
-    MainHeading,
-    MainHeadingLongTitle,
-    MainSubFont,
-    PageContainer,
-    SafeAreaViewContainer,
-    Styles,
+    gameScreenContext,
+    sgSearchScreen,
     useAuth,
-    ViewTopRow
-} from 'index'
+} from 'index';
 import { useIsFocused } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
-import { HeaderBackButton } from '@react-navigation/elements'
 
 export default function GameScreen({navigation}) {
     const { 
         sgDB, 
         sgImageStorage, 
         currentUser, 
+        forwardToNextPage,
         currentUID,
         updateGameViewCount,
-        updateGameViewCountReset
+        updateGameViewCountReset,
     } = useAuth()
     const colors = useContext(CurrentThemeContext)
     const gameScreenFunc = useContext(gameScreenContext)
     const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be read
     const [isLoading, setIsLoading] = useState(true)
     const [currentGameArray, setCurrentGameArray] = useState([])
-    
+    const [searchType, setSearchType] = useState('sgFirebaseSearch')
     const [consoleName, setConsoleName] = useState('sgGenesis')
     const [gameName, setGameName] = useState('streets-of-rage-2')
     const [gameGenre, setGameGenre] = useState('') //For recommended related games
@@ -63,6 +45,7 @@ export default function GameScreen({navigation}) {
     const [gamePageView, setGamePageViews]  = useState('')
     const collectionName = 'sgAPI'
     const gamesCollection = 'games'
+
     useEffect(() => {
         function loadingTime() {
             return new Promise(resolve => {
@@ -132,11 +115,20 @@ export default function GameScreen({navigation}) {
             </Container>
         )
     }
-
+    
     function chosenDataOption(item) {
-        navigation.navigate('sgMainGamePage', {
-            keySearchData: item
-        })
+        const toGameData = {
+            searchType,
+            clientIdIGDB: null,
+            accessTokenIGDB: null,
+            igdbConsoleId: null,
+            gbConsoleId: null,
+            selectedSystemLogo: null,
+            navigationPass: navigation,
+            keySearchData: item,
+            nextPage: 'Page1'
+        }
+        forwardToNextPage(toGameData.nextPage, toGameData, toGameData.navigationPass)
     }
 
     /*----------------------------------------------*/
@@ -167,11 +159,44 @@ export default function GameScreen({navigation}) {
         )
     }
 
-    
-    
     function gamePageStructure() {
         if (gamePageNewHomeScreen == '') return gameScreenFunc.preDeterminedGameHomeScreen(gameHomeScreenShot, gamePageScrollView, isLoading, colors)
         if (gamePageNewHomeScreen != '') return gameScreenFunc.updatedGameHomeScreen(gamePageNewHomeScreen, gamePageScrollView, isLoading, colors)
+    }
+
+    function homeOptions() {
+        return {
+            title: '',
+            headerTransparent: true,
+            label: false,
+            headerLeft: isLoading == true
+                ?   ''
+                : (props) => (
+                    <TouchableOpacity onPress={() => {
+                        updateGameViewCount(collectionName, consoleName, gamesCollection, gameName) // The view count is updated here, but falsely updated on the page. The process was done this way because there was next to no way to properly updated the state in Firebase and have that number represented on the page.
+                        navigation.goBack('Main')
+                    }}>
+                        <BackArrow {...props} />
+                    </TouchableOpacity>
+                )
+        }
+    }
+
+    function searchOptions() {
+        return {
+            title: '',
+            headerTransparent: true,
+            label: false,
+            headerLeft: isLoading == true
+                ?   ''
+                : (props) => (
+                    <TouchableOpacity onPress={() => {
+                        navigation.goBack('Main')
+                    }}>
+                        <BackArrow {...props} />
+                    </TouchableOpacity>
+                )
+        }
     }
     
     function selectedGameStack() {
@@ -181,22 +206,12 @@ export default function GameScreen({navigation}) {
                 <Stack.Screen 
                     name="Home" 
                     component={gamePageStructure}
-                    options={{
-                        title: '',
-                        headerTransparent: true,
-                        label: false,
-                        headerLeft: isLoading == true
-                            ?   ''
-                            : (props) => (
-                                <TouchableOpacity onPress={() => {
-                                    updateGameViewCount(collectionName, consoleName, gamesCollection, gameName) // The view count is updated here, but falsely updated on the page. The process was done this way because there was next to no way to properly updated the state in Firebase and have that number represented on the page.
-                                    navigation.goBack('Main')
-                                }}>
-                                    <BackArrow {...props} />
-                                </TouchableOpacity>
-                            )
-                    
-                    }}
+                    options={homeOptions()}
+                />
+                <Stack.Screen 
+                    name="Page1" 
+                    component={sgSearchScreen}
+                    options={searchOptions()}
                 />
             </Stack.Navigator>
         )

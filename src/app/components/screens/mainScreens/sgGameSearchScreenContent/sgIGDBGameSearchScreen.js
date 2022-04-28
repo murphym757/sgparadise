@@ -47,7 +47,7 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
     const testGamesDb = TestImageDB.results
      // For Search Bar
      const { searchBar, searchResults } = useSearchBar()
-     const [searchType, setSearchType] = useState('sgDBSearch')
+     const [searchType, setSearchType] = useState('sgIGDBSearch')
      const [searchBarTitle, setSearchBarTitle] = useState('Search Games')
      const [searchQuery, setSearchQuery] = useState('')
      const [searchFilterSelected, setSearchFilterSelected] = useState(false)

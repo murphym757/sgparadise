@@ -18,12 +18,11 @@ export default function sgSearchScreen({route, navigation}) {
         searchBar,
         gamesFilterListName,
         testDb,
-        sgDbSearchQuery
+        sgIGDBSearchQuery
      } = useSearchBar()
     //let { searchBarTitle, searchType, searchQuery } = route.params
     const colors = useContext(CurrentThemeContext)
-    const { clientIdIGDB, accessTokenIGDB, igdbConsoleId, gbConsoleId, selectedSystemLogo, searchType } = route.params
-   
+    const { keySearchData, clientIdIGDB, accessTokenIGDB, igdbConsoleId, gbConsoleId, selectedSystemLogo, searchType } = route.params
     // For Search Bar
     const [searchBarTitle, setSearchBarTitle] = useState('Search Games')
     const [searchQuery, setSearchQuery] = useState('') //Figure out why searchQuery is coming back as "undefined"
@@ -33,12 +32,12 @@ export default function sgSearchScreen({route, navigation}) {
     // IGDB search data (Put on confirmation page)
     const [igdbGameSelected, setigdbGameSelected] = useState(false)
     const [igdbSearchResults, setIgdbSearchResults] = useState([])
-    const [igdbSearch, setIgdbSearch] = useState(sgDbSearchQuery)
+    const [igdbSearch, setIgdbSearch] = useState(sgIGDBSearchQuery)
     const igdbSearchPlatforms = `(${JSON.stringify(route.params.igdbConsoleId)})`
     const igdbTestField = `fields name, cover, rating, age_ratings, genres, screenshots, summary, first_release_date; search "${igdbSearch}"; limit 20; where platforms =${igdbSearchPlatforms}& cover != null;`
-    const igdbSearchResultField = `fields name, category, slug, first_release_date, cover; search "${sgDbSearchQuery}"; limit 20; where category != 5 & platforms =${igdbSearchPlatforms}& cover != null;`
+    const igdbSearchResultField = `fields name, category, slug, first_release_date, cover; search "${sgIGDBSearchQuery}"; limit 20; where category != 5 & platforms =${igdbSearchPlatforms}& cover != null;`
     
-    useEffect(() => {
+    function igdbSearchDetector() {
         function searchTesting() {
             let api = axios.create({
                 headers: {
@@ -49,7 +48,7 @@ export default function sgSearchScreen({route, navigation}) {
             })
             return new Promise(resolve => {
                 setTimeout(() => {
-                  resolve(
+                resolve(
                     api.post('https://api.igdb.com/v4/games', igdbSearchResultField, {timeout: 2000})
                         .then(res => {
                             setIgdbSearchResults(res.data)
@@ -62,13 +61,26 @@ export default function sgSearchScreen({route, navigation}) {
                         })
                     )
                 }, 2000)
-              })
-            }
+            })
+        }
+        async function sgLoader() {
+            await searchTesting()
+        }
+        return sgLoader()
+    }
+
+    function sgFirebaseSearchDetector() {
+        return (
+            console.log('it worked')
+        )
+    }
     
-            async function sgLoader() {
-                await searchTesting()
-            }
-            sgLoader()
+    useEffect(() => {
+        if (route.params.clientIdIGDB != null) {
+            return igdbSearchDetector()
+        } else {
+            return sgFirebaseSearchDetector()
+        }
     }, [])
 
     function confirmSearchGame() {
