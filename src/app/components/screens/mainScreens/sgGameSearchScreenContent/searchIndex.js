@@ -34,37 +34,36 @@ export function SearchBarProvider({ children, navigation }) {
     const testDb = TestImageDB.results
     const [ gameName, setGameName ] = useState('')
     const [ sgIGDBSearchQuery, setsgIGDBSearchQuery ] = useState('')
-    const [ addGameSearchQuery, setAddGameSearchQuery ] = useState('') 
+    const [ sgFirebaseSearchQuery, setsgFirebaseSearchQuery ] = useState('')
 
     function searchBar(searchBarTitle, searchType, searchQuery) {
-        function onSearchFinder() {
-            if (searchType == 'sgIGDBSearch') return (searchQuery) => setsgIGDBSearchQuery(searchQuery)
-            return (searchQuery) => setAddGameSearchQuery(searchQuery)
-        }
-        
         function searchBarState() {
             if (searchType == 'sgIGDBSearch') return sgIGDBSearchQuery
-            return addGameSearchQuery
+            if (searchType == 'sgFirebaseSearch') return sgFirebaseSearchQuery
         }
-       return <View>
+        function searchBarQuery() {
+            if (searchType == 'sgIGDBSearch') return setsgIGDBSearchQuery
+            if (searchType == 'sgFirebaseSearch') return setsgFirebaseSearchQuery
+        }
+        return <View>
                 <CustomInputField
                     placeholderTextColor={colors.primaryColor}
                     placeholder={searchBarTitle}
-                    onChangeText={setsgIGDBSearchQuery}
+                    onChangeText={searchBarQuery()}
                     value={searchBarState()}
                     color={colors.primaryColor}
                     underlineColorAndroid="transparent"
                     autoCapitalize="none"
                 />
-       </View>
+        </View>
     }
 
     function gamesFilterListName(chosenDb) {
         return chosenDb.filter(
-        (chosenItem) =>
-            chosenItem.name //Looks thorough database for anything matching the same "Name"
-                .toLowerCase()
-                .includes(sgIGDBSearchQuery.toLowerCase())
+            (chosenItem) =>
+                chosenItem.name //Looks thorough database for anything matching the same "Name"
+                    .toLowerCase()
+                    .includes(sgIGDBSearchQuery.toLowerCase())
         )
     }
 

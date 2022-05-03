@@ -15,7 +15,7 @@ import {
 import { useIsFocused } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 
-export default function GameScreen({navigation}) {
+export default function GameScreen({navigation, route }) {
     const { 
         sgDB, 
         sgImageStorage, 
@@ -27,12 +27,11 @@ export default function GameScreen({navigation}) {
     } = useAuth()
     const colors = useContext(CurrentThemeContext)
     const gameScreenFunc = useContext(gameScreenContext)
+    const { collectionName, gamesCollection, consoleName, gameName} = route.params
     const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be read
     const [isLoading, setIsLoading] = useState(true)
     const [currentGameArray, setCurrentGameArray] = useState([])
     const [searchType, setSearchType] = useState('sgFirebaseSearch')
-    const [consoleName, setConsoleName] = useState('sgGenesis')
-    const [gameName, setGameName] = useState('streets-of-rage-2')
     const [gameGenre, setGameGenre] = useState('') //For recommended related games
     const [gameSubgenre, setGameSubgenre] = useState('') //For recommended related games
     const [gameReleaseDate, setGameReleaseDate] = useState('') //For recommended related games
@@ -42,9 +41,7 @@ export default function GameScreen({navigation}) {
     const gameScreenshots = [gameScreenshot1.toString(), gameScreenshot2.toString(), gameScreenshot3.toString()]
     const [gameHomeScreenShot, setGameHomeScreenShot] = useState('')
     const [gamePageNewHomeScreen, setGamePageNewHomeScreen] = useState('')
-    const [gamePageView, setGamePageViews]  = useState('')
-    const collectionName = 'sgAPI'
-    const gamesCollection = 'games'
+    const [gamePageView, setGamePageViews] = useState('')
 
     useEffect(() => {
         function loadingTime() {
@@ -116,7 +113,7 @@ export default function GameScreen({navigation}) {
         )
     }
     
-    function chosenDataOption(item) {
+    function chosenDataOption(item, keySearchDataArray) {
         const toGameData = {
             searchType,
             clientIdIGDB: null,
@@ -126,6 +123,7 @@ export default function GameScreen({navigation}) {
             selectedSystemLogo: null,
             navigationPass: navigation,
             keySearchData: item,
+            keySearchDataPartOfArray: keySearchDataArray,
             nextPage: 'Page1'
         }
         forwardToNextPage(toGameData.nextPage, toGameData, toGameData.navigationPass)
@@ -143,6 +141,12 @@ export default function GameScreen({navigation}) {
         )
     }
      /*----------------------------------------------*/
+
+     function setUpdoe() {
+         return (
+            setKeySearchDataPartOfArray(true)
+         )
+     }
 
     function gamePageScrollView() {
         return (

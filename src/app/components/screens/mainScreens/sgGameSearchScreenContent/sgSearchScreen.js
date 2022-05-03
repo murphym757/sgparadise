@@ -22,19 +22,21 @@ export default function sgSearchScreen({route, navigation}) {
      } = useSearchBar()
     //let { searchBarTitle, searchType, searchQuery } = route.params
     const colors = useContext(CurrentThemeContext)
-    const { keySearchData, clientIdIGDB, accessTokenIGDB, igdbConsoleId, gbConsoleId, selectedSystemLogo, searchType } = route.params
+    const { keySearchData, keySearchDataPartOfArray, clientIdIGDB, accessTokenIGDB, igdbConsoleId, gbConsoleId, selectedSystemLogo, searchType } = route.params
+    console.log("🚀 ~ file: sgSearchScreen.js ~ line 26 ~ sgSearchScreen ~ searchType", searchType)
     // For Search Bar
     const [searchBarTitle, setSearchBarTitle] = useState('Search Games')
     const [searchQuery, setSearchQuery] = useState('') //Figure out why searchQuery is coming back as "undefined"
     const [ gameName, setGameName ] = useState('')
-    const chosenDb = testDb
+    const [searchQueryArray, setSearchQueryArray] = useState([])
+    console.log("🚀 ~ file: sgSearchScreen.js ~ line 31 ~ sgSearchScreen ~ searchQueryArray", searchQueryArray)
+
 
     // IGDB search data (Put on confirmation page)
     const [igdbGameSelected, setigdbGameSelected] = useState(false)
     const [igdbSearchResults, setIgdbSearchResults] = useState([])
     const [igdbSearch, setIgdbSearch] = useState(sgIGDBSearchQuery)
     const igdbSearchPlatforms = `(${JSON.stringify(route.params.igdbConsoleId)})`
-    const igdbTestField = `fields name, cover, rating, age_ratings, genres, screenshots, summary, first_release_date; search "${igdbSearch}"; limit 20; where platforms =${igdbSearchPlatforms}& cover != null;`
     const igdbSearchResultField = `fields name, category, slug, first_release_date, cover; search "${sgIGDBSearchQuery}"; limit 20; where category != 5 & platforms =${igdbSearchPlatforms}& cover != null;`
     
     function igdbSearchDetector() {
@@ -70,9 +72,8 @@ export default function sgSearchScreen({route, navigation}) {
     }
 
     function sgFirebaseSearchDetector() {
-        return (
-            console.log('it worked')
-        )
+        if (route.params.keySearchDataPartOfArray == true) return (setSearchQueryArray([route.params.keySearchData[0]]))
+        if (route.params.keySearchDataPartOfArray == false) return (setSearchQueryArray([route.params.keySearchData]))
     }
     
     useEffect(() => {
@@ -84,15 +85,19 @@ export default function sgSearchScreen({route, navigation}) {
     }, [])
 
     function confirmSearchGame() {
-        navigation.navigate('Page2', {
-            clientIdIGDB: clientIdIGDB,
-            accessTokenIGDB: accessTokenIGDB, 
-            igdbConsoleId: igdbConsoleId,
-            gbConsoleId: gbConsoleId,
-            selectedSystemLogo: selectedSystemLogo,
-            searchType: searchType,
-            searchQuery: igdbSearch
-        })
+        if(route.params.clientIdIGDB != null) {
+            return (
+                navigation.navigate('Page2', {
+                    clientIdIGDB: clientIdIGDB,
+                    accessTokenIGDB: accessTokenIGDB, 
+                    igdbConsoleId: igdbConsoleId,
+                    gbConsoleId: gbConsoleId,
+                    selectedSystemLogo: selectedSystemLogo,
+                    searchType: searchType,
+                    searchQuery: igdbSearch
+                })
+            )
+        }
     }
 
     function searchData() {

@@ -23,13 +23,14 @@ import {
 // Detailed Data for linking data
 
 function linkedContent(linkedData, linkedDataTitleSingular, chosenDataOption) {
+    const keySearchDataArray = false
     return (
         <LinkedContentGenreView>
             <CenterContent>
                 <MainSubFont>{linkedDataTitleSingular}</MainSubFont>
             </CenterContent>
             <MainFontLinkView>
-                <TouchableOpacity onPress={() => chosenDataOption(linkedData)}>
+                <TouchableOpacity onPress={() => chosenDataOption(linkedData, keySearchDataArray)}>
                     <MainFontLink>{linkedData}</MainFontLink>
                 </TouchableOpacity>
             </MainFontLinkView>
@@ -37,6 +38,7 @@ function linkedContent(linkedData, linkedDataTitleSingular, chosenDataOption) {
     )
 }
 function mutliLinkedContent(linkedData, linkedDataTitleSingular, linkedDataTitlePlural, unsortedArray, chosenDataOption) {
+    const keySearchDataArray = true
     return (
         <LinkedContentGenreView>
             <CenterContent>
@@ -47,7 +49,7 @@ function mutliLinkedContent(linkedData, linkedDataTitleSingular, linkedDataTitle
             </CenterContent>
             <MainFontLinkView>
                 {sortInfoByStringLength(unsortedArray).map((item) => (
-                    <TouchableOpacity onPress={() => chosenDataOption(item)}>
+                    <TouchableOpacity onPress={() => chosenDataOption(item, keySearchDataArray)}>
                         <MainFontArrayLinks>{item}</MainFontArrayLinks>
                     </TouchableOpacity>
                 ))}

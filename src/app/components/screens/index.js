@@ -8,6 +8,9 @@
     export { default as SgMainScreen } from 'main/sgMainScreen'
     export { default as SgHomeScreen } from 'main/sgHomeScreen'
 
+        // Game Components
+        export { default as SgHomeActionGames } from 'main/sgHomeScreenGames/sgHomeActionGames'
+
         // Search Screens
         export { default as SgGameSearchScreen } from 'main/sgGameSearchScreenContent/sgGameSearchScreen'   
         export { default as SgSelectedGameCoverScreen } from 'main/sgGameSearchScreenContent/sgSelectedGameScreens/sgSelectedGameCoverScreen' 
@@ -63,6 +66,7 @@
             MainHeading,
             MainHeadingButton,
             MainHeadingLongTitle,
+            MainSubHeading,
             MainSubFont,
             PageContainer,
             PageContainerCover,
@@ -122,6 +126,9 @@
 
         //Search Bar Context
         export { useSearchBar } from 'main/sgGameSearchScreenContent/searchIndex'
+
+        //Home Context
+        export { homeScreenGenreContext } from 'main/sgHomeScreenContext'
 
         //Game Uploads Context
         export { confirmGameContext } from 'main/sgGameSearchScreenContent/sgSelectedGameScreens/sgSelectedGameContext'
