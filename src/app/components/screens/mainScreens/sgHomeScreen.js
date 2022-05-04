@@ -143,7 +143,7 @@ export default function SgHomeScreen({ navigation, route }) {
   return (
     <SafeAreaViewContainer>
         {isLoading !== true 
-            ?   <Container>
+            ?   <Container style={{paddingBottom: 150}}>
                     {searchBar(searchBarTitle, searchType, searchQuery)}
                     <ScrollViewContainer>
                         {searchResults()}

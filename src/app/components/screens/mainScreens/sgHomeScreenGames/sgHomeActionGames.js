@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, Image, FlatList, TouchableOpacity } from 'react-native';
 import { useAuth } from 'auth/authContext'
 import { MainHeadingLongTitle, MainFont, ViewTopRow } from 'index';
@@ -6,7 +6,15 @@ import { useIsFocused } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 const Stack = createStackNavigator()
 
+import {
+    CurrentThemeContext,
+    faStar,
+    FontAwesomeIcon,
+  } from 'index'
+
+
 export default function SgHomeActionGames({ navigation }) {
+    const colors = useContext(CurrentThemeContext)
     const {sgDB} = useAuth()
     const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be read
     const [collectionName, setCollectionName] = useState('sgAPI')
@@ -14,16 +22,8 @@ export default function SgHomeActionGames({ navigation }) {
     const [gamesArrayTitle, setgamesArrayTitle] = useState('')
     const [gamesArrayDescription, setgamesArrayDescription] = useState('')
     const navigationPass = navigation
-    const toGameData = {
-        navigationPass,
-        nextPage: 'sgGamePage'
-    }
-    const toConsoleList = {
-        navigationPass,
-        nextPage: 'SgAddGameConfirm'
-    }
     useEffect(() => {
-      getGameDatasgGenesisBuddyBeatEmUp()
+      
     }, [isFocused])
 
     function findLaymanConsoleName(consoleName) {
@@ -75,7 +75,7 @@ export default function SgHomeActionGames({ navigation }) {
             return
             }  
             snapshotType.forEach(doc => {
-                passingData.sgFirebaseFoundGames.push(doc.data(), {groupTitle: passingData.titleForRelatedData, groupDescription: passingData.descriptionForRelatedData})
+                passingData.sgFirebaseFoundGames.push(doc.data())
             });
         }
         const gameRef = sgDB.collection(passingData.collectionName)
@@ -93,80 +93,98 @@ export default function SgHomeActionGames({ navigation }) {
         passingData.setupGameData(passingData.sgFirebaseFoundGames)
     }
 
-    function getGameDatasgGenesisBuddyBeatEmUp() {
+    function sgGameListing(item) {
+        return (
+            <TouchableOpacity style={{height:100, marginTop: 3, marginBottom: 100}}
+                onPress={() => passDataToNextPage(item)}>
+                {detailedGameImage(item)}
+                <MainFont>{item.gameName}</MainFont>
+                <MainFont>{item.gameReleaseDate}</MainFont>
+                <MainFont>{item.gameRating} <FontAwesomeIcon icon={ faStar } color={colors.secondaryColor} size={15} /></MainFont>
+            </TouchableOpacity>
+        )
+    }
+
+    function sgGameSet(titleForRelatedData, descriptionForRelatedData) {
+        return (
+            <View>
+                <ViewTopRow style={{justifyContent: 'space-between'}}>
+                    <View>
+                        <MainHeadingLongTitle>{titleForRelatedData}</MainHeadingLongTitle>
+                    </View>
+                    <View>
+                        <MainHeadingLongTitle>See All</MainHeadingLongTitle>
+                    </View>
+                </ViewTopRow>
+                <MainFont>{descriptionForRelatedData}</MainFont>
+                <FlatList
+                    horizontal={true}
+                    showsHorizontalScrollIndicator={false}
+                    scrollEnabled={false}
+                    data={gamesArray}
+                    keyboardShouldPersistTaps="always"
+                    ItemSeparatorComponent={() => <View style={{ width: 35 }} />}
+                    keyExtractor={item => item.id}
+                    renderItem={({ item }) => (
+                    <View>
+                        {sgGameListing(item)}
+                    </View>
+                    )}
+                />
+            </View>
+        )
+    } 
+
+    function getGameDatasgGenesisBuddyBeatEmUp(collectiveGameData) {
         let setupGameData = setgamesArray
         let setupGameDataTitle = setgamesArrayTitle
         let setupGameDataDescription = setgamesArrayDescription
-        let beatEmUpGames = []
-        let sgFirebaseFoundGames = beatEmUpGames
+        let foundGamesArray = []
+        let sgFirebaseFoundGames = foundGamesArray
+        const passingData = {
+            setupGameData,
+            setupGameDataTitle,
+            setupGameDataDescription,
+            sgFirebaseFoundGames,
+            collectionName: collectiveGameData.collectionName,
+            consoleName: collectiveGameData.consoleName,
+            gamesCollection: collectiveGameData.gamesCollection,
+            gamesCollectionOrderBy: collectiveGameData.gamesCollectionOrderBy,
+            gamesCollectionOrderDirection: collectiveGameData.gamesCollectionOrderDirection,
+            gamesCollectionOrderLimit: collectiveGameData.gamesCollectionOrderLimit,
+            gameRefSpecificData: collectiveGameData.gameRefSpecificData,
+            gameRefSpecificRelatedData: collectiveGameData.gameRefSpecificRelatedData
+        }
+        sgFirebaseGamesCollection(passingData)
+    }
+
+    //Called from
+    function beatEmUpList() {
         const collectionName = 'sgAPI'
         const consoleName = 'sgGenesis'
-        const laymanConsoleName = findLaymanConsoleName(consoleName)
         const gamesCollection = 'games'
         const gamesCollectionOrderBy = 'gameRating'
         const gamesCollectionOrderDirection = 'desc'
         const gamesCollectionOrderLimit = 5
         const gameRefSpecificData = 'gameSubgenre'
         const gameRefSpecificRelatedData = 'Beat ‘em Up'
+        const laymanConsoleName = findLaymanConsoleName(consoleName)
         const titleForRelatedData = `Buddy Beat 'em Ups`
         const descriptionForRelatedData = `When it comes to Beat 'em Ups, this is the cream of the crop for ${laymanConsoleName} games`
-        const passingData = {
-            setupGameData,
-            setupGameDataTitle,
-            setupGameDataDescription,
-            sgFirebaseFoundGames,
-            collectionName,
+        const collectiveGameData = {
             consoleName,
+            collectionName,
             gamesCollection,
             gamesCollectionOrderBy,
             gamesCollectionOrderDirection,
             gamesCollectionOrderLimit,
             gameRefSpecificData,
-            gameRefSpecificRelatedData,
-            titleForRelatedData,
-            descriptionForRelatedData
+            gameRefSpecificRelatedData
         }
-        sgFirebaseGamesCollection(passingData)
-    }
-
-    function beatEmUpList() {
-        return (
-            <View>
-                <ViewTopRow style={{justifyContent: 'space-between'}}>
-                    <View>
-                        {/*<MainHeadingLongTitle>{gamesArray[1].groupTitle}</MainHeadingLongTitle>*/}
-                    </View>
-                    <View>
-                        <MainHeadingLongTitle>See All</MainHeadingLongTitle>
-                    </View>
-                </ViewTopRow>
-                {/*<MainFont>{gamesArray[1].groupDescription}</MainFont>*/}
-                <FlatList
-                    showsHorizontalScrollIndicator={false}
-                    scrollEnabled={false}
-                    data={gamesArray}
-                    keyboardShouldPersistTaps="always"
-                    keyExtractor={item => item.id}
-                    renderItem={({ item }) => (
-                    <View>
-                        {beatEmUpListGame(item)}
-                    </View>
-                    )}
-                />
-            </View>
-        )
-    }
-
-    function beatEmUpListGame(item) {
-        return (
-            <TouchableOpacity style={{height:100, marginTop: 3, marginBottom: 10}}
-                onPress={() => passDataToNextPage(item)}>
-                {detailedGameImage(item)}
-                <MainFont>{item.gameName}</MainFont>
-                <MainFont>{item.gameReleaseDate}</MainFont>
-                <MainFont>{item.gameRating} Stars</MainFont>
-            </TouchableOpacity>
-        )
+            return (
+                getGameDatasgGenesisBuddyBeatEmUp(collectiveGameData),
+                sgGameSet(titleForRelatedData, descriptionForRelatedData)
+            )
     }
 
   return (
