@@ -1,159 +1,114 @@
 import React from 'react'
-import { View, Image, ScrollView, FlatList, TouchableOpacity, SafeAreaView, Button, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Image, FlatList, TouchableOpacity } from 'react-native';
+import { MainFont, MainHeadingLongTitle, ViewTopRow } from 'index';
 
-import {
-    Card,
-    CardContent,
-    CenterContent,
-    Container,
-    GamePageImageBackground,
-    LinkedContentGenreView,
-    MainFont,
-    MainFontArrayLinks,
-    MainFontLink,
-    MainFontLinkView,
-    MainHeading,
-    MainHeadingLongTitle,
-    MainSubFont,
-    SafeAreaViewLoader,
-    Styles,
-    ViewTopRow
-} from 'index'
-const collectionName = 'sgAPI'
-const consoleName = 'sgGenesis'
-//const laymanConsoleName = findLaymanConsoleName(consoleName)
-const gamesCollection = 'games'
-const gamesCollectionOrderBy = 'gameRating'
-const gamesCollectionOrderDirection = 'desc'
-const gamesCollectionOrderLimit = 5
-const gameRefSpecificData = 'gameSubgenre'
-
-function findLaymanConsoleName(consoleName) {
-    if (consoleName == 'sgGenesis') return 'Sega Genesis'
-    if (consoleName == 'sg1000') return 'Sega 1000'  
-    if (consoleName == 'sgMS') return 'Sega Master System'
-    if (consoleName == 'sgGG') return 'Sega Game Gear'
-    if (consoleName == 'sgSat') return 'Sega Saturn'
-    if (consoleName == 'sg32X') return 'Sega 32X'
-    if (consoleName == 'sgCD') return 'Sega Cd'
+// Links to the game page
+function passDataToNextPage(navigation, item) {
+    return (
+        navigation.navigate('sgGamePage', {
+            collectionName: 'sgAPI',
+            gamesCollection: 'games',
+            consoleName: 'sgGenesis',
+            gameName: item.gameSlug
+        })
+    )
 }
 
-function sgFirebaseGamesListGame(item, detailedGameImage, passDataToNextPage) {
+// Cover image
+function detailedGameImage(item) {
     return (
-        <TouchableOpacity style={{height:100, marginTop: 3, marginBottom: 10}}
-            onPress={() => passDataToNextPage(item)}>
+        <View style={{
+            width: '100%',
+        }}>
+            <Image
+                style={{
+                    height: 150,
+                    width: 125,
+                    resizeMode: 'stretch',
+                    borderRadius: 5,
+                }}
+                source={{
+                    uri: `${item.firebaseCoverUrl}`,
+                }}
+            />
+        </View>
+    )
+}
+
+// Data beneath cover
+function sgGameListing(passingSectionData, item) {
+    return (
+        <TouchableOpacity style={{height:100, marginTop: 3, marginBottom: 100}}
+            onPress={() => passDataToNextPage(passingSectionData.navigation, item)}>
             {detailedGameImage(item)}
             <MainFont>{item.gameName}</MainFont>
             <MainFont>{item.gameReleaseDate}</MainFont>
-            <MainFont>{item.gameRating} Stars</MainFont>
+            <MainFont>{item.gameRating} <passingSectionData.FontAwesomeIcon icon={ passingSectionData.faStar } color={passingSectionData.colors.secondaryColor} size={15} /></MainFont>
         </TouchableOpacity>
     )
 }
 
-async function sgFirebaseGamesCollection(passingData) {
-    function snapshotDecider(shopshot) {
-        const snapshotType = shopshot
-        if (snapshotType.empty) {
-            console.log('No matching documents.')
-        return
-        }  
-        snapshotType.forEach(doc => {
-            passingData.sgFirebaseFoundGames.push(doc.data(), {groupTitle: passingData.titleForRelatedData, groupDescription: passingData.descriptionForRelatedData})
-        });
-    }
-    const gameRef = sgDB.collection(passingData.collectionName)
-                        .doc(passingData.consoleName)
-                        .collection(passingData.gamesCollection)
-                        .orderBy(passingData.gamesCollectionOrderBy, passingData.gamesCollectionOrderDirection)
-                        .limit(passingData.gamesCollectionOrderLimit)
-    const snapshotSubGenre = await gameRef.where(passingData.gameRefSpecificData, '==', passingData.gameRefSpecificRelatedData).get()
-    const snapshotGenre = await gameRef.get()
-    if (passingData.genreSpecificFunction == true) {
-        snapshotDecider(snapshotSubGenre)
-    } else {
-        snapshotDecider(snapshotGenre)
-    }
-    passingData.setupGameData(passingData.sgFirebaseFoundGames)
+// Contains both the cover image and the data that belongs to each 
+function sgGameSet(passingSectionData, titleForRelatedData, descriptionForRelatedData) {
+    return (
+        <View>
+            <ViewTopRow style={{justifyContent: 'space-between'}}>
+                <View>
+                    <MainHeadingLongTitle>{titleForRelatedData}</MainHeadingLongTitle>
+                </View>
+                <View>
+                    <MainHeadingLongTitle>See All</MainHeadingLongTitle>
+                </View>
+            </ViewTopRow>
+            <MainFont>{descriptionForRelatedData}</MainFont>
+            <FlatList
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+                scrollEnabled={false}
+                data={passingSectionData.gamesArray}
+                keyboardShouldPersistTaps="always"
+                ItemSeparatorComponent={() => <View style={{ width: 35 }} />}
+                keyExtractor={item => item.id}
+                renderItem={({ item }) => (
+                <View>
+                    {sgGameListing(passingSectionData, item)}
+                </View>
+                )}
+            />
+        </View>
+    )
 }
 
-function getGameDatasgGenesisBuddyBeatEmUp() {
-    let setupGameData = setGamesArray1
-    let setupGameDataTitle = setGamesArray1Title
-    let setupGameDataDescription = setGamesArray1Description
-    let beatEmUpGames = []
-    let sgFirebaseFoundGames = beatEmUpGames
+// Retrieves the data and sets the data 
+function dataCollector(passingGameData) {
+    let setupGameData = passingGameData.setgamesArray
+    let setupGameDataTitle = passingGameData.setgamesArrayTitle
+    let setupGameDataDescription = passingGameData.setgamesArrayDescription
     const collectionName = 'sgAPI'
-    const consoleName = 'sgGenesis'
-    const laymanConsoleName = findLaymanConsoleName(consoleName)
     const gamesCollection = 'games'
     const gamesCollectionOrderBy = 'gameRating'
     const gamesCollectionOrderDirection = 'desc'
     const gamesCollectionOrderLimit = 5
     const gameRefSpecificData = 'gameSubgenre'
-    const gameRefSpecificRelatedData = 'Beat ‘em Up'
-    const titleForRelatedData = `Buddy Beat 'em Ups`
-    const descriptionForRelatedData = `When it comes to Beat 'em Ups, this is the cream of the crop for ${laymanConsoleName} games`
-    const genreSpecificFunction = true
-    const passingData = {
+    const collectiveGameData = {
         setupGameData,
         setupGameDataTitle,
         setupGameDataDescription,
-        sgFirebaseFoundGames,
+        consoleName: passingGameData.consoleName,
         collectionName,
-        consoleName,
         gamesCollection,
         gamesCollectionOrderBy,
         gamesCollectionOrderDirection,
         gamesCollectionOrderLimit,
         gameRefSpecificData,
-        gameRefSpecificRelatedData,
-        genreSpecificFunction,
-        titleForRelatedData,
-        descriptionForRelatedData
+        gameRefSpecificRelatedData: passingGameData.gameRefSpecificRelatedData
     }
-    sgFirebaseGamesCollection(passingData)
+    return collectiveGameData
 }
 
-// Action Game Functions
-
-// Genre Wide Function
-/*--------------------------*/
-
-/*--------------------------*/
-
-// Educational Game Functions
-// Genre Wide Function
-/*--------------------------*/
-
-/*--------------------------*/
-
-// RPG Game Functions
-// Genre Wide Function
-/*--------------------------*/
-
-/*--------------------------*/
-
-// Simulation Game Functions
-// Genre Wide Function
-/*--------------------------*/
-
-/*--------------------------*/
-
-// Sports Game Functions
-// Genre Wide Function
-/*--------------------------*/
-
-/*--------------------------*/
-
-// Strategy Game Functions
-// Genre Wide Function
-/*--------------------------*/
-
-/*--------------------------*/
-
-
 export const gameData = {
-    sgFirebaseGamesListGame
+    sgGameSet,
+    dataCollector
 }
 
 export const homeScreenGenreContext = React.createContext(gameData)

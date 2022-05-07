@@ -8,9 +8,6 @@
     export { default as SgMainScreen } from 'main/sgMainScreen'
     export { default as SgHomeScreen } from 'main/sgHomeScreen'
 
-        // Game Components
-        export { default as SgHomeActionGames } from 'main/sgHomeScreenGames/sgHomeActionGames'
-
         // Search Screens
         export { default as SgGameSearchScreen } from 'main/sgGameSearchScreenContent/sgGameSearchScreen'   
         export { default as SgSelectedGameCoverScreen } from 'main/sgGameSearchScreenContent/sgSelectedGameScreens/sgSelectedGameCoverScreen' 
@@ -129,6 +126,8 @@
 
         //Home Context
         export { homeScreenGenreContext } from 'main/sgHomeScreenContext'
+            //Genre Contexts
+            export { homeScreenActionContext } from 'main/sgHomeScreenGames/sgHomeActionGames'
 
         //Game Uploads Context
         export { confirmGameContext } from 'main/sgGameSearchScreenContent/sgSelectedGameScreens/sgSelectedGameContext'
