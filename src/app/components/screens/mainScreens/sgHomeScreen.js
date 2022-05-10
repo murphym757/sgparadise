@@ -11,6 +11,7 @@ import {
     Container,
     SgHomeActionGames,
     MainHeadingLongTitle,
+    homeScreenDatesContext,
     faStar,
     FontAwesomeIcon,
     homeScreenGenreContext,
@@ -39,15 +40,32 @@ export default function SgHomeScreen({ navigation, route }) {
         testDb,
         } = useSearchBar()
     const colors = useContext(CurrentThemeContext)
+    const date = useContext(homeScreenDatesContext)
     const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be read
     const [isLoading, setIsLoading] = useState(true)
     const [userInfo, setUserInfo] = useState()
     const [collectionName, setCollectionName] = useState('sgAPI')
     const [gameIndex, setGameIndex] = useState()
+    // For the 1st Section
     const [gamesArray, setgamesArray] = useState([])
-    console.log("🚀 ~ file: sgHomeActionGames.js ~ line 24 ~ SgHomeActionGames ~ gamesArray", gamesArray)
     const [gamesArrayTitle, setgamesArrayTitle] = useState('')
     const [gamesArrayDescription, setgamesArrayDescription] = useState('')
+    // For the 2nd Section
+    const [gamesArray2, setgamesArray2] = useState([])
+    const [gamesArrayTitle2, setgamesArrayTitle2] = useState('')
+    const [gamesArrayDescription2, setgamesArrayDescription2] = useState('')
+    // For the 3rd Section
+    const [gamesArray3, setgamesArray3] = useState([])
+    const [gamesArrayTitle3, setgamesArrayTitle3] = useState('')
+    const [gamesArrayDescription3, setgamesArrayDescription3] = useState('')
+    // For the 4th Section
+    const [gamesArray4, setgamesArray4] = useState([])
+    const [gamesArrayTitle4, setgamesArrayTitle4] = useState('')
+    const [gamesArrayDescription4, setgamesArrayDescription4] = useState('')
+    // For the 5th Section
+    const [gamesArray5, setgamesArray5] = useState([])
+    const [gamesArrayTitle5, setgamesArrayTitle5] = useState('')
+    const [gamesArrayDescription5, setgamesArrayDescription5] = useState('')
     // For Search Bar
     const [searchType, setSearchType] = useState('sgIGDBSearch')
     const [searchBarTitle, setSearchBarTitle] = useState('Search Games')
@@ -65,6 +83,16 @@ export default function SgHomeScreen({ navigation, route }) {
         nextPage: 'SgAddGameConfirm'
     }
 
+    // Retrieves data before the page loads
+    const passingSectionData = {
+        navigation, 
+        findLaymanConsoleName, 
+        genreSpecFunc, 
+        FontAwesomeIcon, 
+        faStar, 
+        colors
+    }
+
     //For Udemy, please ignore this
     function logItems(n) {
         for(let i=0; i < n; i++) {
@@ -74,6 +102,43 @@ export default function SgHomeScreen({ navigation, route }) {
 
     /*----------- */
 
+    function dope() {
+        const gameData1 = {
+            setgamesArray, setgamesArrayTitle, setgamesArrayDescription, sgFirebaseGamesCollectionSubGenre, genreSpecFunc
+        }
+        const gameData2 = {
+            setgamesArray2, setgamesArrayTitle2, setgamesArrayDescription2, sgFirebaseGamesCollectionSubGenre, genreSpecFunc
+        }
+        const passingGameData3 = {}
+        const passingGameData4 = {}
+        const passingGameData5 = {}
+        const d = new Date();
+        let month = d.getMonth();
+        if (month == 1) return null
+        if (month == 2) return null
+        if (month == 3) return null
+        if (month == 4) return date.mayGames(gameData1, gameData2)
+        if (month == 5) return null
+        if (month == 6) return null
+        if (month == 7) return null
+        if (month == 8) return null
+        if (month == 9) return null
+        if (month == 10) return null
+        if (month == 11) return null
+        if (month == 12) return null
+        if (month == 13) return null
+    }
+
+    // Determines the number the current week
+    function findWeekofYear() {
+        const currentdate = new Date();
+        const oneJan = new Date(currentdate.getFullYear(),0,1);
+        let numberOfDays = Math.floor((currentdate - oneJan) / (24 * 60 * 60 * 1000));
+        let result = Math.ceil(( currentdate.getDay() + 1 + numberOfDays) / 7);
+        return result
+    }
+
+
     useEffect(() => {
         function loadingTime() {
             return new Promise(resolve => {
@@ -81,10 +146,12 @@ export default function SgHomeScreen({ navigation, route }) {
                 resolve(
                     setUserInfo(currentUID),
                     setIsLoading(false)
-                    )
+                )
+                console.log('i fire once')
+                dope()
+                findWeekofYear()
               }, 2000)
-              arrayOfFunctions(),
-              beatEmUpList()
+              arrayOfFunctions()
             }, [])
         }
         async function sgLoader() {
@@ -102,26 +169,6 @@ export default function SgHomeScreen({ navigation, route }) {
         const turtleSoup = [0, 1]
         const random = Math.floor(Math.random() * turtleSoup.length);
         return setGameIndex(random)
-    }
-
-    function detailedGameImage(item) {
-        return (
-            <View style={{
-                width: '100%',
-            }}>
-                <Image
-                    style={{
-                        height: 150,
-                        width: 125,
-                        resizeMode: 'stretch',
-                        borderRadius: 5,
-                    }}
-                    source={{
-                        uri: `${item.firebaseCoverUrl}`,
-                    }}
-                />
-            </View>
-        )
     }
 
     function findLaymanConsoleName(consoleName) {
@@ -236,33 +283,18 @@ export default function SgHomeScreen({ navigation, route }) {
     /*-----------*/
 
     // Retrieves data before the page loads
-    function beatEmUpList() {
-        const consoleName = 'sgGenesis'
-        const gameRefSpecificRelatedData = 'Beat ‘em Up'
-        const passingGameData = {
-            setgamesArray,
-            setgamesArrayTitle,
-            setgamesArrayDescription,
-            consoleName,
-            gameRefSpecificRelatedData
-        }
-            return (
-                sgFirebaseGamesCollectionSubGenre(genreSpecFunc.dataCollector(passingGameData))
-            )
-    }
+
+    
 
     // Renders on page
     function actionSection() {
-        const passingSectionData = {
-            navigation, 
-            findLaymanConsoleName, 
-            genreSpecFunc, 
-            gamesArray, 
-            FontAwesomeIcon, 
-            faStar, 
-            colors
-        }
+        Object.assign(passingSectionData, {gamesArray})
         return actionGenreContext.beatEmUpListGameSet(passingSectionData)
+    }
+
+    function actionsasSection() {
+        Object.assign(passingSectionData, {gamesArray: gamesArray2})
+        return actionGenreContext.platformersListGameSet(passingSectionData)
     }
 
 
@@ -275,6 +307,7 @@ export default function SgHomeScreen({ navigation, route }) {
                     <ScrollViewContainer>
                         {searchResults()}
                         {actionSection()}
+                        {actionsasSection()}
                         {homepageButtonLayout()}
                     </ScrollViewContainer>
                 </Container>

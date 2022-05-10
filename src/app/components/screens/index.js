@@ -126,6 +126,9 @@
 
         //Home Context
         export { homeScreenGenreContext } from 'main/sgHomeScreenContext'
+            //Date Contexts
+            export { homeScreenDatesContext } from 'main/sgHomeScreenGames/sgHomeDates'
+            
             //Genre Contexts
             export { homeScreenActionContext } from 'main/sgHomeScreenGames/sgHomeActionGames'
 
