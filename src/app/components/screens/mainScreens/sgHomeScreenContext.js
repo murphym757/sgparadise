@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, Image, FlatList, TouchableOpacity } from 'react-native';
-import { MainFont, MainHeadingLongTitle, ViewTopRow } from 'index';
+import { MainFont, MainHeading, MainHeadingLongTitle, ViewTopRow, Container, ContentContainer } from 'index';
 
 // Links to the game page
 function passDataToNextPage(navigation, item) {
@@ -41,7 +41,14 @@ function sgGameListing(passingSectionData, item) {
         <TouchableOpacity style={{height:100, marginTop: 3, marginBottom: 100}}
             onPress={() => passDataToNextPage(passingSectionData.navigation, item)}>
             {detailedGameImage(item)}
-            <MainFont>{item.gameName}</MainFont>
+            {item.gameName.length < 18
+                ?   <ViewTopRow>
+                        <MainFont>{item.gameName}</MainFont>
+                </ViewTopRow>
+                :   <ViewTopRow>
+                    <MainFont style={{ flex: 1 }}>{item.gameName.substring(0, 13) + '...'}</MainFont>
+                </ViewTopRow>
+            }
             <MainFont>{item.gameReleaseDate}</MainFont>
             <MainFont>{item.gameRating} <passingSectionData.FontAwesomeIcon icon={ passingSectionData.faStar } color={passingSectionData.colors.secondaryColor} size={15} /></MainFont>
         </TouchableOpacity>
@@ -51,7 +58,7 @@ function sgGameListing(passingSectionData, item) {
 // Contains both the cover image and the data that belongs to each 
 function sgGameSet(passingSectionData, titleForRelatedData, descriptionForRelatedData) {
     return (
-        <View>
+        <View style={{paddingVertical: 25, flex: 1, flexDirection: 'column'}}>
             <ViewTopRow style={{justifyContent: 'space-between'}}>
                 <View>
                     <MainHeadingLongTitle>{titleForRelatedData}</MainHeadingLongTitle>
@@ -62,9 +69,9 @@ function sgGameSet(passingSectionData, titleForRelatedData, descriptionForRelate
             </ViewTopRow>
             <MainFont>{descriptionForRelatedData}</MainFont>
             <FlatList
+                contentContainerStyle={{}}
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
-                scrollEnabled={false}
                 data={passingSectionData.gamesArray}
                 keyboardShouldPersistTaps="always"
                 ItemSeparatorComponent={() => <View style={{ width: 35 }} />}

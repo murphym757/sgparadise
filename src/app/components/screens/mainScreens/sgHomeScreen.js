@@ -12,6 +12,7 @@ import {
     SgHomeActionGames,
     MainHeadingLongTitle,
     homeScreenDatesContext,
+    homeScreenSpotlightGamesContext,
     faStar,
     FontAwesomeIcon,
     homeScreenGenreContext,
@@ -41,11 +42,15 @@ export default function SgHomeScreen({ navigation, route }) {
         } = useSearchBar()
     const colors = useContext(CurrentThemeContext)
     const date = useContext(homeScreenDatesContext)
+    const spotlights = useContext(homeScreenSpotlightGamesContext)
     const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be read
     const [isLoading, setIsLoading] = useState(true)
     const [userInfo, setUserInfo] = useState()
     const [collectionName, setCollectionName] = useState('sgAPI')
     const [gameIndex, setGameIndex] = useState()
+    // For Spotlight Section
+    const [spotlightGameName, setSpotlightGameName] = useState('')
+    console.log("🚀 ~ file: sgHomeScreen.js ~ line 53 ~ SgHomeScreen ~ spotlightGameName", spotlightGameName)
     // For the 1st Section
     const [gamesArray, setgamesArray] = useState([])
     const [gamesArrayTitle, setgamesArrayTitle] = useState('')
@@ -129,16 +134,6 @@ export default function SgHomeScreen({ navigation, route }) {
         if (month == 13) return null
     }
 
-    // Determines the number the current week
-    function findWeekofYear() {
-        const currentdate = new Date();
-        const oneJan = new Date(currentdate.getFullYear(),0,1);
-        let numberOfDays = Math.floor((currentdate - oneJan) / (24 * 60 * 60 * 1000));
-        let result = Math.ceil(( currentdate.getDay() + 1 + numberOfDays) / 7);
-        return result
-    }
-
-
     useEffect(() => {
         function loadingTime() {
             return new Promise(resolve => {
@@ -149,7 +144,7 @@ export default function SgHomeScreen({ navigation, route }) {
                 )
                 console.log('i fire once')
                 dope()
-                findWeekofYear()
+                spotlights.findWeekofYear(setSpotlightGameName)
               }, 2000)
               arrayOfFunctions()
             }, [])

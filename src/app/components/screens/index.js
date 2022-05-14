@@ -126,10 +126,13 @@
 
         //Home Context
         export { homeScreenGenreContext } from 'main/sgHomeScreenContext'
-            //Date Contexts
+            //Date Context
             export { homeScreenDatesContext } from 'main/sgHomeScreenGames/sgHomeDates'
+
+            //Spotlight Context
+            export { homeScreenSpotlightGamesContext } from 'main/sgHomeScreenGames/sgSpotlightedGames'
             
-            //Genre Contexts
+            //Genre Context
             export { homeScreenActionContext } from 'main/sgHomeScreenGames/sgHomeActionGames'
 
         //Game Uploads Context
