@@ -21,7 +21,8 @@ import {
     GeneralFontColor,
     TouchableButton,
     TouchableButtonFont,
-    ViewTopRow
+    ViewTopRow,
+    windowHeight
 } from 'index'
 import { useIsFocused } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
@@ -51,6 +52,10 @@ export default function SgHomeScreen({ navigation, route }) {
     // For Spotlight Section
     const [spotlightGameName, setSpotlightGameName] = useState('')
     console.log("🚀 ~ file: sgHomeScreen.js ~ line 53 ~ SgHomeScreen ~ spotlightGameName", spotlightGameName)
+     // For the Spotlight Game
+     const [spotlightArray, setSpotlightArray] = useState([])
+     const [spotlightArrayTitle, setSpotlightArrayTitle] = useState('')
+     const [spotlightArrayTagLine, setSpotlightArrayTagLine] = useState('')
     // For the 1st Section
     const [gamesArray, setgamesArray] = useState([])
     const [gamesArrayTitle, setgamesArrayTitle] = useState('')
@@ -108,6 +113,9 @@ export default function SgHomeScreen({ navigation, route }) {
     /*----------- */
 
     function dope() {
+        const spotlightData = {
+            setSpotlightArray, setSpotlightArrayTitle, setSpotlightArrayTagLine, sgFirebaseGamesCollectionSubGenre, genreSpecFunc
+        }
         const gameData1 = {
             setgamesArray, setgamesArrayTitle, setgamesArrayDescription, sgFirebaseGamesCollectionSubGenre, genreSpecFunc
         }
@@ -119,10 +127,11 @@ export default function SgHomeScreen({ navigation, route }) {
         const passingGameData5 = {}
         const d = new Date();
         let month = d.getMonth();
+        if (month == 0) return null
         if (month == 1) return null
         if (month == 2) return null
         if (month == 3) return null
-        if (month == 4) return date.mayGames(gameData1, gameData2)
+        if (month == 4) return date.mayGames(spotlightData, gameData1, gameData2)
         if (month == 5) return null
         if (month == 6) return null
         if (month == 7) return null
@@ -131,7 +140,6 @@ export default function SgHomeScreen({ navigation, route }) {
         if (month == 10) return null
         if (month == 11) return null
         if (month == 12) return null
-        if (month == 13) return null
     }
 
     useEffect(() => {
@@ -175,6 +183,7 @@ export default function SgHomeScreen({ navigation, route }) {
         if (consoleName == 'sg32X') return 'Sega 32X'
         if (consoleName == 'sgCD') return 'Sega Cd'
     }
+    
 
     async function sgFirebaseGamesCollection(passingData) {
         const subscriber = sgDB
@@ -197,8 +206,9 @@ export default function SgHomeScreen({ navigation, route }) {
         return () => subscriber()
     }
 
-    async function sgFirebaseGamesCollectionSubGenre(collectiveGameData) {
-        const subscriber = sgDB
+    async function sgFirebaseGamesCollectionSubGenre(collectiveGameData, spotlightGame) {
+        if (collectiveGameData.gameRefSpecificRelatedData != null) {
+            const subscriber = sgDB
             .collection(collectiveGameData.collectionName)
             .doc(collectiveGameData.consoleName)
             .collection(collectiveGameData.gamesCollection)
@@ -217,6 +227,27 @@ export default function SgHomeScreen({ navigation, route }) {
                 collectiveGameData.setupGameData(games)
             })
         return () => subscriber()
+        } else {
+            const subscriber = sgDB
+            .collection(collectiveGameData.collectionName)
+            .doc(collectiveGameData.consoleName)
+            .collection(collectiveGameData.gamesCollection)
+            .orderBy(collectiveGameData.gamesCollectionOrderBy, collectiveGameData.gamesCollectionOrderDirection)
+            .limit(collectiveGameData.gamesCollectionOrderLimit)
+            .onSnapshot(querySnapshot => {
+                const games = []
+                querySnapshot.forEach(documentSnapshot => {
+                    games.push({
+                    ...documentSnapshot.data(),
+                    key: documentSnapshot.id,
+                    })
+                })
+        
+                collectiveGameData.setupGameData(games)
+            })
+        return () => subscriber()
+        }
+        
     }
     
     function searchResults() {
@@ -276,12 +307,11 @@ export default function SgHomeScreen({ navigation, route }) {
         )
     }
     /*-----------*/
-
-    // Retrieves data before the page loads
-
-    
-
     // Renders on page
+    function spotlightSection() {
+        Object.assign(passingSectionData, {gamesArray: spotlightArray})
+        return actionGenreContext.spotlightGamesGen(passingSectionData)
+    }
     function actionSection() {
         Object.assign(passingSectionData, {gamesArray})
         return actionGenreContext.beatEmUpListGameSet(passingSectionData)
@@ -296,11 +326,13 @@ export default function SgHomeScreen({ navigation, route }) {
   return (
     <SafeAreaViewContainer>
         {isLoading !== true 
-            ?   <Container style={{paddingBottom: 150}}>
-            <MainFont>Logo goes here</MainFont>
+            ?   <Container style={{paddingBottom: windowHeight/5}}>
+                    <MainFont>Logo goes here</MainFont>
                     {searchBar(searchBarTitle, searchType, searchQuery)}
-                    <ScrollViewContainer>
+                    <ScrollViewContainer 
+                    showsVerticalScrollIndicator={false}>
                         {searchResults()}
+                        {spotlightSection()}
                         {actionSection()}
                         {actionsasSection()}
                         {homepageButtonLayout()}

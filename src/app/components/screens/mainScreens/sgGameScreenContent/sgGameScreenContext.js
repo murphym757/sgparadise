@@ -80,7 +80,7 @@ function detailedGameName(item, setGameHomeScreenShot) {
     )
 }
 
-function detailedGameImage(item) {
+function detailedGameCover(item) {
     return (
         <CardContent>
             <View style={{
@@ -139,7 +139,7 @@ function detailedGameInfo(item, isLoading, setGameHomeScreenShot) {
                 </View>
                 <ViewTopRow style={{justifyContent: 'space-between'}}>
                     <View>
-                        {detailedGameImage(item)}
+                        {detailedGameCover(item)}
                     </View>
                     <View style={{paddingTop: 15}}>
                         {detailedGameReleaseDate(item)}

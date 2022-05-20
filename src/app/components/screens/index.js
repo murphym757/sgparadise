@@ -47,6 +47,10 @@
             BackButtonTopLayer,
             Card,
             CardContent,
+            CarouselCardBody,
+            CarouselCardContainer,
+            CarouselCardHeader,
+            CarouselCardImage,
             CenterContent,
             Container,
             ContentContainer,
@@ -54,6 +58,7 @@
             ExpandableHeading,
             GamePageImageBackground,
             GeneralFontColor,
+            ItemWidth,
             LinkedContentGeneralInfoView,
             LinkedContentGenreView,
             MainFont,
@@ -63,20 +68,22 @@
             MainHeading,
             MainHeadingButton,
             MainHeadingLongTitle,
-            MainSubHeading,
             MainSubFont,
+            MainSubHeading,
             PageContainer,
             PageContainerCover,
             SafeAreaViewContainer,
             SafeAreaViewLoader,
             ScrollViewContainer,
             SearchFont,
+            sliderWidth,
             Styles,
             TextInputSearchBar,
             ViewContainer,
             ViewSortColumn,
             ViewSortRow,
-            windowHeight
+            windowHeight,
+            windowWidth
         } from 'assets/styles/globalStyling'
 
         //Auth Styling

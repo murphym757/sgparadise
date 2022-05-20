@@ -1,11 +1,37 @@
 import styled from 'styled-components'
-import { View, Text, ScrollView, SafeAreaView, Dimensions, ImageBackground, StyleSheet } from 'react-native';
+import { View, Text, Image, ScrollView, SafeAreaView, Dimensions, ImageBackground, StyleSheet } from 'react-native';
 import { RFValue } from "react-native-responsive-fontsize";
 import {
     currentTheme
 } from './globalTheme'
 
 export const windowHeight = Dimensions.get('window').height
+export const windowWidth = Dimensions.get('window').width
+
+
+// For Image Carousel
+export const SliderWidth = windowWidth
+export const ItemWidth =  Math.round(SliderWidth * 0.7)
+export const CarouselCardHeader = styled(Text) `
+    color: ${currentTheme.primaryFontColor};
+    fontSize: 28;
+    fontWeight: 700;
+    paddingLeft: 20;
+    paddingTop: 20;
+`;
+export const CarouselCardBody = styled(Text) `
+    color: ${currentTheme.primaryFontColor};
+    fontSize: 18;
+    paddingLeft: 20;
+    paddingLeft: 20;
+    paddingRight: 20;
+`;
+export const CarouselCardImage = styled(Image) `
+    height: 250;
+    width: ${ItemWidth};
+    borderRadius: 5;
+`;
+/*-----------------*/
 
 export const Container = styled(View) `
     paddingLeft: ${RFValue(22, windowHeight)}px;
@@ -51,6 +77,17 @@ export const Styles = StyleSheet.create({
         shadowOffset: {width: 6, height: 4},
         shadowOpacity: 0.2,
         shadowRadius: 3,
+    },
+    CarouselStyle: {
+        backgroundColor: 'white',
+        borderRadius: 8,
+        width: `${ItemWidth}`,
+        paddingBottom: 40,
+        shadowColor: "#000",
+        shadowOffset: {width: 0, height: 3},
+        shadowOpacity: 0.29,
+        shadowRadius: 4.65,
+        elevation: 7,
     }
 });
 

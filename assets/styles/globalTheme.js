@@ -35,7 +35,8 @@ const sgParadiseDefaultTheme = {
         failureAlertColor: secondaryColor,
         white: white,
         black: black,
-        offBlack: offBlack
+        offBlack: offBlack,
+        imageOpacityOverlay: primaryColorAlt
     },
     dark: {
         primaryColor: primaryColorAlt,
@@ -51,9 +52,10 @@ const sgParadiseDefaultTheme = {
         successAlertColor: secondaryFontColor,
         failureAlertFont: failureAlertFont,
         failureAlertColor: secondaryColor,
-        white: black,
-        black: white,
-        offBlack: offBlack
+        white: white,
+        black: black,
+        offBlack: offBlack,
+        imageOpacityOverlay: primaryColorAlt
     }
     
 }
