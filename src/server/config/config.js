@@ -90,8 +90,14 @@ const firebaseConfig = {
   appId: FIREBASE_APP_ID
 }
 
+const elasticConfig = {
+  elasticID: ELASTIC_ID,
+  elasticUsername: ELASTIC_USERNAME, 
+  elasticPassword: ELASTIC_PASSWORD
+}
+
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig)
 }
 
-export { imagesConfig, gamesConfig, firebase }
+export { imagesConfig, gamesConfig, firebase, elasticConfig }
