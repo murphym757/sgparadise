@@ -30,7 +30,8 @@ export default function sgSearchScreen({route, navigation}) {
     const [ gameName, setGameName ] = useState('')
     const [searchQueryArray, setSearchQueryArray] = useState([])
     console.log("🚀 ~ file: sgSearchScreen.js ~ line 31 ~ sgSearchScreen ~ searchQueryArray", searchQueryArray)
-
+    const [searchBarTouched, setSearchBarTouched] = useState(true)
+    const [homepageSearchBar, setHomepageSearchBar] = useState(false)
 
     // IGDB search data (Put on confirmation page)
     const [igdbGameSelected, setigdbGameSelected] = useState(false)
@@ -104,7 +105,7 @@ export default function sgSearchScreen({route, navigation}) {
         return (
             <Container>
                 <MainHeading>{"Search for a game"}</MainHeading>
-                {searchBar(searchBarTitle, searchType, searchQuery)}
+                {searchBar(searchBarTitle, searchType, searchQuery, searchBarTouched, homepageSearchBar)}
                 <TouchableButton onPress={() => confirmSearchGame()}>
                     <TouchableButtonFont>Search</TouchableButtonFont>
                 </TouchableButton>

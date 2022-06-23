@@ -159,7 +159,7 @@ export default function SgSelectedGameCoverScreen({route, navigation}) {
         if (igdbConsoleId == 64) return  setConsoleName('Master System'), setFirebaseConsoleName('sgMS'), setFirebaseStorageConsoleName(firebaseConsoleName)
         if (igdbConsoleId == 35) return  setConsoleName('Game Gear'), setFirebaseConsoleName('sgGG'), setFirebaseStorageConsoleName(firebaseConsoleName)
         if (igdbConsoleId == 32) return  setConsoleName('Saturn'), setFirebaseConsoleName('sgSat'), setFirebaseStorageConsoleName(firebaseConsoleName)
-        if (igdbConsoleId == 31) return  setConsoleName('32x'), setFirebaseConsoleName('sg32X'), setFirebaseStorageConsoleName(firebaseConsoleName)
+        if (igdbConsoleId == 30) return  setConsoleName('32x'), setFirebaseConsoleName('sg32X'), setFirebaseStorageConsoleName(firebaseConsoleName)
         if (igdbConsoleId == 78) return  setConsoleName('Sega CD'), setFirebaseConsoleName('sgCD'), setFirebaseStorageConsoleName(firebaseConsoleName)
     }
 

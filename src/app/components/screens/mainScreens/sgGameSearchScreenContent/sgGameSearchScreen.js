@@ -96,7 +96,7 @@ export default function SgGameSearchScreen({route, navigation}, props) {
         )
     }
 
-    function sgGameStack() {
+    function SgGameStack() {
         const currentSearchDB = filterList(testGamesDb)
       return (
             <FlatList
@@ -155,7 +155,7 @@ export default function SgGameSearchScreen({route, navigation}, props) {
                                 </MainFont>
                             </View>
                             <View>
-                                {sgGameStack()}
+                                {SgGameStack()}
                             </View>
                         </ScrollView>
                 </SafeAreaView>

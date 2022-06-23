@@ -44,7 +44,7 @@ export default function App() {
     },
   }
 
-  function sgUserStackNavbar() {
+  function SgUserStackNavbar() {
     return (
       <Tab.Navigator
         initialRouteName="Home"
@@ -62,7 +62,7 @@ export default function App() {
             <FontAwesomeIcon icon={ faHome } color={color} size={size} />
           ),
           }}
-          component={sgGameStack} // HomePage
+          component={SgGameStack} // HomePage
         />
         <Tab.Screen 
           name="Saved"
@@ -88,7 +88,7 @@ export default function App() {
     )
   }
 
-  function sgGameStack() {
+  function SgGameStack() {
     return (
       <Stack.Navigator initialRouteName="Game">
         <Stack.Screen 
@@ -130,7 +130,7 @@ export default function App() {
     )
   }
 
-  function sgAuthStack() {
+  function SgAuthStack() {
     return (
       <Stack.Navigator initialRouteName="Login">
         <Stack.Screen 
@@ -163,17 +163,17 @@ export default function App() {
           <Stack.Screen 
             name="Main" 
             options={{ headerShown: false }} 
-            component={sgUserStackNavbar}
+            component={SgUserStackNavbar}
           />
           <Stack.Screen 
             name="Game" 
             options={{ headerShown: false, gestureEnabled: false }} 
-            component={sgGameStack}
+            component={SgGameStack}
           />
           <Stack.Screen 
             name="Auth" 
             options={{ headerShown: false }} 
-            component={sgAuthStack}
+            component={SgAuthStack}
           />
         </Stack.Navigator>
       </NavigationContainer>

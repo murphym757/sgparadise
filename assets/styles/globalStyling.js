@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { View, Text, Image, ScrollView, SafeAreaView, Dimensions, ImageBackground, StyleSheet } from 'react-native';
+import { View, Text, Image, ScrollView, SafeAreaView, Dimensions, ImageBackground, StyleSheet, TextInput } from 'react-native';
 import { RFValue } from "react-native-responsive-fontsize";
 import {
     currentTheme
@@ -8,6 +8,26 @@ import {
 export const windowHeight = Dimensions.get('window').height
 export const windowWidth = Dimensions.get('window').width
 
+//Search Bar 
+export const CustomSearchBarContainer = styled(View) `
+    height: 48px;
+    borderRadius: 5px;
+    overflow: hidden;
+    fontFamily: 'SpartanRegular';
+    backgroundColor: ${currentTheme.primaryColor};
+    fontSize: 28;
+    marginTop: 10px;
+    marginBottom: 10px;
+    marginLeft: 1px;
+    marginRight: 1px;
+    paddingLeft: 16px;
+`;
+
+export const CustomSearchBarTextInput = styled(TextInput) `
+    fontFamily: 'SpartanRegular';
+    color: ${currentTheme.primaryColorAlt};
+`;
+/*------------------------ */
 
 // For Image Carousel
 export const SliderWidth = windowWidth
@@ -69,6 +89,14 @@ export const CardLinksView = styled(ContentContainer) `
     flexWrap: 'wrap';
 `;
 
+export const PlatformCard = styled(View) `
+    backgroundColor: ${currentTheme.primaryColor};
+	alignItems: center;
+    borderRadius: 5;
+    width: ${RFValue(250, windowHeight)}px;
+    height: ${RFValue(150, windowHeight)}px;
+`;
+
 export const Styles = StyleSheet.create({
     CardStyle: {
         flexGrow: 1,
@@ -91,6 +119,7 @@ export const Styles = StyleSheet.create({
     }
 });
 
+// Main Screen Background
 export const SafeAreaViewContainer = styled(SafeAreaView) `
     backgroundColor: ${currentTheme.primaryColor};
 `;
@@ -137,6 +166,13 @@ export const GeneralFontColor = styled(Text) `
 
 export const MainFont = styled(Text) `
     fontSize: ${RFValue(15, windowHeight)}px;
+	fontWeight: 500;
+    fontFamily: 'SpartanRegular';
+    color: ${currentTheme.primaryFontColor};
+`;
+
+export const MainFontPills = styled(Text) `
+    fontSize: ${RFValue(12, windowHeight)}px;
 	fontWeight: 500;
     fontFamily: 'SpartanRegular';
     color: ${currentTheme.primaryFontColor};

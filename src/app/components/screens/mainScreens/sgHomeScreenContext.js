@@ -11,6 +11,7 @@ import {
     CarouselCardContainer,
     CarouselCardHeader,
     CarouselCardImage,
+    PlatformCard,
     SliderWidth,
     Styles
  } from 'index'
@@ -49,8 +50,30 @@ function detailedGameCover(item, coverHeight, coverWidth) {
     )
 }
 
+// Platform Logo
+function detailedPlatformLogo(item, coverHeight, coverWidth) {
+    return (
+        <View style={{
+            width: '100%',
+        }}>
+            <Image
+                style={{
+                    height: coverHeight,
+                    width: coverWidth,
+                    resizeMode: 'stretch',
+                    borderRadius: 5,
+                }}
+                source={{
+                    uri: `${item.systemLogoDay}`,
+                }}
+            />
+        </View>
+    )
+}
+
 // Spotlight Gameplay Image 
 function detailedGameScreenshot(item) {
+    SliderWidth
     return (
         <View style={{
             width: '100%',
@@ -69,6 +92,7 @@ function detailedGameScreenshot(item) {
         </View>
     )
 }
+    console.log("🚀 ~ file: sgHomeScreenContext.js ~ line 73 ~ detailedGameScreenshot ~ SliderWidth", SliderWidth)
 
 function sgGameListingSpotlight(passingSectionData, item, laymanConsoleName, consoleName) {
     const coverHeight = 100
@@ -80,7 +104,7 @@ function sgGameListingSpotlight(passingSectionData, item, laymanConsoleName, con
                 <View style={{
                     position: 'relative'
                 }}>
-                <MainHeading style={{color: `${passingSectionData.colors.white}`, paddingBottom: 10}}>Spotlight</MainHeading>
+                <MainHeading style={{color: `${passingSectionData.colors.black}`, paddingBottom: 10}}>Spotlight</MainHeading>
                     {detailedGameScreenshot(item)}
                 </View>
                 
@@ -160,6 +184,40 @@ function sgGameListing(passingSectionData, item, consoleName) {
     )
 }
 
+function sgConsoleSet(passingSectionData, titleForRelatedData) {
+    const coverHeight = 80
+    const coverWidth = 200
+    return (
+        <View>
+            <MainHeading>{titleForRelatedData}</MainHeading>
+            <FlatList
+                contentContainerStyle={{}}
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+                data={passingSectionData.gamesArray}
+                keyboardShouldPersistTaps="always"
+                ItemSeparatorComponent={() => <View style={{ width: 35 }} />}
+                keyExtractor={item => item.id}
+                renderItem={({ item }) => (
+                    <View>
+                        <ViewTopRow>
+                            <PlatformCard>
+                                <View style={{
+                                    flex: 1, 
+                                    justifyContent: 'center',
+                                    alignItems: 'center'
+                                }}>
+                                    {detailedPlatformLogo(item, coverHeight, coverWidth)}
+                                    </View>
+                            </PlatformCard>
+                        </ViewTopRow>
+                    </View>
+                )}
+            />
+        </View>
+    )
+}
+
 // Contains both the cover image and the data that belongs to each 
 function sgGameSet(passingSectionData, titleForRelatedData, descriptionForRelatedData, consoleName) {
     return (
@@ -167,9 +225,6 @@ function sgGameSet(passingSectionData, titleForRelatedData, descriptionForRelate
             <ViewTopRow style={{justifyContent: 'space-between'}}>
                 <View>
                     <MainHeadingLongTitle>{titleForRelatedData}</MainHeadingLongTitle>
-                </View>
-                <View>
-                    <MainHeadingLongTitle>See All</MainHeadingLongTitle>
                 </View>
             </ViewTopRow>
             <MainFont>{descriptionForRelatedData}</MainFont>
@@ -193,12 +248,30 @@ function sgGameSet(passingSectionData, titleForRelatedData, descriptionForRelate
 
 // Retrieves the data and sets the data 
 
-// Spotlight games are console specific with the intent to showcase the best game on each respective console
+// Spotlight games are console specific with the intent to showcase the best game on each respective 
+function dataCollectorConsole(passingGameData) {
+    let setupGameData = passingGameData.setGamesArray
+    let setupGameDataTitle = passingGameData.setGamesArrayTitle
+    const collectionName = 'sgAPI'
+    const consolesCollectionOrderBy = 'systemConsoleLifespanStart'
+    const consolesCollectionOrderDirection = 'asc'
+
+    const collectiveGameData = {
+        setupGameData,
+        setupGameDataTitle,
+        collectionName,
+        consolesCollectionOrderBy,
+        consolesCollectionOrderDirection,
+        gameRefSpecificData: passingGameData.gameRefSpecificData,
+        gameRefSpecificRelatedData: passingGameData.gameRefSpecificRelatedData
+    }
+    return collectiveGameData
+}
 // Collect data primarily based on rating and in descending order
 function dataCollector(passingGameData) {
-    let setupGameData = passingGameData.setgamesArray
-    let setupGameDataTitle = passingGameData.setgamesArrayTitle
-    let setupGameDataDescription = passingGameData.setgamesArrayDescription
+    let setupGameData = passingGameData.setGamesArray
+    let setupGameDataTitle = passingGameData.setGamesArrayTitle
+    let setupGameDataDescription = passingGameData.setGamesArrayDescription
     const collectionName = 'sgAPI'
     const gamesCollection = 'games'
     const gamesCollectionOrderBy = 'gameRating'
@@ -220,10 +293,37 @@ function dataCollector(passingGameData) {
     return collectiveGameData
 }
 
+function dataActionGenreCollector(passingGameData) {
+    let setupGenreData = passingGameData.setGenreArray
+    let setupGenreDataTitle = passingGameData.setGenreArrayTitle
+    const collectionName = 'sgAPI'
+    const tagDoc = 'sgTags'
+    const genresCollection = 'genreTags'
+    const genreSpecificCollection = 'genreSpecificTags'
+    const genresCollectionOrderBy = 'tagName'
+    const genresCollectionOrderDirection = 'desc'
+    
+    const collectiveGameData = {
+        setupGenreData,
+        setupGenreDataTitle,
+        genreName: passingGameData.genreName,
+        collectionName,
+        tagDoc,
+        genresCollection,
+        genreSpecificCollection,
+        genresCollectionOrderBy,
+        genresCollectionOrderDirection
+    }
+    return collectiveGameData
+}
+
 export const gameData = {
+    sgConsoleSet,
     sgGameSetSpotlight,
     sgGameSet,
-    dataCollector
+    dataCollector,
+    dataCollectorConsole,
+    dataActionGenreCollector
 }
 
 export const homeScreenGenreContext = React.createContext(gameData)

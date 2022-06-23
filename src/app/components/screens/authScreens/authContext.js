@@ -311,6 +311,93 @@ export function AuthProvider({ children }) {
         })
     }
     */
+
+    // Returns data from firebase based on a specific subgenre
+    async function sgFirebaseGamesCollectionSubGenre(collectiveGameData) {
+        if (collectiveGameData.gameRefSpecificRelatedData != null) {
+            const subscriber = sgDB
+            .collection(collectiveGameData.collectionName)
+            .doc(collectiveGameData.consoleName)
+            .collection(collectiveGameData.gamesCollection)
+            .orderBy(collectiveGameData.gamesCollectionOrderBy, collectiveGameData.gamesCollectionOrderDirection)
+            .limit(collectiveGameData.gamesCollectionOrderLimit)
+            .where(collectiveGameData.gameRefSpecificData, '==', collectiveGameData.gameRefSpecificRelatedData)
+            .onSnapshot(querySnapshot => {
+                const games = []
+                querySnapshot.forEach(documentSnapshot => {
+                    games.push({
+                    ...documentSnapshot.data(),
+                    key: documentSnapshot.id,
+                    })
+                })
+        
+                collectiveGameData.setupGameData(games)
+            })
+        return () => subscriber()
+        } else {
+            const subscriber = sgDB
+            .collection(collectiveGameData.collectionName)
+            .doc(collectiveGameData.consoleName)
+            .collection(collectiveGameData.gamesCollection)
+            .orderBy(collectiveGameData.gamesCollectionOrderBy, collectiveGameData.gamesCollectionOrderDirection)
+            .limit(collectiveGameData.gamesCollectionOrderLimit)
+            .onSnapshot(querySnapshot => {
+                const games = []
+                querySnapshot.forEach(documentSnapshot => {
+                    games.push({
+                    ...documentSnapshot.data(),
+                    key: documentSnapshot.id,
+                    })
+                })
+        
+                collectiveGameData.setupGameData(games)
+            })
+        return () => subscriber()
+        }
+    }
+    /*-----------------*/
+    // Returns the collection of console names from firebase
+    async function sgFirebaseConsolesCollection(collectiveGameData) {
+        const subscriber = sgDB
+            .collection(collectiveGameData.collectionName)
+            .orderBy(collectiveGameData.consolesCollectionOrderBy, collectiveGameData.consolesCollectionOrderDirection)
+            .onSnapshot(querySnapshot => {
+                const consoles = []
+                querySnapshot.forEach(documentSnapshot => {
+                    consoles.push({
+                    ...documentSnapshot.data(),
+                    key: documentSnapshot.id,
+                    })
+                })
+        
+                collectiveGameData.setupGameData(consoles)
+            })
+        return () => subscriber()
+    }
+     /*-----------------*/
+     // Returns the collection of console names from firebase
+     async function sgFirebaseGenreCollection(collectiveGameData){
+        const subscriber = sgDB
+        .collection(collectiveGameData.collectionName)
+        .doc(collectiveGameData.tagDoc)
+        .collection(collectiveGameData.genresCollection)
+        .doc(collectiveGameData.genreName)
+        .collection(collectiveGameData.genreSpecificCollection)
+        .orderBy(collectiveGameData.genresCollectionOrderBy, collectiveGameData.genresCollectionOrderDirection)
+        .onSnapshot(querySnapshot => {
+            const genres = []
+            querySnapshot.forEach(documentSnapshot => {
+                genres.push({
+                ...documentSnapshot.data(),
+                key: documentSnapshot.id,
+                })
+            })
+    
+            collectiveGameData.setupGenreData(genres)
+        })
+    return () => subscriber()
+     }
+      /*-----------------*/
     ///Buttons for navigating through uploading games process
     function toNewSection(screenName, navigationPass) {
         navigationPass.navigate(screenName)
@@ -390,6 +477,9 @@ export function AuthProvider({ children }) {
         addGameToConsoleButtonGroup,
         addGameToConsole,
         deleteGameFromConsole,
+        sgFirebaseGamesCollectionSubGenre,
+        sgFirebaseConsolesCollection,
+        sgFirebaseGenreCollection,
         addImagesForGame,
         addCommentsForGame,
         addGenreTagsForGame,

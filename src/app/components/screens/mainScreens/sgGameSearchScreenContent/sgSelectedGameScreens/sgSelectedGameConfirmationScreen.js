@@ -51,7 +51,7 @@ export default function SgSelectedGameConfirmationScreen({route, navigation}) {
     const [gameUploaded, setGameUploaded] = useState(false)
     const pageDescription = `Here is all the information about ${gameName}. Is there anything you would like to change?`
     const stackName = 'Game'
-    const screenName = 'sgUserStackNavbar'
+    const screenName = 'SgUserStackNavbar'
     const confirmationPage = true
     const passingContent = {
         consoleName,

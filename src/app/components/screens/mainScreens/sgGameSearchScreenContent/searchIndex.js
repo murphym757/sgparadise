@@ -5,23 +5,17 @@ import {
     FlatList,
     TouchableOpacity
 } from 'react-native'
-import {CurrentThemeContext} from '../../../../../../assets/styles/globalTheme'
-import {
+import { 
+    faSearch,
+    faTimes,
+    FontAwesomeIcon,
     CustomInputField,
-    TouchableButton,
-    TouchableButtonFont,
-    FooterView,
-    FooterFont,
-    FooterLink
-  } from '../../../../../../assets/styles/authScreensStyling'
-
-  import{
-    MainFont,
-    MainSubFont,
-    MainHeading
-} from '../../../../../../assets/styles/globalStyling'
-
-  import { TestImageDB } from 'index'
+    CurrentThemeContext,
+    TestImageDB,
+    CustomSearchBarContainer,
+    CustomSearchBarTextInput, 
+    ViewTopRow,
+} from 'index'
 
 const SearchContext = React.createContext()
 
@@ -36,7 +30,7 @@ export function SearchBarProvider({ children, navigation }) {
     const [ sgIGDBSearchQuery, setsgIGDBSearchQuery ] = useState('')
     const [ sgFirebaseSearchQuery, setsgFirebaseSearchQuery ] = useState('')
 
-    function searchBar(searchBarTitle, searchType, searchQuery) {
+    function searchBar(searchBarTitle, searchType, searchQuery, searchBarTouched, setSearchBarTouched, homepageSearchBar) {
         function searchBarState() {
             if (searchType == 'sgIGDBSearch') return sgIGDBSearchQuery
             if (searchType == 'sgFirebaseSearch') return sgFirebaseSearchQuery
@@ -45,16 +39,48 @@ export function SearchBarProvider({ children, navigation }) {
             if (searchType == 'sgIGDBSearch') return setsgIGDBSearchQuery
             if (searchType == 'sgFirebaseSearch') return setsgFirebaseSearchQuery
         }
+
+        function resetSearchBarQuery() {
+            setSearchBarTouched(false)
+            if (searchType == 'sgIGDBSearch') return setsgIGDBSearchQuery('')
+            if (searchType == 'sgFirebaseSearch') return setsgFirebaseSearchQuery('')
+        }
+
+        
         return <View>
-                <CustomInputField
-                    placeholderTextColor={colors.primaryColor}
-                    placeholder={searchBarTitle}
-                    onChangeText={searchBarQuery()}
-                    value={searchBarState()}
-                    color={colors.primaryColor}
-                    underlineColorAndroid="transparent"
-                    autoCapitalize="none"
-                />
+                    {searchBarTouched == true
+                        ?   <CustomSearchBarContainer>
+                                <ViewTopRow style={{flex: 1, flexDirection: 'row'}}>
+                                    <View style={{ alignItems: 'left', justifyContent: 'center', backgroundColor: colors.primaryColor, paddingRight: 10 }}>
+                                        <FontAwesomeIcon 
+                                            icon={ faSearch } color={colors.primaryColorAlt} size={25}
+                                        />
+                                    </View>
+                                    <CustomSearchBarTextInput
+                                        style={{flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'flex-start', paddingRight: 190}}
+                                        placeholderTextColor={colors.primaryColorAlt}
+                                        placeholder={searchBarTitle}
+                                        onChangeText={searchBarQuery()}
+                                        value={searchBarState()}
+                                        underlineColorAndroid="transparent"
+                                        autoCapitalize="none"
+                                    />
+                                    {homepageSearchBar == true
+                                        ?   <TouchableOpacity onPress={() => resetSearchBarQuery()} style={{ alignItems: 'right', justifyContent: 'center', backgroundColor: colors.primaryColor }}>
+                                                <View>
+                                                    <FontAwesomeIcon icon={ faTimes } color={colors.primaryColorAlt} size={25} />
+                                                </View>
+                                            </TouchableOpacity>
+                                        :   <View/>
+                                    }
+                                </ViewTopRow>
+                            </CustomSearchBarContainer>
+                        :   <View style={{ alignItems: 'left', justifyContent: 'center', backgroundColor: colors.primaryColor, paddingVertical: 25 }}>
+                                <FontAwesomeIcon 
+                                    icon={ faSearch } color={colors.primaryColorAlt} size={25}
+                                />
+                            </View>
+                    }
         </View>
     }
 

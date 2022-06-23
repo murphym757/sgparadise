@@ -1,11 +1,13 @@
 import React from 'react'
 
 // Homepage Section Functions
+function consolesListSet(passingSectionData) {
+   const titleForRelatedData = `Platforms`
+   return passingSectionData.genreSpecFunc.sgConsoleSet(passingSectionData, titleForRelatedData)
+}
 function spotlightGamesGen(passingSectionData) {
-   const consoleName = 'sgGenesis'
+   const consoleName = passingSectionData.consoleName
    const laymanConsoleName = passingSectionData.findLaymanConsoleName(consoleName)
-   const titleForRelatedData = `Spotlight`
-   const descriptionForRelatedData = `When it comes to Beat 'em Ups, this is the cream of the crop for ${laymanConsoleName} games`
    return passingSectionData.genreSpecFunc.sgGameSetSpotlight(passingSectionData, laymanConsoleName, consoleName)
 }
 
@@ -29,6 +31,7 @@ function platformersListGameSet(passingSectionData) {
 
 
 export const gameData = {
+   consolesListSet,
    spotlightGamesGen,
     beatEmUpListGameSet,
     platformersListGameSet

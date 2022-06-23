@@ -82,7 +82,7 @@ export default function LoginScreen({navigation, route}) {
           <View style={{ paddingLeft: 20 }}>
             <FontAwesomeIcon 
               icon={ faTimes } color={colors.primaryFontColor} size={50} 
-              onPress={() => navigation.navigate('Main', { screen: 'sgUserStackNavbar' })}
+              onPress={() => navigation.navigate('Main', { screen: 'SgUserStackNavbar' })}
             />
           </View>
           <View>

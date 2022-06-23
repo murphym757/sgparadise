@@ -54,6 +54,8 @@
             CenterContent,
             Container,
             ContentContainer,
+            CustomSearchBarContainer,
+            CustomSearchBarTextInput,
             CustomTextAreaField,
             ExpandableHeading,
             GamePageImageBackground,
@@ -62,6 +64,7 @@
             LinkedContentGeneralInfoView,
             LinkedContentGenreView,
             MainFont,
+            MainFontPills,
             MainFontArrayLinks,
             MainFontLink,
             MainFontLinkView,
@@ -72,9 +75,11 @@
             MainSubHeading,
             PageContainer,
             PageContainerCover,
+            PlatformCard,
             SafeAreaViewContainer,
             SafeAreaViewLoader,
             ScrollViewContainer,
+            SearchBarSG,
             SearchFont,
             sliderWidth,
             Styles,
@@ -133,6 +138,8 @@
 
         //Home Context
         export { homeScreenGenreContext } from 'main/sgHomeScreenContext'
+             //Home Search Context
+            export { firebaseSearchContext } from 'main//sgHomeScreenGames/sgHomeSearchScreen'
             //Date Context
             export { homeScreenDatesContext } from 'main/sgHomeScreenGames/sgHomeDates'
 
@@ -166,6 +173,7 @@
         faHeart, 
         faHome,
         faLayerGroup,
+        faSearch,
         faMap,
         faPuzzlePiece,
         faShieldAlt,
