@@ -155,7 +155,7 @@
         //Uploaded Game Context
         export { gameScreenContext } from 'main/sgGameScreenContent/sgGameScreenContext'    
 
-    //Firebase
+    //Firebase and Elastic
     export { firebase, gamesConfig, getStorage, ref, getDownloadURL } from 'server/config/config'
     
     // Font Awesome

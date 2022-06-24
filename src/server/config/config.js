@@ -2,6 +2,7 @@ import * as firebase from 'firebase'
 import '@firebase/auth'
 import '@firebase/firestore'
 import '@firebase/storage'
+
 import {
     FIREBASE_API_KEY,
     FIREBASE_AUTH_DOMAIN,
@@ -90,14 +91,8 @@ const firebaseConfig = {
   appId: FIREBASE_APP_ID
 }
 
-const elasticConfig = {
-  elasticID: ELASTIC_ID,
-  elasticUsername: ELASTIC_USERNAME, 
-  elasticPassword: ELASTIC_PASSWORD
-}
-
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig)
 }
 
-export { imagesConfig, gamesConfig, firebase, elasticConfig }
+export { imagesConfig, gamesConfig, firebase }
