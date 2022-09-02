@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 import * as Font from 'expo-font';
-import AppLoading from 'expo-app-loading';
+import * as SplashScreen from 'expo-splash-screen';
 import { AuthProvider } from './src/app/components/screens/authScreens/authContext'
 import { TagsProvider } from './src/app/components/screens/authScreens/tagsContext'
 import { SearchBarProvider } from './src/app/components/screens/mainScreens/sgGameSearchScreenContent/searchIndex'
@@ -27,8 +27,16 @@ export default function Home() {
     'SpartanSemiBold': require('./assets/fonts/spartanFonts/Spartan-SemiBold.ttf'),
     'SpartanThin': require('./assets/fonts/spartanFonts/Spartan-Thin.ttf')
   });
+  useEffect(() => {
+    async function prepare() {
+      await SplashScreen.preventAutoHideAsync();
+    }
     
-      if (fontsLoaded) {
+    prepare();
+  }, []);
+
+    if (fontsLoaded) {
+        SplashScreen.hideAsync()
         return  (
           <AuthProvider>
             <SearchBarProvider>
@@ -37,10 +45,9 @@ export default function Home() {
               </TagsProvider>
             </SearchBarProvider>
           </AuthProvider>
-        );        
+        );
+                
       } else {
-        return (
-            <AppLoading />
-        )
+        return null
       }
 }
