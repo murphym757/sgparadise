@@ -40,11 +40,13 @@ export function SearchBarProvider({ children, navigation }) {
             if (searchType == 'sgFirebaseSearch') return setsgFirebaseSearchQuery
         }
 
+        /* Commented out for further research. Decision to remove this will come at a later date
         function resetSearchBarQuery() {
             setSearchBarTouched(false)
             if (searchType == 'sgIGDBSearch') return setsgIGDBSearchQuery('')
             if (searchType == 'sgFirebaseSearch') return setsgFirebaseSearchQuery('')
         }
+        */
 
         
         return <View>
@@ -60,19 +62,21 @@ export function SearchBarProvider({ children, navigation }) {
                                         style={{flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'flex-start', paddingRight: 190}}
                                         placeholderTextColor={colors.primaryColorAlt}
                                         placeholder={searchBarTitle}
+                                        clearButtonMode="while-editing"
                                         onChangeText={searchBarQuery()}
                                         value={searchBarState()}
                                         underlineColorAndroid="transparent"
                                         autoCapitalize="none"
                                     />
-                                    {homepageSearchBar == true
+                                    {/*Commented out for further research. Decision to remove this will come at a later date
+                                        homepageSearchBar == true
                                         ?   <TouchableOpacity onPress={() => resetSearchBarQuery()} style={{ alignItems: 'right', justifyContent: 'center', backgroundColor: colors.primaryColor }}>
                                                 <View>
                                                     <FontAwesomeIcon icon={ faTimes } color={colors.primaryColorAlt} size={25} />
                                                 </View>
                                             </TouchableOpacity>
                                         :   <View/>
-                                    }
+                                    */}
                                 </ViewTopRow>
                             </CustomSearchBarContainer>
                         :   <View style={{ alignItems: 'left', justifyContent: 'center', backgroundColor: colors.primaryColor, paddingVertical: 25 }}>

@@ -156,7 +156,7 @@
         export { gameScreenContext } from 'main/sgGameScreenContent/sgGameScreenContext'    
 
     //Firebase and Elastic
-    export { firebase, gamesConfig, getStorage, ref, getDownloadURL } from 'server/config/config'
+    export { firebase, algoliaConfig, gamesConfig, getStorage, ref, getDownloadURL } from 'server/config/config'
     
     // Font Awesome
     export { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'

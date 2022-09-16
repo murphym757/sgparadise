@@ -73,7 +73,6 @@ function detailedPlatformLogo(item, coverHeight, coverWidth) {
 
 // Spotlight Gameplay Image 
 function detailedGameScreenshot(item) {
-    SliderWidth
     return (
         <View style={{
             width: '100%',

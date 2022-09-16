@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react'
 import { View, Button, Image, FlatList, TouchableOpacity } from 'react-native'
 import { useAuth } from 'auth/authContext'
 import { useSearchBar } from 'main/sgGameSearchScreenContent/searchIndex'
+import { SearchArea } from 'main/sgGameSearchScreenContent/sgAlgoliaComponents/sgAlgoliaSearchAreaContext'
 import { loadingScreen } from 'auth/loadingScreen'
 import {
     ContentContainer,
@@ -169,7 +170,7 @@ export default function SgHomeScreen({ navigation, route }) {
         if (month == 5) return date.mayGames(consoleData, gameData1, gameData2, gameData3)
         if (month == 6) return null
         if (month == 7) return null
-        if (month == 8) return null
+        if (month == 8) return date.mayGames(consoleData, gameData1, gameData2, gameData3)
         if (month == 9) return null
         if (month == 10) return null
         if (month == 11) return null
@@ -384,6 +385,7 @@ async function sgFirebaseGamesCollection(passingData) {
                             </TouchableOpacity>
                         </View>
                 }
+                <Image source={{uri: 'https://reactnative.dev/img/tiny_logo.png'}} style={{width:32,height:32}} />
             </View>
         )
     }
@@ -391,6 +393,7 @@ async function sgFirebaseGamesCollection(passingData) {
     function homepageMainSection() {
         return (
             <View>
+                <SearchArea />
                 {homepageHeader()}
                 <ScrollViewContainer showsVerticalScrollIndicator={false}>
                     {actionSection()}

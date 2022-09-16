@@ -2,8 +2,11 @@ import * as firebase from 'firebase'
 import '@firebase/auth'
 import '@firebase/firestore'
 import '@firebase/storage'
+import algoliasearch from 'algoliasearch'
 
 import {
+    ALGOLIA_APPLICATION_ID,
+    ALGOLIA_API_KEY,
     FIREBASE_API_KEY,
     FIREBASE_AUTH_DOMAIN,
     FIREBASE_DATABASE_URL,
@@ -91,8 +94,13 @@ const firebaseConfig = {
   appId: FIREBASE_APP_ID
 }
 
+const algoliaConfig = {
+  apiKey: ALGOLIA_API_KEY,
+  appId: ALGOLIA_APPLICATION_ID
+}
+
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig)
 }
 
-export { imagesConfig, gamesConfig, firebase }
+export { imagesConfig, gamesConfig, firebase, algoliaConfig }
