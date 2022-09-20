@@ -249,7 +249,6 @@ function coverImageCapture(passingImageData) {
                 return snapshot.ref.getDownloadURL()
             })
             .then(url => {
-                console.log("Firebase storage image uploaded : ", url)
                 passingImageData.setFirebaseCoverUrl(url) 
             }) 
         })
@@ -292,7 +291,6 @@ function coverImageCapture(passingImageData) {
                     return snapshot.ref.getDownloadURL()
                 })
                 .then(url => {
-                    console.log("Firebase storage image uploaded : ", url)
                     if (item.imageNumber == 1) return item.setFirebaseScreenshot1Url(url)
                     if (item.imageNumber == 2) return item.setFirebaseScreenshot2Url(url)
                     if (item.imageNumber == 3) return item.setFirebaseScreenshot3Url(url)

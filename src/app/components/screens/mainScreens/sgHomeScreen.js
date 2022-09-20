@@ -61,7 +61,6 @@ export default function SgHomeScreen({ navigation, route }) {
     const [gameIndex, setGameIndex] = useState()
     // For Spotlight Section
     const [spotlightGameConsoleName, setSpotlightGameConsoleName] = useState()
-    console.log("🚀 ~ file: sgHomeScreen.js ~ line 53 ~ SgHomeScreen ~ spotlightGameConsoleName", spotlightGameConsoleName)
      // For the Spotlight Game
      const [spotlightArray, setSpotlightArray] = useState([])
      const [spotlightArrayTitle, setSpotlightArrayTitle] = useState('')
@@ -91,7 +90,6 @@ export default function SgHomeScreen({ navigation, route }) {
     const [gamesArrayDescription5, setgamesArrayDescription5] = useState('')
 
     const [genreArray, setGenreArray] = useState([])
-    console.log("🚀 ~ file: sgHomeScreen.js ~ line 89 ~ SgHomeScreen ~ genreArray", genreArray)
     const [genreArrayTitle, setGenreArrayTitle] = useState('')
 
     // Search Area
@@ -133,13 +131,6 @@ export default function SgHomeScreen({ navigation, route }) {
         setSpotlightArrayTagLine, 
         sgFirebaseGamesCollectionSubGenre, 
         genreSpecFunc
-    }
-
-    //For Udemy, please ignore this
-    function logItems(n) {
-        for(let i=0; i < n; i++) {
-            console.log(i)
-        }
     }
 
     /*----------- */
@@ -185,7 +176,6 @@ export default function SgHomeScreen({ navigation, route }) {
                     setUserInfo(currentUID),
                     setIsLoading(false)
                 )
-                console.log('i fire once')
                 dope()
                 spotlights.findWeekofYear(spotlightData, gamesArray)
               }, 2000)
@@ -198,8 +188,7 @@ export default function SgHomeScreen({ navigation, route }) {
         sgLoader()
         if(currentUID !== undefined) 
             return 
-                displayData(collectionName),
-                logItems(10)
+                displayData(collectionName)
                
     }, [isFocused])
 

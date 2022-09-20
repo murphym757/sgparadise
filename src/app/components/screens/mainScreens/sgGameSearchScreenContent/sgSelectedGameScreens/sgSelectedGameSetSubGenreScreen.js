@@ -67,7 +67,6 @@ export default function sgSelectedGameSetSubgenreScreen({route, navigation}) {
         gameSubgenre: chosenName,
         gameSummary
     }
-    console.log("🚀 ~ file: sgSelectedGameSetSubgenreScreen.js ~ line 46 ~ sgSelectedGameSetSubgenreScreen ~ passingContent", passingContent)
     const navigationPass = navigation
     let tagArrayData = {
         pageDescription, 

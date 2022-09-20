@@ -61,7 +61,6 @@ export default function SgSelectedGameCoverScreen({route, navigation}) {
         gameSlug,
         gameSummary
     }
-    console.log("🚀 ~ file: sgSelectedGameCoverScreen.js ~ line 44 ~ SgSelectedGameCoverScreen ~ passingContent", passingContent)
     const navigationPass = navigation
     const buttonGroupData = {
         backToPreviousPage, 

@@ -51,7 +51,6 @@ export function SearchArea(props) {
     function Hit({ hit }) { 
       const gameNameValue = hit.gameName
       const gameSubGenreValue = hit.gameSubgenre
-      console.log("🚀 ~ file: sgAlgoliaSearchAreaContext.js ~ line 77 ~ Hit ~ gameSubGenreValue", gameSubGenreValue.length)
       const coverLink = hit.gameCover
       const coverHeight = 75
       const coverWidth = 50

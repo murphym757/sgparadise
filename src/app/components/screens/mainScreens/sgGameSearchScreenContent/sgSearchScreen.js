@@ -23,13 +23,11 @@ export default function sgSearchScreen({route, navigation}) {
     //let { searchBarTitle, searchType, searchQuery } = route.params
     const colors = useContext(CurrentThemeContext)
     const { keySearchData, keySearchDataPartOfArray, clientIdIGDB, accessTokenIGDB, igdbConsoleId, gbConsoleId, selectedSystemLogo, searchType } = route.params
-    console.log("🚀 ~ file: sgSearchScreen.js ~ line 26 ~ sgSearchScreen ~ searchType", searchType)
     // For Search Bar
     const [searchBarTitle, setSearchBarTitle] = useState('Search Games')
     const [searchQuery, setSearchQuery] = useState('') //Figure out why searchQuery is coming back as "undefined"
     const [ gameName, setGameName ] = useState('')
     const [searchQueryArray, setSearchQueryArray] = useState([])
-    console.log("🚀 ~ file: sgSearchScreen.js ~ line 31 ~ sgSearchScreen ~ searchQueryArray", searchQueryArray)
     const [searchBarTouched, setSearchBarTouched] = useState(true)
     const [homepageSearchBar, setHomepageSearchBar] = useState(false)
 

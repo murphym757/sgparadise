@@ -19,7 +19,6 @@ export const InfiniteHits = forwardRef(
     const colors = useContext(CurrentThemeContext)
     const { hits, isLastPage, showMore } = useInfiniteHits(props);
     const [ gameSelected, setGameSelected ] = useState('')
-    console.log("🚀 ~ file: sgMeilisearchHitsContext.js ~ line 10 ~ gameSelected", gameSelected)
 
     async function chosenAlgoliaGame(item) {
       setGameSelected(item.gameName)

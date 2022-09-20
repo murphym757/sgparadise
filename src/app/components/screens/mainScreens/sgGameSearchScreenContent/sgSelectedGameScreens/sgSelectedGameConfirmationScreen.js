@@ -78,7 +78,6 @@ export default function SgSelectedGameConfirmationScreen({route, navigation}) {
         gameSummary,
         gameUploadedBy: currentUID
     }
-    console.log("🚀 ~ file: sgSelectedGameConfirmationScreen.js ~ line 80 ~ SgSelectedGameConfirmationScreen ~ passingContent", passingContent)
     
     const navigationPass = navigation
     let tagArrayData = {

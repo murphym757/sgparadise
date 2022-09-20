@@ -89,7 +89,6 @@ export default function SgSelectedGameplayScreen({route, navigation}) {
         gameSlug,
         gameSummary
     }
-    console.log("🚀 ~ file: sgSelectedGameplayScreen.js ~ line 55 ~ SgSelectedGameplayScreen ~ passingContent", passingContent)
     const navigationPass = navigation
     const buttonGroupData = {
         forwardToNextPage, 

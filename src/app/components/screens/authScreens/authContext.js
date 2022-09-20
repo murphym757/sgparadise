@@ -62,7 +62,6 @@ export function AuthProvider({ children }) {
 
     function deleteAccountDb(userId) {
         return sgDB.collection("users").doc(userId).delete().then(() => {
-            console.log("User successfully deleted!")
         }).catch((err) => {
           setError(`${err}`)
         })
@@ -91,7 +90,6 @@ export function AuthProvider({ children }) {
     function displayData(collectionName) {
         return sgDB.collection(collectionName)
         .get().then((querySnapshot) => {
-            console.log(querySnapshot.size)
             const newEntries = []
             querySnapshot.forEach((doc) => {
                 const entry = doc.data()
@@ -296,7 +294,6 @@ export function AuthProvider({ children }) {
      sgDB.collection(collectionName).doc(consoleName).collection(gamesCollection).doc(gameName).get()
         .then((doc) => {
             if (doc.exists) {
-                console.log(doc.data().views)
                 setViewCountFirebase(doc.data().views)
             } else {
                 console.log("No such document!")
