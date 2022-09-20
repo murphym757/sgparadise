@@ -30,7 +30,7 @@ function passDataToNextPage(navigation, item, consoleName) {
 }
 
 // Cover image
-function detailedGameCover(item, coverHeight, coverWidth) {
+function detailedGameCover(coverLink, coverHeight, coverWidth) {
     return (
         <View style={{
             width: '100%',
@@ -43,7 +43,7 @@ function detailedGameCover(item, coverHeight, coverWidth) {
                     borderRadius: 5,
                 }}
                 source={{
-                    uri: `${item.firebaseCoverUrl}`,
+                    uri: `${coverLink}`,
                 }}
             />
         </View>
@@ -91,11 +91,25 @@ function detailedGameScreenshot(item) {
         </View>
     )
 }
-    console.log("🚀 ~ file: sgHomeScreenContext.js ~ line 73 ~ detailedGameScreenshot ~ SliderWidth", SliderWidth)
+
+function charLengthSet(nameValue, nameLength, maxNameLength, nameLengthSet) {
+    if (nameLength < maxNameLength) {
+      return (
+        <MainFont>{nameValue}</MainFont>
+      )
+    } else {
+      return (
+        <MainFont>{nameValue.substring(0, nameLengthSet) + '...'}</MainFont>
+      )
+    }
+  }
+
 
 function sgGameListingSpotlight(passingSectionData, item, laymanConsoleName, consoleName) {
+    const coverLink = item.firebaseCoverUrl
     const coverHeight = 100
     const coverWidth = 75
+    const nameValue = item.gameName
     return (
         <View style={{paddingBottom: 75, flex: 1, flexDirection: 'column'}}>
             <TouchableOpacity style={{height:100, marginTop: 3, marginBottom: 100}}
@@ -124,17 +138,10 @@ function sgGameListingSpotlight(passingSectionData, item, laymanConsoleName, con
                     }}/>
                         <ViewTopRow style={{paddingTop: 215, position: 'absolute', flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'flex-start', paddingVertical: 25}}>
                             <View style={{paddingRight: 15, paddingVertical: 5}}>
-                                {detailedGameCover(item, coverHeight, coverWidth)}
+                                {detailedGameCover(coverLink, coverHeight, coverWidth)}
                             </View>
                             <View style={{paddingVertical: 25}}>
-                                {item.gameName.length < 18
-                                    ?   <ViewTopRow>
-                                            <MainFont style={{color: `${passingSectionData.colors.white}`}}>{item.gameName}</MainFont>
-                                    </ViewTopRow>
-                                    :   <ViewTopRow>
-                                        <MainFont style={{ flex: 1, color: `${passingSectionData.colors.white}` }}>{item.gameName.substring(0, 13) + '...'}</MainFont>
-                                    </ViewTopRow>
-                                }
+                                {charLengthSet(nameValue, nameValue.length, 18, 13)}
                                 <MainFont style={{color: `${passingSectionData.colors.white}`}}>{laymanConsoleName}</MainFont>
                                 <MainFont style={{color: `${passingSectionData.colors.white}`}}>{item.gameReleaseDate}</MainFont>
                                 <MainFont style={{color: `${passingSectionData.colors.white}`}}>{item.gameRating} <passingSectionData.FontAwesomeIcon icon={ passingSectionData.faStar } color={passingSectionData.colors.secondaryColor} size={15} /></MainFont>
@@ -163,20 +170,15 @@ function sgGameSetSpotlight(passingSectionData, laymanConsoleName, consoleName) 
 
 // Data beneath cover
 function sgGameListing(passingSectionData, item, consoleName) {
+    const coverLink = item.firebaseCoverUrl
     const coverHeight = 150
     const coverWidth = 125
+    const nameValue = item .gameName
     return (
         <TouchableOpacity style={{height:100, marginTop: 3, marginBottom: 100}}
             onPress={() => passDataToNextPage(passingSectionData.navigation, item, consoleName)}>
-            {detailedGameCover(item, coverHeight, coverWidth)}
-            {item.gameName.length < 18
-                ?   <ViewTopRow>
-                        <MainFont>{item.gameName}</MainFont>
-                </ViewTopRow>
-                :   <ViewTopRow>
-                    <MainFont style={{ flex: 1 }}>{item.gameName.substring(0, 13) + '...'}</MainFont>
-                </ViewTopRow>
-            }
+            {detailedGameCover(coverLink, coverHeight, coverWidth)}
+            {charLengthSet(nameValue, nameValue.length, 18, 13)}
             <MainFont>{item.gameReleaseDate}</MainFont>
             <MainFont>{item.gameRating} <passingSectionData.FontAwesomeIcon icon={ passingSectionData.faStar } color={passingSectionData.colors.secondaryColor} size={15} /></MainFont>
         </TouchableOpacity>
@@ -320,6 +322,8 @@ export const gameData = {
     sgConsoleSet,
     sgGameSetSpotlight,
     sgGameSet,
+    charLengthSet,
+    detailedGameCover,
     dataCollector,
     dataCollectorConsole,
     dataActionGenreCollector

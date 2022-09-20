@@ -1,5 +1,5 @@
 import React, { useRef, useState, useContext } from 'react';
-import { SafeAreaView, StatusBar, Text, Button, Image, FlatList, TouchableOpacity } from 'react-native'
+import { View, SafeAreaView, StatusBar, Text, Button, Image, FlatList, TouchableOpacity } from 'react-native'
 import { SearchBox } from './sgAlgoliaSearchBarContext'
 import { InfiniteHits } from './sgMeilisearchHitsContext'
 import algoliasearch from 'algoliasearch/lite'
@@ -7,13 +7,21 @@ import { InstantSearch } from 'react-instantsearch-hooks';
 import { Hits } from 'react-instantsearch-dom';
 import { 
     algoliaConfig,
+    CurrentThemeContext,
     CustomSearchBarContainer,
     CustomSearchBarTextInput, 
-    MainFont
+    MainFont,
+    MainSubFont,
+    homeScreenGenreContext,
+    FontAwesomeIcon,
+    faStar,
+    ViewTopRow
 } from 'index'
 
 export function SearchArea(props) {
-    const listRef = useRef(null);
+  const colors = useContext(CurrentThemeContext) 
+  const genreSpecFunc = useContext(homeScreenGenreContext)
+  const listRef = useRef(null);
 
   function scrollToTop() {
     listRef.current?.scrollToOffset({ animated: false, offset: 0 });
@@ -39,9 +47,35 @@ export function SearchArea(props) {
     */}
         
     }
-    function Hit({ hit }) {
+
+    function Hit({ hit }) { 
+      const gameNameValue = hit.gameName
+      const gameSubGenreValue = hit.gameSubgenre
+      console.log("🚀 ~ file: sgAlgoliaSearchAreaContext.js ~ line 77 ~ Hit ~ gameSubGenreValue", gameSubGenreValue.length)
+      const coverLink = hit.gameCover
+      const coverHeight = 75
+      const coverWidth = 50
         return (
-          <MainFont>{hit.gameName}</MainFont>
+          <View style={{flexDirection: "row"}}>
+            <View style={{}}>
+              {genreSpecFunc.detailedGameCover(coverLink, coverHeight, coverWidth)}
+            </View>
+            <View style={{paddingLeft: 25}}>
+              <View>
+                {genreSpecFunc.charLengthSet(gameNameValue, gameNameValue.length, 35, 35)}
+              </View>
+              <View style={{flexDirection: "row", paddingVertical: 10}}>
+                <MainFont>{hit.gameReleaseDate}</MainFont>
+                <MainSubFont> / </MainSubFont>
+                {genreSpecFunc.charLengthSet(gameSubGenreValue, gameSubGenreValue.length, 17, 15)}
+                <MainSubFont> / </MainSubFont>
+                <MainFont>{hit.gameRating} <FontAwesomeIcon icon={ faStar } color={colors.secondaryFontColor} size={12} /></MainFont>
+              </View>
+              <View>
+                <MainFont>Sega Genesis</MainFont>
+              </View>
+            </View>
+        </View>
         );
       }
 

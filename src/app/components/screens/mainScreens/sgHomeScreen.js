@@ -385,7 +385,6 @@ async function sgFirebaseGamesCollection(passingData) {
                             </TouchableOpacity>
                         </View>
                 }
-                <Image source={{uri: 'https://reactnative.dev/img/tiny_logo.png'}} style={{width:32,height:32}} />
             </View>
         )
     }

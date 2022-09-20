@@ -169,6 +169,7 @@ export function AuthProvider({ children }) {
         function pathToUploadViaFirebase() {
             setTimeout(() => {
                 addGameToConsole(passingContent)
+                addGameToSearchConsole(passingContent)
             }, 3000)
             return(
                 buttonGroupData.toNewStack(buttonGroupData.stackName, buttonGroupData.screenName, buttonGroupData.navigationPass)
@@ -231,6 +232,7 @@ export function AuthProvider({ children }) {
     async function addGameToConsole(passingContent) {
         const timestamp = firebase.firestore.FieldValue.serverTimestamp()
         sgDB.collection('sgAPI').doc(passingContent.sgFirebaseConsoleName).collection('games').doc(passingContent.sgGameSlug).set({
+            consoleName: passingContent.sgConsoleName,
             createdAt: timestamp,
             firebaseCoverUrl: passingContent.sgFirebaseCoverUrl,
             firebaseScreenshot1Url: passingContent.sgFirebaseScreenshot1Url,
@@ -254,6 +256,23 @@ export function AuthProvider({ children }) {
             postCreator: passingContent.sgPostCreator,
             sgID: complexID(20),
             views: viewCountFirebase
+        })
+    }
+
+    
+    // Add Game to sgSearch (For search purposes)
+    async function addGameToSearchConsole(passingContent) {
+        const timestamp = firebase.firestore.FieldValue.serverTimestamp()
+        sgDB.collection('sgSearch').doc(`${passingContent.sgGameSlug} (${passingContent.sgGameSlug})`).set({
+            consoleName: passingContent.sgConsoleName,
+            createdAt: timestamp,
+            gameCover: passingContent.sgFirebaseCoverUrl,
+            gameName: passingContent.sgGameName,
+            gameRating: passingContent.sgGameRating, 
+            gameReleaseDate: passingContent.sgGameReleaseDate,
+            gameSlug: passingContent.sgGameSlug,
+            gameSubgenre: passingContent.sgGameSubgenre,
+            sgID: complexID(20)
         })
     }
 
@@ -476,6 +495,7 @@ export function AuthProvider({ children }) {
         getGameData,
         addGameToConsoleButtonGroup,
         addGameToConsole,
+        addGameToSearchConsole,
         deleteGameFromConsole,
         sgFirebaseGamesCollectionSubGenre,
         sgFirebaseConsolesCollection,
