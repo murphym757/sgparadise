@@ -1,14 +1,17 @@
 import React, { useRef, useState, useContext } from 'react';
 import { useSearchBox } from 'react-instantsearch-hooks';
 import { 
+    CurrentThemeContext,
     CustomSearchBarContainer,
     CustomSearchBarTextInput, 
 } from 'index'
 
 export function SearchBox(props) {
+  const colors = useContext(CurrentThemeContext) 
   const { query, refine } = useSearchBox(props);
   const [inputValue, setInputValue] = useState(query);
   const inputRef = useRef(null);
+  const searchBarTitle = 'Search Games'
 
   function setQuery(newQuery) {
     setInputValue(newQuery);
@@ -24,17 +27,19 @@ export function SearchBox(props) {
   }
 
   return (
-    <CustomSearchBarContainer>
-      <CustomSearchBarTextInput
+    <CustomSearchBarTextInput
         ref={inputRef}
         value={inputValue}
         onChangeText={setQuery}
+        style={{flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'flex-start', paddingRight: 190}}
+        placeholderTextColor={colors.primaryColorAlt}
+        placeholder={searchBarTitle}
         clearButtonMode="while-editing"
+        underlineColorAndroid="transparent"
         autoCapitalize="none"
         autoCorrect={false}
         spellCheck={false}
         autoCompleteType="off"
       />
-    </CustomSearchBarContainer>
   );
 }

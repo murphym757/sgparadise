@@ -26,7 +26,7 @@ import {
     ScrollViewContainer,
     SgConsoleListScreen,
     sgSearchResultsScreen,
-    sgSearchScreen,
+    SgSearchScreen,
     SgSelectedGameConfirmationScreen,
     SgSelectedGameCoverScreen,
     SgSelectedGameplayScreen,
@@ -282,7 +282,7 @@ export default function ConfirmAddGameScreen({navigation, route}) {
         return (
             <Stack.Navigator headerMode="none" initialRouteName="Home">
                 <Stack.Screen name="Home" component={SgConsoleListScreen} initialParams={{ addGameLinkPressed: true }} />
-                <Stack.Screen name="Page1" component={sgSearchScreen} />
+                <Stack.Screen name="Page1" component={SgSearchScreen} />
                 <Stack.Screen name="Page2" component={sgSearchResultsScreen} />
                 <Stack.Screen name="Page3" component={SgSelectedGameCoverScreen} />
                 <Stack.Screen name="Page4" component={SgSelectedGameplayScreen} />

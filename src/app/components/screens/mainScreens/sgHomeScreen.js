@@ -153,7 +153,7 @@ export default function SgHomeScreen({ navigation, route }) {
         const passingGameData5 = {}
         const d = new Date();
         let month = d.getMonth();
-        if (month == 0) return null
+        if (month == 0) return date.mayGames(consoleData, gameData1, gameData2, gameData3)
         if (month == 1) return null
         if (month == 2) return null
         if (month == 3) return null
@@ -162,10 +162,10 @@ export default function SgHomeScreen({ navigation, route }) {
         if (month == 6) return null
         if (month == 7) return null
         if (month == 8) return date.mayGames(consoleData, gameData1, gameData2, gameData3)
-        if (month == 9) return null
-        if (month == 10) return null
-        if (month == 11) return null
-        if (month == 12) return null
+        if (month == 9) return date.mayGames(consoleData, gameData1, gameData2, gameData3)
+        if (month == 10) return date.mayGames(consoleData, gameData1, gameData2, gameData3)
+        if (month == 11) return date.mayGames(consoleData, gameData1, gameData2, gameData3)
+        if (month == 12) return date.mayGames(consoleData, gameData1, gameData2, gameData3)
     }
 
     useEffect(() => {
@@ -174,7 +174,8 @@ export default function SgHomeScreen({ navigation, route }) {
               setTimeout(() => {
                 resolve(
                     setUserInfo(currentUID),
-                    setIsLoading(false)
+                    setIsLoading(false),
+                    udemyLoop1(10)
                 )
                 dope()
                 spotlights.findWeekofYear(spotlightData, gamesArray)
@@ -206,6 +207,13 @@ export default function SgHomeScreen({ navigation, route }) {
         if (consoleName == 'sgSat') return 'Sega Saturn'
         if (consoleName == 'sg32X') return 'Sega 32X'
         if (consoleName == 'sgCD') return 'Sega CD'
+    }
+
+    function udemyLoop1(n) {
+        for(let i = 0; i < n; i++) {
+            console.log(i)
+        }
+        return
     }
 
     /*
@@ -268,6 +276,7 @@ async function sgFirebaseGamesCollection(passingData) {
         return (
             <View>
                 <MainFont>Show search page options here</MainFont>
+                <SearchArea />
                 <FlatList
                     data={gamesFilterListName(chosenDb)}
                     keyboardShouldPersistTaps="always" 
@@ -381,7 +390,6 @@ async function sgFirebaseGamesCollection(passingData) {
     function homepageMainSection() {
         return (
             <View>
-                <SearchArea />
                 {homepageHeader()}
                 <ScrollViewContainer showsVerticalScrollIndicator={false}>
                     {actionSection()}

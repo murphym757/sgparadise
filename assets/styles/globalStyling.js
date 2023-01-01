@@ -15,7 +15,7 @@ export const CustomSearchBarContainer = styled(View) `
     overflow: hidden;
     fontFamily: 'SpartanRegular';
     backgroundColor: ${currentTheme.primaryColor};
-    fontSize: 28;
+    fontSize: 28px;
     marginTop: 10px;
     marginBottom: 10px;
     marginLeft: 1px;
@@ -34,7 +34,7 @@ export const SliderWidth = windowWidth
 export const ItemWidth =  Math.round(SliderWidth * 0.7)
 export const CarouselCardHeader = styled(Text) `
     color: ${currentTheme.primaryFontColor};
-    fontSize: 28;
+    px;
     fontWeight: 700;
     paddingLeft: 20;
     paddingTop: 20;

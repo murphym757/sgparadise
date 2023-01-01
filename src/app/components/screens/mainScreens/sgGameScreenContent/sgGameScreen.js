@@ -9,7 +9,7 @@ import {
     faCircle,
     FontAwesomeIcon,
     gameScreenContext,
-    sgSearchScreen,
+    SgSearchScreen,
     useAuth,
 } from 'index';
 import { useIsFocused } from '@react-navigation/native'
@@ -214,7 +214,7 @@ export default function GameScreen({navigation, route }) {
                 />
                 <Stack.Screen 
                     name="Page1" 
-                    component={sgSearchScreen}
+                    component={SgSearchScreen}
                     options={searchOptions()}
                 />
             </Stack.Navigator>

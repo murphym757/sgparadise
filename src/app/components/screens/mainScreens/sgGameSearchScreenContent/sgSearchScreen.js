@@ -13,7 +13,7 @@ import {
 } from 'index';
 import axios from 'axios'
 
-export default function sgSearchScreen({route, navigation}) {
+export default function SgSearchScreen({route, navigation}) {
     const { 
         searchBar,
         gamesFilterListName,

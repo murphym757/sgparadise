@@ -261,7 +261,7 @@ export function AuthProvider({ children }) {
     // Add Game to sgSearch (For search purposes)
     async function addGameToSearchConsole(passingContent) {
         const timestamp = firebase.firestore.FieldValue.serverTimestamp()
-        sgDB.collection('sgSearch').doc(`${passingContent.sgGameSlug} (${passingContent.sgGameSlug})`).set({
+        sgDB.collection('sgSearch').doc(`${passingContent.sgGameSlug} (${passingContent.sgConsoleName})`).set({
             consoleName: passingContent.sgConsoleName,
             createdAt: timestamp,
             gameCover: passingContent.sgFirebaseCoverUrl,

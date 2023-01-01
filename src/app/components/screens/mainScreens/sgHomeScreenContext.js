@@ -175,10 +175,12 @@ function sgGameListing(passingSectionData, item, consoleName) {
     const coverWidth = 125
     const nameValue = item .gameName
     return (
-        <TouchableOpacity style={{height:100, marginTop: 3, marginBottom: 100}}
+        <TouchableOpacity style={{height:125, marginTop: 3, marginBottom: 100}}
             onPress={() => passDataToNextPage(passingSectionData.navigation, item, consoleName)}>
             {detailedGameCover(coverLink, coverHeight, coverWidth)}
-            {charLengthSet(nameValue, nameValue.length, 18, 13)}
+            <View style={{paddingVertical: 5}}>
+                {charLengthSet(nameValue, nameValue.length, 18, 13)}
+            </View>
             <MainFont>{item.gameReleaseDate}</MainFont>
             <MainFont>{item.gameRating} <passingSectionData.FontAwesomeIcon icon={ passingSectionData.faStar } color={passingSectionData.colors.secondaryColor} size={15} /></MainFont>
         </TouchableOpacity>

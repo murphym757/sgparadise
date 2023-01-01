@@ -2,7 +2,8 @@ import React, { useRef, useState, useContext } from 'react';
 import { View, SafeAreaView, StatusBar, Text, Button, Image, FlatList, TouchableOpacity } from 'react-native'
 import { SearchBox } from './sgAlgoliaSearchBarContext'
 import { InfiniteHits } from './sgMeilisearchHitsContext'
-import algoliasearch from 'algoliasearch/lite'
+import Filters from './sgAlgoliaRefinementList'
+import algoliasearch from 'algoliasearch'
 import { InstantSearch } from 'react-instantsearch-hooks';
 import { Hits } from 'react-instantsearch-dom';
 import { 
@@ -15,6 +16,7 @@ import {
     homeScreenGenreContext,
     FontAwesomeIcon,
     faStar,
+    faSearch,
     ViewTopRow
 } from 'index'
 
@@ -22,6 +24,8 @@ export function SearchArea(props) {
   const colors = useContext(CurrentThemeContext) 
   const genreSpecFunc = useContext(homeScreenGenreContext)
   const listRef = useRef(null);
+  const [isModalOpen, setModalOpen] = useState(false);
+
 
   function scrollToTop() {
     listRef.current?.scrollToOffset({ animated: false, offset: 0 });
@@ -29,10 +33,24 @@ export function SearchArea(props) {
     function sgAlgolia() {
         const searchClient = algoliasearch(algoliaConfig.appId, algoliaConfig.apiKey);
         return (
-            <InstantSearch searchClient={searchClient} indexName="games">
-                <SearchBox onChange={scrollToTop} />
-                <InfiniteHits hitComponent={Hit} />
-            </InstantSearch>
+          <InstantSearch searchClient={searchClient} indexName="games">
+            <CustomSearchBarContainer>
+              <ViewTopRow style={{flex: 1, flexDirection: 'row'}}>
+                  <View style={{ alignItems: 'left', justifyContent: 'center', backgroundColor: colors.primaryColor, paddingRight: 10 }}>
+                    <FontAwesomeIcon 
+                        icon={ faSearch } color={colors.primaryColorAlt} size={25}
+                    />
+                  </View>
+                  <SearchBox onChange={scrollToTop} />
+                </ViewTopRow>
+            </CustomSearchBarContainer>
+            <Filters 
+              isModalOpen={isModalOpen}
+              onToggleModal={() => setModalOpen((isOpen) => !isOpen)}
+              onChange={scrollToTop} 
+            />
+            <InfiniteHits hitComponent={Hit} />
+          </InstantSearch>
         )
     {/*
         const client = algoliasearch(algoliaConfig.appId, algoliaConfig.apiKey)
@@ -46,6 +64,14 @@ export function SearchArea(props) {
         </View>
     */}
         
+    }
+
+    function sgAlgoliaDeleteObject() {
+      const searchClient = algoliasearch(algoliaConfig.appId, algoliaConfig.apiKey);
+      const index = searchClient.initIndex('games');
+      index.deleteObject('pac-man-2-the-new-adventures (Genesis)').then(({ hits }) => {
+        console.log(hits);
+      });
     }
 
     function Hit({ hit }) { 

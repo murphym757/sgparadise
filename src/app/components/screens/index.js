@@ -21,7 +21,7 @@
         export { default as SgConsoleListScreen } from 'main/sgGameScreenContent/sgConsoleListScreen'
         export { default as TestImageDB } from 'main/sgGameScreenContent/TestImageDB'
         export { default as SgSearchQuery } from 'main/sgGameScreenContent/sgConfirmAddGameScreen'
-        export { default as sgSearchScreen } from 'main/sgGameSearchScreenContent/sgSearchScreen'
+        export { default as SgSearchScreen } from 'main/sgGameSearchScreenContent/sgSearchScreen'
         export { default as sgSearchResultsScreen } from 'main/sgGameSearchScreenContent/sgSearchResultsScreen'
 
         // Game Screens
