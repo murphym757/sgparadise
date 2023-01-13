@@ -29,7 +29,7 @@
     "expo-font": "~10.2.0",
     "expo-splash-screen": "~0.16.2",
     "expo-status-bar": "~1.4.0",
-    "expo-updates": "~0.14.7",
+    "expo-updates": "~0.14.6",
     "firebase": "^8.6.7",
     "html-entities": "^1.4.0",
     "instantsearch.js": "^4.46.1",
