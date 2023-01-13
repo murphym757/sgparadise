@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react'
 import {
   Button,
   StyleSheet,
@@ -13,10 +13,21 @@ import {
   useCurrentRefinements,
   useRefinementList,
 } from 'react-instantsearch-hooks';
+import { 
+  CurrentThemeContext, 
+  MainFontPills, 
+  MainHeading,
+  ViewContainer,
+  ContentContainer,
+  MainFont,
+  MainSubFont,
+  AlgoliaSearchListLabelText,
+  AlgoliaSearchTitleText,
+} from 'index'
 
 export default function Filters({ isModalOpen, onToggleModal, onChange }) {
+  const colors = useContext(CurrentThemeContext)
   const { items, refine } = useRefinementList({ attribute: 'gameSubgenre' });
-  console.log("🚀 ~ file: sgAlgoliaRefinementList.js ~ line 19 ~ Filters ~ items", items)
   const { canRefine: canClear, refine: clear } = useClearRefinements();
   const { items: currentRefinements } = useCurrentRefinements();
   const totalRefinements = currentRefinements.reduce(
@@ -24,40 +35,33 @@ export default function Filters({ isModalOpen, onToggleModal, onChange }) {
     0
   );
   const styles = StyleSheet.create({
-    container: {
-      padding: 18,
-      backgroundColor: '#ffffff',
-    },
     title: {
       alignItems: 'center',
     },
-    titleText: {
-      fontSize: 32,
-    },
     list: {
       marginTop: 32,
+    },
+    listTitle: {
+      color: colors.primaryFontColor
     },
     item: {
       paddingVertical: 12,
       flexDirection: 'row',
       justifyContent: 'space-between',
       borderBottomWidth: 1,
-      borderColor: '#ddd',
+      borderColor: colors.primaryColorLight,
       alignItems: 'center',
     },
     itemCount: {
-      backgroundColor: '#252b33',
+      backgroundColor: colors.primaryColorLight,
       borderRadius: 24,
       paddingVertical: 4,
       paddingHorizontal: 8,
       marginLeft: 4,
     },
     itemCountText: {
-      color: '#ffffff',
+      color: colors.secondaryColor,
       fontWeight: '800',
-    },
-    labelText: {
-      fontSize: 16,
     },
     filterListButtonContainer: {
       flexDirection: 'row',
@@ -79,11 +83,12 @@ export default function Filters({ isModalOpen, onToggleModal, onChange }) {
     },
   });
 
-  function searchableList(title) {
+  function searchableList(title, tagCollection) {
     const listTitle = title
+    const tagList = tagCollection
     return (
       <View style={styles.list}>
-      <Text>{listTitle}</Text>
+      <Text style={styles.listTitle}>{listTitle}</Text>
         {items.map((item) => {
           return (
             <TouchableOpacity
@@ -94,9 +99,9 @@ export default function Filters({ isModalOpen, onToggleModal, onChange }) {
                 onChange();
               }}
             >
-              <Text style={{...styles.labelText, fontWeight: item.isRefined ? '800' : '400'}}>
+              <AlgoliaSearchListLabelText style={{fontFamily: item.isRefined ? 'SpartanBlack' : 'SpartanRegular'}}>
                 {item.label}
-              </Text>
+              </AlgoliaSearchListLabelText>
               <View style={styles.itemCount}>
                 <Text style={styles.itemCountText}>{item.count}</Text>
               </View>
@@ -121,14 +126,14 @@ export default function Filters({ isModalOpen, onToggleModal, onChange }) {
 
         <Modal animationType="slide" visible={isModalOpen}>
           <SafeAreaView>
-            <View style={styles.container}>
-              <View style={styles.title}>
-                <Text style={styles.titleText}>Games</Text>
-              </View>
+            <ViewContainer>
+              <ContentContainer>
+                <AlgoliaSearchTitleText>Games</AlgoliaSearchTitleText>
+              </ContentContainer>
               {searchableList('Consoles')}
               {searchableList('Genres')}
               {searchableList('Sub Genres')}
-            </View>
+            </ViewContainer>
             <View style={styles.filterListButtonContainer}>
               <View style={styles.filterListButton}>
                 <Button

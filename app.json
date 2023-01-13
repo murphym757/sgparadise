@@ -12,7 +12,8 @@
     },
     "userInterfaceStyle": "automatic",
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/53789bae-3cfb-4d0a-9c25-73866c02b858"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -21,18 +22,27 @@
       "bundleIdentifier": "com.sgparadise.sgparadise",
       "buildNumber": "1.0.0",
       "supportsTablet": true,
-      "userInterfaceStyle": "automatic"
+      "userInterfaceStyle": "automatic",
+      "runtimeVersion": {
+        "policy": "appVersion"
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-       "userInterfaceStyle": "automatic",
-      "package": "com.sgparadise.sgparadise"
+      "userInterfaceStyle": "automatic",
+      "package": "com.sgparadise.sgparadise",
+      "runtimeVersion": "1.0.0"
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "53789bae-3cfb-4d0a-9c25-73866c02b858"
+      }
     }
   }
 }

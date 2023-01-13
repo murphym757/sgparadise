@@ -1,6 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { View, FlatList, TouchableOpacity } from 'react-native'
 import { CurrentThemeContext, MainFontPills, MainHeading } from 'index'
+import Accordion from 'react-native-collapsible/Accordion';
+
 
 // Goes on separate page dedicated to home screen search functionality
 const actionTagsArray = {
@@ -107,7 +109,7 @@ function searchGenre(passedTagArray) {
                                     width: item.length * 18, 
                                     margin: 1,
                                     borderWidth: 1,
-                                    borderRadius: 50,
+                                    borderRadius: 10,
                                     alignItems:'center',
                                     justifyContent:'center',
                                     borderColor:'rgba(0,0,0,0.2)',
@@ -151,7 +153,6 @@ function searchTagsCollection(consolesSection, searchActive) {
         <View style={{paddingBottom: 175}}>
             {searchActive == false
                 ?   <View>
-                        {searchLanding(consolesSection)}
                 </View>
                 :   <View>
                         <MainHeading>No errors :)</MainHeading>

@@ -7,6 +7,7 @@ import {
 } from './globalTheme';
 
 export const windowHeight = Dimensions.get('window').height
+export const windowWidth = Dimensions.get('window').width
 
 /* Sg Collection */
 /*---------------------------------------*/
@@ -105,5 +106,18 @@ export const SearchGameData = styled(Text) `
 export const SearchGameResults = styled(View) `
     flexDirection: column;
     paddingBottom: ${RFValue(20, windowHeight)}px;
+`;
+/*---------------------------------------*/
+/* Sg Algolia RefinementList Page */
+/*---------------------------------------*/
+export const AlgoliaSearchListLabelText = styled(Text) `
+    color: ${currentTheme.primaryFontColor};
+    fontSize: ${RFValue(16, windowHeight)}px;
+`;
+
+export const AlgoliaSearchTitleText = styled(Text) `
+    fontFamily: 'SpartanMedium';
+    color: ${currentTheme.primaryFontColor};
+    fontSize: ${RFValue(32, windowHeight)}px;
 `;
 /*---------------------------------------*/

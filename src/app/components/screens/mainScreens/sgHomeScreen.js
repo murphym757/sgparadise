@@ -389,7 +389,7 @@ async function sgFirebaseGamesCollection(passingData) {
 
     function homepageMainSection() {
         return (
-            <View>
+            <View style={{paddingBottom: 200}}>
                 {homepageHeader()}
                 <ScrollViewContainer showsVerticalScrollIndicator={false}>
                     {actionSection()}

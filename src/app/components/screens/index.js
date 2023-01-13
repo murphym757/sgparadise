@@ -107,6 +107,8 @@
 
         //Screens Styling
         export {
+            AlgoliaSearchListLabelText,
+            AlgoliaSearchTitleText,
             AccordionHeader,
             AccordionView,
             CustomFontAwesomeIcon,
