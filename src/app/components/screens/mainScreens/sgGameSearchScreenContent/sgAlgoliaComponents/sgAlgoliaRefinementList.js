@@ -27,7 +27,6 @@ import {
 
 export default function Filters({ isModalOpen, onToggleModal, onChange }) {
   const colors = useContext(CurrentThemeContext)
-  const { items, refine } = useRefinementList({ attribute: 'gameSubgenre' });
   const { canRefine: canClear, refine: clear } = useClearRefinements();
   const { items: currentRefinements } = useCurrentRefinements();
   const totalRefinements = currentRefinements.reduce(
@@ -83,9 +82,10 @@ export default function Filters({ isModalOpen, onToggleModal, onChange }) {
     },
   });
 
-  function searchableList(title, tagCollection) {
+  function searchableList(title, searchAttribute) {
     const listTitle = title
-    const tagList = tagCollection
+    const attributeName = searchAttribute
+    const { items, refine } = useRefinementList({ attribute: attributeName });
     return (
       <View style={styles.list}>
       <Text style={styles.listTitle}>{listTitle}</Text>
@@ -130,9 +130,9 @@ export default function Filters({ isModalOpen, onToggleModal, onChange }) {
               <ContentContainer>
                 <AlgoliaSearchTitleText>Games</AlgoliaSearchTitleText>
               </ContentContainer>
-              {searchableList('Consoles')}
-              {searchableList('Genres')}
-              {searchableList('Sub Genres')}
+              {searchableList('Consoles', 'gameSubgenre')}
+              {searchableList('Consoles', 'gameGenre')}
+              {searchableList('Consoles', 'gameName')}
             </ViewContainer>
             <View style={styles.filterListButtonContainer}>
               <View style={styles.filterListButton}>
