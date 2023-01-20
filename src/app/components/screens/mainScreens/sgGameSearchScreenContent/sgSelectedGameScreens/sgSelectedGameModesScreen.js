@@ -35,7 +35,8 @@ export default function SgSelectedGameSetGameModesScreen({route, navigation}) {
         firebaseScreenshot3Url,
         gameSlug,
         gameSubgenre,
-        gameSummary
+        gameSummary,
+        sortedGameName,
     } = route.params
     const isFocused = useIsFocused()
     const [ gameArray, setGameArray ]= useState([])
@@ -67,7 +68,8 @@ export default function SgSelectedGameSetGameModesScreen({route, navigation}) {
         gameReleaseDate,
         gameSlug,
         gameSubgenre,
-        gameSummary
+        gameSummary,
+        sortedGameName
     }
     const navigationPass = navigation
     let tagArrayData = {

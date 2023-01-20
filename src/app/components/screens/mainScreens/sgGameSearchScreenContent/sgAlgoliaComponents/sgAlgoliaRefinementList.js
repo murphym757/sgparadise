@@ -132,7 +132,7 @@ export default function Filters({ isModalOpen, onToggleModal, onChange }) {
               </ContentContainer>
               {searchableList('Consoles', 'gameSubgenre')}
               {searchableList('Consoles', 'gameGenre')}
-              {searchableList('Consoles', 'gameName')}
+              {searchableList('Consoles', 'consoleName')}
             </ViewContainer>
             <View style={styles.filterListButtonContainer}>
               <View style={styles.filterListButton}>

@@ -33,7 +33,8 @@ export default function sgSelectedGameSetSubgenreScreen({route, navigation}) {
         firebaseScreenshot2Url,
         firebaseScreenshot3Url,
         gameSlug,
-        gameSummary
+        gameSummary,
+        sortedGameName
     } = route.params
     const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be read
     const [ gameArray, setGameArray ]= useState([])
@@ -65,7 +66,8 @@ export default function sgSelectedGameSetSubgenreScreen({route, navigation}) {
         gameReleaseDate,
         gameSlug,
         gameSubgenre: chosenName,
-        gameSummary
+        gameSummary,
+        sortedGameName
     }
     const navigationPass = navigation
     let tagArrayData = {

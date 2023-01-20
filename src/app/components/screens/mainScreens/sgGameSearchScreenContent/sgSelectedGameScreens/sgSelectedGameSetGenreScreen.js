@@ -41,7 +41,8 @@ export default function SgSelectedGameSetGenreScreen({route, navigation}) {
         gameRating, 
         gameReleaseDate,
         gameSlug,
-        gameSummary
+        gameSummary,
+        sortedGameName
     } = route.params
     const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be read
     const [ gameArray, setGameArray ]= useState([])
@@ -72,7 +73,8 @@ export default function SgSelectedGameSetGenreScreen({route, navigation}) {
         gameRating, 
         gameReleaseDate,
         gameSlug,
-        gameSummary
+        gameSummary,
+        sortedGameName
     }
     const navigationPass = navigation
     let tagArrayData = {

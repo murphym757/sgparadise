@@ -44,7 +44,8 @@ export default function SgSelectedGameConfirmationScreen({route, navigation}) {
         gameReleaseDate,
         gameSlug,
         gameSubgenre,
-        gameSummary
+        gameSummary,
+        sortedGameName
     } = route.params
   
     const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be read

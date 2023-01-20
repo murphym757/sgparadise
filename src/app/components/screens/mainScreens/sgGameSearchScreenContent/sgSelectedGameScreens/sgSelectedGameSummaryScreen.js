@@ -58,8 +58,8 @@ export default function SgSelectedGameSummaryScreen({route, navigation}) {
     const [screenshot2Url, setScreenshot2Url] = useState(`https://images.igdb.com/igdb/image/upload/t_1080p/${gameScreenshot2}.jpg`)
     const [screenshot3Url, setScreenshot3Url] = useState(`https://images.igdb.com/igdb/image/upload/t_1080p/${gameScreenshot3}.jpg`)
     const [folderName, setFolderName] = useState('images')
-    const [consoleNameFolder, setConsoleNameFolder] = useState(firebaseStorageConsoleName)
     const [subFolderName, setSubFolderName] = useState('Uploaded Games')
+    const [sortedGameName, setSortGameName] = useState(gameSlug.slice(0, 2))
     const [gameNameFolder, setGameNameFolder] = useState(gameSlug)
     const [coverArtFolder, setCoverArtFolder] = useState('coverArt')
     const [screenshotFolder, setScreenshotFolder] = useState('screenshots')
@@ -77,8 +77,9 @@ export default function SgSelectedGameSummaryScreen({route, navigation}) {
         screenshot2Url,
         screenshot3Url,
         folderName,
-        consoleNameFolder,
+        firebaseStorageConsoleName,
         subFolderName,
+        sortedGameName,
         gameNameFolder,
         coverArtFolder,
         screenshotFolder,

@@ -38,7 +38,8 @@ export default function SgSelectedGameplayScreen({route, navigation}) {
         gameReleaseDate,
         gameScreenshots,
         gameSlug,
-        gameSummary
+        gameSummary,
+        sortedGameName
     } = route.params
     
     const gameNameLastChar = gameName.charAt(gameName.length - 1)
@@ -87,7 +88,8 @@ export default function SgSelectedGameplayScreen({route, navigation}) {
         gameScreenshot2,
         gameScreenshot3,
         gameSlug,
-        gameSummary
+        gameSummary,
+        sortedGameName
     }
     const navigationPass = navigation
     const buttonGroupData = {

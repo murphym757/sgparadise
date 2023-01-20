@@ -232,13 +232,14 @@ function buttonGroupImages(buttonGroupData, resetChosenGameplayData) {
 function coverImageCapture(passingImageData) {
     const coverUrl = passingImageData.coverUrl
     const folderName = passingImageData.folderName
-    const consoleNameFolder = passingImageData.consoleNameFolder
+    const firebaseStorageConsoleName = passingImageData.firebaseStorageConsoleName
     const subFolderName = passingImageData.subFolderName
+    const sortedGameName = passingImageData.sortedGameName
     const gameNameFolder = passingImageData.gameNameFolder
     const coverArtFolder = passingImageData.coverArtFolder
     const coverArtFileName = passingImageData.coverArtFileName
     const fileType = passingImageData.fileType
-    const coverArtFileRoute = `${folderName}/${consoleNameFolder}/${subFolderName}/${gameNameFolder}/${coverArtFolder}/${coverArtFileName}.${fileType}`
+    const coverArtFileRoute = `${folderName}/${firebaseStorageConsoleName}/${subFolderName}/${sortedGameName}/${gameNameFolder}/${coverArtFolder}/${coverArtFileName}.${fileType}`
     fetch(coverUrl)
         .then(res => {
             return res.blob()
@@ -272,14 +273,15 @@ function coverImageCapture(passingImageData) {
     function screenshotImageCapture(item) {
         const screenshotUrl = item.imageUrl
         const folderName = item.folderName
-        const consoleNameFolder = item.consoleNameFolder
+        const firebaseStorageConsoleName = item.firebaseStorageConsoleName
         const subFolderName = item.subFolderName
+        const sortedGameNameFolder = item.sortedGameNameFolder
         const gameNameFolder = item.gameNameFolder
         const screenshotFolder = item.screenshotFolder
         const gameNameLength = item.gameNameCharCount
         const screenshotFileName = `${gameNameFolder.substring(0, gameNameLength)}-(screenshot${item.imageNumber})`
         const fileType = item.fileType
-        const screenshotFileRoute = `${folderName}/${consoleNameFolder}/${subFolderName}/${gameNameFolder}/${screenshotFolder}/${screenshotFileName}.${fileType}`
+        const screenshotFileRoute = `${folderName}/${firebaseStorageConsoleName}/${subFolderName}/${sortedGameNameFolder}/${gameNameFolder}/${screenshotFolder}/${screenshotFileName}.${fileType}`
 
         fetch(screenshotUrl)
             .then(res => {
