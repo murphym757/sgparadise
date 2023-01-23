@@ -141,16 +141,23 @@ export const ViewSortColumn = styled(View) `
     flexDirection: column;
 `;
 
-export const BackButtonTopLayer = styled(View) `
+/* Back Button */
+/*---------------------------------------*/
+export const BackButtonContainer = styled(Container) `
     marginLeft: ${RFValue(30, windowHeight)}px;
-    paddingTop: ${RFValue(5, windowHeight)}px; 
+`;
+
+export const BackButtonTopLayer = styled(View) `
+    paddingTop: ${RFValue(13, windowHeight)}px;
     position: absolute;
 `;
 
 export const BackButtonBottomLayer = styled(View) `
-    marginLeft:${RFValue(40, windowHeight)}px;
+    paddingTop: ${RFValue(26, windowHeight)}px;
+    paddingHorizontal: ${RFValue(11, windowHeight)}px;
     position: relative;
 `;
+/*---------------------------------------*/
 
 export const LinkedContentGenreView = styled(View) `
     paddingVertical: 20;

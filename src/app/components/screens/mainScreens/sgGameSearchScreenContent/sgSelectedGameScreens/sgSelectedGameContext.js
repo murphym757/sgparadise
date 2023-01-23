@@ -58,6 +58,7 @@ function starRatingSystem(buttonGroupData, updatedGameRating, setUpdatedGameRati
 }
 
 function gameSummaryResults(buttonGroupData, updatedGameSummary, setUpdatedGameSummary, windowHeight, colors) {
+    const stackName = ''
     return (
         <Container>
             <ContentContainer>
@@ -76,7 +77,7 @@ function gameSummaryResults(buttonGroupData, updatedGameSummary, setUpdatedGameS
                 autoCapitalize="none"
             />
             <MainFont>({updatedGameSummary.length}/500)</MainFont>
-            {buttonGroup(buttonGroupData)}
+            {buttonGroup(buttonGroupData, stackName)}
         </Container>
     )
 }
@@ -124,7 +125,8 @@ function gameConfirmationResults(tagArrayData, buttonGroupData, windowHeight, co
 }
 
 function gameResults(tagArrayData, buttonGroupData) {
-    const { selectedTags, tagCollection } = useTags() 
+    const { selectedTags, tagCollection } = useTags()
+    const stackName = ''
     return (
         <Container>
             <CenterContent>
@@ -143,7 +145,7 @@ function gameResults(tagArrayData, buttonGroupData) {
             <View>
                 {tagArrayData.tagSelected == false 
                     ?   <View></View>
-                    :   <View>{buttonGroup(buttonGroupData)}</View>
+                    :   <View>{buttonGroup(buttonGroupData, stackName)}</View>
                 }
             </View>
         </Container>
@@ -152,6 +154,7 @@ function gameResults(tagArrayData, buttonGroupData) {
 
 function gameModesResults(tagArrayData, buttonGroupData) {
     const { selectedTags, tagCollection } = useTags() 
+    const stackName = ''
     let initArray = tagArrayData.gameArray
     let deletionArray = tagArrayData.tagsNewArray
     let currentTagsArray = []
@@ -169,14 +172,14 @@ function gameModesResults(tagArrayData, buttonGroupData) {
             <View>
                 {tagArrayData.modeTagsSelected == false 
                     ?   <View></View>
-                    :   buttonGroup(buttonGroupData)
+                    :   buttonGroup(buttonGroupData, stackName)
                 }
             </View>
         </Container>
       ) 
 }
 
-function buttonGroup(buttonGroupData, confirmationPage) {
+function buttonGroup(buttonGroupData, confirmationPage, stackName) {
     return (
         <View>
             <TouchableButton onPress={() => buttonGroupData.forwardToNextPage(buttonGroupData.nextPageNumber, buttonGroupData.passingContent, buttonGroupData.navigationPass)}>
@@ -185,7 +188,7 @@ function buttonGroup(buttonGroupData, confirmationPage) {
                     :   <TouchableButtonFont>Next Page</TouchableButtonFont>
                 }
             </TouchableButton>
-            <TouchableButtonAlt style={{}} onPress={() => buttonGroupData.backToPreviousPage(buttonGroupData.navigationPass)}>
+            <TouchableButtonAlt style={{}} onPress={() => buttonGroupData.backToPreviousPage(buttonGroupData.navigationPass, stackName)}>
                 <TouchableButtonFontAlt>Previous Page</TouchableButtonFontAlt>
             </TouchableButtonAlt>
         </View>
@@ -219,12 +222,13 @@ function chosenImages(pageDescription){
 }
 
 function buttonGroupImages(buttonGroupData, resetChosenGameplayData) {
+    const stackName = ''
     return (
         <View>
             <TouchableButtonDelete onPress={() => resetChosenGameplayData()}>
                 <TouchableButtonFontDelete>Clear Images</TouchableButtonFontDelete>
             </TouchableButtonDelete>
-            {buttonGroup(buttonGroupData)}
+            {buttonGroup(buttonGroupData, stackName)}
         </View>
     )
 }

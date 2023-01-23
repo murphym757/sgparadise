@@ -24,6 +24,7 @@ export default function GameScreen({navigation, route }) {
         currentUID,
         updateGameViewCount,
         updateGameViewCountReset,
+        backArrow
     } = useAuth()
     const colors = useContext(CurrentThemeContext)
     const gameScreenFunc = useContext(gameScreenContext)
@@ -42,6 +43,8 @@ export default function GameScreen({navigation, route }) {
     const [gameHomeScreenShot, setGameHomeScreenShot] = useState('')
     const [gamePageNewHomeScreen, setGamePageNewHomeScreen] = useState('')
     const [gamePageView, setGamePageViews] = useState('')
+    const navigationPass = navigation
+    const colorsPassThrough = colors
 
     useEffect(() => {
         function loadingTime() {
@@ -92,24 +95,12 @@ export default function GameScreen({navigation, route }) {
         setGameScreenshot3(currentGameScreenshot3)
     }
 
-    function BackArrow() {
+
+    function BackButton() {
+        const stackName = 'Main'
+        const backNeeded = true
         return (
-            <Container style={{paddingTop: 40}}>
-                <View style={{ flex: 1, alignItems: 'left', justifyContent: 'center', backgroundColor: colors.primaryColor }}> 
-                    <BackButtonTopLayer>
-                        <FontAwesomeIcon 
-                            icon={ faCircle } color={colors.primaryFontColor} size={50}
-                            onPress={() => navigation.goBack('Main')}
-                        />
-                    </BackButtonTopLayer>
-                    <BackButtonBottomLayer>
-                        <FontAwesomeIcon 
-                            icon={ faChevronLeft } color={colors.secondaryColor} size={25} 
-                            onPress={() => navigation.goBack('Main')}
-                        />
-                    </BackButtonBottomLayer>
-                </View>
-            </Container>
+            backArrow(navigationPass, colorsPassThrough, stackName, backNeeded)
         )
     }
     
@@ -180,7 +171,7 @@ export default function GameScreen({navigation, route }) {
                         updateGameViewCount(collectionName, consoleName, gamesCollection, gameName) // The view count is updated here, but falsely updated on the page. The process was done this way because there was next to no way to properly updated the state in Firebase and have that number represented on the page.
                         navigation.goBack('Main')
                     }}>
-                        <BackArrow {...props} />
+                        <BackButton {...props} />
                     </TouchableOpacity>
                 )
         }
@@ -197,6 +188,7 @@ export default function GameScreen({navigation, route }) {
                     <TouchableOpacity onPress={() => {
                         navigation.goBack('Main')
                     }}>
+                        
                         <BackArrow {...props} />
                     </TouchableOpacity>
                 )

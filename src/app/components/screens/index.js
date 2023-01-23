@@ -43,6 +43,7 @@
         } from 'assets/styles/globalTheme'
         //Global Styling
         export {
+            BackButtonContainer,
             BackButtonBottomLayer,
             BackButtonTopLayer,
             Card,

@@ -2,14 +2,21 @@ import React, { useContext, useEffect, useState } from 'react'
 import { View } from 'react-native'
 import { firebase } from 'server/config/config'
 import {
-  CustomFailureAlert,
-  CustomFailureAlertFont,
-  CustomSuccessAlert,
-  CustomSuccessAlertFont,
-  TouchableButton,
-  TouchableButtonAlt,
-  TouchableButtonFont,
-  TouchableButtonFontAlt
+    BackButtonContainer,
+    BackButtonBottomLayer,
+    BackButtonTopLayer,
+    Container,
+    CustomFailureAlert,
+    CustomFailureAlertFont,
+    CustomSuccessAlert,
+    CustomSuccessAlertFont,
+    faChevronLeft,
+    faCircle,
+    FontAwesomeIcon,
+    TouchableButton,
+    TouchableButtonAlt,
+    TouchableButtonFont,
+    TouchableButtonFontAlt
 } from 'index'
 
 const AuthContext = React.createContext()
@@ -163,8 +170,9 @@ export function AuthProvider({ children }) {
             sgGameSummary,
             sgPostCreator:  sgCurrentUID
         }
+        const stackName = ''
 
-        function pathToUploadViaFirebase() {
+        function pathToUploadViaFirebase() {   
             setTimeout(() => {
                 addGameToConsole(passingContent)
                 addGameToSearchConsole(passingContent)
@@ -178,7 +186,7 @@ export function AuthProvider({ children }) {
                 <TouchableButton onPress={() => pathToUploadViaFirebase()}>
                     <TouchableButtonFont>Upload Game</TouchableButtonFont>
                 </TouchableButton>
-                <TouchableButtonAlt style={{}} onPress={() => buttonGroupData.backToPreviousPage(buttonGroupData.navigationPass)}>
+                <TouchableButtonAlt style={{}} onPress={() => buttonGroupData.backToPreviousPage(buttonGroupData.navigationPass, stackName)}>
                     <TouchableButtonFontAlt>Previous Page</TouchableButtonFontAlt>
                 </TouchableButtonAlt>
             </View>
@@ -427,8 +435,8 @@ export function AuthProvider({ children }) {
         navigationPass.navigate(pageNumber, passingContent)
     }
 
-    function backToPreviousPage(navigationPass) {
-        navigationPass.goBack()
+    function backToPreviousPage(navigationPass, stackName) {
+        navigationPass.goBack(stackName)
     }
     /*--------------*/
 
@@ -455,7 +463,36 @@ export function AuthProvider({ children }) {
     //Limits the number of character that can be used
     function charLimit(string = '', limit = 0) {  
         return string.substring(0, limit)
-    }  
+    }
+
+    // Stylized Back Arrow for going to the previous page
+    function backArrow(navigationPass, colorsPassThrough, stackName, backNeeded) {
+        const backOptionRequired = backNeeded
+        return (
+            <BackButtonContainer>
+                <View style={{ flex: 1, alignItems: 'left', justifyContent: 'center' }}> 
+                    {backOptionRequired === true
+                        ?   <View>
+                                <BackButtonTopLayer>
+                                    <FontAwesomeIcon 
+                                        icon={ faCircle } color={colorsPassThrough.primaryFontColor} size={50}
+                                        onPress={() => backToPreviousPage(navigationPass, stackName, backNeeded)}
+                                    />
+                                </BackButtonTopLayer>
+                            </View>
+                        :   <View></View>
+                    }
+                    <BackButtonBottomLayer>
+                        <FontAwesomeIcon 
+                            icon={ faChevronLeft } color={colorsPassThrough.secondaryColor} size={25} 
+                            onPress={() => backToPreviousPage(navigationPass, stackName, backNeeded)}
+                        />
+                    </BackButtonBottomLayer>
+                </View>
+            </BackButtonContainer>
+        )
+    }
+    /*----------------------------------------------*/
 
     useEffect(() => {
         const unsubcribe = auth.onAuthStateChanged(user => {
@@ -513,7 +550,8 @@ export function AuthProvider({ children }) {
         successAlert,
         failureAlert,
         unixTimestampConverter,
-        charLimit
+        charLimit,
+        backArrow
     }
 
     return (

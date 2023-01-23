@@ -14,6 +14,8 @@ import {
     MainFont,
     MainSubFont,
     homeScreenGenreContext,
+    TouchableButton,
+    TouchableButtonAlt,
     FontAwesomeIcon,
     faStar,
     faSearch,

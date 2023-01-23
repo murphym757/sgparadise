@@ -17,6 +17,8 @@ import {
     MainSubFont,
     SafeAreaViewLoader,
     Styles,
+    faCircle,
+    faChevronLeft,
     ViewTopRow
 } from 'index'
 

@@ -111,6 +111,7 @@ export default function SgSelectedGameCoverScreen({route, navigation}) {
     }, [])
 
     function gameCoverImage(buttonGroupData, updatedGameRating, setUpdatedGameRating, colors) {
+        const stackName = ''
         return (
             <ContentContainer>
                 <FlatList
@@ -141,7 +142,7 @@ export default function SgSelectedGameCoverScreen({route, navigation}) {
                                 onLoadEnd={() => {setIsLoading(false)}}
                             />
                             {confirmGame.starRatingSystem(buttonGroupData, updatedGameRating, setUpdatedGameRating, colors)}
-                            {confirmGame.buttonGroup(buttonGroupData)}
+                            {confirmGame.buttonGroup(buttonGroupData, stackName)}
                             {isLoading && (
                                 <ActivityIndicator size="large" />
                             )}
