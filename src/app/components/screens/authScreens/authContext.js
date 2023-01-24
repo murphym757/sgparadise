@@ -466,7 +466,7 @@ export function AuthProvider({ children }) {
     }
 
     // Stylized Back Arrow for going to the previous page
-    function backArrow(navigationPass, colorsPassThrough, stackName, backNeeded) {
+    function backArrow(colorsPassThrough, backNeeded) {
         const backOptionRequired = backNeeded
         return (
             <BackButtonContainer>
@@ -476,7 +476,6 @@ export function AuthProvider({ children }) {
                                 <BackButtonTopLayer>
                                     <FontAwesomeIcon 
                                         icon={ faCircle } color={colorsPassThrough.primaryFontColor} size={50}
-                                        onPress={() => backToPreviousPage(navigationPass, stackName, backNeeded)}
                                     />
                                 </BackButtonTopLayer>
                             </View>
@@ -485,7 +484,6 @@ export function AuthProvider({ children }) {
                     <BackButtonBottomLayer>
                         <FontAwesomeIcon 
                             icon={ faChevronLeft } color={colorsPassThrough.secondaryColor} size={25} 
-                            onPress={() => backToPreviousPage(navigationPass, stackName, backNeeded)}
                         />
                     </BackButtonBottomLayer>
                 </View>

@@ -378,9 +378,6 @@ async function sgFirebaseGamesCollection(passingData) {
                                     <MainFont style={{alignItems: 'left', justifyContent: 'center'}}>Logo goes here</MainFont>
                                 </View>
                             </ViewTopRow>
-                            <TouchableOpacity style={{}} onPress={() => setSearchBarTouched(true)}>
-                                {searchBar(searchBarTitle, searchType, searchQuery, searchBarTouched, setSearchBarTouched, homepageSearchBar)}
-                            </TouchableOpacity>
                         </View>
                 }
             </View>

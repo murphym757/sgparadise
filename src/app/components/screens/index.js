@@ -5,7 +5,6 @@
     export { default as ResetPasswordScreen } from 'auth/resetPasswordScreen' 
 
     // Main Screens
-    export { default as SgMainScreen } from 'main/sgMainScreen'
     export { default as SgHomeScreen } from 'main/sgHomeScreen'
 
         // Search Screens

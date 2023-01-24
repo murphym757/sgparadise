@@ -97,10 +97,9 @@ export default function GameScreen({navigation, route }) {
 
 
     function BackButton() {
-        const stackName = 'Main'
         const backNeeded = true
         return (
-            backArrow(navigationPass, colorsPassThrough, stackName, backNeeded)
+            backArrow(colorsPassThrough, backNeeded)
         )
     }
     
@@ -160,6 +159,7 @@ export default function GameScreen({navigation, route }) {
     }
 
     function homeOptions() {
+        const stackName = 'Main'
         return {
             title: '',
             headerTransparent: true,
@@ -169,7 +169,7 @@ export default function GameScreen({navigation, route }) {
                 : (props) => (
                     <TouchableOpacity onPress={() => {
                         updateGameViewCount(collectionName, consoleName, gamesCollection, gameName) // The view count is updated here, but falsely updated on the page. The process was done this way because there was next to no way to properly updated the state in Firebase and have that number represented on the page.
-                        navigation.goBack('Main')
+                        navigation.goBack(stackName)
                     }}>
                         <BackButton {...props} />
                     </TouchableOpacity>
@@ -178,6 +178,7 @@ export default function GameScreen({navigation, route }) {
     }
 
     function searchOptions() {
+        const stackName = 'Main'
         return {
             title: '',
             headerTransparent: true,
@@ -186,7 +187,7 @@ export default function GameScreen({navigation, route }) {
                 ?   ''
                 : (props) => (
                     <TouchableOpacity onPress={() => {
-                        navigation.goBack('Main')
+                        navigation.goBack(stackName)
                     }}>
                         
                         <BackArrow {...props} />
