@@ -1,29 +1,15 @@
 import { useState, useEffect, useContext } from 'react';
-import { View, ScrollView, TouchableOpacity } from 'react-native';
-import {
-    BackButtonBottomLayer,
-    BackButtonTopLayer,
-    Container,
-    CurrentThemeContext,
-    faChevronLeft,
-    faCircle,
-    FontAwesomeIcon,
-    gameScreenContext,
-    SgSearchScreen,
-    useAuth,
-} from 'index';
+import { ScrollView, TouchableOpacity } from 'react-native';
+import { CurrentThemeContext, gameScreenContext, SgSearchScreen, useAuth } from 'index';
 import { useIsFocused } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 
 export default function GameScreen({navigation, route }) {
     const { 
-        sgDB, 
-        sgImageStorage, 
-        currentUser, 
+        sgDB,
         forwardToNextPage,
         currentUID,
         updateGameViewCount,
-        updateGameViewCountReset,
         backArrow
     } = useAuth()
     const colors = useContext(CurrentThemeContext)

@@ -87,6 +87,7 @@
             ViewContainer,
             ViewSortColumn,
             ViewSortRow,
+            windowController,
             windowHeight,
             windowWidth
         } from 'assets/styles/globalStyling'

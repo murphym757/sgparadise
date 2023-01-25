@@ -55,7 +55,7 @@ export default function App() {
         barStyle={{ backgroundColor: colors.primaryColor }}     
       >
         <Tab.Screen 
-          name="SgMainScreen"
+          name="Home"
           options={{
             tabBarLabel: 'Home',
             tabBarIcon: ({ color, size }) => (

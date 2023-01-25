@@ -5,6 +5,7 @@ import {
     currentTheme
 } from './globalTheme'
 
+export const windowController = RFValue
 export const windowHeight = Dimensions.get('window').height
 export const windowWidth = Dimensions.get('window').width
 
@@ -143,18 +144,13 @@ export const ViewSortColumn = styled(View) `
 
 /* Back Button */
 /*---------------------------------------*/
-export const BackButtonContainer = styled(Container) `
-    marginLeft: ${RFValue(30, windowHeight)}px;
-`;
+export const BackButtonContainer = styled(Container) ``;
 
 export const BackButtonTopLayer = styled(View) `
-    paddingTop: ${RFValue(13, windowHeight)}px;
     position: absolute;
 `;
 
 export const BackButtonBottomLayer = styled(View) `
-    paddingTop: ${RFValue(26, windowHeight)}px;
-    paddingHorizontal: ${RFValue(11, windowHeight)}px;
     position: relative;
 `;
 /*---------------------------------------*/

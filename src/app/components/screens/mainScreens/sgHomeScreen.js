@@ -41,7 +41,8 @@ export default function SgHomeScreen({ navigation, route }) {
         sgFirebaseGamesCollectionSubGenre,
         sgFirebaseConsolesCollection,
         sgFirebaseGenreCollection,
-        sgDB } = useAuth()
+        sgDB,
+        backArrow } = useAuth()
 
     const { 
         searchBar,  
@@ -52,6 +53,7 @@ export default function SgHomeScreen({ navigation, route }) {
     const date = useContext(homeScreenDatesContext)
     const spotlights = useContext(homeScreenSpotlightGamesContext)
     const sgGameSearch = useContext(firebaseSearchContext)
+    const colorsPassThrough = colors
     const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be read
     const [isLoading, setIsLoading] = useState(true)
     const [searchBarTouched, setSearchBarTouched] = useState(false)
@@ -275,7 +277,6 @@ async function sgFirebaseGamesCollection(passingData) {
     function searchResults() {
         return (
             <View>
-                <MainFont>Show search page options here</MainFont>
                 <SearchArea />
                 <FlatList
                     data={gamesFilterListName(chosenDb)}
@@ -387,7 +388,7 @@ async function sgFirebaseGamesCollection(passingData) {
     function homepageMainSection() {
         return (
             <View style={{paddingBottom: 200}}>
-                {homepageHeader()}
+            {homepageHeader()}
                 <ScrollViewContainer showsVerticalScrollIndicator={false}>
                     {actionSection()}
                     {actionsasSection()}
@@ -409,19 +410,90 @@ async function sgFirebaseGamesCollection(passingData) {
         )
     }
 
-  return (
-    <SafeAreaViewContainer>
-        {isLoading !== true 
-            ?   <Container style={{paddingBottom: windowHeight/5}}>
-                    {searchBarTouched == false
-                        ?   homepageMainSection()
-                        :   homepageSearchSection()
-                    }
-                </Container>
-            :   <ContentContainer>
-                    {loadingScreen()}
-                </ContentContainer>
+    function homepageTotal() {
+        return (
+            <SafeAreaViewContainer>
+                {isLoading !== true 
+                    ?   <Container style={{paddingBottom: windowHeight/5}}>
+                            {searchBarTouched == false
+                                ?   homepageMainSection()
+                                :   homepageSearchSection()
+                            }
+                        </Container>
+                    :   <ContentContainer>
+                            {loadingScreen()}
+                        </ContentContainer>
+                }
+            </SafeAreaViewContainer>
+          )
+    }
+
+    function BackButton() {
+        const backNeeded = true
+        return (
+            backArrow(colorsPassThrough, backNeeded)
+        )
+    }
+
+    function homeOptions() {
+        const stackName = 'Main'
+        const pageLoadedHeader = {
+            title: 'My home',
+            headerStyle: {
+                backgroundColor: '#f4511e',
+            },
+            headerTransparent: true,
+            label: false,
+            headerLeft: isLoading == true
+                ?   ''
+                : (props) => (
+                    <TouchableOpacity onPress={() => {
+                        navigation.goBack(stackName)
+                    }}>
+                        
+                        <BackButton {...props} />
+                    </TouchableOpacity>
+            ),
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+                fontWeight: 'bold',
+            }
         }
-    </SafeAreaViewContainer>
+        const pageUnloadedHeader = {
+            title: '',
+            headerStyle: {
+                backgroundColor: '#f4511e',
+            },
+            headerTransparent: true,
+            label: false,
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+                fontWeight: 'bold',
+            }
+        }
+        return (
+            isLoading !== true 
+                ?   pageLoadedHeader
+                :   pageUnloadedHeader
+            
+            
+        )
+    }
+
+    function homeStack() {
+        const Stack = createStackNavigator()
+        return (
+            <Stack.Navigator initialRouteName="Home">
+                <Stack.Screen 
+                    name="Home" 
+                    component={homepageTotal}
+                    options={homeOptions()}
+                />
+            </Stack.Navigator>
+        )
+    }
+
+  return (
+    homeStack()
   )
 }
