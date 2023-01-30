@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext } from 'react'
 import { View, Button, Image, FlatList, TouchableOpacity } from 'react-native'
 import { useAuth } from 'auth/authContext'
 import { useSearchBar } from 'main/sgGameSearchScreenContent/searchIndex'
-import { SearchArea } from 'main/sgGameSearchScreenContent/sgAlgoliaComponents/sgAlgoliaSearchAreaContext'
 import { loadingScreen } from 'auth/loadingScreen'
 import {
     ContentContainer,
@@ -137,7 +136,7 @@ export default function SgHomeScreen({ navigation, route }) {
 
     /*----------- */
 
-    function dope() {
+    function homepageSpotlightCollection() {
         const consoleData = {
             setConsoleArray, setConsoleArrayTitle, sgFirebaseConsolesCollection, genreSpecFunc
         }
@@ -179,7 +178,7 @@ export default function SgHomeScreen({ navigation, route }) {
                     setIsLoading(false),
                     udemyLoop1(10)
                 )
-                dope()
+                homepageSpotlightCollection()
                 spotlights.findWeekofYear(spotlightData, gamesArray)
               }, 2000)
               arrayOfFunctions()
@@ -273,33 +272,6 @@ async function sgFirebaseGamesCollection(passingData) {
             })
         return () => subscriber()
     }
-    
-    function searchResults() {
-        return (
-            <View>
-                <SearchArea />
-                <FlatList
-                    data={gamesFilterListName(chosenDb)}
-                    keyboardShouldPersistTaps="always" 
-                    contentContainerStyle={{
-                        justifyContent: 'center'
-                    }}
-                    keyExtractor={item => item.id}
-                    renderItem={({ item }) => (
-                    <View style={{
-                        flexDirection: 'column',
-                        flex: 1
-                    }}>
-                        <TouchableOpacity onPress={() => chosenGame(item)}>
-                            <MainFont>{item.name}</MainFont>
-                        </TouchableOpacity>
-                    </View>
-                    )}
-                />
-            </View>
-        ) 
-    }
-
     /*-----------*/
     // Links to the search page
     function confirmViewGames() {
@@ -403,14 +375,13 @@ async function sgFirebaseGamesCollection(passingData) {
             <View>
                 {homepageHeader()}
                 <ScrollViewContainer showsVerticalScrollIndicator={false}>
-                    {searchResults()}
                     {sgGameSearch.searchTagsCollection(consolesSection, searchActive, setSearchActive)}
                 </ScrollViewContainer>
             </View>
         )
     }
 
-    function homepageTotal() {
+    function HomepageTotal() {
         return (
             <SafeAreaViewContainer>
                 {isLoading !== true 
@@ -428,17 +399,63 @@ async function sgFirebaseGamesCollection(passingData) {
           )
     }
 
+    /*-----------*/
+    // App-Wide Header
     function BackButton() {
+        const stackName = 'Main'
         const backNeeded = true
         return (
-            backArrow(colorsPassThrough, backNeeded)
+            <TouchableOpacity onPress={() => {
+                navigation.goBack(stackName)
+            }}> 
+            {backArrow(colorsPassThrough, backNeeded)}
+            </TouchableOpacity>
+            
         )
     }
 
-    function homeOptions() {
+      function HeaderLogo() {
+        const logoLink = 'https://reactnative.dev/img/tiny_logo.png'
+        return (
+            <View style={{
+                width: '100%',
+            }}>
+                <Image
+                    style={{
+                        height: 45,
+                        width: 45,
+                        resizeMode: 'stretch',
+                        borderRadius: 5,
+                    }}
+                    source={{
+                        uri: logoLink,
+                    }}
+                />
+            </View>
+        )
+    }
+
+    function HeaderBackButton() {
         const stackName = 'Main'
+        return (
+            <View>
+                {isLoading == true
+                    ?   ''
+                    : (props) => (
+                        <TouchableOpacity onPress={() => {
+                            navigation.goBack(stackName)
+                        }}>
+                            
+                            <BackButton {...props} />
+                        </TouchableOpacity>
+                )}
+            </View>
+        )
+    }
+
+    function HomeOptions() {
         const pageLoadedHeader = {
-            title: 'My home',
+            title: 'SGParadise home',
             headerStyle: {
                 backgroundColor: '#f4511e',
             },
@@ -447,12 +464,12 @@ async function sgFirebaseGamesCollection(passingData) {
             headerLeft: isLoading == true
                 ?   ''
                 : (props) => (
-                    <TouchableOpacity onPress={() => {
-                        navigation.goBack(stackName)
-                    }}>
-                        
-                        <BackButton {...props} />
-                    </TouchableOpacity>
+                    BackButton(props)
+            ),
+            headerTitle: isLoading == true
+                ?   ''
+                : (props) => (
+                    HeaderLogo(props)
             ),
             headerTintColor: '#fff',
             headerTitleStyle: {
@@ -475,25 +492,26 @@ async function sgFirebaseGamesCollection(passingData) {
             isLoading !== true 
                 ?   pageLoadedHeader
                 :   pageUnloadedHeader
-            
-            
         )
     }
 
-    function homeStack() {
+    /*-----------------------------------*/
+
+
+    function HomeStack() {
         const Stack = createStackNavigator()
         return (
             <Stack.Navigator initialRouteName="Home">
                 <Stack.Screen 
                     name="Home" 
-                    component={homepageTotal}
-                    options={homeOptions()}
+                    component={HomepageTotal}
+                    options={HomeOptions()}
                 />
             </Stack.Navigator>
         )
     }
 
   return (
-    homeStack()
+    HomeStack()
   )
 }

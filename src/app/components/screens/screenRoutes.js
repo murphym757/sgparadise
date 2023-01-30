@@ -8,7 +8,7 @@ import {
   ConfirmAddGameScreen,
   CurrentThemeContext,
   EditGameScreen,
-  faHeart,
+  faSearch,
   faHome,
   faUser,
   FontAwesomeIcon,
@@ -23,6 +23,7 @@ import {
   useAuth,
   UserProfileScreen,
   UserSavesScreen,
+  SgSearchHome,
 } from 'index'
 import {decode, encode} from 'base-64'
 if (!global.btoa) { global.btoa = encode }
@@ -65,14 +66,14 @@ export default function App() {
           component={SgGameStack} // HomePage
         />
         <Tab.Screen 
-          name="Saved"
+          name="Search"
           options={{
-            tabBarLabel: 'Saved',
+            tabBarLabel: 'Search',
             tabBarIcon: ({ color, size }) => (
-            <FontAwesomeIcon icon={ faHeart } color={color} size={size} />
+            <FontAwesomeIcon icon={ faSearch } color={color} size={size} />
           ),
           }}
-          component={UserSavesScreen} 
+          component={SgSearchHome} 
         />
         <Tab.Screen 
           name="UserProfileScreen"

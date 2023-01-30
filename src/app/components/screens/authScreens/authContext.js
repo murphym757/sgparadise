@@ -471,14 +471,14 @@ export function AuthProvider({ children }) {
     // Stylized Back Arrow for going to the previous page
     function backArrow(colorsPassThrough, backNeeded) {
         const backOptionRequired = backNeeded
-        const backButtonBackgroundSize = windowController(50, windowHeight)
-        const backButtonSpacing = backButtonBackgroundSize - 20
+        const backButtonBackgroundSize = windowController(40, windowHeight)
+        const backButtonSpacing = backButtonBackgroundSize - 40
         const backButtonBackgroundPaddingVert = backButtonBackgroundSize / 3.84
         const backButtonForegroundSize = backButtonBackgroundSize / 2
         const backButtonChevronPaddingVert = backButtonBackgroundSize / 1.92
         const backButtonChevronPaddingHor = backButtonBackgroundSize / 4.55
         return (
-            <BackButtonContainer style={{marginLeft: backButtonSpacing}}>
+            <BackButtonContainer>
                 <View style={{ flex: 1, alignItems: 'left', justifyContent: 'center' }}> 
                     {backOptionRequired === true
                         ?   <View>

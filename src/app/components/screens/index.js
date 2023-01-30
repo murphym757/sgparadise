@@ -8,6 +8,8 @@
     export { default as SgHomeScreen } from 'main/sgHomeScreen'
 
         // Search Screens
+        
+        export { default as SgSearchHome } from 'main/sgGameSearchScreenContent/sgSearchHome'   
         export { default as SgGameSearchScreen } from 'main/sgGameSearchScreenContent/sgGameSearchScreen'   
         export { default as SgSelectedGameCoverScreen } from 'main/sgGameSearchScreenContent/sgSelectedGameScreens/sgSelectedGameCoverScreen' 
         export { default as SgSelectedGameSummaryScreen } from 'main/sgGameSearchScreenContent/sgSelectedGameScreens/sgSelectedGameSummaryScreen'
