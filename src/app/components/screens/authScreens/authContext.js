@@ -48,16 +48,6 @@ export function AuthProvider({ children }) {
     const sgMSIGDB = '64'
     const sgSatIGDB = '32'
 
-    const randomString = (n, r='') => {
-        while (n--) r += String.fromCharCode((r=Math.random()*62|0, r+=r>9?(r<36?55:61):48))
-        return r
-    }
-    
-
-    function complexID(characterLength) {
-        return randomString(characterLength)
-    }
-
     function signUp(email, password) {
       return auth.createUserWithEmailAndPassword(email, password)
     }
@@ -148,6 +138,7 @@ export function AuthProvider({ children }) {
         const sgGameSlug = buttonGroupData.passingContent.gameSlug
         const sgGameSubgenre = buttonGroupData.passingContent.gameSubgenre
         const sgGameSummary = buttonGroupData.passingContent.gameSummary
+        const sgGameID = buttonGroupData.passingContent.gameSgID
         const sgCurrentUID = currentUID
         const passingContent = {
             sgConsoleName,
@@ -169,6 +160,7 @@ export function AuthProvider({ children }) {
             sgGameRating, 
             sgGameReleaseDate,
             sgGameSlug,
+            sgGameID,
             sgGameSubgenre,
             sgGameSummary,
             sgPostCreator:  sgCurrentUID
@@ -263,7 +255,7 @@ export function AuthProvider({ children }) {
             gameSummary: passingContent.sgGameSummary,
             gameUploaded: true,
             postCreator: passingContent.sgPostCreator,
-            sgID: complexID(20),
+            sgID: passingContent.sgGameID,
             views: viewCountFirebase
         })
     }
@@ -281,7 +273,7 @@ export function AuthProvider({ children }) {
             gameReleaseDate: passingContent.sgGameReleaseDate,
             gameSlug: passingContent.sgGameSlug,
             gameSubgenre: passingContent.sgGameSubgenre,
-            sgID: complexID(20)
+            sgID: passingContent.sgGameID
         })
     }
 

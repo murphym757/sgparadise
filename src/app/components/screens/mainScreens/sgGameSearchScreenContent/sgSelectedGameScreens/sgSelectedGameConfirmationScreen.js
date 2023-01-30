@@ -77,7 +77,8 @@ export default function SgSelectedGameConfirmationScreen({route, navigation}) {
         gameSlug,
         gameSubgenre,
         gameSummary,
-        gameUploadedBy: currentUID
+        gameUploadedBy: currentUID,
+        gameSgID: complexID(20) 
     }
     
     const navigationPass = navigation
@@ -98,6 +99,15 @@ export default function SgSelectedGameConfirmationScreen({route, navigation}) {
             setIsLoading(false)
           }, 2000)
       }, [isFocused])
+
+      const randomString = (n, r='') => {
+        while (n--) r += String.fromCharCode((r=Math.random()*62|0, r+=r>9?(r<36?55:61):48))
+        return r
+    }
+
+    function complexID(characterLength) {
+        return randomString(characterLength)
+    }
 
     return (
         <PageContainer>
