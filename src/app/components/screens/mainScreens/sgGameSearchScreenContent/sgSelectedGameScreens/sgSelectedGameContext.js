@@ -279,14 +279,13 @@ function coverImageCapture(passingImageData) {
         const folderName = item.folderName
         const firebaseStorageConsoleName = item.firebaseStorageConsoleName
         const subFolderName = item.subFolderName
-        const sortedGameNameFolder = item.sortedGameNameFolder
+        const sortedGameName = item.sortedGameName
         const gameNameFolder = item.gameNameFolder
         const screenshotFolder = item.screenshotFolder
         const gameNameLength = item.gameNameCharCount
         const screenshotFileName = `${gameNameFolder.substring(0, gameNameLength)}-(screenshot${item.imageNumber})`
         const fileType = item.fileType
-        const screenshotFileRoute = `${folderName}/${firebaseStorageConsoleName}/${subFolderName}/${sortedGameNameFolder}/${gameNameFolder}/${screenshotFolder}/${screenshotFileName}.${fileType}`
-
+        const screenshotFileRoute = `${folderName}/${firebaseStorageConsoleName}/${subFolderName}/${sortedGameName}/${gameNameFolder}/${screenshotFolder}/${screenshotFileName}.${fileType}`
         fetch(screenshotUrl)
             .then(res => {
                 return res.blob()
