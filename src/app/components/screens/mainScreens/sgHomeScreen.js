@@ -155,7 +155,7 @@ export default function SgHomeScreen({ navigation, route }) {
         const d = new Date();
         let month = d.getMonth();
         if (month == 0) return date.mayGames(consoleData, gameData1, gameData2, gameData3)
-        if (month == 1) return null
+        if (month == 1) return date.mayGames(consoleData, gameData1, gameData2, gameData3)
         if (month == 2) return null
         if (month == 3) return null
         if (month == 4) return date.mayGames(consoleData, gameData1, gameData2, gameData3)

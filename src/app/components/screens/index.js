@@ -160,6 +160,10 @@
         //Uploaded Game Context
         export { gameScreenContext } from 'main/sgGameScreenContent/sgGameScreenContext'    
 
+    // Modal
+
+    export { ModalButton } from 'auth/sgModal'
+
     //Firebase and Elastic
     export { firebase, algoliaConfig, gamesConfig, getStorage, ref, getDownloadURL } from 'server/config/config'
     

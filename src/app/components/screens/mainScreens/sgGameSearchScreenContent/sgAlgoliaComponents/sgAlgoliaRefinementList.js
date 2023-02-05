@@ -7,6 +7,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Image,
 } from 'react-native';
 import {
   useClearRefinements,
@@ -87,13 +88,20 @@ export default function Filters({ isModalOpen, onToggleModal, onChange }) {
     const attributeName = searchAttribute
     const { items, refine } = useRefinementList({ attribute: attributeName });
     return (
-      <View style={styles.list}>
-      <Text style={styles.listTitle}>{listTitle}</Text>
+      <View style={{marginTop: 32}}>
+      <Text style={{color: colors.primaryFontColor}}>{listTitle}</Text>
         {items.map((item) => {
           return (
             <TouchableOpacity
               key={item.label}
-              style={styles.item}
+              style={{
+                paddingVertical: 12,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                borderBottomWidth: 1,
+                borderColor: colors.primaryColorLight,
+                alignItems: 'center',
+              }}
               onPress={() => {
                 refine(item.label);
                 onChange();
@@ -102,8 +110,14 @@ export default function Filters({ isModalOpen, onToggleModal, onChange }) {
               <AlgoliaSearchListLabelText style={{fontFamily: item.isRefined ? 'SpartanBlack' : 'SpartanRegular'}}>
                 {item.label}
               </AlgoliaSearchListLabelText>
-              <View style={styles.itemCount}>
-                <Text style={styles.itemCountText}>{item.count}</Text>
+              <View style={{
+                backgroundColor: colors.primaryColorLight,
+                borderRadius: 24,
+                paddingVertical: 4,
+                paddingHorizontal: 8,
+                marginLeft: 4,
+              }}>
+                <Text style={{color: colors.secondaryColor, fontWeight: '800',}}>{item.count}</Text>
               </View>
             </TouchableOpacity>
           );
@@ -112,11 +126,32 @@ export default function Filters({ isModalOpen, onToggleModal, onChange }) {
     )
   }
 
+  function headerLogo() {
+    const logoLink = 'https://reactnative.dev/img/tiny_logo.png'
+    return (
+        <View style={{
+            width: '100%',
+        }}>
+            <Image
+                style={{
+                    height: 45,
+                    width: 45,
+                    resizeMode: 'stretch',
+                    borderRadius: 5,
+                }}
+                source={{
+                    uri: logoLink,
+                }}
+            />
+        </View>
+    )
+}
+
   function refinementListRender() {
     return (
       <View>
-        <TouchableOpacity style={styles.filtersButton} onPress={onToggleModal}>
-          <Text style={styles.filtersButtonText}>Filters</Text>
+        <TouchableOpacity style={styles.filtersButton} onPress={onToggleModal} >
+          {headerLogo()}
           {totalRefinements > 0 && (
             <View style={styles.itemCount}>
               <Text style={styles.itemCountText}>{totalRefinements}</Text>
