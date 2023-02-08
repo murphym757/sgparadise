@@ -140,7 +140,7 @@ export default function Filters({ isModalOpen, onToggleModal, onChange }) {
                     borderRadius: 5,
                 }}
                 source={{
-                    uri: logoLink,
+                    url: logoLink,
                 }}
             />
         </View>

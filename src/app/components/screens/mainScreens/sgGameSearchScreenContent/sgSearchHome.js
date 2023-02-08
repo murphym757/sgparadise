@@ -32,7 +32,7 @@ import {
     windowHeight,
 } from 'index';
 
-export default function SearchHome({navigation}) {
+export default function SgSearchHome({navigation}) {
     const { 
         searchBar,  
         gamesFilterListName,
@@ -114,7 +114,7 @@ export default function SearchHome({navigation}) {
     }
     function sgAlgoliaHits() {
         return (
-            <InfiniteHits hitComponent={Hit} />
+            <InfiniteHits hitComponent={Hit} nav={navigation} />
             )
     }
     /*----------------------------*/
@@ -142,7 +142,7 @@ export default function SearchHome({navigation}) {
                         borderRadius: 5,
                     }}
                     source={{
-                        uri: logoLink,
+                        url: logoLink,
                     }}
                 />
             </View>
@@ -163,9 +163,7 @@ export default function SearchHome({navigation}) {
     }
 
     function goToGame(item) {
-        return (
-            <View></View>
-        )
+        console.log(item)
     }
 
     function searchResults() {

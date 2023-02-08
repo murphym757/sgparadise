@@ -97,7 +97,7 @@ function detailedGameCover(item) {
                         borderRadius: 5,
                     }}
                     source={{
-                        uri: `${item.firebaseCoverUrl}`,
+                        url: `${item.firebaseCoverUrl}`,
                     }}
                 />
             </View>
@@ -382,7 +382,7 @@ function detailedGameScreenshot(gameScreenshots, gamePageNewHomeScreen, selected
                                                     borderColor: colors.secondaryColor,
                                                 }}
                                                 source={{
-                                                    uri: `${item}`,
+                                                    url: `${item}`,
                                                 }}
                                             />
                                         :    <Image
@@ -393,7 +393,7 @@ function detailedGameScreenshot(gameScreenshots, gamePageNewHomeScreen, selected
                                                     borderRadius: 20
                                                 }}
                                                 source={{
-                                                    uri: `${item}`,
+                                                    url: `${item}`,
                                                 }}
                                             />
                                     }  
@@ -430,7 +430,7 @@ function returnedGameScreenshots(item, gameScreenshots, gamePageNewHomeScreen, s
 
  // Change Background image
  function preDeterminedGameHomeScreen(gameHomeScreenShot, gamePageScrollView, isLoading, colors) {
-    let image = { uri: gameHomeScreenShot };
+    let image = { url: gameHomeScreenShot };
     return (
         <GamePageImageBackground source={image} resizeMode="cover" imageStyle={{opacity: 0.45}}>
             {isLoading == true
@@ -450,7 +450,7 @@ function returnedGameScreenshots(item, gameScreenshots, gamePageNewHomeScreen, s
 }
 
 function updatedGameHomeScreen(gamePageNewHomeScreen, gamePageScrollView, isLoading, colors) {
-    let image = { uri: gamePageNewHomeScreen };
+    let image = { url: gamePageNewHomeScreen };
     return (
         <GamePageImageBackground source={image} resizeMode="cover" imageStyle={{opacity: 0.45}}>
             {isLoading == true

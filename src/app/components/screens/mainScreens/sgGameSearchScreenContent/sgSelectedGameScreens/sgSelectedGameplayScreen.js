@@ -161,7 +161,7 @@ export default function SgSelectedGameplayScreen({route, navigation}) {
                                     borderRadius: 25,
                                 }}
                                 source={{
-                                    uri: `https://images.igdb.com/igdb/image/upload/t_1080p/${item}.jpg`,
+                                    url: `https://images.igdb.com/igdb/image/upload/t_1080p/${item}.jpg`,
                                 }}
                                 onLoadStart={() => {setIsLoading(true)}}
                                 onLoadEnd={() => {setIsLoading(false)}}
@@ -209,7 +209,7 @@ export default function SgSelectedGameplayScreen({route, navigation}) {
                                     borderColor: colors.secondaryColor,
                                 }}
                                 source={{
-                                    uri: `https://images.igdb.com/igdb/image/upload/t_1080p/${item}.jpg`,
+                                    url: `https://images.igdb.com/igdb/image/upload/t_1080p/${item}.jpg`,
                                 }}
                                 onLoadStart={() => {setIsLoading(true)}}
                                 onLoadEnd={() => {setIsLoading(false)}}

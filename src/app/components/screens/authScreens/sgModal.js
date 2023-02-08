@@ -112,9 +112,9 @@ export function ModalButton({ onToggleModal, onChange }) {
     const { items, refine } = useRefinementList({ attribute: attributeName });
   
     return (
-      <ScrollView style={{height: 200,}}>
       <View style={{marginTop: 32}}>
       <Text style={{color: colors.primaryFontColor}}>{listTitle}</Text>
+      <ScrollView style={{height: 150}}>
         {items.map((item) => {
           return (
             <TouchableOpacity
@@ -134,6 +134,7 @@ export function ModalButton({ onToggleModal, onChange }) {
               <AlgoliaSearchListLabelText style={{fontFamily: item.isRefined ? 'SpartanBlack' : 'SpartanRegular'}}>
                 {item.label}
               </AlgoliaSearchListLabelText>
+             
               <View style={{
                 backgroundColor: colors.primaryColorLight,
                 borderRadius: 24,
@@ -146,8 +147,8 @@ export function ModalButton({ onToggleModal, onChange }) {
             </TouchableOpacity>
           );
         })}
+        </ScrollView>
       </View>
-      </ScrollView>
     )
   }
 

@@ -417,7 +417,7 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
                                     height: 60
                                 }}
                                 source={{
-                                    uri: `${selectedSystemLogo}`,
+                                    url: `${selectedSystemLogo}`,
                                 }}
                             />
                             <MainFont>Test</MainFont>

@@ -22,7 +22,25 @@ export const InfiniteHits = forwardRef(
 
     async function chosenAlgoliaGame(item) {
       setGameSelected(item.gameName)
+      passDataToNextPage(item)
+      console.log(item.gameSlug)
   }
+
+    // Links to the game page
+    function passDataToNextPage(item) {
+      const navPass = props.nav
+      const consoleName = item.consoleName
+      const gameName = item.gameSlug
+      return (
+        navPass.navigate('sgGamePageSearch', {
+              collectionName: 'sgAPI',
+              gamesCollection: 'games',
+              consoleName: "sg" + consoleName,
+              gameName,
+              back2Search: true
+          })
+      )
+    }
 
     return (
       <FlatList
@@ -41,8 +59,7 @@ export const InfiniteHits = forwardRef(
         }}
         renderItem={({ item }) => (
           <View style={{paddingHorizontal: 18, paddingVertical: 25}}>
-            <TouchableOpacity
-              onPress={() => chosenAlgoliaGame(item)}>
+            <TouchableOpacity onPress={() => chosenAlgoliaGame(item)}>
               <Hit hit={item} />
             </TouchableOpacity>
           </View>

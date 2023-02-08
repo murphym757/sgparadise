@@ -43,7 +43,7 @@ function detailedGameCover(coverLink, coverHeight, coverWidth) {
                     borderRadius: 5,
                 }}
                 source={{
-                    uri: `${coverLink}`,
+                    url: `${coverLink}`,
                 }}
             />
         </View>
@@ -64,7 +64,7 @@ function detailedPlatformLogo(item, coverHeight, coverWidth) {
                     borderRadius: 5,
                 }}
                 source={{
-                    uri: `${item.systemLogoDay}`,
+                    url: `${item.systemLogoDay}`,
                 }}
             />
         </View>
@@ -85,7 +85,7 @@ function detailedGameScreenshot(item) {
                     borderRadius: 5,
                 }}
                 source={{
-                    uri: `${item.firebaseScreenshot1Url}`,
+                    url: `${item.firebaseScreenshot1Url}`,
                 }}
             />
         </View>
@@ -173,7 +173,7 @@ function sgGameListing(passingSectionData, item, consoleName) {
     const coverLink = item.firebaseCoverUrl
     const coverHeight = 150
     const coverWidth = 125
-    const nameValue = item .gameName
+    const nameValue = item.gameName
     return (
         <TouchableOpacity style={{height:125, marginTop: 3, marginBottom: 100}}
             onPress={() => passDataToNextPage(passingSectionData.navigation, item, consoleName)}>

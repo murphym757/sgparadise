@@ -10,7 +10,7 @@ export function setImage(imageWidth, imageHeight, imageUrl) {
               height: imageHeight
           }}
           source={{
-              uri: `${imageUrl}`,
+              url: `${imageUrl}`,
           }}
       />
   )
@@ -37,7 +37,7 @@ export function searchGameIcon(colors, item) {
                 <View>
                     <Image
                         source={{
-                            uri: item.gameImages.gameplay[0]
+                            url: item.gameImages.gameplay[0]
                         }}
                         style={{ 
                         height: 180,
@@ -86,7 +86,7 @@ export function searchGameIcon(colors, item) {
                 <View style={{flexDirection:'row', zIndex: 4, position: 'absolute', marginTop: 35, paddingLeft: 260}}> 
                     <Image 
                         source={{
-                            uri: item.gameImages.coverArt
+                            url: item.gameImages.coverArt
                         }}
                         style={{ 
                         height: 150, 

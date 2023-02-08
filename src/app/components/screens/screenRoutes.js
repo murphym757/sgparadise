@@ -73,7 +73,7 @@ export default function App() {
             <FontAwesomeIcon icon={ faSearch } color={color} size={size} />
           ),
           }}
-          component={SgSearchHome} 
+          component={SgSearchStack} 
         />
         <Tab.Screen 
           name="UserProfileScreen"
@@ -131,6 +131,23 @@ export default function App() {
     )
   }
 
+  function SgSearchStack() {
+    return (
+      <Stack.Navigator initialRouteName="Search">
+        <Stack.Screen 
+          name="SgSearchHome" 
+          options={{ headerShown: false }} 
+          component={SgSearchHome}
+        />
+        <Stack.Screen 
+          name="sgGamePageSearch" 
+          options={{ headerShown: false, gestureEnabled: false }} 
+          component={GameScreen}
+        />
+      </Stack.Navigator>
+    )
+  }
+
   function SgAuthStack() {
     return (
       <Stack.Navigator initialRouteName="Login">
@@ -170,6 +187,11 @@ export default function App() {
             name="Game" 
             options={{ headerShown: false, gestureEnabled: false }} 
             component={SgGameStack}
+          />
+          <Stack.Screen 
+            name="Search" 
+            options={{ headerShown: false, gestureEnabled: false }} 
+            component={SgSearchStack}
           />
           <Stack.Screen 
             name="Auth" 

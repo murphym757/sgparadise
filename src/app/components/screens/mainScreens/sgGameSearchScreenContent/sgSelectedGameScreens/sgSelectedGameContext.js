@@ -102,7 +102,7 @@ function gameConfirmationResults(tagArrayData, buttonGroupData, windowHeight, co
                                 borderRadius: 25,
                             }}
                             source={{
-                                uri: `https://images.igdb.com/igdb/image/upload/t_1080p/${buttonGroupData.passingContent.gameCover}.jpg`,
+                                url: `https://images.igdb.com/igdb/image/upload/t_1080p/${buttonGroupData.passingContent.gameCover}.jpg`,
                             }}
                         />
                     </View>

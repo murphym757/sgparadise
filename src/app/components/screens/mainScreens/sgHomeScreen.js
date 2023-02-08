@@ -428,7 +428,7 @@ async function sgFirebaseGamesCollection(passingData) {
                         borderRadius: 5,
                     }}
                     source={{
-                        uri: logoLink,
+                        url: logoLink,
                     }}
                 />
             </View>

@@ -1,20 +1,21 @@
 import { useState, useEffect, useContext } from 'react';
-import { ScrollView, TouchableOpacity } from 'react-native';
-import { CurrentThemeContext, gameScreenContext, SgSearchScreen, useAuth } from 'index';
+import { ScrollView, TouchableOpacity, Text, View } from 'react-native';
+import { CurrentThemeContext, gameScreenContext, SgSearchScreen, SgConsoleListScreen, useAuth } from 'index';
 import { useIsFocused } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 
-export default function GameScreen({navigation, route }) {
+export default function GameScreen({navigation, route}) {
     const { 
         sgDB,
         forwardToNextPage,
         currentUID,
         updateGameViewCount,
-        backArrow
+        backArrow,
+        toNewStack
     } = useAuth()
     const colors = useContext(CurrentThemeContext)
     const gameScreenFunc = useContext(gameScreenContext)
-    const { collectionName, gamesCollection, consoleName, gameName} = route.params
+    const { collectionName, gamesCollection, consoleName, gameName, back2Search} = route.params
     const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be read
     const [isLoading, setIsLoading] = useState(true)
     const [currentGameArray, setCurrentGameArray] = useState([])
@@ -144,8 +145,9 @@ export default function GameScreen({navigation, route }) {
         if (gamePageNewHomeScreen != '') return gameScreenFunc.updatedGameHomeScreen(gamePageNewHomeScreen, gamePageScrollView, isLoading, colors)
     }
 
+    /*----------------------------------------------*/
+    // Back Button in Header
     function homeOptions() {
-        const stackName = 'Main'
         return {
             title: '',
             headerTransparent: true,
@@ -155,32 +157,15 @@ export default function GameScreen({navigation, route }) {
                 : (props) => (
                     <TouchableOpacity onPress={() => {
                         updateGameViewCount(collectionName, consoleName, gamesCollection, gameName) // The view count is updated here, but falsely updated on the page. The process was done this way because there was next to no way to properly updated the state in Firebase and have that number represented on the page.
-                        navigation.goBack(stackName)
+                        navigation.goBack()
                     }}>
                         <BackButton {...props} />
                     </TouchableOpacity>
                 )
+                
         }
     }
-
-    function searchOptions() {
-        const stackName = 'Main'
-        return {
-            title: '',
-            headerTransparent: true,
-            label: false,
-            headerLeft: isLoading == true
-                ?   ''
-                : (props) => (
-                    <TouchableOpacity onPress={() => {
-                        navigation.goBack(stackName)
-                    }}>
-                        
-                        <BackArrow {...props} />
-                    </TouchableOpacity>
-                )
-        }
-    }
+    /*----------------------------------------------*/
     
     function selectedGameStack() {
         const Stack = createStackNavigator()
@@ -190,11 +175,6 @@ export default function GameScreen({navigation, route }) {
                     name="Home" 
                     component={gamePageStructure}
                     options={homeOptions()}
-                />
-                <Stack.Screen 
-                    name="Page1" 
-                    component={SgSearchScreen}
-                    options={searchOptions()}
                 />
             </Stack.Navigator>
         )

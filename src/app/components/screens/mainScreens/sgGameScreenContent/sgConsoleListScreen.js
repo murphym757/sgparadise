@@ -204,7 +204,7 @@ export default function SgConsoleListScreens({route, navigation}, props) {
                                         marginVertical: 15
                                     }}
                                     source={{
-                                        uri: `${item.systemLogoSelectedDay}`,
+                                        url: `${item.systemLogoSelectedDay}`,
                                     }}
                                     onLoadStart={() => {setIsLoading(true)}}
                                     onLoadEnd={() => {setIsLoading(false)}}

@@ -136,7 +136,7 @@ export default function SgSelectedGameCoverScreen({route, navigation}) {
                                     borderRadius: 25,
                                 }}
                                 source={{
-                                    uri: `https://images.igdb.com/igdb/image/upload/t_1080p/${gameCover}.jpg`,
+                                    url: `https://images.igdb.com/igdb/image/upload/t_1080p/${gameCover}.jpg`,
                                 }}
                                 onLoadStart={() => {setIsLoading(true)}}
                                 onLoadEnd={() => {setIsLoading(false)}}

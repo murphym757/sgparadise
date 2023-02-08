@@ -15,7 +15,7 @@ import { View, FlatList, TouchableOpacity } from 'react-native'
 } from 'index'
   import axios from 'axios'
 
-export default function SgSearchScreen({route, navigation}) {
+export default function sgSearchResultsScreen({route, navigation}) {
     const {
         unixTimestampConverter
     } = useAuth()
