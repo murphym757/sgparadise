@@ -16,6 +16,8 @@ import {
   ViewContainer,
   ContentContainer,
   MainFont,
+  FontAwesomeIcon,
+  faFilter,
   MainSubFont,
   AlgoliaSearchListLabelText,
   AlgoliaSearchTitleText,
@@ -195,7 +197,11 @@ export function ModalButton({ onToggleModal, onChange }) {
           : <Pressable
               style={[styles.button, styles.buttonOpen]}
               onPress={() => setModalVisible(true)}>
-              <Text style={styles.textStyle}>Filters</Text>
+              <Text style={styles.textStyle}>Filters 
+                <FontAwesomeIcon 
+                    icon={ faFilter } color={colors.primaryColorAlt} size={15}
+                />
+                </Text>
             </Pressable>
         }
       

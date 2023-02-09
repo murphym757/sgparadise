@@ -83,7 +83,6 @@ export default function SgSearchHome({navigation}) {
             {sgAlgoliaCustomSearchBar()}
             <View style={{position: 'relative'}}>
                 <ScrollView style={{paddingBottom: windowHeight + 5000}} showsVerticalScrollIndicator={false} scrollEventThrottle={16}>
-                    {consoleFlatList()}
                     {sgAlgoliaHits()}
                 </ScrollView>
             </View>
