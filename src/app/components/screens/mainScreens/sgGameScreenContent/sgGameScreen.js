@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import { ScrollView, TouchableOpacity, Text, View } from 'react-native';
 import { CurrentThemeContext, gameScreenContext, SgSearchScreen, SgConsoleListScreen, useAuth } from 'index';
-import { useIsFocused } from '@react-navigation/native'
+import { useIsFocused, useFocusEffect } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 
 export default function GameScreen({navigation, route}) {
@@ -32,6 +32,7 @@ export default function GameScreen({navigation, route}) {
     const [gamePageView, setGamePageViews] = useState('')
     const navigationPass = navigation
     const colorsPassThrough = colors
+    const nameOfGame = gameName
 
     useEffect(() => {
         function loadingTime() {
@@ -76,10 +77,13 @@ export default function GameScreen({navigation, route}) {
         }).catch((error) => {
             console.log("Error getting document:", error);
         });
-        setCurrentGameArray(currentGameData)
-        setGameScreenshot1(currentGameScreenshot1)
-        setGameScreenshot2(currentGameScreenshot2)
-        setGameScreenshot3(currentGameScreenshot3)
+        //This code asks whether or not the game's data was passed in or not. This is really more useful when traversing between tabs (in the navbar)
+        if (currentGameArray.length === 0)  {
+            setCurrentGameArray(currentGameData)
+            setGameScreenshot1(currentGameScreenshot1)
+            setGameScreenshot2(currentGameScreenshot2)
+            setGameScreenshot3(currentGameScreenshot3)
+        }
     }
 
 
