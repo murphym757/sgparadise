@@ -44,7 +44,7 @@ export function ModalButton({ onToggleModal, onChange }) {
           backgroundColor: colors.primaryColor,
           borderRadius: 20,
           padding: 30,
-          shadowColor: '#000',
+          shadowColor: colors.black,
           shadowOffset: {
           width: 0,
           height: 2,
@@ -59,13 +59,13 @@ export function ModalButton({ onToggleModal, onChange }) {
           elevation: 2,
       },
       buttonOpen: {
-          backgroundColor: '#F194FF',
+          backgroundColor: colors.secondaryColor,
       },
       buttonClose: {
-          backgroundColor: '#2196F3',
+          backgroundColor:  colors.secondaryColor,
       },
       textStyle: {
-          color: 'white',
+        color: colors.primaryColor,
           fontWeight: 'bold',
           textAlign: 'center',
       },

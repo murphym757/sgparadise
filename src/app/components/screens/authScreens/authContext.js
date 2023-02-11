@@ -123,6 +123,7 @@ export function AuthProvider({ children }) {
         const sgFirebaseScreenshot1Url = buttonGroupData.passingContent.firebaseScreenshot1Url
         const sgFirebaseScreenshot2Url = buttonGroupData.passingContent.firebaseScreenshot2Url
         const sgFirebaseScreenshot3Url = buttonGroupData.passingContent.firebaseScreenshot3Url
+        const sgFirebaseGameNameImageCount = buttonGroupData.passingContent.gameNameImageCount
         const sgFirebaseStorageConsoleName = buttonGroupData.passingContent.firebaseStorageConsoleName
         const sgGameDevelopers = buttonGroupData.passingContent.gameDevelopers
         const sgGameGenre = buttonGroupData.passingContent.gameGenre
@@ -144,12 +145,14 @@ export function AuthProvider({ children }) {
             sgConsoleName,
             sgFirebaseConsoleName,
             sgFirebaseCoverUrl,
+            sgFirebaseGameNameImageCount,
             sgFirebaseScreenshot1Url,
             sgFirebaseScreenshot2Url,
             sgFirebaseScreenshot3Url,
             sgFirebaseStorageConsoleName,
             sgGameDevelopers,
             sgGameGenre,
+            sgGameID,
             sgGameModes,
             sgGameName,
             sgGameNameBRZ,
@@ -160,7 +163,6 @@ export function AuthProvider({ children }) {
             sgGameRating, 
             sgGameReleaseDate,
             sgGameSlug,
-            sgGameID,
             sgGameSubgenre,
             sgGameSummary,
             sgPostCreator:  sgCurrentUID
@@ -236,6 +238,7 @@ export function AuthProvider({ children }) {
             consoleName: passingContent.sgConsoleName,
             createdAt: timestamp,
             firebaseCoverUrl: passingContent.sgFirebaseCoverUrl,
+            firebaseGameNameImageCount: passingContent.sgFirebaseGameNameImageCount,
             firebaseScreenshot1Url: passingContent.sgFirebaseScreenshot1Url,
             firebaseScreenshot2Url: passingContent.sgFirebaseScreenshot2Url,
             firebaseScreenshot3Url: passingContent.sgFirebaseScreenshot3Url,

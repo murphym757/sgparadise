@@ -46,6 +46,7 @@ export default function SgSelectedGameplayScreen({route, navigation}) {
     const [chosenGameplaysArray, setChosenGameplaysArray] = useState([])
     const {0: gameScreenshot1, 1: gameScreenshot2, 2: gameScreenshot3 } = chosenGameplaysArray
     const [ imageCount, setImageCount ] = useState()
+    console.log("🚀 ~ file: sgSelectedGameplayScreen.js:49 ~ SgSelectedGameplayScreen ~ imageCount", imageCount)
     const gameplaysNewArray = Array.from(new Set(chosenGameplaysArray)) //Removes the ability to add duplicate
     const pageDescriptionPluralForS = `Choose ${imageCount} ${confirmGame.imgWordingSelector(imageCount)} that perfectly showcases some of ${gameName}' highlights:`
     const pageDescriptionPlural = `Choose ${imageCount} ${confirmGame.imgWordingSelector(imageCount)} that perfectly showcases some of ${gameName}'s highlights:`
@@ -89,6 +90,7 @@ export default function SgSelectedGameplayScreen({route, navigation}) {
         gameScreenshot3,
         gameSlug,
         gameSummary,
+        imagesChosen: chosenGameplaysArray.length,
         sortedGameName
     }
     const navigationPass = navigation

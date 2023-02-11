@@ -16,6 +16,10 @@ export default function SgSelectedGameSetGameModesScreen({route, navigation}) {
     const { 
         consoleName,
         firebaseConsoleName,
+        firebaseCoverUrl,
+        firebaseScreenshot1Url,
+        firebaseScreenshot2Url,
+        firebaseScreenshot3Url,
         firebaseStorageConsoleName,
         gameCover,
         gameDevelopers,
@@ -24,19 +28,16 @@ export default function SgSelectedGameSetGameModesScreen({route, navigation}) {
         gameName,
         gameNameBRZ,
         gameNameEUR,
+        gameNameImageCount,
         gameNameJPN,
         gameNameMatchInSgDB,
         gamePublishers,
         gameRating, 
         gameReleaseDate,
-        firebaseCoverUrl,
-        firebaseScreenshot1Url,
-        firebaseScreenshot2Url,
-        firebaseScreenshot3Url,
         gameSlug,
         gameSubgenre,
         gameSummary,
-        sortedGameName,
+        sortedGameName
     } = route.params
     const isFocused = useIsFocused()
     const [ gameArray, setGameArray ]= useState([])
@@ -61,6 +62,7 @@ export default function SgSelectedGameSetGameModesScreen({route, navigation}) {
         gameName,
         gameNameBRZ,
         gameNameEUR,
+        gameNameImageCount,
         gameNameJPN,
         gameNameMatchInSgDB,
         gamePublishers,

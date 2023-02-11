@@ -37,6 +37,7 @@ export default function SgSelectedGameConfirmationScreen({route, navigation}) {
         gameName,
         gameNameBRZ,
         gameNameEUR,
+        gameNameImageCount,
         gameNameJPN,
         gameNameMatchInSgDB,
         gamePublishers,
@@ -69,16 +70,17 @@ export default function SgSelectedGameConfirmationScreen({route, navigation}) {
         gameName,
         gameNameBRZ,
         gameNameEUR,
+        gameNameImageCount,
         gameNameJPN,
         gameNameMatchInSgDB,
         gamePublishers: gamePublishers.map(game => game[0].name),
         gameRating, 
         gameReleaseDate,
+        gameSgID: complexID(20),
         gameSlug,
         gameSubgenre,
         gameSummary,
         gameUploadedBy: currentUID,
-        gameSgID: complexID(20) 
     }
     
     const navigationPass = navigation

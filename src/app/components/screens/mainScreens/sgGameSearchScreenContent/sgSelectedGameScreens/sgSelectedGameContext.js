@@ -266,8 +266,26 @@ function coverImageCapture(passingImageData) {
         let sgGameScreenshot1Data = {...passingImageData, imageNumber: 1, imageName: passingImageData.gameScreenshot1, imageUrl: passingImageData.screenshot1Url, gameNameCharCount: passingImageData.gameNameFolder.length}
         let sgGameScreenshot2Data = {...passingImageData, imageNumber: 2, imageName: passingImageData.gameScreenshot2, imageUrl: passingImageData.screenshot2Url, gameNameCharCount: passingImageData.gameNameFolder.length}
         let sgGameScreenshot3Data = {...passingImageData, imageNumber: 3, imageName: passingImageData.gameScreenshot3, imageUrl: passingImageData.screenshot3Url, gameNameCharCount: passingImageData.gameNameFolder.length}
-        const screenShotDataArray = [sgGameScreenshot1Data, sgGameScreenshot2Data, sgGameScreenshot3Data];
-        screenShotDataArray.forEach(setFirebaseScreenShotData)
+        // Create 3 separate if/else statement that only returns the number of available images. 
+        //Do this by passing a prop (through all these functions) that indicate the imageCount
+        if(passingImageData.gameNameImageCount == 1) {
+            const screenShotDataArray = [sgGameScreenshot1Data];
+            return (     
+                screenShotDataArray.forEach(setFirebaseScreenShotData)
+            )
+        }
+        if(passingImageData.gameNameImageCount == 2) {
+            const screenShotDataArray = [sgGameScreenshot1Data, sgGameScreenshot2Data];
+            return (     
+                screenShotDataArray.forEach(setFirebaseScreenShotData)
+            )
+        }
+        if(passingImageData.gameNameImageCount == 3) {
+            const screenShotDataArray = [sgGameScreenshot1Data, sgGameScreenshot2Data, sgGameScreenshot3Data];
+            return (     
+                screenShotDataArray.forEach(setFirebaseScreenShotData)
+            )
+        }
     }
 
     function setFirebaseScreenShotData(item) {

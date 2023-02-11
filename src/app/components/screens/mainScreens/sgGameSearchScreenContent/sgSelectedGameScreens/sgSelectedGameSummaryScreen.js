@@ -45,7 +45,8 @@ export default function SgSelectedGameSummaryScreen({route, navigation}) {
         gameScreenshot2,
         gameScreenshot3,
         gameSummary,
-        gameSlug
+        gameSlug,
+        imagesChosen
     } = route.params
     
     const [adminUser, setAdminUser] = useState(true)
@@ -71,29 +72,32 @@ export default function SgSelectedGameSummaryScreen({route, navigation}) {
     const [chosenDevelopersArray, setChosenDevelopersArray] = useState([])
     const pageDescription = `What is ${gameName} about, exactly?`
     const [nextPageNumber, setNextPageNumber] = useState('Page6')
+    const [gameNameImageCount, setGameImageCount] = useState(imagesChosen) 
+    console.log("🚀 ~ file: sgSelectedGameSummaryScreen.js:76 ~ SgSelectedGameSummaryScreen ~ gameNameImageCount", gameNameImageCount)
     const passingImageData = {
-        coverUrl,
-        screenshot1Url,
-        screenshot2Url,
-        screenshot3Url,
-        folderName,
-        firebaseStorageConsoleName,
-        subFolderName,
-        sortedGameName,
-        gameNameFolder,
-        coverArtFolder,
-        screenshotFolder,
         coverArtFileName,
-        screenshotFileName,
+        coverArtFolder,
+        coverUrl,
         fileType,
         firebaseCoverUrl,
         firebaseScreenshot1Url,
         firebaseScreenshot2Url,
         firebaseScreenshot3Url,
+        firebaseStorageConsoleName,
+        folderName,
+        gameNameFolder,
+        gameNameImageCount,
+        screenshot1Url,
+        screenshot2Url,
+        screenshot3Url,
+        screenshotFileName,
+        screenshotFolder,
         setFirebaseCoverUrl,
         setFirebaseScreenshot1Url,
         setFirebaseScreenshot2Url,
-        setFirebaseScreenshot3Url
+        setFirebaseScreenshot3Url,
+        sortedGameName,
+        subFolderName
     }
     const passingContent = {
         adminUser,
@@ -110,6 +114,7 @@ export default function SgSelectedGameSummaryScreen({route, navigation}) {
         gameName,
         gameNameBRZ,
         gameNameEUR,
+        gameNameImageCount,
         gameNameJPN,
         gameNameMatchInSgDB,
         gamePublishers: chosenPublishersArray,
