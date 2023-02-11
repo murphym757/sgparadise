@@ -22,9 +22,11 @@ function passDataToNextPage(navigation, item, consoleName) {
     return (
         navigation.navigate('sgGamePage', {
             collectionName: 'sgAPI',
-            gamesCollection: 'games',
             consoleName,
-            gameName: item.gameSlug
+            gameName: item.gameSlug,
+            gameGenre: item.gameGenre,
+            gameImageCount: item.firebaseGameNameImageCount,
+            gamesCollection: 'games'
         })
     )
 }

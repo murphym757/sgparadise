@@ -15,7 +15,9 @@ export default function GameScreen({navigation, route}) {
     } = useAuth()
     const colors = useContext(CurrentThemeContext)
     const gameScreenFunc = useContext(gameScreenContext)
-    const { collectionName, gamesCollection, consoleName, gameName, back2Search} = route.params
+    const { collectionName, gamesCollection, consoleName, gameName, gameImageCount, gameSummary, back2Search} = route.params
+    console.log("🚀 ~ file: sgGameScreen.js:19 ~ GameScreen ~ gameImageCount", gameImageCount)
+    console.log("🚀 ~ file: sgGameScreen.js:19 ~ GameScreen ~ consoleName", gameSummary)
     const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be read
     const [isLoading, setIsLoading] = useState(true)
     const [currentGameArray, setCurrentGameArray] = useState([])
@@ -130,18 +132,33 @@ export default function GameScreen({navigation, route}) {
      }
 
     function gamePageScrollView() {
-        return (
-            <ScrollView 
-                horizontal={true} 
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{flexWrap: "wrap", paddingHorizontal: 20}}>
-                    {gameScreenFunc.returnedGameInfo(currentGameArray, isLoading, setGameHomeScreenShot)}
-                    {gameScreenFunc.returnedGameSummary(currentGameArray)}
-                    {gameScreenFunc.returnedGameScreenshots(gameScreenshots, isLoading, selectedGameScreenshot, colors)}
-                    {gameScreenFunc.returnedGamePubDevInfo(currentGameArray, chosenDataOption)}
-                    {gameScreenFunc.returnedGameGenresAndModes(currentGameArray, chosenDataOption)}
-            </ScrollView>
-        )
+        if (gameImageCount === 0) {
+            return (
+                <ScrollView 
+                    horizontal={true} 
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={{flexWrap: "wrap", paddingHorizontal: 20}}>
+                        {gameScreenFunc.returnedGameInfo(currentGameArray, isLoading, setGameHomeScreenShot)}
+                        {gameScreenFunc.returnedGameSummary(currentGameArray)}
+                        {gameScreenFunc.returnedGamePubDevInfo(currentGameArray, chosenDataOption)}
+                        {gameScreenFunc.returnedGameGenresAndModes(currentGameArray, chosenDataOption)}
+                </ScrollView>
+            )
+        } else {
+            return (
+                <ScrollView 
+                    horizontal={true} 
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={{flexWrap: "wrap", paddingHorizontal: 20}}>
+                        {gameScreenFunc.returnedGameInfo(currentGameArray, isLoading, setGameHomeScreenShot)}
+                        {gameScreenFunc.returnedGameSummary(currentGameArray)}
+                        {gameScreenFunc.returnedGameScreenshots(gameScreenshots, isLoading, selectedGameScreenshot, colors)}
+                        {gameScreenFunc.returnedGamePubDevInfo(currentGameArray, chosenDataOption)}
+                        {gameScreenFunc.returnedGameGenresAndModes(currentGameArray, chosenDataOption)}
+                </ScrollView>
+            )
+        }
+        
     }
 
     function gamePageStructure() {

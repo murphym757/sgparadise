@@ -270,6 +270,7 @@ export function AuthProvider({ children }) {
         sgDB.collection('sgSearch').doc(`${passingContent.sgGameSlug} (${passingContent.sgConsoleName})`).set({
             consoleName: passingContent.sgConsoleName,
             createdAt: timestamp,
+            firebaseGameNameImageCount: passingContent.sgFirebaseGameNameImageCount,
             gameCover: passingContent.sgFirebaseCoverUrl,
             gameName: passingContent.sgGameName,
             gameRating: passingContent.sgGameRating, 

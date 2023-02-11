@@ -37,6 +37,8 @@ export const InfiniteHits = forwardRef(
               gamesCollection: 'games',
               consoleName: "sg" + consoleName,
               gameName,
+              gameGenre: item.gameGenre,
+              gameImageCount: item.firebaseGameNameImageCount,
               back2Search: true
           })
       )
