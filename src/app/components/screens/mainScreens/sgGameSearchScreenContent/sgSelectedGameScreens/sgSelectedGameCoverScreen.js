@@ -1,8 +1,9 @@
 
 import React, { useState, useEffect, useContext } from 'react'
-import { View, Image, FlatList, ActivityIndicator } from 'react-native'
-import { axiosSearchContext, confirmGameContext, ContentContainer, sgGenNATitles, PageContainerCover, CurrentThemeContext, SafeAreaViewContainer, useAuth } from 'index'
+import { View, Image, Text, FlatList, ActivityIndicator } from 'react-native'
+import { axiosSearchContext, confirmGameContext, MainSubHeading, CenterContent, ContentContainer, algoliaConfig, sgGenNATitles, PageContainerCover, CurrentThemeContext, SafeAreaViewContainer, useAuth } from 'index'
 import axios from 'axios'
+import algoliasearch from 'algoliasearch'
 import stringSimilarity from 'string-similarity'
 
 export default function SgSelectedGameCoverScreen({route, navigation}) {
@@ -39,6 +40,8 @@ export default function SgSelectedGameCoverScreen({route, navigation}) {
     const [gameScreenshots, setGameScreenshots] = useState([])
     const [updatedGameRating, setUpdatedGameRating] = useState()
     const [gameNameMatchInSgDB, setGameNameMatchInSgDB] = useState('')
+    const [gameExistence, setGameExistence] = useState(false)
+    console.log("🚀 ~ file: sgSelectedGameCoverScreen.js:44 ~ SgSelectedGameCoverScreen ~ gameExistence", gameExistence)
     const nextPageNumber = 'Page4'
     const passingContent = {
         accessTokenIGDB, 
@@ -99,7 +102,8 @@ export default function SgSelectedGameCoverScreen({route, navigation}) {
                     setIsLoading(false)),
                     findConsoleName(igdbConsoleId)
                 }, 2000)
-                setFirebaseGameName()
+                setFirebaseGameName(),
+                foundGameinSGDB()
               })
             }
 
@@ -141,8 +145,15 @@ export default function SgSelectedGameCoverScreen({route, navigation}) {
                                 onLoadStart={() => {setIsLoading(true)}}
                                 onLoadEnd={() => {setIsLoading(false)}}
                             />
-                            {confirmGame.starRatingSystem(buttonGroupData, updatedGameRating, setUpdatedGameRating, colors)}
-                            {confirmGame.buttonGroup(buttonGroupData, stackName)}
+                            {gameExistence === true
+                                ?   <CenterContent>
+                                        <MainSubHeading>This game is already uploaded, sorry</MainSubHeading>
+                                </CenterContent>
+                                :   <View>
+                                        {confirmGame.starRatingSystem(buttonGroupData, updatedGameRating, setUpdatedGameRating, colors)}
+                                        {confirmGame.buttonGroup(buttonGroupData, stackName)}
+                                </View>
+                            }
                             {isLoading && (
                                 <ActivityIndicator size="large" />
                             )}
@@ -151,6 +162,20 @@ export default function SgSelectedGameCoverScreen({route, navigation}) {
                 />
             </ContentContainer>
         )
+    }
+
+    function foundGameinSGDB() {
+        const searchClient = algoliasearch(algoliaConfig.appId, algoliaConfig.apiKey);
+        const index = searchClient.initIndex('games');
+        
+        // Search for "query string" in the index "contacts"
+        index.search("" + gameSlug +"").then(({ hits }) => {
+            if (hits[0]._highlightResult.gameSlug.value === "<em>" + gameSlug + "</em>") {
+                return (
+                    setGameExistence(true)
+                )
+            } 
+        });
     }
 
     function findConsoleName(igdbConsoleId) {
