@@ -138,6 +138,9 @@
         //Tags Context
         export { useTags } from 'auth/tagsContext'
 
+        //Refinements Context
+        export { customRefinementContext } from 'main/sgGameSearchScreenContent/sgAlgoliaComponents/sgAlgoliaRefinementContext'
+        
         //Search Bar Context
         export { useSearchBar } from 'main/sgGameSearchScreenContent/searchIndex'
 

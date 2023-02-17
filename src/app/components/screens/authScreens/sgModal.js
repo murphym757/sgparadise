@@ -21,17 +21,15 @@ import {
   MainSubFont,
   AlgoliaSearchListLabelText,
   AlgoliaSearchTitleText,
+  customRefinementContext
 } from 'index'
 
-export function ModalButton({ onToggleModal, onChange }) { 
-  const colors = useContext(CurrentThemeContext)
+export function ModalButton(props) { 
+  const customRefinements = useContext(customRefinementContext)
+  const colors = props.refinementColors
   const [modalVisible, setModalVisible] = useState(false);
   const { canRefine: canClear, refine: clear } = useClearRefinements();
-  const { items: currentRefinements } = useCurrentRefinements();
-  const totalRefinements = currentRefinements.reduce(
-    (acc, { refinements }) => acc + refinements.length,
-    0
-  );
+
   const styles = StyleSheet.create({
       centeredView: {
           flex: 1,
@@ -75,84 +73,6 @@ export function ModalButton({ onToggleModal, onChange }) {
       },
   });
 
-  function customRefinementListButtons() {
-    return (
-      <View style={{flexDirection: 'row'}}>
-      <View style={{
-        flex: 1,
-        alignItems: 'center',
-        marginTop: 18
-      }}>
-        <Button
-          title="Clear all"
-          color={colors.primaryFontColor}
-          disabled={!canClear}
-          onPress={() => {
-            clear();
-            () => setModalVisible(!modalVisible)
-          }}
-        />
-      </View>
-      <View style={{
-        flex: 1,
-        alignItems: 'center',
-        marginTop: 18
-      }}>
-        <Button
-          onPress={() => setModalVisible(!modalVisible)}
-          title="See results"
-          color={colors.primaryFontColor}
-        />
-      </View>
-    </View>
-    )
-  }
-
-  function customRefinementList(title, searchAttribute) {
-    const listTitle = title
-    const attributeName = searchAttribute
-    const { items, refine } = useRefinementList({ attribute: attributeName });
-  
-    return (
-      <View style={{marginTop: 32}}>
-      <Text style={{color: colors.primaryFontColor}}>{listTitle}</Text>
-      <ScrollView style={{height: 150}}>
-        {items.map((item) => {
-          return (
-            <TouchableOpacity
-              key={item.label}
-              style={{
-                paddingVertical: 12,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                borderBottomWidth: 1,
-                borderColor: colors.primaryColorLight,
-                alignItems: 'center',
-              }}
-              onPress={() => {
-                refine(item.label);
-              }}
-            >
-              <AlgoliaSearchListLabelText style={{fontFamily: item.isRefined ? 'SpartanBlack' : 'SpartanRegular'}}>
-                {item.label}
-              </AlgoliaSearchListLabelText>
-             
-              <View style={{
-                backgroundColor: colors.primaryColorLight,
-                borderRadius: 24,
-                paddingVertical: 4,
-                paddingHorizontal: 8,
-                marginLeft: 4,
-              }}>
-                <Text style={{color: colors.secondaryColor, fontWeight: '800'}}>{item.count}</Text>
-              </View>
-            </TouchableOpacity>
-          );
-        })}
-        </ScrollView>
-      </View>
-    )
-  }
 
   function refinementListRender() {
     return (
@@ -161,11 +81,11 @@ export function ModalButton({ onToggleModal, onChange }) {
               <ContentContainer>
                 <AlgoliaSearchTitleText>Games</AlgoliaSearchTitleText>
               </ContentContainer>
-              {customRefinementList('Sub Genres', 'gameSubgenre')}
-              {customRefinementList('Genres', 'gameGenre')}
-              {customRefinementList('Consoles', 'consoleName')}
+              {customRefinements.customRefinementList('Sub Genres', 'gameSubgenre', colors)}
+              {customRefinements.customRefinementList('Genres', 'gameGenre', colors)}
+              {customRefinements.customRefinementList('Consoles', 'consoleName', colors)}
             </ViewContainer>
-            {customRefinementListButtons()}
+            {customRefinements.customRefinementListButtons(colors, setModalVisible, modalVisible)}
           </SafeAreaView>
     )
   }

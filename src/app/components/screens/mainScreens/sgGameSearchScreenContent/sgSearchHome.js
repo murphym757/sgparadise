@@ -15,14 +15,14 @@ import {
 } from 'react-native';
 import { useSearchBar } from 'main/sgGameSearchScreenContent/searchIndex'
 import { SearchBox } from 'main/sgGameSearchScreenContent/sgAlgoliaComponents/sgAlgoliaSearchBarContext'
-import { InfiniteHits, Hit } from 'main/sgGameSearchScreenContent/sgAlgoliaComponents/sgAlgoliaSearchHitsContext'
-import Filters from 'main/sgGameSearchScreenContent/sgAlgoliaComponents/sgAlgoliaRefinementList'
+import { InfiniteHits, Hit, AlgoliaSGPagination } from 'main/sgGameSearchScreenContent/sgAlgoliaComponents/sgAlgoliaSearchHitsContext'
 import algoliasearch from 'algoliasearch'
 import { InstantSearch } from 'react-instantsearch-hooks'
 import {
     algoliaConfig,
     Container,
     CurrentThemeContext,
+    customRefinementContext,
     CustomSearchBarContainer,
     faSearch,
     FontAwesomeIcon,
@@ -39,6 +39,7 @@ export default function SgSearchHome({navigation}) {
         testDb,
         } = useSearchBar()
     const colors = useContext(CurrentThemeContext)
+    const customRefinements = useContext(customRefinementContext)
     const isFocused = useIsFocused //Needs to be outside of the useEffect to properly be read
     const [isLoading, setIsLoading] = useState(true)
     const listRef = useRef(null);
@@ -79,15 +80,19 @@ export default function SgSearchHome({navigation}) {
     function sgAlgolia() {
         const searchClient = algoliasearch(algoliaConfig.appId, algoliaConfig.apiKey);
         return (
-            <InstantSearch searchClient={searchClient} indexName="games">
+            <InstantSearch searchClient={searchClient} indexName="games" style={{ flex: 1 }}>
             {sgAlgoliaCustomSearchBar()}
-            <View style={{position: 'relative'}}>
-                <ScrollView style={{paddingBottom: windowHeight + 5000}} showsVerticalScrollIndicator={false} scrollEventThrottle={16}>
+            <AlgoliaSGPagination searchClient={searchClient} indexName={"games"}/>
+            <View style={{position: 'relative', flex: 1}}>
+                <ScrollView showsVerticalScrollIndicator={false} scrollEventThrottle={16}>
                     {sgAlgoliaHits()}
                 </ScrollView>
             </View>
-            <View style={{paddingTop: windowHeight - 200, position: 'absolute', alignSelf: 'flex-end'}}>
+            <View style={{flex: 1, position: 'absolute', alignSelf: 'flex-end'}}>
                 {sgAlgoliaFilters()}
+            </View>
+            <View style={{flex: 1}}>
+                {sgAlgoliaConsoleRefinements()}
             </View>
             </InstantSearch>
         )
@@ -106,15 +111,20 @@ export default function SgSearchHome({navigation}) {
             </CustomSearchBarContainer>
         )
     }
+    function sgAlgoliaConsoleRefinements() {
+        return (
+            <customRefinements.refinementConsoleList />
+        )
+    }
     function sgAlgoliaFilters() {
         return (
-            <ModalButton />
+            <ModalButton refinementColors={colors} />
         )
     }
     function sgAlgoliaHits() {
         return (
             <InfiniteHits hitComponent={Hit} nav={navigation} />
-            )
+        )
     }
     /*----------------------------*/
 
@@ -225,11 +235,8 @@ export default function SgSearchHome({navigation}) {
 
     function loadedData() {
         return (
-            <View>
+            <View style={{ flex: 1 }}>
             {sgAlgolia()}
-             <MainFont style={{paddingVertical: 25}}>
-                    Search Goes Here
-                </MainFont>
                 <MainFont style={{paddingVertical: 25}}>
                     Use opensea an example for sitewide updates. However, start with the app's search area
                 </MainFont>
@@ -244,9 +251,9 @@ export default function SgSearchHome({navigation}) {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-        <Container>
+        <Container style={{ flex: 1 }}>
             {isLoading !== true
-                ?   <View>
+                ?   <View style={{ flex: 1 }}>
                 {loadedData()}
                 </View>
                 :  <View>
