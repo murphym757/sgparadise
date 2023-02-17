@@ -108,11 +108,14 @@ function customRefinementList(title, searchAttribute, colors) {
   )
 }
 
-function refinementConsoleList(colors) {
+function refinementConsoleList(props) {
   const { items, refine } = useRefinementList({ attribute: 'consoleName' });
+  const colors = props.colors
   return (
-    <View style={{marginTop: 32}}>
-    <ScrollView style={{height: 150}}>
+    <View>
+    <ScrollView 
+      horizontal={true}
+      showsHorizontalScrollIndicator={false}>
       {items.map((item) => {
         return (
           <TouchableOpacity
@@ -122,25 +125,26 @@ function refinementConsoleList(colors) {
               flexDirection: 'row',
               justifyContent: 'space-between',
               borderBottomWidth: 1,
-              borderColor: colors.primaryColorLight,
+              borderColor: colors.primaryColor,
               alignItems: 'center',
             }}
             onPress={() => {
               refine(item.label);
             }}
           >
-            <AlgoliaSearchListLabelText style={{fontFamily: item.isRefined ? 'SpartanBlack' : 'SpartanRegular'}}>
-              {item.label}
-            </AlgoliaSearchListLabelText>
-           
-            <View style={{
-              backgroundColor: colors.primaryColorLight,
-              borderRadius: 24,
-              paddingVertical: 4,
-              paddingHorizontal: 8,
-              marginLeft: 4,
-            }}>
-              <Text style={{color: colors.secondaryColor, fontWeight: '800'}}>{item.count}</Text>
+            <View style={{justifyContent: 'center', paddingHorizontal: 24}}>
+              <AlgoliaSearchListLabelText style={{fontFamily: item.isRefined ? 'SpartanBlack' : 'SpartanRegular'}}>
+                {item.label}
+              </AlgoliaSearchListLabelText>
+              <View style={{
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                backgroundColor: colors.primaryColor,
+                borderRadius: 24,
+                paddingVertical: 4,
+              }}>
+                <Text style={{color: colors.secondaryColor, fontWeight: '800'}}>{item.count}</Text>
+              </View>
             </View>
           </TouchableOpacity>
         );

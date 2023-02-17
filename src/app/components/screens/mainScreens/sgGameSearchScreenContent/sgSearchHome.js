@@ -82,17 +82,16 @@ export default function SgSearchHome({navigation}) {
         return (
             <InstantSearch searchClient={searchClient} indexName="games" style={{ flex: 1 }}>
             {sgAlgoliaCustomSearchBar()}
-            <AlgoliaSGPagination searchClient={searchClient} indexName={"games"}/>
             <View style={{position: 'relative', flex: 1}}>
+                <View>
+                    {sgAlgoliaConsoleRefinements()}
+                </View>
                 <ScrollView showsVerticalScrollIndicator={false} scrollEventThrottle={16}>
                     {sgAlgoliaHits()}
                 </ScrollView>
             </View>
             <View style={{flex: 1, position: 'absolute', alignSelf: 'flex-end'}}>
                 {sgAlgoliaFilters()}
-            </View>
-            <View style={{flex: 1}}>
-                {sgAlgoliaConsoleRefinements()}
             </View>
             </InstantSearch>
         )
@@ -113,7 +112,7 @@ export default function SgSearchHome({navigation}) {
     }
     function sgAlgoliaConsoleRefinements() {
         return (
-            <customRefinements.refinementConsoleList />
+            <customRefinements.refinementConsoleList colors={colors} />
         )
     }
     function sgAlgoliaFilters() {
@@ -236,14 +235,7 @@ export default function SgSearchHome({navigation}) {
     function loadedData() {
         return (
             <View style={{ flex: 1 }}>
-            {sgAlgolia()}
-                <MainFont style={{paddingVertical: 25}}>
-                    Use opensea an example for sitewide updates. However, start with the app's search area
-                </MainFont>
-                <MainFont style={{paddingVertical: 25}}>
-                    IMPORTANT------Include a filter button that will appear on top of the data on the screen. Again, reference Opensea.
-                </MainFont>
-           
+                {sgAlgolia()}
             </View>
         )
     }

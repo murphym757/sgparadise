@@ -53,7 +53,7 @@ export const InfiniteHits = forwardRef(
           : null)
         }
         keyExtractor={(item) => item.objectID}
-        ItemSeparatorComponent={() => <View style={{borderBottomWidth: 1, borderColor: colors.secondaryFontColor}} />}
+        ItemSeparatorComponent={() => <View style={{borderBottomWidth: 1, borderColor: colors.primaryColorLight}} />}
         onEndReached={() => {
           if (!isLastPage) {
             showMore();
