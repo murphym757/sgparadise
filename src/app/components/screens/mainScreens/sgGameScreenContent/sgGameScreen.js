@@ -29,7 +29,10 @@ export default function GameScreen({navigation, route}) {
     const [gameScreenshot2, setGameScreenshot2] = useState([])
     const [gameScreenshot3, setGameScreenshot3] = useState([])
     const gameScreenshots = [gameScreenshot1.toString(), gameScreenshot2.toString(), gameScreenshot3.toString()]
+    const [gameHomeScreenCover, setGameHomeScreenCover] = useState('')
+    console.log("🚀 ~ file: sgGameScreen.js:33 ~ GameScreen ~ gameHomeScreenCover", gameHomeScreenCover)
     const [gameHomeScreenShot, setGameHomeScreenShot] = useState('')
+    console.log(gameHomeScreenShot)
     const [gamePageNewHomeScreen, setGamePageNewHomeScreen] = useState('')
     const [gamePageView, setGamePageViews] = useState('')
     const navigationPass = navigation
@@ -138,7 +141,7 @@ export default function GameScreen({navigation, route}) {
                     horizontal={true} 
                     showsHorizontalScrollIndicator={false}
                     contentContainerStyle={{flexWrap: "wrap", paddingHorizontal: 20}}>
-                        {gameScreenFunc.returnedGameInfo(currentGameArray, isLoading, setGameHomeScreenShot)}
+                        {gameScreenFunc.returnedGameInfo(currentGameArray, isLoading,setGameHomeScreenCover, setGameHomeScreenShot)}
                         {gameScreenFunc.returnedGameSummary(currentGameArray)}
                         {gameScreenFunc.returnedGamePubDevInfo(currentGameArray, chosenDataOption)}
                         {gameScreenFunc.returnedGameGenresAndModes(currentGameArray, chosenDataOption)}
@@ -150,7 +153,7 @@ export default function GameScreen({navigation, route}) {
                     horizontal={true} 
                     showsHorizontalScrollIndicator={false}
                     contentContainerStyle={{flexWrap: "wrap", paddingHorizontal: 20}}>
-                        {gameScreenFunc.returnedGameInfo(currentGameArray, isLoading, setGameHomeScreenShot)}
+                        {gameScreenFunc.returnedGameInfo(currentGameArray, isLoading, setGameHomeScreenCover, setGameHomeScreenShot)}
                         {gameScreenFunc.returnedGameSummary(currentGameArray)}
                         {gameScreenFunc.returnedGameScreenshots(gameScreenshots, isLoading, selectedGameScreenshot, colors)}
                         {gameScreenFunc.returnedGamePubDevInfo(currentGameArray, chosenDataOption)}
@@ -162,8 +165,8 @@ export default function GameScreen({navigation, route}) {
     }
 
     function gamePageStructure() {
-        if (gamePageNewHomeScreen == '') return gameScreenFunc.preDeterminedGameHomeScreen(gameHomeScreenShot, gamePageScrollView, isLoading, colors)
-        if (gamePageNewHomeScreen != '') return gameScreenFunc.updatedGameHomeScreen(gamePageNewHomeScreen, gamePageScrollView, isLoading, colors)
+        if (gamePageNewHomeScreen == '') return gameScreenFunc.preDeterminedGameHomeScreen(gameHomeScreenCover, gameHomeScreenShot, gamePageScrollView, isLoading, colors)
+        if (gamePageNewHomeScreen != '') return gameScreenFunc.updatedGameHomeScreen(gameHomeScreenCover, gamePageNewHomeScreen, gamePageScrollView, isLoading, colors)
     }
 
     /*----------------------------------------------*/

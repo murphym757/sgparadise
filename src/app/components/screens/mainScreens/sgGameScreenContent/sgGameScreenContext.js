@@ -70,7 +70,8 @@ function detailedGameReleaseDate(item) {
     )
 }
 
-function detailedGameName(item, setGameHomeScreenShot) {
+function detailedGameName(item, setGameHomeScreenCover, setGameHomeScreenShot) {
+    setGameHomeScreenCover(item.firebaseCoverUrl)
     setGameHomeScreenShot(item.firebaseScreenshot1Url)
     return (
         <CardContent>
@@ -132,12 +133,12 @@ function detailedPostCreator(item) {
     )
 }
 
-function detailedGameInfo(item, isLoading, setGameHomeScreenShot) {
+function detailedGameInfo(item, isLoading, setGameHomeScreenCover, setGameHomeScreenShot) {
     return (
         <Container>
             <View style={{paddingTop: 15}}>
                 <View style={{paddingBottom: 15}}>
-                    {detailedGameName(item, setGameHomeScreenShot)}
+                    {detailedGameName(item, setGameHomeScreenCover, setGameHomeScreenShot)}
                 </View>
                 <ViewTopRow style={{justifyContent: 'space-between'}}>
                     <View>
@@ -157,7 +158,7 @@ function detailedGameInfo(item, isLoading, setGameHomeScreenShot) {
     )
 }
 
-function returnedGameInfo(currentGameArray, isLoading, setGameHomeScreenShot) {
+function returnedGameInfo(currentGameArray, isLoading, setGameHomeScreenCover, setGameHomeScreenShot) {
     return (
         <FlatList
             nestedScrollEnabled
@@ -169,7 +170,7 @@ function returnedGameInfo(currentGameArray, isLoading, setGameHomeScreenShot) {
             renderItem={({ item }) => (
                 <View style={{paddingRight: 20}}>
                     <Card style={Styles.CardStyle}>
-                        {detailedGameInfo(item, isLoading, setGameHomeScreenShot)}
+                        {detailedGameInfo(item, isLoading, setGameHomeScreenCover, setGameHomeScreenShot)}
                     </Card>
                 </View>
             )}
@@ -429,10 +430,20 @@ function returnedGameScreenshots(item, gameScreenshots, gamePageNewHomeScreen, s
 /*----------------------------------------------*/
 
  // Change Background image
- function preDeterminedGameHomeScreen(gameHomeScreenShot, gamePageScrollView, isLoading, colors) {
-    let image = { url: gameHomeScreenShot };
+ function preDeterminedGameHomeScreen(gameHomeScreenCover, gameHomeScreenShot, gamePageScrollView, isLoading, colors) {
+    function gameScreenBackground() {
+        if (gameHomeScreenShot !== '') {
+            let image = { url: gameHomeScreenShot }
+            return image
+        } else {
+            let image = { url: gameHomeScreenCover }
+            return image
+        }
+    }
+   
+    
     return (
-        <GamePageImageBackground source={image} resizeMode="cover" imageStyle={{opacity: 0.45}}>
+        <GamePageImageBackground source={gameScreenBackground()} resizeMode="cover" imageStyle={{opacity: 0.45}}>
             {isLoading == true
                 ? <View style={{ backgroundColor: colors.primaryColor }}>
                     <SafeAreaViewLoader>
