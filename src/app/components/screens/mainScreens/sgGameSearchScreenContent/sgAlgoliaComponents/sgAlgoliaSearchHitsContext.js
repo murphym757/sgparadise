@@ -71,20 +71,6 @@ export const InfiniteHits = forwardRef(
   }
 );
 
-export function AlgoliaSGPagination(props) {
-  const searchClient = props.searchClient
-  const index = searchClient.initIndex('games');
-  const {currentRefinement, nbPages, nbHits, pages, refine } = usePagination(props);
-  console.log("🚀 ~ file: sgAlgoliaSearchHitsContext.js:78 ~ AlgoliaSGPagination ~ nbPages", nbPages)
-  console.log("🚀 ~ file: sgAlgoliaSearchHitsContext.js:78 ~ AlgoliaSGPagination ~ nbHits", nbHits)
-  return (
-    <MainFont>
-      {currentRefinement + 1} of {nbPages} page(s) for {nbHits} hit(s)
-    </MainFont>
-  );
-  
-}
-
 export function Hit({ hit }) {
   const colors = useContext(CurrentThemeContext) 
   const genreSpecFunc = useContext(homeScreenGenreContext)
