@@ -76,7 +76,10 @@ function gameSummaryResults(buttonGroupData, updatedGameSummary, setUpdatedGameS
                 underlineColorAndroid="transparent"
                 autoCapitalize="none"
             />
-            <MainFont>({updatedGameSummary.length}/500)</MainFont>
+            {updatedGameSummary !== undefined
+                ?   <MainFont>({updatedGameSummary.length}/500)</MainFont>
+                :   <MainFont></MainFont>
+            }
             {buttonGroup(buttonGroupData, stackName)}
         </Container>
     )
