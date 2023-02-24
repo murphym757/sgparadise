@@ -44,6 +44,7 @@ export default function SgSearchHome({navigation}) {
     const [isLoading, setIsLoading] = useState(true)
     const listRef = useRef(null);
     const [isModalOpen, setModalOpen] = useState(false);
+    const gamePageLinkPressed = true
     const chosenDb = testDb
     
 
@@ -90,22 +91,30 @@ export default function SgSearchHome({navigation}) {
                     {sgAlgoliaHits()}
                 </ScrollView>
             </View>
-            <View style={{flex: 1, position: 'absolute', alignSelf: 'flex-end'}}>
-                {sgAlgoliaFilters()}
-            </View>
+            {gamePageLinkPressed === false
+                ?    <View style={{flex: 1, position: 'absolute', alignSelf: 'flex-end'}}>
+                        {sgAlgoliaFilters()}
+                    </View>
+                :   <View></View>
+            }
+           
             </InstantSearch>
         )
     }
     function sgAlgoliaCustomSearchBar() {
+        const toBepassedFromGameScreen = 'Platformer'
         return (
             <CustomSearchBarContainer>
                 <ViewTopRow style={{flex: 1, flexDirection: 'row'}}>
-                    <View style={{ alignItems: 'left', justifyContent: 'center', backgroundColor: colors.primaryColor, paddingRight: 10 }}>
-                    <FontAwesomeIcon 
-                        icon={ faSearch } color={colors.primaryColorAlt} size={25}
-                    />
-                    </View>
-                    <SearchBox onChange={scrollToTop} />
+                {gamePageLinkPressed === false
+                    ?   <View style={{ alignItems: 'left', justifyContent: 'center', backgroundColor: colors.primaryColor, paddingRight: 10 }}>
+                            <FontAwesomeIcon 
+                                icon={ faSearch } color={colors.primaryColorAlt} size={25}
+                            />
+                        </View>
+                    :   <View></View>
+                }
+                    <SearchBox gamePageLinkProp={toBepassedFromGameScreen} gamePageLinkPressed={gamePageLinkPressed} searchBarTitle={'Search Games'} onChange={scrollToTop} />
                 </ViewTopRow>
             </CustomSearchBarContainer>
         )

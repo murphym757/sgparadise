@@ -127,6 +127,11 @@ export default function App() {
             options={{ headerShown: false }}
             component={EditGameScreen} 
         />
+        <Stack.Screen 
+          name="SgSearchSet" 
+          options={{ headerShown: false }} 
+          component={SgSearchHome}
+        />
       </Stack.Navigator>
     )
   }
