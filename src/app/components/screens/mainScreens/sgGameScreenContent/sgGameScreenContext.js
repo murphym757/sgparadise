@@ -51,7 +51,7 @@ function mutliLinkedContent(linkedData, linkedDataTitleSingular, linkedDataTitle
             </CenterContent>
             <MainFontLinkView>
                 {sortInfoByStringLength(unsortedArray).map((item) => (
-                    <TouchableOpacity onPress={() => chosenDataOption(item, keySearchDataArray)}>
+                    <TouchableOpacity onPress={() => chosenDataOption(item[0], keySearchDataArray)}>
                         <MainFontArrayLinks>{item}</MainFontArrayLinks>
                     </TouchableOpacity>
                 ))}

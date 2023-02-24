@@ -129,8 +129,9 @@ export default function App() {
         />
         <Stack.Screen 
           name="SgSearchSet" 
-          options={{ headerShown: false }} 
+          options={{ headerShown: false, gestureEnabled: false  }} 
           component={SgSearchHome}
+          initialParams={{ gamePageLinkPressed: false, gameDataToBePassed: null }}
         />
       </Stack.Navigator>
     )
@@ -141,8 +142,9 @@ export default function App() {
       <Stack.Navigator initialRouteName="Search">
         <Stack.Screen 
           name="SgSearchHome" 
-          options={{ headerShown: false }} 
+          options={{ headerShown: false, gestureEnabled: false }} 
           component={SgSearchHome}
+          initialParams={{ gamePageLinkPressed: false, gameDataToBePassed: null }}
         />
         <Stack.Screen 
           name="sgGamePageSearch" 

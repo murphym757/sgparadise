@@ -13,8 +13,6 @@ export function SearchBox(props) {
   const { query, refine } = useSearchBox(props);
   const [inputValue, setInputValue] = useState(query);
   const inputRef = useRef(null);
-  const testingTesting = props.gamePageLinkPressed
-  console.log("🚀 ~ file: sgAlgoliaSearchBarContext.js:17 ~ SearchBox ~ testingTesting:", testingTesting)
   
 
   function setQuery(newQuery) {
@@ -32,47 +30,6 @@ export function SearchBox(props) {
   // updates when typing.
   if (query !== inputValue && !inputRef.current?.isFocused()) {
     setInputValue(query);
-  }
-  
-
-  function searchBarSelectior() {
-    if (props.gamePageLinkPressed === true) {
-      <CustomSearchBarTextInput
-        ref={inputRef}
-        value={setQueryNow()}
-        onChangeText={setQuery}
-        style={{flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'flex-start', paddingRight: 190}}
-        placeholderTextColor={colors.primaryColorAlt}
-        placeholder={props.gamePageLinkProp}
-        clearButtonMode="while-editing"
-        underlineColorAndroid="transparent"
-        autoCapitalize="none"
-        autoCorrect={false}
-        spellCheck={false}
-        autoCompleteType="off"
-    />
-    } else {
-      <CustomSearchBarTextInput
-        ref={inputRef}
-        value={inputValue}
-        onChangeText={setQuery}
-        style={{
-          flex: 1, 
-          flexDirection: 'row', 
-          justifyContent: 'center', 
-          alignItems: 'flex-start', 
-          fontSize: RFValue(20, windowHeight),
-          paddingRight: 190}}
-        placeholderTextColor={colors.primaryColorAlt}
-        placeholder={props.searchBarTitle}
-        clearButtonMode="while-editing"
-        underlineColorAndroid="transparent"
-        autoCapitalize="none"
-        autoCorrect={false}
-        spellCheck={false}
-        autoCompleteType="off"
-    />
-    }
   }
 
   function defaultSearchBar() {
@@ -106,7 +63,8 @@ export function SearchBox(props) {
           justifyContent: 'center', 
           alignItems: 'flex-start', 
           fontSize: RFValue(20, windowHeight),
-          paddingRight: 190}}
+          paddingRight: 110
+        }}
         placeholderTextColor={colors.primaryColorAlt}
         placeholder={props.gamePageLinkProp}
         clearButtonMode="while-editing"

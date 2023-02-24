@@ -29,22 +29,35 @@ import {
     MainFont,
     ModalButton,
     ViewTopRow,
-    windowHeight,
+    windowHeight
 } from 'index';
+import { useAuth } from 'auth/authContext'
 
-export default function SgSearchHome({navigation}) {
+export default function SgSearchHome({navigation, route}) {
     const { 
         searchBar,  
         gamesFilterListName,
         testDb,
         } = useSearchBar()
+        const { 
+            currentUser, 
+            currentUID, 
+            displayData,
+            toNewSection,
+            sgFirebaseGamesCollectionSubGenre,
+            sgFirebaseConsolesCollection,
+            sgFirebaseGenreCollection,
+            sgDB,
+            backArrow } = useAuth()
+    const { gamePageLinkPressed, gameDataToBePassed } = route.params
     const colors = useContext(CurrentThemeContext)
     const customRefinements = useContext(customRefinementContext)
     const isFocused = useIsFocused //Needs to be outside of the useEffect to properly be read
     const [isLoading, setIsLoading] = useState(true)
     const listRef = useRef(null);
     const [isModalOpen, setModalOpen] = useState(false);
-    const gamePageLinkPressed = true
+    const colorsPassThrough = colors
+    const backNeeded = true
     const chosenDb = testDb
     
 
@@ -74,6 +87,7 @@ export default function SgSearchHome({navigation}) {
         'CD'
     ]
 
+
     // Algolia Search Bar and Modal
     function scrollToTop() {
         listRef.current?.scrollToOffset({ animated: false, offset: 0 });
@@ -82,27 +96,29 @@ export default function SgSearchHome({navigation}) {
         const searchClient = algoliasearch(algoliaConfig.appId, algoliaConfig.apiKey);
         return (
             <InstantSearch searchClient={searchClient} indexName="games" style={{ flex: 1 }}>
-            {sgAlgoliaCustomSearchBar()}
-            <View style={{position: 'relative', flex: 1}}>
-                <View>
-                    {sgAlgoliaConsoleRefinements()}
-                </View>
-                <ScrollView showsVerticalScrollIndicator={false} scrollEventThrottle={16}>
-                    {sgAlgoliaHits()}
-                </ScrollView>
-            </View>
-            {gamePageLinkPressed === false
-                ?    <View style={{flex: 1, position: 'absolute', alignSelf: 'flex-end'}}>
-                        {sgAlgoliaFilters()}
+                {sgAlgoliaCustomSearchBar()}
+                <View style={{position: 'relative', flex: 1}}>
+                    <View>
+                        {sgAlgoliaConsoleRefinements()}
                     </View>
-                :   <View></View>
-            }
-           
+                    <Container style={{ flex: 1 }}>
+                        <ScrollView showsVerticalScrollIndicator={false} scrollEventThrottle={16}>
+                            {sgAlgoliaHits()}
+                        </ScrollView>
+                    </Container>
+                </View>
+                {gamePageLinkPressed === false
+                    ?    <View style={{flex: 1, position: 'absolute', alignSelf: 'flex-end'}}>
+                            <Container style={{ flex: 1 }}>
+                                {sgAlgoliaFilters()}
+                            </Container>
+                        </View>
+                    :   <View></View>
+                }
             </InstantSearch>
         )
     }
     function sgAlgoliaCustomSearchBar() {
-        const toBepassedFromGameScreen = 'Platformer'
         return (
             <CustomSearchBarContainer>
                 <ViewTopRow style={{flex: 1, flexDirection: 'row'}}>
@@ -112,9 +128,13 @@ export default function SgSearchHome({navigation}) {
                                 icon={ faSearch } color={colors.primaryColorAlt} size={25}
                             />
                         </View>
-                    :   <View></View>
+                    :   <View>
+                            <TouchableOpacity onPress={() => { navigation.goBack() }}>
+                                {backArrow(colorsPassThrough, backNeeded)}
+                            </TouchableOpacity>
+                    </View>
                 }
-                    <SearchBox gamePageLinkProp={toBepassedFromGameScreen} gamePageLinkPressed={gamePageLinkPressed} searchBarTitle={'Search Games'} onChange={scrollToTop} />
+                    <SearchBox gamePageLinkProp={gameDataToBePassed} gamePageLinkPressed={gamePageLinkPressed} searchBarTitle={'Search Games'} onChange={scrollToTop} />
                 </ViewTopRow>
             </CustomSearchBarContainer>
         )
@@ -179,68 +199,6 @@ export default function SgSearchHome({navigation}) {
         )
     }
 
-    function goToGame(item) {
-        console.log(item)
-    }
-
-    function searchResults() {
-        return (
-            <View>
-                <FlatList
-                    data={gamesFilterListName(chosenDb)}
-                    keyboardShouldPersistTaps="always" 
-                    contentContainerStyle={{
-                        justifyContent: 'center'
-                    }}
-                    keyExtractor={item => item.id}
-                    renderItem={({ item }) => (
-                    <View style={{
-                        flexDirection: 'column',
-                        flex: 1
-                    }}>
-                        <TouchableOpacity onPress={() => chosenGame(item)}>
-                            <MainFont>{item.name}</MainFont>
-                        </TouchableOpacity>
-                    </View>
-                    )}
-                />
-            </View>
-        ) 
-    }
-
-    function consoleFlatList() {
-        return (
-            <FlatList
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            data={consoleList.sort()}
-            keyboardShouldPersistTaps="always"
-            keyExtractor={item => item.id}
-            renderItem={({ item }) => (
-                <TouchableOpacity style={{  
-                    margin: 3,
-                    borderWidth: 1,
-                    borderRadius: 20,
-                    alignItems:'center',
-                    justifyContent:'center',
-                    height:45, 
-                    padding: 3,
-                    marginTop: 3,
-                    marginBottom: 10
-                    }}
-                    onPress={() => goToGame(item)}>
-                    <View style={{
-                        margin: 10,
-                        flexDirection: "row", justifyContent: "center"
-                    }}>
-                        <MainFont style={{paddingHorizontal: 5}}>{item}</MainFont>
-                    </View>
-                </TouchableOpacity>
-            )}
-        />
-        )
-    }
-
     function loadedData() {
         return (
             <View style={{ flex: 1 }}>
@@ -252,7 +210,6 @@ export default function SgSearchHome({navigation}) {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-        <Container style={{ flex: 1 }}>
             {isLoading !== true
                 ?   <View style={{ flex: 1 }}>
                 {loadedData()}
@@ -261,7 +218,6 @@ export default function SgSearchHome({navigation}) {
                     {preLoadedData()} 
                 </View>
             }
-        </Container>
     </SafeAreaView>
   )
 }

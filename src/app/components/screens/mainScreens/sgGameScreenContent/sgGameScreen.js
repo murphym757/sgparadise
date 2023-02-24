@@ -37,6 +37,8 @@ export default function GameScreen({navigation, route}) {
     const [gamePageView, setGamePageViews] = useState('')
     const navigationPass = navigation
     const colorsPassThrough = colors
+    const [dataToBePassed, setDataToBePassed] = useState('')
+    console.log("🚀 ~ file: sgGameScreen.js:41 ~ GameScreen ~ dataToBePassed:", dataToBePassed)
     const nameOfGame = gameName
 
     useEffect(() => {
@@ -99,22 +101,25 @@ export default function GameScreen({navigation, route}) {
         )
     }
     
-    function chosenDataOption(item, keySearchDataArray) {
-        const toGameData = {
-            searchType,
-            clientIdIGDB: null,
-            accessTokenIGDB: null,
-            igdbConsoleId: null,
-            gbConsoleId: null,
-            selectedSystemLogo: null,
-            navigationPass: navigation,
-            keySearchData: item,
-            keySearchDataPartOfArray: keySearchDataArray,
-            nextPage: 'Page1'
-        }
-        forwardToNextPage(toGameData.nextPage, toGameData, toGameData.navigationPass)
+    function chosenDataOption(item) {
+        return (
+          navigation.navigate('SgSearchSet', {
+                gameDataToBePassed: item,
+                gamePageLinkPressed: true
+            })
+        )
     }
 
+    // Links to the search page
+    function passDataToNextPage(item) {
+        const gamePageLinkPressed = true
+        return (
+          navigation.navigate('SgSearchSet', {
+                gameDataToBePassed: dataToBePassed,
+                gamePageLinkPressed: true
+            })
+        )
+      }
     /*----------------------------------------------*/
     // Changes page's background
     function selectedGameScreenshot(item) {

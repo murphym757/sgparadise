@@ -11,17 +11,17 @@ export const windowWidth = Dimensions.get('window').width
 
 //Search Bar 
 export const CustomSearchBarContainer = styled(View) `
-    height: 48px;
-    borderRadius: 5px;
+    height: ${RFValue(48, windowHeight)}px;
+    borderRadius: ${RFValue(5, windowHeight)}px;
     overflow: hidden;
     fontFamily: 'SpartanRegular';
     backgroundColor: ${currentTheme.primaryColor};
-    fontSize: 28px;
-    marginTop: 10px;
-    marginBottom: 10px;
-    marginLeft: 1px;
-    marginRight: 1px;
-    paddingLeft: 16px;
+    fontSize: ${RFValue(28, windowHeight)}px;
+    marginTop: ${RFValue(10, windowHeight)}px;
+    marginBottom: ${RFValue(10, windowHeight)}px;
+    marginLeft: ${RFValue(1, windowHeight)}px;
+    marginRight: ${RFValue(1, windowHeight)}px;
+    paddingLeft: ${RFValue(16, windowHeight)}px;
 `;
 
 export const CustomSearchBarTextInput = styled(TextInput) `
