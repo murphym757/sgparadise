@@ -370,7 +370,7 @@ function detailedGameScreenshot(gameScreenshots, gamePageNewHomeScreen, selected
                 <View style={{paddingTop: 15}}>
                     {gameScreenshots.map((item) =>
                         <TouchableOpacity
-                            onPress={() => selectedGameScreenshot(item, gamePageNewHomeScreen, selectedGameScreenshot)}>
+                            onPress={() => selectedGameScreenshot(item, selectedGameScreenshot)}>
                                 <View style={{marginVertical: 5}}>
                                     {gamePageNewHomeScreen == item
                                         ?    <Image
@@ -440,7 +440,6 @@ function returnedGameScreenshots(item, gameScreenshots, gamePageNewHomeScreen, s
             return image
         }
     }
-   
     
     return (
         <GamePageImageBackground source={gameScreenBackground()} resizeMode="cover" imageStyle={{opacity: 0.45}}>

@@ -34,11 +34,11 @@ export default function GameScreen({navigation, route}) {
     const [gameHomeScreenShot, setGameHomeScreenShot] = useState('')
     console.log(gameHomeScreenShot)
     const [gamePageNewHomeScreen, setGamePageNewHomeScreen] = useState('')
+    console.log(gamePageNewHomeScreen)
     const [gamePageView, setGamePageViews] = useState('')
     const navigationPass = navigation
     const colorsPassThrough = colors
     const [dataToBePassed, setDataToBePassed] = useState('')
-    console.log("🚀 ~ file: sgGameScreen.js:41 ~ GameScreen ~ dataToBePassed:", dataToBePassed)
     const nameOfGame = gameName
 
     useEffect(() => {
@@ -140,7 +140,7 @@ export default function GameScreen({navigation, route}) {
      }
 
     function gamePageScrollView() {
-        if (gameImageCount === 0) {
+        if (gameScreenshots.length === 0) {
             return (
                 <ScrollView 
                     horizontal={true} 
@@ -169,9 +169,9 @@ export default function GameScreen({navigation, route}) {
         
     }
 
-    function gamePageStructure() {
+    function GamePageStructure() {
         if (gamePageNewHomeScreen == '') return gameScreenFunc.preDeterminedGameHomeScreen(gameHomeScreenCover, gameHomeScreenShot, gamePageScrollView, isLoading, colors)
-        if (gamePageNewHomeScreen != '') return gameScreenFunc.updatedGameHomeScreen(gameHomeScreenCover, gamePageNewHomeScreen, gamePageScrollView, isLoading, colors)
+        if (gamePageNewHomeScreen !== '') return gameScreenFunc.updatedGameHomeScreen(gamePageNewHomeScreen, gamePageScrollView, isLoading, colors)
     }
 
     /*----------------------------------------------*/
@@ -202,7 +202,7 @@ export default function GameScreen({navigation, route}) {
             <Stack.Navigator initialRouteName="Home">
                 <Stack.Screen 
                     name="Home" 
-                    component={gamePageStructure}
+                    component={GamePageStructure}
                     options={homeOptions()}
                 />
             </Stack.Navigator>
