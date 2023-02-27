@@ -16,8 +16,6 @@ export default function GameScreen({navigation, route}) {
     const colors = useContext(CurrentThemeContext)
     const gameScreenFunc = useContext(gameScreenContext)
     const { collectionName, gamesCollection, consoleName, gameName, gameImageCount, gameSummary, back2Search} = route.params
-    console.log("🚀 ~ file: sgGameScreen.js:19 ~ GameScreen ~ gameImageCount", gameImageCount)
-    console.log("🚀 ~ file: sgGameScreen.js:19 ~ GameScreen ~ consoleName", gameSummary)
     const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be read
     const [isLoading, setIsLoading] = useState(true)
     const [currentGameArray, setCurrentGameArray] = useState([])
@@ -30,7 +28,6 @@ export default function GameScreen({navigation, route}) {
     const [gameScreenshot3, setGameScreenshot3] = useState([])
     const gameScreenshots = [gameScreenshot1.toString(), gameScreenshot2.toString(), gameScreenshot3.toString()]
     const [gameHomeScreenCover, setGameHomeScreenCover] = useState('')
-    console.log("🚀 ~ file: sgGameScreen.js:33 ~ GameScreen ~ gameHomeScreenCover", gameHomeScreenCover)
     const [gameHomeScreenShot, setGameHomeScreenShot] = useState('')
     console.log(gameHomeScreenShot)
     const [gamePageNewHomeScreen, setGamePageNewHomeScreen] = useState('')
@@ -140,7 +137,7 @@ export default function GameScreen({navigation, route}) {
      }
 
     function gamePageScrollView() {
-        if (gameScreenshots.length === 0) {
+        if (gameImageCount === 0) {
             return (
                 <ScrollView 
                     horizontal={true} 
