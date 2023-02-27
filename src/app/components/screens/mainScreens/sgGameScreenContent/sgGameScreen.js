@@ -1,17 +1,15 @@
 import { useState, useEffect, useContext } from 'react';
-import { ScrollView, TouchableOpacity, Text, View } from 'react-native';
-import { CurrentThemeContext, gameScreenContext, SgSearchScreen, SgConsoleListScreen, useAuth } from 'index';
-import { useIsFocused, useFocusEffect } from '@react-navigation/native'
+import { ScrollView, TouchableOpacity } from 'react-native';
+import { CurrentThemeContext, gameScreenContext, useAuth } from 'index';
+import { useIsFocused } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack'
 
 export default function GameScreen({navigation, route}) {
     const { 
         sgDB,
-        forwardToNextPage,
         currentUID,
         updateGameViewCount,
         backArrow,
-        toNewStack
     } = useAuth()
     const colors = useContext(CurrentThemeContext)
     const gameScreenFunc = useContext(gameScreenContext)
@@ -19,24 +17,15 @@ export default function GameScreen({navigation, route}) {
     const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be read
     const [isLoading, setIsLoading] = useState(true)
     const [currentGameArray, setCurrentGameArray] = useState([])
-    const [searchType, setSearchType] = useState('sgFirebaseSearch')
-    const [gameGenre, setGameGenre] = useState('') //For recommended related games
-    const [gameSubgenre, setGameSubgenre] = useState('') //For recommended related games
-    const [gameReleaseDate, setGameReleaseDate] = useState('') //For recommended related games
     const [gameScreenshot1, setGameScreenshot1] = useState([])
     const [gameScreenshot2, setGameScreenshot2] = useState([])
     const [gameScreenshot3, setGameScreenshot3] = useState([])
     const gameScreenshots = [gameScreenshot1.toString(), gameScreenshot2.toString(), gameScreenshot3.toString()]
     const [gameHomeScreenCover, setGameHomeScreenCover] = useState('')
     const [gameHomeScreenShot, setGameHomeScreenShot] = useState('')
-    console.log(gameHomeScreenShot)
     const [gamePageNewHomeScreen, setGamePageNewHomeScreen] = useState('')
-    console.log(gamePageNewHomeScreen)
-    const [gamePageView, setGamePageViews] = useState('')
-    const navigationPass = navigation
     const colorsPassThrough = colors
     const [dataToBePassed, setDataToBePassed] = useState('')
-    const nameOfGame = gameName
 
     useEffect(() => {
         function loadingTime() {
@@ -60,10 +49,6 @@ export default function GameScreen({navigation, route}) {
 
     async function getCurrentGameData() {
         let currentGameData = []
-        let currentGameGenre = ''
-        let currentGameSubgenre = ''
-        let currentGameReleaseDate = ''
-        let currentGameHomeScreenshot = ''
         let currentGameScreenshot1 = []
         let currentGameScreenshot2 = []
         let currentGameScreenshot3 = []
@@ -89,7 +74,6 @@ export default function GameScreen({navigation, route}) {
             setGameScreenshot3(currentGameScreenshot3)
         }
     }
-
 
     function BackButton() {
         const backNeeded = true
@@ -150,7 +134,7 @@ export default function GameScreen({navigation, route}) {
         )
     }
 
-    function allnformationIncluded() {
+    function allInformationIncluded() {
         return (
             <ScrollView 
                 horizontal={true} 
@@ -169,7 +153,7 @@ export default function GameScreen({navigation, route}) {
         return (
             gameImageCount === 0
                 ?   informationExcludedImages()
-                :   allnformationIncluded()
+                :   allInformationIncluded()
         )
     }
 
