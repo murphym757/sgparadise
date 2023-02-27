@@ -136,34 +136,41 @@ export default function GameScreen({navigation, route}) {
          )
      }
 
+    function informationExcludedImages() {
+        return (
+            <ScrollView 
+                horizontal={true} 
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{flexWrap: "wrap", paddingHorizontal: 20}}>
+                    {gameScreenFunc.returnedGameInfo(currentGameArray, isLoading,setGameHomeScreenCover, setGameHomeScreenShot)}
+                    {gameScreenFunc.returnedGameSummary(currentGameArray)}
+                    {gameScreenFunc.returnedGamePubDevInfo(currentGameArray, chosenDataOption)}
+                    {gameScreenFunc.returnedGameGenresAndModes(currentGameArray, chosenDataOption)}
+            </ScrollView>
+        )
+    }
+
+    function allnformationIncluded() {
+        return (
+            <ScrollView 
+                horizontal={true} 
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{flexWrap: "wrap", paddingHorizontal: 20}}>
+                    {gameScreenFunc.returnedGameInfo(currentGameArray, isLoading, setGameHomeScreenCover, setGameHomeScreenShot)}
+                    {gameScreenFunc.returnedGameSummary(currentGameArray)}
+                    {gameScreenFunc.returnedGameScreenshots(gameScreenshots, isLoading, selectedGameScreenshot, colors)}
+                    {gameScreenFunc.returnedGamePubDevInfo(currentGameArray, chosenDataOption)}
+                    {gameScreenFunc.returnedGameGenresAndModes(currentGameArray, chosenDataOption)}
+            </ScrollView>
+        )
+    }
+
     function gamePageScrollView() {
-        if (gameImageCount === 0) {
-            return (
-                <ScrollView 
-                    horizontal={true} 
-                    showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={{flexWrap: "wrap", paddingHorizontal: 20}}>
-                        {gameScreenFunc.returnedGameInfo(currentGameArray, isLoading,setGameHomeScreenCover, setGameHomeScreenShot)}
-                        {gameScreenFunc.returnedGameSummary(currentGameArray)}
-                        {gameScreenFunc.returnedGamePubDevInfo(currentGameArray, chosenDataOption)}
-                        {gameScreenFunc.returnedGameGenresAndModes(currentGameArray, chosenDataOption)}
-                </ScrollView>
-            )
-        } else {
-            return (
-                <ScrollView 
-                    horizontal={true} 
-                    showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={{flexWrap: "wrap", paddingHorizontal: 20}}>
-                        {gameScreenFunc.returnedGameInfo(currentGameArray, isLoading, setGameHomeScreenCover, setGameHomeScreenShot)}
-                        {gameScreenFunc.returnedGameSummary(currentGameArray)}
-                        {gameScreenFunc.returnedGameScreenshots(gameScreenshots, isLoading, selectedGameScreenshot, colors)}
-                        {gameScreenFunc.returnedGamePubDevInfo(currentGameArray, chosenDataOption)}
-                        {gameScreenFunc.returnedGameGenresAndModes(currentGameArray, chosenDataOption)}
-                </ScrollView>
-            )
-        }
-        
+        return (
+            gameImageCount === 0
+                ?   informationExcludedImages()
+                :   allnformationIncluded()
+        )
     }
 
     function GamePageStructure() {
