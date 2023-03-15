@@ -2,6 +2,9 @@ import React, { useContext, useEffect, useState } from 'react'
 import { 
     Text,
     View,
+    Button, 
+    Modal, 
+    StyleSheet,
     Pressable,
     FlatList,
     TouchableOpacity
@@ -10,6 +13,8 @@ import {
     Container,
     CurrentThemeContext,
     windowHeight,
+    TouchableButton,
+    TouchableButtonFont,
     MainFont
 } from 'index'
 import { RFValue } from "react-native-responsive-fontsize";
@@ -17,6 +22,7 @@ import { createAvatar } from '@dicebear/core';
 import { botttsNeutral } from '@dicebear/collection';
 import { SvgXml } from 'react-native-svg';
 import DropDownPicker from 'react-native-dropdown-picker';
+import ColorPicker, { Panel1, Swatches, Preview, OpacitySlider, HueSlider } from 'reanimated-color-picker';
 
 const IconContext = React.createContext()
 
@@ -26,10 +32,14 @@ export function useIconCreator() {
 
 export function IconCreatorProvider({ children, navigation }) {
     const colors = useContext(CurrentThemeContext)
+    const [showModal, setShowModal] = useState(false)
     const sgIconName = 'Felix'
+    const [iconColorPicker, setIconColorPicker] = useState('')
+    const [iconBackground, setIconBackground] = useState('') // This value goes into firebase
+    
     // Icon Eyes
     const [eyeSectionOpen, setEyeSectionOpen] = useState(false)
-    const [eyeValue, setEyeValue] = useState(null)
+    const [eyeValue, setEyeValue] = useState(null) // This value goes into firebase
     const [iconEyes, setIconEyes] = useState([
       {label: 'Eyes', value: 'eyes', disabled: true},
       {label: 'Bulging', value: 'bulging', parent: 'eyes'},
@@ -49,7 +59,7 @@ export function IconCreatorProvider({ children, navigation }) {
     ])
     // Icons Mouth
     const [mouthSectionOpen, setMouthSectionOpen] = useState(false)
-    const [mouthValue, setMouthValue] = useState(null)
+    const [mouthValue, setMouthValue] = useState(null) // This value goes into firebase
     const [iconMouths, setIconMouths] = useState([
       {label: 'Mouths', value: 'mouths', disabled: true},
       {label: 'Bite', value: 'bite', parent:'mouths'},
@@ -62,6 +72,12 @@ export function IconCreatorProvider({ children, navigation }) {
       {label: 'square01', value: 'square01', parent:'mouths'},
       {label: 'square02', value: '2', parent:'mouths'}
     ])
+    const styles = StyleSheet.create({
+        container: {
+          flex: 1,
+          justifyContent: 'center',
+        },
+      });
 
      // User Icon
     function sgIconSetter(iconValue) {
@@ -69,12 +85,22 @@ export function IconCreatorProvider({ children, navigation }) {
             ["" + iconValue + ""]
         )
     }
+
+    function colorFixer(chosenColor) {
+        let humpDay = chosenColor
+        if (chosenColor != null) {
+            setIconBackground(humpDay.substr(1))
+            return humpDay.substr(1)
+        } 
+    }
+
     function sgUserIcon() {
         const avatar = createAvatar(botttsNeutral, {
             seed: sgIconName,
             eyes: sgIconSetter(eyeValue),
             mouth: sgIconSetter(mouthValue),
-            radius: 10
+            radius: 10,
+            backgroundColor: [colorFixer(""+iconColorPicker.hex+"")]
             // ... other options
         }).toString();
       
@@ -118,18 +144,18 @@ export function IconCreatorProvider({ children, navigation }) {
             dropDownContainerStyle={{
               backgroundColor: colors.primaryColor,
               borderColor: colors.black,
-              color: colors.primaryColor,
+              color: colors.primaryFontColor,
             }}
             labelStyle={{
                 fontSize: `${RFValue(15, windowHeight)}`,
                 fontWeight: 500,
-                fontFamily: 'SpartanRegular',
-                color: colors.primaryFontColor,
+                fontFamily: 'SpartanRegular'
             }}
             textStyle={{
                 fontSize: `${RFValue(15, windowHeight)}`,
                 fontWeight: 500,
                 fontFamily: 'SpartanRegular',
+                color: colors.primaryFontColor
             }}
           />
         )
@@ -163,17 +189,34 @@ export function IconCreatorProvider({ children, navigation }) {
 
     function sgIconCreator() {
         return (
-          <View>
+            <View>
                 <View style={{paddingHorizontal: 20}}>
                     {sgUserIconContainer()}
                 </View>
                 <View>
-                <View style={{flexDirection: 'row', paddingVertical: 20}}>
-                    {sgUserIconCreatorEyes()}
-                </View>
-                <View  style={{flexDirection: 'row', paddingVertical: 20}}>
-                    {sgUserIconCreatorMouth()}
-                </View>
+                    <TouchableButton onPress={() => setShowModal(true)}>
+                        <TouchableButtonFont>Color Picker</TouchableButtonFont>
+                    </TouchableButton>
+                    <View>
+                        <View style={{flexDirection: 'row', paddingVertical: 20}}>
+                            {sgUserIconCreatorEyes()}
+                        </View>
+                        <View  style={{flexDirection: 'row', paddingVertical: 20}}>
+                            {sgUserIconCreatorMouth()}
+                        </View>
+                    </View>
+                    <Modal visible={showModal} animationType='slide' transparent={true}>
+                        <ColorPicker style={{ width: '90%', backgroundColor: colors.primaryColor }} value='red' onComplete={setIconColorPicker}>
+                            <Preview />
+                            <Panel1 />
+                            <HueSlider />
+                            <OpacitySlider />
+                            <Swatches />
+                            <TouchableButton onPress={() => setShowModal(false)}>
+                                <TouchableButtonFont>Finish</TouchableButtonFont>
+                            </TouchableButton>
+                        </ColorPicker>
+                    </Modal>
                 </View>
             </View>
         )

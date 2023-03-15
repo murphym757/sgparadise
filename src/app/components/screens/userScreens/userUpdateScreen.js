@@ -31,7 +31,8 @@ export default function UpdateUserScreen({navigation}) {
       failureAlert
     } = useAuth()
     const { 
-      sgIconCreator
+      sgIconCreator,
+      sgColorPicker
       } = useIconCreator()
     const sgDB = firebase.firestore()
     const colors = useContext(CurrentThemeContext)
@@ -475,8 +476,8 @@ export default function UpdateUserScreen({navigation}) {
           {changeIconButtonPressed == false
             ? updateForm()
             : <View> 
-              <View style={{paddingBottom: 200}}>
-                {sgIconCreator()}
+                <View style={{paddingBottom: 200}}>
+                  {sgIconCreator()}
                 </View>
                 <View>
                 {customSGButtonChangeIconGoBack()}
