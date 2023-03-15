@@ -87,6 +87,28 @@ export function AuthProvider({ children }) {
         return currentUser.updatePassword(password)
     }
 
+    function updateProfile(displayName) {
+        return currentUser.updateProfile({
+            displayName: displayName,
+            photoURL: "https://example.com/jane-q-user/profile.jpg",
+          }).then(() => {
+            logOut()
+          }).catch((error) => {
+            // An error occurred
+            // ...
+          });
+    }
+
+    function reauthenticateUser(email, userProvidedPassword) {
+        const user = firebase.auth().currentUser;
+        const credential = firebase.auth.EmailAuthProvider.credential(
+            email, 
+            userProvidedPassword
+        );
+        // Now you can use that to reauthenticate
+        user.reauthenticateWithCredential(credential).then(logOut());
+    }
+
     function displayData(collectionName) {
         return sgDB.collection(collectionName)
         .get().then((querySnapshot) => {
@@ -532,6 +554,8 @@ export function AuthProvider({ children }) {
         resetPassword,
         updateEmail,
         updatePassword,
+        updateProfile,
+        reauthenticateUser,
         displayData,
         getGameData,
         addGameToConsoleButtonGroup,

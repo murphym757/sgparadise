@@ -4,7 +4,8 @@ import * as SplashScreen from 'expo-splash-screen';
 import { AuthProvider } from './src/app/components/screens/authScreens/authContext'
 import { TagsProvider } from './src/app/components/screens/authScreens/tagsContext'
 import { SearchBarProvider } from './src/app/components/screens/mainScreens/sgGameSearchScreenContent/searchIndex'
-import ScreenRoutes from "./src/app/components/screens/screenRoutes";
+import { IconCreatorProvider } from './src/app/components/screens/userScreens/userIconContext'
+import ScreenRoutes from "./src/app/components/screens/screenRoutes"
 
 function useFonts(fontMap) {
   let [fontsLoaded, setFontsLoaded] = useState(false);
@@ -40,9 +41,11 @@ export default function Home() {
         return  (
           <AuthProvider>
             <SearchBarProvider>
-              <TagsProvider>
-                <ScreenRoutes />
-              </TagsProvider>
+              <IconCreatorProvider>
+                <TagsProvider>
+                  <ScreenRoutes />
+                </TagsProvider>
+              </IconCreatorProvider>
             </SearchBarProvider>
           </AuthProvider>
         );

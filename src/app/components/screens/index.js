@@ -31,9 +31,9 @@
         export { default as EditGameScreen } from 'main/sgGameScreenContent/sgEditGameScreen'
         
     // User Screens
-    export { default as UserProfileScreen } from 'user/UserProfileScreen'
+    export { default as UserProfileScreen } from 'user/userProfileScreen'
     export { default as UpdateUserScreen } from 'user/userUpdateScreen'
-    export { default as UserSavesScreen } from 'user/UserSavesScreen'
+    export { default as UserSavesScreen } from 'user/userSavesScreen'
 // Assets  
     // Styling
         //Theme Context
@@ -143,6 +143,9 @@
         
         //Search Bar Context
         export { useSearchBar } from 'main/sgGameSearchScreenContent/searchIndex'
+
+        //USer Icon Creator Context
+        export { useIconCreator } from 'user/userIconContext'
 
         //Home Context
         export { homeScreenGenreContext } from 'main/sgHomeScreenContext'

@@ -1,18 +1,22 @@
 
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { View } from 'react-native';
-import { useAuth } from 'auth/authContext'
-import { // App Styling
+import {
+    useAuth,
     TouchableButton,
-    TouchableButtonFont
-  } from 'assets/styles/authScreensStyling'
+    TouchableButtonFont,
+    MainFont,
+    CurrentThemeContext
+} from 'index'
 
 export default function UserProfileScreen({navigation}) {
     const { currentUser, logOut } = useAuth()
+    console.log("🚀 ~ file: UserProfileScreen.js:14 ~ UserProfileScreen ~ currentUser:", currentUser)
+    const colors = useContext(CurrentThemeContext)
     const [error, setError] = useState('')
 
     function onUpdateUser() {
-        navigation.navigate('UserProfileScreen')
+        navigation.navigate('Update Account')
     }
     
     async function onHandleLogout() {
@@ -31,7 +35,8 @@ export default function UserProfileScreen({navigation}) {
             {currentUser !== null
                 ?   <View>
                         <MainFont>{error}</MainFont>
-                        <MainFont>{JSON.stringify(currentUser)}</MainFont>
+                        <MainFont>{JSON.stringify(currentUser.uid)}</MainFont>
+                        <MainFont>{JSON.stringify(currentUser.email)}</MainFont>
                         <TouchableButton 
                             onPress={() => onUpdateUser()}>
                             <TouchableButtonFont>Account</TouchableButtonFont>

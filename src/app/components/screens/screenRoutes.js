@@ -23,6 +23,7 @@ import {
   useAuth,
   UserProfileScreen,
   UserSavesScreen,
+  UpdateUserScreen,
   SgSearchHome,
 } from 'index'
 import {decode, encode} from 'base-64'
@@ -83,7 +84,7 @@ export default function App() {
             <FontAwesomeIcon icon={ faUser } color={color} size={size} />
           ),
           }}
-          component={UserProfileScreen} 
+          component={SgAuthStack} 
         />
       </Tab.Navigator>
     )
@@ -156,8 +157,15 @@ export default function App() {
   }
 
   function SgAuthStack() {
+    function AccountAccess() {
+      return (
+        currentUser !== null 
+          ? "Update Account"
+          : "Login"
+      )
+    }
     return (
-      <Stack.Navigator initialRouteName="Login">
+      <Stack.Navigator initialRouteName={AccountAccess()}>
         <Stack.Screen 
           name="Login" 
           options={{ headerShown: false }} 
@@ -173,6 +181,11 @@ export default function App() {
           options={{ headerShown: false }}
           component={ResetPasswordScreen} 
         />
+        <Stack.Screen 
+        name="Update Account" 
+        options={{ headerShown: false }}
+        component={UpdateUserScreen} 
+      />
       </Stack.Navigator>
     )
   }

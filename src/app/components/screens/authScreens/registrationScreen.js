@@ -16,7 +16,6 @@ import {
 export default function RegistrationScreen({navigation}) {
   const { sgDB, signUp, currentUser, failureAlert } = useAuth()
   const [isLoading, setIsLoading] = useState(true)
-  const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -44,7 +43,6 @@ export default function RegistrationScreen({navigation}) {
             const data = {
               id: uid,
               email,
-              fullName,
             }
             sgDB.collection('users')
               .doc(uid)
@@ -94,15 +92,6 @@ export default function RegistrationScreen({navigation}) {
                 : <View></View>
               }
             </View>
-            <CustomInputField
-                placeholder='Full Name'
-                placeholderTextColor={colors.primaryColor}
-                onChangeText={(text) => setFullName(text)}
-                value={fullName}
-                color={colors.primaryColor}
-                underlineColorAndroid="transparent"
-                autoCapitalize="none"
-            />
             <CustomInputField
                 placeholder='E-mail'
                 placeholderTextColor={colors.primaryColor}
