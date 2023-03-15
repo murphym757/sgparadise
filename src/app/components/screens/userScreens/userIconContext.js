@@ -8,8 +8,11 @@ import {
 } from 'react-native'
 import {
     Container,
-    CurrentThemeContext
+    CurrentThemeContext,
+    windowHeight,
+    MainFont
 } from 'index'
+import { RFValue } from "react-native-responsive-fontsize";
 import { createAvatar } from '@dicebear/core';
 import { botttsNeutral } from '@dicebear/collection';
 import { SvgXml } from 'react-native-svg';
@@ -96,82 +99,88 @@ export function IconCreatorProvider({ children, navigation }) {
             </View>
         )
     }
-    function sgUserIconCreatorEyes() {
+    function sgCustomDropdown(sectionOpen, value, iconFeatures, setSectionOpen, setValue, setIconFeatures, placeholderFont, dropDownDirection) {
         return (
-          <DropDownPicker
-            open={eyeSectionOpen}
-            value={eyeValue}
-            items={iconEyes}
-            setOpen={setEyeSectionOpen}
-            setValue={setEyeValue}
-            setItems={setIconEyes}
-            style={{
-                backgroundColor: colors.primaryColor,
-            }}
-            dropDownContainerStyle={{
-                backgroundColor: "#dfdfdf"
-            }}
-          />
-        )
-    }
-    function sgUserIconCreatorMouth() {
-        return (
-          <DropDownPicker
-            open={mouthSectionOpen}
-            value={mouthValue}
-            items={iconMouths}
-            setOpen={setMouthSectionOpen}
-            setValue={setMouthValue}
-            setItems={setIconMouths}
-            placeholder="Select an items"
+            <DropDownPicker
+            open={sectionOpen}
+            value={value}
+            items={iconFeatures}
+            setOpen={setSectionOpen}
+            setValue={setValue}
+            setItems={setIconFeatures}
+            placeholder={placeholderFont}
+            dropDownDirection={dropDownDirection}
             style={{
               backgroundColor: colors.primaryColor,
               borderColor: colors.black,
-              fontColor: "#dfdfdf"
+              color: colors.primaryFontColor,
             }}
             dropDownContainerStyle={{
-              backgroundColor: "#dfdfdf",
+              backgroundColor: colors.primaryColor,
               borderColor: colors.black,
               color: colors.primaryColor,
             }}
             labelStyle={{
-              fontWeight: "bold"
+                fontSize: `${RFValue(15, windowHeight)}`,
+                fontWeight: 500,
+                fontFamily: 'SpartanRegular',
+                color: colors.primaryFontColor,
             }}
             textStyle={{
-              fontSize: 15
+                fontSize: `${RFValue(15, windowHeight)}`,
+                fontWeight: 500,
+                fontFamily: 'SpartanRegular',
             }}
           />
+        )
+    }
+    function sgUserIconCreatorEyes() {
+        const sectionOpen = eyeSectionOpen
+        const value = eyeValue
+        const iconFeatures = iconEyes
+        const setSectionOpen = setEyeSectionOpen
+        const setValue = setEyeValue
+        const setIconFeatures = setIconEyes
+        const placeholderFont = "Select a set of eyes"
+        const dropDownDirection = "TOP"
+        return (
+            sgCustomDropdown(sectionOpen, value, iconFeatures, setSectionOpen, setValue, setIconFeatures, placeholderFont, dropDownDirection)
+        )
+    }
+    function sgUserIconCreatorMouth() {
+        const sectionOpen = mouthSectionOpen
+        const value = mouthValue
+        const iconFeatures = iconMouths
+        const setSectionOpen = setMouthSectionOpen
+        const setValue = setMouthValue
+        const setIconFeatures = setIconMouths
+        const placeholderFont = "Select a mouth"
+        const dropDownDirection = "BOTTOM"
+        return (
+            sgCustomDropdown(sectionOpen, value, iconFeatures, setSectionOpen, setValue, setIconFeatures, placeholderFont, dropDownDirection)
         )
     }
 
     function sgIconCreator() {
         return (
-          <Container>
-            <View>
+          <View>
                 <View style={{paddingHorizontal: 20}}>
                     {sgUserIconContainer()}
                 </View>
                 <View>
-                <View style={{flexDirection: 'row'}}>
+                <View style={{flexDirection: 'row', paddingVertical: 20}}>
                     {sgUserIconCreatorEyes()}
                 </View>
-                <View  style={{flexDirection: 'row'}}>
+                <View  style={{flexDirection: 'row', paddingVertical: 20}}>
                     {sgUserIconCreatorMouth()}
                 </View>
                 </View>
             </View>
-        </Container>
-        )
-    }
-    function textTest() {
-        return (
-            <Text>If you see this, it works. More to do tho</Text>
         )
     }
 
     const value = {
-        sgIconCreator,
-        textTest
+        sgIconCreator
     }
 
     return (
