@@ -253,6 +253,18 @@ export function AuthProvider({ children }) {
         })
     }
 
+    // Add User Data sgUsers (on Cloud Firestore)
+    async function addUserDataUsers(userID, userEmail) {
+        const timestamp = firebase.firestore.FieldValue.serverTimestamp()
+        sgDB.collection('sgUsers').doc(userID).add({
+            id: userID,
+            email:userEmail,
+            createdAt: timestamp
+        })
+    }
+    
+    /*-------------------------------*/
+
     // Add Game to sgDB
     async function addGameToConsole(passingContent) {
         const timestamp = firebase.firestore.FieldValue.serverTimestamp()
