@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { View, SafeAreaView } from 'react-native'
 import {
+  Container,
   CurrentThemeContext,
   CustomInputField,
   faTimes,
@@ -78,13 +79,7 @@ export default function LoginScreen({navigation, route}) {
     
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: colors.primaryColor }}> 
-        <View style={{ flex: 1 }}>
-          <View style={{ paddingLeft: 20 }}>
-            <FontAwesomeIcon 
-              icon={ faTimes } color={colors.primaryFontColor} size={50} 
-              onPress={() => navigation.navigate('Main', { screen: 'SgUserStackNavbar' })}
-            />
-          </View>
+        <Container style={{ flex: 1, justifyContent: 'center' }}>
           <View>
             {error !== ''
               ? failureAlertMessage(error)
@@ -114,13 +109,13 @@ export default function LoginScreen({navigation, route}) {
               onPress={() => onLoginPress()}>
               <TouchableButtonFont>Log in</TouchableButtonFont>
           </TouchableButton>
-          <FooterView>
-              <FooterFont>Forgot Password? <FooterLink onPress={onFooterResLinkPress}>Reset Password</FooterLink></FooterFont>
-          </FooterView>
-          <FooterView>
-              <FooterFont>Don't have an account? <FooterLink onPress={onFooterRegsLinkPress}>Sign up</FooterLink></FooterFont>
-          </FooterView>
-      </View>
+          <Container style={{alignItems: 'center'}}>
+            <FooterFont style={{paddingVertical: 50}}>Forgot Password? <FooterLink onPress={onFooterResLinkPress}>Reset Password</FooterLink></FooterFont>
+          </Container>
+          <Container  style={{alignItems: 'center'}}>
+            <FooterFont>Don't have an account? <FooterLink onPress={onFooterRegsLinkPress}>Sign up</FooterLink></FooterFont>
+          </Container>
+        </Container>
       </SafeAreaView>
     )
 }

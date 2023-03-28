@@ -106,7 +106,7 @@ export default function UpdateUserScreen({navigation}) {
       updateDataPromises.push(emailMatchPromise)
       //updateDataPromises.push(passwordMatchPromise)
       Promise.all(updateDataPromises).then((messages) => {
-        reauthenticateUser()
+        reauthenticateUser(navigation.navigate('Home'))
         console.log(messages)
       }).catch((err) => {
       }).finally(() => {
@@ -119,7 +119,7 @@ export default function UpdateUserScreen({navigation}) {
 
     function cancelUpdate() {
         setAuthButtonPressed(false)
-        navigation.navigate('Home')
+        navigation.goBack()
     }
 
     function onRegisterPress() {
@@ -208,6 +208,12 @@ export default function UpdateUserScreen({navigation}) {
       )
   }
 
+  function tester() {
+    return (
+      navigation.navigate('Home')
+    )
+  }
+
 
     // Edit Profile (General Info)
     /*--------------------------*/ 
@@ -224,11 +230,11 @@ export default function UpdateUserScreen({navigation}) {
     }
     function row1LinkAbsolute(hasFunction, linkFunction, linkColor, linkFont, leftPadding) {
       return (
-        <View style={{flex: 1, position: 'absolute', alignSelf: 'flex-end', paddingLeft: leftPadding}}>
+        <View style={{flex: 1, position: 'absolute'}}>
           {hasFunction == true
-            ? <View onPress={linkFunction}>
+            ? <Pressable onPress={linkFunction}>
                 <MainSubFont style={{color:linkColor}}>{linkFont}</MainSubFont>
-              </View>
+              </Pressable>
             : <View>
                 <MainSubFont style={{color: linkColor}}>{linkFont}</MainSubFont>
               </View>
@@ -242,14 +248,21 @@ export default function UpdateUserScreen({navigation}) {
         <View style={{paddingBottom: rowPadding}}>
           <View style={{flexDirection: 'row'}}>
             {row1LinkRelative(cancelUpdate, colors.primaryFontColor, 'Cancel')}
-            {row1LinkAbsolute(true, cancelUpdate, colors.primaryFontColor, 'Edit Profile', 130)}
-            {row1LinkAbsolute(false, cancelUpdate, colors.secondaryColor, 'Done', 300)}
+          </View>
+        </View>
+      )
+    }
+    function editPersonalRow2(rowPadding) {
+      return (
+        <View style={{paddingBottom: rowPadding}}>
+          <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+            {row1LinkAbsolute(false, cancelUpdate, colors.primaryFontColor, 'Edit Profile', 130)}
           </View>
         </View>
       )
     }
 
-    function editPersonalRow2(rowPadding) {
+    function editPersonalRow3(rowPadding) {
       return (
         <View style={{paddingBottom: rowPadding}}>
           <View style={{justifyContent: 'center', alignItems: 'center'}}>
@@ -261,7 +274,7 @@ export default function UpdateUserScreen({navigation}) {
       )
     }
 
-    function editPersonalRow3(rowPadding) {
+    function editPersonalRow4(rowPadding) {
       return (
         <View style={{paddingBottom: rowPadding}}>
           <View>
@@ -271,14 +284,24 @@ export default function UpdateUserScreen({navigation}) {
       )
     }
 
-    function editPersonalRow4(rowPadding) {
+    function editPersonalRow5(rowPadding) {
       return (
         <View style={{paddingBottom: rowPadding}}>
-          <View>
+          <View style={{justifyContent: 'center', alignItems: 'center'}}>
             <Pressable onPress={() => {setChangePersonalInfoButtonPressed(true), setChangeIconButtonPressed(false)}}>
               <MainSubFont>Personal information settings</MainSubFont>
             </Pressable>
             </View>
+        </View>
+      )
+    }
+
+    function editPersonalRow6(rowPadding) {
+      return (
+        <View style={{paddingBottom: rowPadding}}>
+          <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+            {row1LinkAbsolute(true, updateProcess, colors.secondaryColor, 'Update', 300)}
+          </View>
         </View>
       )
     }
@@ -288,7 +311,6 @@ export default function UpdateUserScreen({navigation}) {
       const warningMessage2 = 'To keep your account secure, don\'t enter an email that belongs to someone else.'
       return (
         <View>
-          <Container>
           {changeIconButtonPressed == false
             ?  changePersonalInfoButtonPressed == false
               ? <View>
@@ -296,6 +318,8 @@ export default function UpdateUserScreen({navigation}) {
                   {editPersonalRow2(100)}
                   {editPersonalRow3(100)}
                   {editPersonalRow4(100)}
+                  {editPersonalRow5(100)}
+                  {editPersonalRow6(100)}
                 </View>
               : <View>
                 {personalInfoSection(warningMessage1, warningMessage2)}
@@ -305,9 +329,6 @@ export default function UpdateUserScreen({navigation}) {
                 {sgCreatorSuite()}
               </View>
           }
-          
-         
-          </Container>
         </View>
       )
     }
@@ -613,7 +634,7 @@ export default function UpdateUserScreen({navigation}) {
           <View style={{flex: 1, position: 'absolute', alignSelf: 'flex-end', paddingTop: 10, paddingLeft: 50}}>
             <MainSubFont>Personal Information</MainSubFont>
           </View>
-          <View style={{paddingBottom: 100}}>
+          <View>
             <MainFont>{warningMessage1}</MainFont>
             <MainFont>{warningMessage2}</MainFont>
             {customSGFormFieldEmail()}
@@ -637,22 +658,8 @@ export default function UpdateUserScreen({navigation}) {
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.primaryColor }}>
-          <Container style={{ flex: 1 }}>
+          <Container style={{ flex: 1, justifyContent: 'center' }}>
             {editPersonalInfo()}
-            {/*
-            {authButtonPressed == false
-              ? editUserExpanded()
-              : authForm()
-            }
-              <FooterView style={{flexDirection: 'row'}}>
-                  <FooterFont style={{alignItems: 'center', justifyContent: 'center'}}>
-                    <FooterLink onPress={cancelUpdate}>
-                      Cancel
-                    </FooterLink>
-                  </FooterFont>
-              </FooterView>
-              <Text>{testError}</Text>
-          */}
           </Container>
       </SafeAreaView>
     )

@@ -188,7 +188,7 @@ export default function SgHomeScreen({ navigation, route }) {
             await loadingTime()
         }
         sgLoader()
-        if(currentUID !== undefined) 
+        if(currentUID !== null) 
             return 
                 displayData(collectionName)
                

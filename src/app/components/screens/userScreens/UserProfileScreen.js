@@ -1,18 +1,35 @@
 
 import React, { useState, useContext } from 'react';
-import { View } from 'react-native';
+import { View, SafeAreaView } from 'react-native';
 import {
     useAuth,
     TouchableButton,
     TouchableButtonFont,
     MainFont,
+    Container,
+    MainSubFont,
     CurrentThemeContext
 } from 'index'
 
 export default function UserProfileScreen({navigation}) {
-    const { currentUser, logOut } = useAuth()
+    const { 
+        currentUser, 
+        logOut, 
+        addUserDataUsers, 
+        updateUsernameFirestore, 
+        updateUserEmailFirestore,
+        updateProfile
+     } = useAuth()
     console.log("🚀 ~ file: UserProfileScreen.js:14 ~ UserProfileScreen ~ currentUser:", currentUser)
     const colors = useContext(CurrentThemeContext)
+    const userName = currentUser.displayName
+    console.log("🚀 ~ file: userProfileScreen.js:26 ~ UserProfileScreen ~ userName:", userName)
+    const userEmail = currentUser.email
+    console.log("🚀 ~ file: userProfileScreen.js:20 ~ UserProfileScreen ~ userEmail:", userEmail)
+    const newEmail = 'musicLover786@gmail.com'
+    const newUsername = 'musicLover786'
+    const userId = currentUser.uid
+    console.log("🚀 ~ file: userProfileScreen.js:22 ~ UserProfileScreen ~ userId:", userId)
     const [error, setError] = useState('')
 
     function onUpdateUser() {
@@ -23,20 +40,30 @@ export default function UserProfileScreen({navigation}) {
         setError('')
         try {
             await logOut()
-            navigation.navigate('Login')
         } catch {
             setError('Failed to log out')
         }
     }
+    
+    function createUser() {
+       
+    }
+
+    function unixTimestamp (date = Date.now()) {  
+        return Math.floor(date / 1000)
+      }
 
     return (
-        <View style={{ flex: 1, backgroundColor: colors.primaryColor, justifyContent: 'center', alignItems: 'center' }}>
-            <MainFont>Account Screen</MainFont>
+        <SafeAreaView style={{ flex: 1, backgroundColor: colors.primaryColor }}>
+          <Container style={{ flex: 1, justifyContent: 'center' }}>
+            <MainSubFont>Account Page</MainSubFont>
             {currentUser !== null
                 ?   <View>
                         <MainFont>{error}</MainFont>
-                        <MainFont>{JSON.stringify(currentUser.uid)}</MainFont>
-                        <MainFont>{JSON.stringify(currentUser.email)}</MainFont>
+                        <MainFont>{JSON.stringify(currentUser.lastLoginAt)}</MainFont>
+                        <Container style={{alignItems: 'center'}}>
+                            <MainFont>{userName}</MainFont>
+                        </Container>
                         <TouchableButton 
                             onPress={() => onUpdateUser()}>
                             <TouchableButtonFont>Account</TouchableButtonFont>
@@ -45,12 +72,24 @@ export default function UserProfileScreen({navigation}) {
                             onPress={() => onHandleLogout()}>
                             <TouchableButtonFont>Log Out</TouchableButtonFont>
                         </TouchableButton>
+                        <TouchableButton 
+                            onPress={() => addUserDataUsers(userId, userEmail)}>
+                            <TouchableButtonFont>Add User Data to Firebase</TouchableButtonFont>
+                        </TouchableButton>
+                        <TouchableButton 
+                            onPress={() => { updateUsernameFirestore(userId, newUsername), updateProfile(newUsername) }}>
+                            <TouchableButtonFont>Change username in Firestore</TouchableButtonFont>
+                        </TouchableButton>
+                        <TouchableButton 
+                            onPress={() => updateUserEmailFirestore(userId, newEmail)}>
+                            <TouchableButtonFont>Update user email in Firebase</TouchableButtonFont>
+                        </TouchableButton>
                 </View>
                 :   <View>
                         <MainFont>Not Logged In</MainFont>
                 </View>
             }
-            
-        </View>
+          </Container>
+      </SafeAreaView>
     )
 }

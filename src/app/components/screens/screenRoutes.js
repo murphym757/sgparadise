@@ -160,7 +160,7 @@ export default function App() {
     function AccountAccess() {
       return (
         currentUser !== null 
-          ? "Update Account"
+          ? "User Profile"
           : "Login"
       )
     }
@@ -175,6 +175,12 @@ export default function App() {
           name="Registration" 
           options={{ headerShown: false }}
           component={RegistrationScreen} 
+        />
+        
+        <Stack.Screen 
+          name="User Profile" 
+          options={{ headerShown: false }} 
+          component={UserProfileScreen}
         />
         <Stack.Screen 
           name="Reset Password" 

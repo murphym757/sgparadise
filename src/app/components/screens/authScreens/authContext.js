@@ -72,7 +72,11 @@ export function AuthProvider({ children }) {
     }
 
     function logOut() {
-        return auth.signOut()
+        return auth.signOut().then(() => {
+            navigation.navigate('Home')
+          }).catch((err) => {
+            setError(`${err}`)
+          })
     }
 
     function resetPassword(email) {
@@ -87,26 +91,27 @@ export function AuthProvider({ children }) {
         return currentUser.updatePassword(password)
     }
 
-    function updateProfile(displayName) {
+    function updateProfile(newUsername) {
         return currentUser.updateProfile({
-            displayName: displayName,
-            photoURL: "https://example.com/jane-q-user/profile.jpg",
+            displayName: newUsername,
           }).then(() => {
-            logOut()
           }).catch((error) => {
             // An error occurred
             // ...
           });
     }
 
-    function reauthenticateUser(email, userProvidedPassword) {
-        const user = firebase.auth().currentUser;
+    function reauthenticateUser(email, userProvidedPassword, reDirect) {
+        const user = currentUser;
         const credential = firebase.auth.EmailAuthProvider.credential(
             email, 
             userProvidedPassword
         );
         // Now you can use that to reauthenticate
-        user.reauthenticateWithCredential(credential).then(logOut());
+        user.reauthenticateWithCredential(credential).then(
+            reDirect,
+            logOut()
+            );
     }
 
     function displayData(collectionName) {
@@ -253,13 +258,25 @@ export function AuthProvider({ children }) {
         })
     }
 
-    // Add User Data sgUsers (on Cloud Firestore)
+    // Create User Data sgUsers (on Cloud Firestore)
     async function addUserDataUsers(userID, userEmail) {
         const timestamp = firebase.firestore.FieldValue.serverTimestamp()
-        sgDB.collection('sgUsers').doc(userID).add({
+        sgDB.collection('sgUsers').doc(userID).set({
             id: userID,
             email:userEmail,
             createdAt: timestamp
+        })
+    }
+    // Add new Document to already existing User Data sgUsers (on Cloud Firestore)
+    async function updateUsernameFirestore(userID, newUsername) {
+        sgDB.collection('sgUsers').doc(userID).update({
+            userName: newUsername
+        })
+    }
+    // Update User Data sgUsers (on Cloud Firestore)
+    async function updateUserEmailFirestore(userID, userEmail) {
+        sgDB.collection('sgUsers').doc(userID).update({
+            email:userEmail
         })
     }
     
@@ -535,6 +552,19 @@ export function AuthProvider({ children }) {
     }
     /*----------------------------------------------*/
 
+    function updatePassword(password) {
+        return currentUser.updatePassword(password)
+    }
+
+    function updateProfile(newUsername) {
+        return currentUser.updateProfile({
+            displayName: newUsername,
+          }).then(() => {
+          }).catch((error) => {
+            // An error occurred
+            // ...
+          });
+    }
     useEffect(() => {
         const unsubcribe = auth.onAuthStateChanged(user => {
             setCurrentUser(user)
@@ -581,6 +611,9 @@ export function AuthProvider({ children }) {
         addCommentsForGame,
         addGenreTagsForGame,
         addDescriptionTagsForGame,
+        addUserDataUsers,
+        updateUsernameFirestore,
+        updateUserEmailFirestore,
         updateGameViewCount,
         updateGameViewCountReset,
         deleteData,
