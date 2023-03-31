@@ -23,6 +23,7 @@ export default function LoginScreen({navigation, route}) {
     const [error, setError] = useState('')
     const appIcon = '../../../../../assets/images/icon.png'
     const colors = useContext(CurrentThemeContext)
+    console.log(currentUser)
 
     function onFooterRegsLinkPress() {
         navigation.navigate('Registration')

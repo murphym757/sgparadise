@@ -4,11 +4,15 @@ import { auth, sgDB, sgImageStorage } from 'server/config/config'
 import { getFirestore, collection, getDocs, addDoc, doc, updateDoc, deleteField } from "firebase/firestore";
 import { getStorage } from "firebase/storage"; 
 import { 
-    getAuth, 
     createUserWithEmailAndPassword,
+    getAuth, 
+    onAuthStateChanged,
     signInWithEmailAndPassword,
-    onAuthStateChanged
+    updateEmail,
+    updatePassword,
+    updateProfile,
 } from "firebase/auth";
+
 import {
     BackButtonContainer,
     BackButtonBottomLayer,
@@ -112,35 +116,65 @@ export function AuthProvider({ children }) {
         return auth.sendPasswordResetEmail(email)
     }
 
-    function updateEmail(email) {
-        return currentUser.updateEmail(email)
+    function updateEmailAuth(email) {
+        const auth = getAuth();
+        return updateEmail(auth.currentUser, email).then(() => {
+        // Email updated!
+        // ...
+        }).catch((error) => {
+        // An error occurred
+        // ...
+        });
     }
     
     function updatePassword(password) {
-        return currentUser.updatePassword(password)
+        const auth = getAuth();
+        const user = auth.currentUser;
+        const newPassword = getASecureRandomPassword();
+
+        return updatePassword(user, newPassword).then(() => {
+        // Update successful.
+        }).catch((error) => {
+        // An error ocurred
+        // ...
+        });
     }
 
-    function updateProfile(newUsername) {
-        return currentUser.updateProfile({
+    function updateUsernameAuth(newUsername) {
+        const auth = getAuth()
+        return updateProfile(auth.currentUser, {
             displayName: newUsername,
-          }).then(() => {
-          }).catch((error) => {
-            // An error occurred
-            // ...
-          });
+        }).then(() => {
+        // Profile updated!
+        // ...
+        }).catch((error) => {
+        // An error occurred
+        // ...
+        })
     }
 
     function reauthenticateUser(email, userProvidedPassword, reDirect) {
-        const user = currentUser;
-        const credential = auth.EmailAuthProvider.credential(
+        const auth = getAuth();
+        const user = auth.currentUser;
+
+        // TODO(you): prompt the user to re-provide their sign-in credentials
+        const credential = promptForCredentials();
+
+        /* 
+            const credential = auth.EmailAuthProvider.credential(
             email, 
             userProvidedPassword
         );
-        // Now you can use that to reauthenticate
-        user.reauthenticateWithCredential(credential).then(
+        */
+
+        reauthenticateWithCredential(user, credential).then(() => {
+        // User re-authenticated.
             reDirect,
             logOut()
-            );
+        }).catch((error) => {
+        // An error ocurred
+        // ...
+        });
     }
 
     async function displayData(collectionName) {
@@ -303,14 +337,16 @@ export function AuthProvider({ children }) {
     }
     // Add new Document to already existing User Data sgUsers (on Cloud Firestore)
     async function updateUsernameFirestore(userID, newUsername) {
-        sgDB.collection('sgUsers').doc(userID).update({
+        const userNameRef = doc(sgDB, 'sgUsers', userID)
+        await updateDoc(userNameRef, {
             userName: newUsername
         })
     }
     // Update User Data sgUsers (on Cloud Firestore)
     async function updateUserEmailFirestore(userID, userEmail) {
-        sgDB.collection('sgUsers').doc(userID).update({
-            email:userEmail
+        const userEmailRef = doc(sgDB, 'sgUsers', userID)
+        await updateDoc(userEmailRef, {
+            email: userEmail
         })
     }
     
@@ -590,31 +626,22 @@ export function AuthProvider({ children }) {
         return currentUser.updatePassword(password)
     }
 
-    function updateProfile(newUsername) {
-        return currentUser.updateProfile({
-            displayName: newUsername,
-          }).then(() => {
-          }).catch((error) => {
-            // An error occurred
-            // ...
-          });
-    }
     useEffect(() => {
         const auth = getAuth();
         onAuthStateChanged(auth, (user) => {
-        if (user) {
-            // User is signed in, see docs for a list of available properties
-            // https://firebase.google.com/docs/reference/js/firebase.User
-            setCurrentUser(user)
-            setCurrentUID(user.uid)
             setIsLoading(false)
-            // ...
-        } else {
-            setCurrentUser(null)
-            setCurrentUID(null)
-            // User is signed out
-            // ...
-        }
+            if (user) {
+                // User is signed in, see docs for a list of available properties
+                // https://firebase.google.com/docs/reference/js/firebase.User
+                setCurrentUser(user)
+                setCurrentUID(user.uid)
+                // ...
+            } else {
+                setCurrentUser(null)
+                setCurrentUID(null)
+                // User is signed out
+                // ...
+            }
         })
     })
 
@@ -637,9 +664,9 @@ export function AuthProvider({ children }) {
         logIn,
         logOut,
         resetPassword,
-        updateEmail,
+        updateEmailAuth,
         updatePassword,
-        updateProfile,
+        updateUsernameAuth,
         reauthenticateUser,
         displayData,
         getGameData,

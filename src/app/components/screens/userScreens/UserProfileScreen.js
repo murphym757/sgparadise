@@ -18,13 +18,14 @@ export default function UserProfileScreen({navigation}) {
         addUserDataUsers, 
         updateUsernameFirestore, 
         updateUserEmailFirestore,
-        updateProfile
+        updateUsernameAuth
      } = useAuth()
     const colors = useContext(CurrentThemeContext)
     const userName = currentUser.displayName
+    console.log("🚀 ~ file: userProfileScreen.js:25 ~ UserProfileScreen ~ userName:", userName)
     const userEmail = currentUser.email
-    const newEmail = 'musicLover786@gmail.com'
-    const newUsername = 'musicLover786'
+    const newEmail = 'brickellLife@gmail.com'
+    const newUsername = 'brickellLife'
     const userId = currentUser.uid
     const [error, setError] = useState('')
 
@@ -42,7 +43,12 @@ export default function UserProfileScreen({navigation}) {
     }
     
     function createUser() {
-       
+        logOut()
+    }
+
+    function changeUsername() {
+        updateUsernameFirestore(userId, newUsername), 
+        updateUsernameAuth(newUsername)
     }
 
     function unixTimestamp (date = Date.now()) {  
@@ -73,7 +79,7 @@ export default function UserProfileScreen({navigation}) {
                             <TouchableButtonFont>Add User Data to Firebase</TouchableButtonFont>
                         </TouchableButton>
                         <TouchableButton 
-                            onPress={() => { updateUsernameFirestore(userId, newUsername), updateProfile(newUsername) }}>
+                            onPress={() => { changeUsername() }}>
                             <TouchableButtonFont>Change username in Firestore</TouchableButtonFont>
                         </TouchableButton>
                         <TouchableButton 

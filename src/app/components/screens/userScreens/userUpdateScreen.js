@@ -25,29 +25,32 @@ export default function UpdateUserScreen({navigation}) {
       updateProfile,
       deleteAccountAuth, 
       deleteAccountDb, 
-      updateEmail, 
+      updateEmailAuth, 
       updatePassword, 
       reauthenticateUser,
       successAlert, 
       failureAlert,
       backArrow,
-      toNewSection
+      sgDB,
+      toNewSection,
+      updateUsernameFirestore, 
+      updateUserEmailFirestore,
+      updateUsernameAuth
     } = useAuth()
     const { 
       sgIconCreator,
       sgColorPicker
       } = useIconCreator()
-    const sgDB = firebase.firestore()
     const colors = useContext(CurrentThemeContext)
     const colorsPassThrough = colors
     const [ isLoading, setIsLoading] = useState(true)
     const [email, setEmail] = useState('')
-    console.log("🚀 ~ file: userUpdateScreen.js:41 ~ UpdateUserScreen ~ email:", email)
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
     const [userProvidedPassword, setUserProvidedPassword] = useState('')
-    const [userId, setUserId] = useState('')
-    const [userName, setUserName] = useState(currentUser.displayName)
+    const userId = currentUser.uid
+    const [newUsername, setNewUsername] = useState(currentUser.displayName)
+    const [newEmail, setNewEmail] = useState('')
     const [message, setMessage] = useState('')
     const [error, setError] = useState('')
     const [errorEmailCheck, setErrorEmailCheck] = useState('')
@@ -82,12 +85,40 @@ export default function UpdateUserScreen({navigation}) {
         "The Promise is settled, meaning it has been resolved or rejected."
       )});
 
+    function usernameUpdate() {
+      updateProfile(userName)
+    }
+
+  // Update username
+  function changeUsername() {
+    updateUsernameFirestore(userId, newUsername), 
+    updateUsernameAuth(newUsername)
+     console.log('Username has been updated')
+  }
+  /*-----------------*/
+
+   // Update username
+   function changeUserEmail() {
+    updateUserEmailFirestore(userId, newEmail)
+    updateEmailAuth(newEmail)
+    console.log('Email has been updated')
+  }
+  /*-----------------*/
+
     function updateProcess() {//You shouldn't have to update any info to "add the username" ***IMPORTANT***
       const updateDataPromises = []
+      const usernameMatchPromise = new Promise((resolve, reject) => {
+        if (newUsername !== currentUser.username) {
+          resolve('This checks for matching usernames')
+          changeUsername()
+        } else {
+          reject('username is still the same')
+        }
+      })
       const emailMatchPromise = new Promise((resolve, reject) => {
-        if (email !== currentUser.email) {
+        if (newEmail !== currentUser.email) {
           resolve('This checks for matching emails')
-          updateEmail(email)
+          changeUserEmail()
         } else {
           reject('Email is still the same')
           setErrorEmailCheck('Email is still the same')
@@ -103,8 +134,9 @@ export default function UpdateUserScreen({navigation}) {
         }
       })
 
+      updateDataPromises.push(usernameMatchPromise)
       updateDataPromises.push(emailMatchPromise)
-      //updateDataPromises.push(passwordMatchPromise)
+      updateDataPromises.push(passwordMatchPromise)
       Promise.all(updateDataPromises).then((messages) => {
         reauthenticateUser(navigation.navigate('Home'))
         console.log(messages)
@@ -187,7 +219,6 @@ export default function UpdateUserScreen({navigation}) {
     }
   
     useEffect(() => {
-      setUserId(`${currentUser.uid}`)
       pageLoader()
     })
 
@@ -381,8 +412,8 @@ export default function UpdateUserScreen({navigation}) {
       function customSGFormFieldUsername() {
         const fieldGroup = {
           placeholder: 'Username',
-          changeTextVariable: (text) => setUserName(text),
-          value: userName,
+          changeTextVariable: (text) => setNewUsername(text),
+          value: newUsername,
           errorMessageVariable: null
         }
         const customPlaceholder = fieldGroup.placeholder
@@ -398,8 +429,8 @@ export default function UpdateUserScreen({navigation}) {
       function customSGFormFieldEmail() {
         const fieldGroup = {
           placeholder: 'E-mail',
-          changeTextVariable: (text) => setEmail(text),
-          value: email,
+          changeTextVariable: (text) => setNewEmail(text),
+          value: newEmail,
           errorMessageVariable:errorMessageData(errorEmailCheck)
         }
         const customPlaceholder = fieldGroup.placeholder
@@ -480,45 +511,6 @@ export default function UpdateUserScreen({navigation}) {
             customSGFormField(customPlaceholder, customChangeText, customValue, customErrorMessage, isSensitiveData)
           )
         }
-        function customSGButtonUpdate() {
-          const buttonGroup = {
-            style: colors.secondaryColor,
-            function: () => updateProcess(),
-            title: 'Update'
-          }
-          const customButtonStyle = buttonGroup.style
-          const customButtonFunction = buttonGroup.function
-          const customButtonTitle = buttonGroup.title
-          return (
-            customSGFormButton(customButtonStyle, customButtonFunction, customButtonTitle)
-          )
-        }
-        function customSGButtonDelete() {
-          const buttonGroup = {
-            style: colors.secondaryColorAlt,
-            function: () => onDeleteAccountPress(),
-            title: 'Delete'
-          }
-          const customButtonStyle = buttonGroup.style
-          const customButtonFunction = buttonGroup.function
-          const customButtonTitle = buttonGroup.title
-          return (
-            customSGFormButton(customButtonStyle, customButtonFunction, customButtonTitle)
-          )
-        }
-        function customSGButtonGoToAuth() {
-          const buttonGroup = {
-            style: colors.secondaryColorAlt,
-            function: () => setupAuthentication(),
-            title: 'Reauthenticate'
-          }
-          const customButtonStyle = buttonGroup.style
-          const customButtonFunction = buttonGroup.function
-          const customButtonTitle = buttonGroup.title
-          return (
-            customSGFormButton(customButtonStyle, customButtonFunction, customButtonTitle)
-          )
-        }
       /*------------------*/
     /*------------------*/
 
@@ -534,20 +526,6 @@ export default function UpdateUserScreen({navigation}) {
             onPress={buttonFunction}>
             <TouchableButtonFont>{buttonTitle}</TouchableButtonFont>
         </TouchableButton>
-      )
-    }
-
-    function customSGButtonAuth() {
-      const buttonGroup = {
-        style: colors.secondaryColorAlt,
-        function: () => reauthenticateUser(email, userProvidedPassword),
-        title: 'Reauthenticate'
-      }
-      const customButtonStyle = buttonGroup.style
-      const customButtonFunction = buttonGroup.function
-      const customButtonTitle = buttonGroup.title
-      return (
-        customSGFormButton(customButtonStyle, customButtonFunction, customButtonTitle)
       )
     }
     function customSGButtonChangeIcon() {
