@@ -202,7 +202,7 @@ function sgConsoleSet(passingSectionData, titleForRelatedData) {
                 data={passingSectionData.gamesArray}
                 keyboardShouldPersistTaps="always"
                 ItemSeparatorComponent={() => <View style={{ width: 35 }} />}
-                keyExtractor={(item, index) => index.toString()}
+                keyExtractor={tem >d}tmd
                 renderItem={({ item }) => (
                     <View>
                         <ViewTopRow>
@@ -240,7 +240,7 @@ function sgGameSet(passingSectionData, titleForRelatedData, descriptionForRelate
                 data={passingSectionData.gamesArray}
                 keyboardShouldPersistTaps="always"
                 ItemSeparatorComponent={() => <View style={{ width: 35 }} />}
-                keyExtractor={(item, index) => index.toString()}
+                keyExtractor={item => item.id}
                 renderItem={({ item }) => (
                 <View>
                     {sgGameListing(passingSectionData, item, consoleName)}

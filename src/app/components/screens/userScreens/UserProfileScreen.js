@@ -20,16 +20,12 @@ export default function UserProfileScreen({navigation}) {
         updateUserEmailFirestore,
         updateProfile
      } = useAuth()
-    console.log("🚀 ~ file: UserProfileScreen.js:14 ~ UserProfileScreen ~ currentUser:", currentUser)
     const colors = useContext(CurrentThemeContext)
     const userName = currentUser.displayName
-    console.log("🚀 ~ file: userProfileScreen.js:26 ~ UserProfileScreen ~ userName:", userName)
     const userEmail = currentUser.email
-    console.log("🚀 ~ file: userProfileScreen.js:20 ~ UserProfileScreen ~ userEmail:", userEmail)
     const newEmail = 'musicLover786@gmail.com'
     const newUsername = 'musicLover786'
     const userId = currentUser.uid
-    console.log("🚀 ~ file: userProfileScreen.js:22 ~ UserProfileScreen ~ userId:", userId)
     const [error, setError] = useState('')
 
     function onUpdateUser() {

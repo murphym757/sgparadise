@@ -23,7 +23,6 @@ export const InfiniteHits = forwardRef(
     async function chosenAlgoliaGame(item) {
       setGameSelected(item.gameName)
       passDataToNextPage(item)
-      console.log(item.gameSlug)
   }
 
     // Links to the game page

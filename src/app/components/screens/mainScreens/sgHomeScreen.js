@@ -175,8 +175,7 @@ export default function SgHomeScreen({ navigation, route }) {
               setTimeout(() => {
                 resolve(
                     setUserInfo(currentUID),
-                    setIsLoading(false),
-                    udemyLoop1(10)
+                    setIsLoading(false)
                 )
                 homepageSpotlightCollection()
                 spotlights.findWeekofYear(spotlightData, gamesArray)
@@ -208,13 +207,6 @@ export default function SgHomeScreen({ navigation, route }) {
         if (consoleName == 'sgSat') return 'Sega Saturn'
         if (consoleName == 'sg32X') return 'Sega 32X'
         if (consoleName == 'sgCD') return 'Sega CD'
-    }
-
-    function udemyLoop1(n) {
-        for(let i = 0; i < n; i++) {
-            console.log(i)
-        }
-        return
     }
 
     /*

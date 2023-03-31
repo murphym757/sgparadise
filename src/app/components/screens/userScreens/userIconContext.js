@@ -40,6 +40,7 @@ export function IconCreatorProvider({ children, navigation }) {
     // Icon Eyes
     const [eyeSectionOpen, setEyeSectionOpen] = useState(false)
     const [eyeValue, setEyeValue] = useState(null) // This value goes into firebase
+    console.log("🚀 ~ file: userIconContext.js:43 ~ IconCreatorProvider ~ eyeValue:", eyeValue)
     const [iconEyes, setIconEyes] = useState([
       {label: 'Eyes', value: 'eyes', disabled: true},
       {label: 'Bulging', value: 'bulging', parent: 'eyes'},
@@ -60,6 +61,7 @@ export function IconCreatorProvider({ children, navigation }) {
     // Icons Mouth
     const [mouthSectionOpen, setMouthSectionOpen] = useState(false)
     const [mouthValue, setMouthValue] = useState(null) // This value goes into firebase
+    console.log("🚀 ~ file: userIconContext.js:64 ~ IconCreatorProvider ~ mouthValue:", mouthValue)
     const [iconMouths, setIconMouths] = useState([
       {label: 'Mouths', value: 'mouths', disabled: true},
       {label: 'Bite', value: 'bite', parent:'mouths'},

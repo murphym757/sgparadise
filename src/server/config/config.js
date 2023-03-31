@@ -1,8 +1,20 @@
+/*
 import * as firebase from 'firebase'
 import '@firebase/auth'
 import '@firebase/firestore'
 import '@firebase/storage'
+*/
 import algoliasearch from 'algoliasearch'
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { initializeApp } from 'firebase/app';
+import { getFirestore, collection, getDocs, addDoc } from "firebase/firestore";
+import { getStorage } from "firebase/storage"; 
+import {
+  initializeAuth,
+  getReactNativePersistence
+} from 'firebase/auth/react-native';
+
 
 import {
     ALGOLIA_APPLICATION_ID,
@@ -99,8 +111,27 @@ const algoliaConfig = {
   appId: ALGOLIA_APPLICATION_ID
 }
 
-if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig)
-}
+// add firebase config here
 
-export { imagesConfig, gamesConfig, firebase, algoliaConfig }
+// initialize firebase app
+const app = initializeApp(firebaseConfig);
+
+// initialize auth
+const auth = initializeAuth(app, {
+  persistence: getReactNativePersistence(AsyncStorage)
+});
+
+// Initialize Cloud Firestore and get a reference to the service
+const sgDB = getFirestore(app)
+
+// Initialize Cloud Storage and get a reference to the service
+const sgImageStorage = getStorage(app)
+
+
+export { 
+  imagesConfig, 
+  gamesConfig, 
+  auth, 
+  sgDB,
+  sgImageStorage,
+  algoliaConfig }

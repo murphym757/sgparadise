@@ -1,6 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { View } from 'react-native'
-import { firebase } from 'server/config/config'
+import { auth, sgDB, sgImageStorage } from 'server/config/config'
+import { getFirestore, collection, getDocs, addDoc, doc, updateDoc, deleteField } from "firebase/firestore";
+import { getStorage } from "firebase/storage"; 
+import { 
+    getAuth, 
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    onAuthStateChanged
+} from "firebase/auth";
 import {
     BackButtonContainer,
     BackButtonBottomLayer,
@@ -37,9 +45,7 @@ export function AuthProvider({ children }) {
     const [entryText, setEntryText] = useState('')
     const [viewCountFirebase, setViewCountFirebase] = useState(0)
     const [entries, setEntries] = useState([])
-    const auth = firebase.auth()
-    const sgDB = firebase.firestore()
-    const sgImageStorage = firebase.storage()
+    console.log("🚀 ~ file: authContext.js:42 ~ AuthProvider ~ entries:", entries)
     const sg1000IGDB = '84'
     const sg32XIGDB = '30'
     const sgCDIGDB = '78'
@@ -49,7 +55,19 @@ export function AuthProvider({ children }) {
     const sgSatIGDB = '32'
 
     function signUp(email, password) {
-      return auth.createUserWithEmailAndPassword(email, password)
+        const auth = getAuth();
+        return createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            // Signed in 
+            const user = userCredential.user;
+            // ...
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            // ..
+        });
+      
     }
 
     function deleteAccountAuth() {
@@ -60,15 +78,26 @@ export function AuthProvider({ children }) {
           })
     }
 
-    function deleteAccountDb(userId) {
-        return sgDB.collection("users").doc(userId).delete().then(() => {
-        }).catch((err) => {
-          setError(`${err}`)
+    async function deleteAccountDb(userId) {
+        const accountRef = doc(sgDB, 'users', userId)
+
+        await updateDoc(accountRef, {
+            account: deleteField()
         })
     }
 
     function logIn(email, password) {
-        return auth.signInWithEmailAndPassword(email, password)
+        const auth = getAuth();
+        return signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            // Signed in 
+            const user = userCredential.user;
+            // ...
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+        });
     }
 
     function logOut() {
@@ -103,7 +132,7 @@ export function AuthProvider({ children }) {
 
     function reauthenticateUser(email, userProvidedPassword, reDirect) {
         const user = currentUser;
-        const credential = firebase.auth.EmailAuthProvider.credential(
+        const credential = auth.EmailAuthProvider.credential(
             email, 
             userProvidedPassword
         );
@@ -114,7 +143,12 @@ export function AuthProvider({ children }) {
             );
     }
 
-    function displayData(collectionName) {
+    async function displayData(collectionName) {
+        const querySnapshot = await getDocs(collection(sgDB, collectionName));
+        querySnapshot.forEach((doc) => {
+            console.log(`${doc.id} => ${doc.data()}`);
+        })
+
         return sgDB.collection(collectionName)
         .get().then((querySnapshot) => {
             const newEntries = []
@@ -566,14 +600,23 @@ export function AuthProvider({ children }) {
           });
     }
     useEffect(() => {
-        const unsubcribe = auth.onAuthStateChanged(user => {
+        const auth = getAuth();
+        onAuthStateChanged(auth, (user) => {
+        if (user) {
+            // User is signed in, see docs for a list of available properties
+            // https://firebase.google.com/docs/reference/js/firebase.User
             setCurrentUser(user)
             setCurrentUID(user.uid)
             setIsLoading(false)
+            // ...
+        } else {
+            setCurrentUser(null)
+            setCurrentUID(null)
+            // User is signed out
+            // ...
+        }
         })
-
-        return unsubcribe
-    }, [])
+    })
 
     const value = {
         sg1000IGDB,
