@@ -26,7 +26,7 @@ export default function UpdateUserScreen({navigation}) {
       deleteAccountAuth, 
       deleteAccountDb, 
       updateEmailAuth, 
-      updatePassword, 
+      updatePasswordAuth, 
       reauthenticateUser,
       successAlert, 
       failureAlert,
@@ -45,12 +45,17 @@ export default function UpdateUserScreen({navigation}) {
     const colorsPassThrough = colors
     const [ isLoading, setIsLoading] = useState(true)
     const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
+    const [password, setPassword] = useState(currentUser)
+    console.log("🚀 ~ file: userUpdateScreen.js:49 ~ UpdateUserScreen ~ password:", password)
     const [confirmPassword, setConfirmPassword] = useState('')
     const [userProvidedPassword, setUserProvidedPassword] = useState('')
     const userId = currentUser.uid
     const [newUsername, setNewUsername] = useState(currentUser.displayName)
     const [newEmail, setNewEmail] = useState('')
+    const [newPassword, setNewPassword] = useState('')
+    console.log("🚀 ~ file: userUpdateScreen.js:56 ~ UpdateUserScreen ~ newPassword:", newPassword)
+    const [confirmNewPassword, setConfirmNewPassword] = useState('')  
+    console.log("🚀 ~ file: userUpdateScreen.js:58 ~ UpdateUserScreen ~ confirmNewPassword:", confirmNewPassword)
     const [message, setMessage] = useState('')
     const [error, setError] = useState('')
     const [errorEmailCheck, setErrorEmailCheck] = useState('')
@@ -105,6 +110,13 @@ export default function UpdateUserScreen({navigation}) {
   }
   /*-----------------*/
 
+  // Update username
+  function changeUserPassword() {
+    updatePasswordAuth(newPassword)
+    console.log('Password has been updated')
+  }
+  /*-----------------*/
+
     function updateProcess() {//You shouldn't have to update any info to "add the username" ***IMPORTANT***
       const updateDataPromises = []
       const usernameMatchPromise = new Promise((resolve, reject) => {
@@ -125,13 +137,17 @@ export default function UpdateUserScreen({navigation}) {
         }
       })
       const passwordMatchPromise = new Promise((resolve, reject) => {
-        if (password == confirmPassword) {
-          resolve('This password has been updated')
-          updatePassword(password)
-        } else {
-          reject('Password and Confirm Password do not match')
-          setErrorPasswordPassword('Password and Confirm Password do not match')
+        if (password !== newPassword) {
+          if (newPassword == confirmNewPassword) {
+            resolve('This password has been updated')
+            changeUserPassword()
+          } else {
+            reject('Password and Confirm Password do not match')
+            setErrorPasswordPassword('Password and Confirm Password do not match')
+          }
+          reject('Password has not been updated')
         }
+        
       })
 
       updateDataPromises.push(usernameMatchPromise)
@@ -446,8 +462,8 @@ export default function UpdateUserScreen({navigation}) {
       function customSGFormFieldPassword() {
         const fieldGroup = {
           placeholder: 'Password',
-          changeTextVariable: (text) => setPassword(text),
-          value: password,
+          changeTextVariable: (text) => setNewPassword(text),
+          value: newPassword,
           errorMessageVariable:errorMessageData(errorPasswordCheck)
         }
         const customPlaceholder = fieldGroup.placeholder
@@ -462,8 +478,8 @@ export default function UpdateUserScreen({navigation}) {
       function customSGFormFieldPasswordConfirm() {
         const fieldGroup = {
           placeholder: 'Confirm Password',
-          changeTextVariable: (text) => setConfirmPassword(text),
-          value: confirmPassword,
+          changeTextVariable: (text) => setConfirmNewPassword(text),
+          value: confirmNewPassword,
           errorMessageVariable:errorMessageData(errorPasswordCheck)
         }
         const customPlaceholder = fieldGroup.placeholder
@@ -476,43 +492,6 @@ export default function UpdateUserScreen({navigation}) {
         )
       }
       /*------------------*/
-      
-      // Auth Form
-        function customSGFormFieldEmailAuth() {
-          const fieldGroup = {
-            placeholder: 'E-mail',
-            changeTextVariable: (text) => setEmail(text),
-            value: email,
-            errorMessageVariable:errorMessageData(errorEmailCheck)
-          }
-          const customPlaceholder = fieldGroup.placeholder
-          const customChangeText = fieldGroup.changeTextVariable
-          const customValue = fieldGroup.value
-          const customErrorMessage = fieldGroup.errorMessageVariable
-          const isSensitiveData = false
-          return (
-            customSGFormField(customPlaceholder, customChangeText, customValue, customErrorMessage, isSensitiveData)
-          )
-        }
-
-        function customSGFormFieldPasswordAuth() {
-          const fieldGroup = {
-            placeholder: 'Password',
-            changeTextVariable: (text) => setUserProvidedPassword(text),
-            value: userProvidedPassword,
-            errorMessageVariable:errorMessageData(errorPasswordAuthCheck)
-          }
-          const customPlaceholder = fieldGroup.placeholder
-          const customChangeText = fieldGroup.changeTextVariable
-          const customValue = fieldGroup.value
-          const customErrorMessage = fieldGroup.errorMessageVariable
-          const isSensitiveData = true
-          return (
-            customSGFormField(customPlaceholder, customChangeText, customValue, customErrorMessage, isSensitiveData)
-          )
-        }
-      /*------------------*/
-    /*------------------*/
 
     // Form Button Functions  
     function customSGFormButton(customButtonStyle, customButtonFunction, customButtonTitle) {

@@ -127,17 +127,20 @@ export function AuthProvider({ children }) {
         });
     }
     
-    function updatePassword(password) {
+    function updatePasswordAuth(password) {
+        // Get the current user
         const auth = getAuth();
         const user = auth.currentUser;
-        const newPassword = getASecureRandomPassword();
 
-        return updatePassword(user, newPassword).then(() => {
-        // Update successful.
-        }).catch((error) => {
-        // An error ocurred
-        // ...
-        });
+        // Update the user's password
+        const newPassword = password
+        return updatePassword(user, newPassword)
+        .then(() => {
+            console.log("Password updated successfully!");
+        })
+        .catch((error) => {
+            console.log("Error updating password:", error);
+        })
     }
 
     function updateUsernameAuth(newUsername) {
@@ -622,10 +625,6 @@ export function AuthProvider({ children }) {
     }
     /*----------------------------------------------*/
 
-    function updatePassword(password) {
-        return currentUser.updatePassword(password)
-    }
-
     useEffect(() => {
         const auth = getAuth();
         onAuthStateChanged(auth, (user) => {
@@ -665,7 +664,7 @@ export function AuthProvider({ children }) {
         logOut,
         resetPassword,
         updateEmailAuth,
-        updatePassword,
+        updatePasswordAuth,
         updateUsernameAuth,
         reauthenticateUser,
         displayData,
