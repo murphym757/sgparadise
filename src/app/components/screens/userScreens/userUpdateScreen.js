@@ -45,7 +45,7 @@ export default function UpdateUserScreen({navigation}) {
     const colorsPassThrough = colors
     const [ isLoading, setIsLoading] = useState(true)
     const [email, setEmail] = useState('')
-    const [password, setPassword] = useState(currentUser)
+    const [password, setPassword] = useState(currentUser.email)
     console.log("🚀 ~ file: userUpdateScreen.js:49 ~ UpdateUserScreen ~ password:", password)
     const [confirmPassword, setConfirmPassword] = useState('')
     const [userProvidedPassword, setUserProvidedPassword] = useState('')
@@ -53,14 +53,17 @@ export default function UpdateUserScreen({navigation}) {
     const [newUsername, setNewUsername] = useState(currentUser.displayName)
     const [newEmail, setNewEmail] = useState('')
     const [newPassword, setNewPassword] = useState('')
-    console.log("🚀 ~ file: userUpdateScreen.js:56 ~ UpdateUserScreen ~ newPassword:", newPassword)
-    const [confirmNewPassword, setConfirmNewPassword] = useState('')  
-    console.log("🚀 ~ file: userUpdateScreen.js:58 ~ UpdateUserScreen ~ confirmNewPassword:", confirmNewPassword)
+    const [confirmNewPassword, setConfirmNewPassword] = useState('') 
     const [message, setMessage] = useState('')
     const [error, setError] = useState('')
-    const [errorEmailCheck, setErrorEmailCheck] = useState('')
-    const [errorPasswordCheck, setErrorPasswordPassword] = useState('')
-    const [errorPasswordAuthCheck, setErrorPasswordAuthCheck] = useState('')
+    const [errorEmailCheck, setErrorEmailCheck] = useState(null)
+    const [emailCheckStatus, setEmailCheckStatus] = useState('fulfilled')
+    const [errorPasswordCheck, setErrorPasswordPassword] = useState(null)
+    const [passwordCheckStatus, setPasswordCheckStatus] = useState('fulfilled')
+    const [errorPasswordAuthCheck, setErrorPasswordAuthCheck] = useState(null)
+    const [passwordAuthCheckStatus, setPasswordAuthCheckStatus] = useState('fulfilled')
+    const statusChecks = [emailCheckStatus, passwordCheckStatus, passwordAuthCheckStatus]
+    console.log("🚀 ~ file: userUpdateScreen.js:161 ~ Promise.allSettled ~ statusChecks:", statusChecks)
     const [testError, setTestError] = useState('')
     const [authButtonPressed, setAuthButtonPressed] = useState(false)
     const [changeIconButtonPressed, setChangeIconButtonPressed] = useState(false)
@@ -116,51 +119,65 @@ export default function UpdateUserScreen({navigation}) {
     console.log('Password has been updated')
   }
   /*-----------------*/
+  function checkStatus(statusChecks) {
+    return statusChecks === 'fulfilled'
+  }
 
     function updateProcess() {//You shouldn't have to update any info to "add the username" ***IMPORTANT***
-      const updateDataPromises = []
       const usernameMatchPromise = new Promise((resolve, reject) => {
         if (newUsername !== currentUser.username) {
           resolve('This checks for matching usernames')
           changeUsername()
         } else {
           reject('username is still the same')
+          
         }
       })
       const emailMatchPromise = new Promise((resolve, reject) => {
         if (newEmail !== currentUser.email) {
-          resolve('This checks for matching emails')
+          resolve('The email has been updated')
+          setEmailCheckStatus('fulfilled')
           changeUserEmail()
         } else {
-          reject('Email is still the same')
-          setErrorEmailCheck('Email is still the same')
+          reject('The email is still the same')
+          setErrorEmailCheck('Email is still the same' + " (" + newEmail + ")")
+          setEmailCheckStatus('rejected')
         }
       })
       const passwordMatchPromise = new Promise((resolve, reject) => {
         if (password !== newPassword) {
           if (newPassword == confirmNewPassword) {
             resolve('This password has been updated')
+            setPasswordCheckStatus('fulfilled')
+            setPasswordAuthCheckStatus('fulfilled')
             changeUserPassword()
           } else {
             reject('Password and Confirm Password do not match')
             setErrorPasswordPassword('Password and Confirm Password do not match')
+            setPasswordCheckStatus('rejected')
+            setPasswordAuthCheckStatus('rejected')
           }
           reject('Password has not been updated')
         }
         
       })
-
-      updateDataPromises.push(usernameMatchPromise)
-      updateDataPromises.push(emailMatchPromise)
-      updateDataPromises.push(passwordMatchPromise)
-      Promise.all(updateDataPromises).then((messages) => {
-        reauthenticateUser(navigation.navigate('Home'))
-        console.log(messages)
-      }).catch((err) => {
+      Promise.allSettled([usernameMatchPromise, emailMatchPromise, passwordMatchPromise]).then(() => {
+        if (statusChecks.every(checkStatus) === true) {
+          if (changePersonalInfoButtonPressed === true) {
+            setChangePersonalInfoButtonPressed(false), 
+            setChangeIconButtonPressed(false)
+          } else if (changeIconButtonPressed === true) {
+            setChangePersonalInfoButtonPressed(false), 
+            setChangeIconButtonPressed(false)
+          } else {
+            navigation.navigate('User Profile')
+          }
+        }
+      })
+      .catch((err) => {
       }).finally(() => {
-        console.log(
-          "The Promise is settled, meaning it has been resolved or rejected."
-        )});
+        console.log( "The Promise is settled, meaning it has been resolved or rejected.")
+      });
     }
       
 
@@ -228,6 +245,12 @@ export default function UpdateUserScreen({navigation}) {
       return <MainFont>{errMessage}</MainFont>
     }
 
+    // Goes on the "main section" update screen
+    function errorMessageDataMain(errorCheck, errorOwner, errorMessage) {
+      if (errorCheck !== null) { return <MainSubFont>{errorOwner}: {errorMessageData(errorMessage)}</MainSubFont> }
+    }
+    /*--------------------*/
+
     function pageLoader() {
       setTimeout(() => {
         setIsLoading(false)
@@ -247,7 +270,7 @@ export default function UpdateUserScreen({navigation}) {
       const backNeeded = true
       return (
           <TouchableOpacity onPress={() => {
-            setChangePersonalInfoButtonPressed(false), setChangeIconButtonPressed(false)
+            updateProcess()
           }}> 
           {backArrow(colorsPassThrough, backNeeded)}
           </TouchableOpacity>
@@ -286,7 +309,6 @@ export default function UpdateUserScreen({navigation}) {
                 <MainSubFont style={{color: linkColor}}>{linkFont}</MainSubFont>
               </View>
           }
-          
         </View>
       )
     }
@@ -326,6 +348,8 @@ export default function UpdateUserScreen({navigation}) {
         <View style={{paddingBottom: rowPadding}}>
           <View>
             {customSGFormFieldUsername()}
+            {errorEmailCheck !== null ? errorMessageDataMain(errorEmailCheck, 'email', errorEmailCheck) : null}
+            {errorMessageDataMain(errorPasswordCheck, 'password', errorPasswordCheck)}
             </View>
         </View>
       )
@@ -447,7 +471,7 @@ export default function UpdateUserScreen({navigation}) {
           placeholder: 'E-mail',
           changeTextVariable: (text) => setNewEmail(text),
           value: newEmail,
-          errorMessageVariable:errorMessageData(errorEmailCheck)
+          errorMessageVariable: errorMessageData(errorEmailCheck)
         }
         const customPlaceholder = fieldGroup.placeholder
         const customChangeText = fieldGroup.changeTextVariable

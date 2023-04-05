@@ -45,6 +45,10 @@ export default function App() {
       background: colors.primaryColor,
     },
   }
+  const tabBarListeners = ({ navigation, route }) => ({
+    tabPress: () => navigation.navigate(route.name),
+});
+  console.log("🚀 ~ file: screenRoutes.js:51 ~ tabBarListeners ~ tabBarListeners:", tabBarListeners)
 
   function SgUserStackNavbar() {
     return (
@@ -61,30 +65,34 @@ export default function App() {
           options={{
             tabBarLabel: 'Home',
             tabBarIcon: ({ color, size }) => (
-            <FontAwesomeIcon icon={ faHome } color={color} size={size} />
-          ),
+              <FontAwesomeIcon icon={ faHome } color={color} size={size} />
+            ),
           }}
           component={SgGameStack} // HomePage
+          listeners={tabBarListeners}
         />
         <Tab.Screen 
           name="Search"
           options={{
             tabBarLabel: 'Search',
             tabBarIcon: ({ color, size }) => (
-            <FontAwesomeIcon icon={ faSearch } color={color} size={size} />
-          ),
+              <FontAwesomeIcon icon={ faSearch } color={color} size={size} />
+            ),
           }}
           component={SgSearchStack} 
+          listeners={tabBarListeners}
         />
         <Tab.Screen 
           name="UserProfileScreen"
           options={{
             tabBarLabel: 'Account',
             tabBarIcon: ({ color, size }) => (
-            <FontAwesomeIcon icon={ faUser } color={color} size={size} />
-          ),
+              <FontAwesomeIcon icon={ faUser } color={color} size={size} />
+            ),
+            screenOptions: { unmountOnBlur: true }
           }}
           component={SgAuthStack} 
+          listeners={tabBarListeners}
         />
       </Tab.Navigator>
     )
