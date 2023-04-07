@@ -15,7 +15,7 @@ import {
 } from 'index'
 
 export default function LoginScreen({navigation, route}) {
-    const { sgDB, logIn, currentUser, successAlert, failureAlert } = useAuth()
+    const { sgDB, logIn, currentUser, successAlert, failureAlert, reauthenticateUser } = useAuth()
     const [ isLoading, setIsLoading] = useState(true)
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -23,7 +23,7 @@ export default function LoginScreen({navigation, route}) {
     const [error, setError] = useState('')
     const appIcon = '../../../../../assets/images/icon.png'
     const colors = useContext(CurrentThemeContext)
-    console.log(currentUser)
+    
 
     function onFooterRegsLinkPress() {
         navigation.navigate('Registration')
@@ -48,7 +48,10 @@ export default function LoginScreen({navigation, route}) {
                         alert("User does not exist anymore.")
                         return
                     }
-                    navigation.navigate('Home')
+                    if (currentUser !== null) {
+                      const userAccountLink = navigation.navigate('Home')
+                      reauthenticateUser(email, password, userAccountLink)
+                    }
                 })
                 .catch(err => {
                     alert(err)

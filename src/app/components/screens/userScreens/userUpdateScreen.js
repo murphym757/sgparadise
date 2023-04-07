@@ -26,8 +26,7 @@ export default function UpdateUserScreen({navigation}) {
       deleteAccountAuth, 
       deleteAccountDb, 
       updateEmailAuth, 
-      updatePasswordAuth, 
-      reauthenticateUser,
+      updatePasswordAuth,
       successAlert, 
       failureAlert,
       backArrow,
@@ -37,6 +36,7 @@ export default function UpdateUserScreen({navigation}) {
       updateUserEmailFirestore,
       updateUsernameAuth
     } = useAuth()
+      console.log("🚀 ~ file: userUpdateScreen.js:39 ~ UpdateUserScreen ~ currentUser:", currentUser)
     const { 
       sgIconCreator,
       sgColorPicker
@@ -45,12 +45,10 @@ export default function UpdateUserScreen({navigation}) {
     const colorsPassThrough = colors
     const [ isLoading, setIsLoading] = useState(true)
     const [email, setEmail] = useState('')
-    const [password, setPassword] = useState(currentUser.email)
-    console.log("🚀 ~ file: userUpdateScreen.js:49 ~ UpdateUserScreen ~ password:", password)
+    const [password, setPassword] = useState()
     const [confirmPassword, setConfirmPassword] = useState('')
     const [userProvidedPassword, setUserProvidedPassword] = useState('')
-    const userId = currentUser.uid
-    const [newUsername, setNewUsername] = useState(currentUser.displayName)
+    const [newUsername, setNewUsername] = useState()
     const [newEmail, setNewEmail] = useState('')
     const [newPassword, setNewPassword] = useState('')
     const [confirmNewPassword, setConfirmNewPassword] = useState('') 
@@ -71,7 +69,6 @@ export default function UpdateUserScreen({navigation}) {
     const [userIcon, setUserIcon] = useState('')
     const sgIconName = 'Felix'
     const sgIconEyes = ["bulging"]
-    console.log(currentUser.uid)
 
 
     let p = new Promise((resolve, reject) => {
@@ -97,26 +94,40 @@ export default function UpdateUserScreen({navigation}) {
       updateProfile(userName)
     }
 
+  // Log out the user
+  function onHandleLogout() {
+    logOut()
+  }
+  /*---------------*/
+
   // Update username
   function changeUsername() {
-    updateUsernameFirestore(userId, newUsername), 
-    updateUsernameAuth(newUsername)
-     console.log('Username has been updated')
+    if ( currentUser !== null) {
+      const userId = currentUser.uid
+      updateUsernameFirestore(userId, newUsername), 
+      updateUsernameAuth(newUsername)
+      console.log('Username has been updated')
+    }
   }
   /*-----------------*/
 
    // Update username
-   function changeUserEmail() {
-    updateUserEmailFirestore(userId, newEmail)
-    updateEmailAuth(newEmail)
-    console.log('Email has been updated')
+   function changeUserEmail() {// The user needs to be logged out and back in to see the new email
+    if ( currentUser !== null) {
+      const userId = currentUser.uid
+      updateUserEmailFirestore(userId, newEmail)
+      updateEmailAuth(newEmail)
+      console.log('Email has been updated')
+    }
   }
   /*-----------------*/
 
   // Update username
-  function changeUserPassword() {
-    updatePasswordAuth(newPassword)
-    console.log('Password has been updated')
+  function changeUserPassword() {// The user can make a password change "without" having to loggout and back in
+    if ( currentUser !== null) {
+      updatePasswordAuth(newPassword)
+      console.log('Password has been updated')
+    }
   }
   /*-----------------*/
   function checkStatus(statusChecks) {
@@ -185,52 +196,6 @@ export default function UpdateUserScreen({navigation}) {
     function cancelUpdate() {
         setAuthButtonPressed(false)
         navigation.goBack()
-    }
-
-    function onRegisterPress() {
-        if (password !== confirmPassword) {
-            setError("Passwords do not match.")
-            return
-        }
-
-        const promises = []
-        console.log("🚀 ~ file: userUpdateScreen.js:53 ~ onRegisterPress ~ promises:", promises)
-        setIsLoading(true)
-        setError("")
-        if (email !== currentUser.email) {
-          promises.push(updateEmail(email))
-        }
-        if (password !== '') {
-          promises.push(updatePassword(password))
-        }
-
-        Promise.all(promises)
-        .then(() =>{
-          navigation.navigate('Home')
-        }).catch((err)=>{
-          setError(err)
-        })
-        .finally(() => {
-          setIsLoading(false)
-        })
-      }
-
-    function onDeleteAccountPress() {
-      const promises =[]
-      setIsLoading(true)
-      setError("")
-      promises.push(deleteAccountAuth())
-      promises.push(deleteAccountDb(userId))
-      Promise.all(promises)
-        .then(() =>{
-          navigation.navigate('Login')
-        })
-        .catch((err) => {
-          setError(err)
-        })
-        .finally(() => {
-          setIsLoading(false)
-        })
     }
     
     function successAlertMessage(message) {

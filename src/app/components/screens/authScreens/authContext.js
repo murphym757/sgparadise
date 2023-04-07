@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { View } from 'react-native'
 import { auth, sgDB, sgImageStorage } from 'server/config/config'
-import { getFirestore, collection, getDocs, addDoc, doc, updateDoc, deleteField } from "firebase/firestore";
+import { getFirestore, collection, getDocs, setDoc, addDoc, doc, updateDoc, serverTimestamp, deleteField } from "firebase/firestore";
 import { getStorage } from "firebase/storage"; 
 import { 
     createUserWithEmailAndPassword,
@@ -64,6 +64,7 @@ export function AuthProvider({ children }) {
         .then((userCredential) => {
             // Signed in 
             const user = userCredential.user;
+            addUserDataUsers(user.uid, email)
             // ...
         })
         .catch((error) => {
@@ -161,19 +162,18 @@ export function AuthProvider({ children }) {
         const user = auth.currentUser;
 
         // TODO(you): prompt the user to re-provide their sign-in credentials
-        const credential = promptForCredentials();
+        //const credential = promptForCredentials();
 
-        /* 
             const credential = auth.EmailAuthProvider.credential(
             email, 
             userProvidedPassword
         );
-        */
+
 
         reauthenticateWithCredential(user, credential).then(() => {
         // User re-authenticated.
-            reDirect,
-            logOut()
+            reDirect
+            console.log('The User have been re-authenticated.')
         }).catch((error) => {
         // An error ocurred
         // ...
@@ -331,11 +331,11 @@ export function AuthProvider({ children }) {
 
     // Create User Data sgUsers (on Cloud Firestore)
     async function addUserDataUsers(userID, userEmail) {
-        const timestamp = firebase.firestore.FieldValue.serverTimestamp()
-        sgDB.collection('sgUsers').doc(userID).set({
+        const newUserNameRef = doc(sgDB, 'sgUsers', userID)
+        await setDoc(newUserNameRef, {   
             id: userID,
-            email:userEmail,
-            createdAt: timestamp
+            email: userEmail,
+            createdAt: serverTimestamp()
         })
     }
     // Add new Document to already existing User Data sgUsers (on Cloud Firestore)

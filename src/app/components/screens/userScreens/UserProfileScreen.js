@@ -21,12 +21,8 @@ export default function UserProfileScreen({navigation}) {
         updateUsernameAuth
      } = useAuth()
     const colors = useContext(CurrentThemeContext)
-    const userName = currentUser.displayName
-    console.log("🚀 ~ file: userProfileScreen.js:25 ~ UserProfileScreen ~ userName:", userName)
-    const userEmail = currentUser.email
     const newEmail = 'brickellLife@gmail.com'
     const newUsername = 'brickellLife'
-    const userId = currentUser.uid
     const [error, setError] = useState('')
 
     function onUpdateUser() {
@@ -47,8 +43,10 @@ export default function UserProfileScreen({navigation}) {
     }
 
     function changeUsername() {
-        updateUsernameFirestore(userId, newUsername), 
-        updateUsernameAuth(newUsername)
+        {currentUser !== null
+        updateUsernameFirestore(currentUser.uid, currentUser.displayName)
+        //updateUsernameAuth(currentUser.displayName)
+        }
     }
 
     function unixTimestamp (date = Date.now()) {  
@@ -64,7 +62,7 @@ export default function UserProfileScreen({navigation}) {
                         <MainFont>{error}</MainFont>
                         <MainFont>{JSON.stringify(currentUser.lastLoginAt)}</MainFont>
                         <Container style={{alignItems: 'center'}}>
-                            <MainFont>{userName}</MainFont>
+                            <MainFont>{currentUser.displayName}</MainFont>
                         </Container>
                         <TouchableButton 
                             onPress={() => onUpdateUser()}>
@@ -75,7 +73,7 @@ export default function UserProfileScreen({navigation}) {
                             <TouchableButtonFont>Log Out</TouchableButtonFont>
                         </TouchableButton>
                         <TouchableButton 
-                            onPress={() => addUserDataUsers(userId, userEmail)}>
+                            onPress={() => addUserDataUsers(currentUser.uid, currentUser.email)}>
                             <TouchableButtonFont>Add User Data to Firebase</TouchableButtonFont>
                         </TouchableButton>
                         <TouchableButton 
@@ -83,7 +81,7 @@ export default function UserProfileScreen({navigation}) {
                             <TouchableButtonFont>Change username in Firestore</TouchableButtonFont>
                         </TouchableButton>
                         <TouchableButton 
-                            onPress={() => updateUserEmailFirestore(userId, newEmail)}>
+                            onPress={() => updateUserEmailFirestore(currentUser.uid, currentUser.email)}>
                             <TouchableButtonFont>Update user email in Firebase</TouchableButtonFont>
                         </TouchableButton>
                 </View>
