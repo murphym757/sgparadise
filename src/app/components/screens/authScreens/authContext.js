@@ -624,6 +624,73 @@ export function AuthProvider({ children }) {
         )
     }
     /*----------------------------------------------*/
+    // Validation for email and password
+
+    //Email Validation
+    /*
+        Checks for the following criteria:
+        Starts with one or more characters that are not whitespace or @
+        Followed by @ symbol
+        Followed by one or more characters that are not whitespace or @
+        Followed by a dot
+        Ends with one or more characters that are not whitespace or @
+    */
+        function validateEmail(email) {
+            const errors = [];
+          
+            if (!email) {
+              errors.push('Email is required');
+            }
+          
+            if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+              errors.push('Invalid email format');
+            }
+          
+            return errors;
+        }
+          
+      
+    /*----------------------------------------------*/
+
+    //Password 
+    /*
+        Checks for the following criteria:
+        At least 8 characters long
+        Contains at least one digit (0-9)
+        Contains at least one lowercase letter (a-z)
+        Contains at least one uppercase letter (A-Z)
+        Contains at least one special character (!@#$%^&*()_+)
+    */
+        function validatePassword(password) {
+            const errors = [];
+          
+            if (password.length < 8) {
+              errors.push('Password must be at least 8 characters long');
+            }
+          
+            if (!password.match(/[a-z]/)) {
+              errors.push('Password must contain at least one lowercase letter');
+            }
+          
+            if (!password.match(/[A-Z]/)) {
+              errors.push('Password must contain at least one uppercase letter');
+            }
+          
+            if (!password.match(/\d/)) {
+              errors.push('Password must contain at least one digit');
+            }
+          
+            if (!password.match(/[!@#$%^&*()_+]/)) {
+              errors.push('Password must contain at least one special character');
+            }
+          
+            return errors;
+        }
+          
+      
+    /*----------------------------------------------*/
+
+    /*----------------------------------------------*/
 
     useEffect(() => {
         const auth = getAuth();
@@ -696,7 +763,9 @@ export function AuthProvider({ children }) {
         failureAlert,
         unixTimestampConverter,
         charLimit,
-        backArrow
+        backArrow,
+        validateEmail,
+        validatePassword,
     }
 
     return (

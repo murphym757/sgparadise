@@ -34,7 +34,9 @@ export default function UpdateUserScreen({navigation}) {
       toNewSection,
       updateUsernameFirestore, 
       updateUserEmailFirestore,
-      updateUsernameAuth
+      updateUsernameAuth,
+      validateEmail,
+      validatePassword
     } = useAuth()
       console.log("🚀 ~ file: userUpdateScreen.js:39 ~ UpdateUserScreen ~ currentUser:", currentUser)
     const { 
@@ -55,6 +57,7 @@ export default function UpdateUserScreen({navigation}) {
     const [message, setMessage] = useState('')
     const [error, setError] = useState('')
     const [errorEmailCheck, setErrorEmailCheck] = useState(null)
+    console.log("🚀 ~ file: userUpdateScreen.js:60 ~ UpdateUserScreen ~ errorEmailCheck:", errorEmailCheck)
     const [emailCheckStatus, setEmailCheckStatus] = useState('fulfilled')
     const [errorPasswordCheck, setErrorPasswordPassword] = useState(null)
     const [passwordCheckStatus, setPasswordCheckStatus] = useState('fulfilled')
@@ -145,14 +148,21 @@ export default function UpdateUserScreen({navigation}) {
         }
       })
       const emailMatchPromise = new Promise((resolve, reject) => {
-        if (newEmail !== currentUser.email) {
-          resolve('The email has been updated')
-          setEmailCheckStatus('fulfilled')
-          changeUserEmail()
+        const errors = validateEmail(newEmail);
+        if (errors.length > 0) {
+          setErrorEmailCheck(errors)
+          console.log('Email validation failed:', errors);
         } else {
-          reject('The email is still the same')
-          setErrorEmailCheck('Email is still the same' + " (" + newEmail + ")")
-          setEmailCheckStatus('rejected')
+          if (newEmail !== currentUser.email) {
+            resolve('The email has been updated')
+            setEmailCheckStatus('fulfilled')
+            changeUserEmail()
+          } else {
+            reject('The email is still the same')
+            setErrorEmailCheck('Email is still the same' + " (" + newEmail + ")")
+            setEmailCheckStatus('rejected')
+          }
+          console.log('Email is valid!');
         }
       })
       const passwordMatchPromise = new Promise((resolve, reject) => {
