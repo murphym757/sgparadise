@@ -635,7 +635,7 @@ export function AuthProvider({ children }) {
         Followed by a dot
         Ends with one or more characters that are not whitespace or @
     */
-        function validateEmail(email) {
+        function validateEmail(email, currentUser) {
             const errors = [];
           
             if (!email) {
@@ -644,6 +644,10 @@ export function AuthProvider({ children }) {
           
             if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
               errors.push('Invalid email format');
+            } else {
+                if (email !== currentUser.email) {
+                    errors.push("Email does not match sgParadise's records" + " (" + email + ")");
+                }
             }
           
             return errors;
