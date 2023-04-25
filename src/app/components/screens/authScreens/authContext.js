@@ -6,8 +6,11 @@ import { getStorage } from "firebase/storage";
 import { 
     createUserWithEmailAndPassword,
     getAuth, 
+    reauthenticateWithCredential, 
+    EmailAuthProvider,
     onAuthStateChanged,
     signInWithEmailAndPassword,
+    sendPasswordResetEmail,
     updateEmail,
     updatePassword,
     updateProfile,
@@ -57,6 +60,7 @@ export function AuthProvider({ children }) {
     const sgGenIGDB = '29'
     const sgMSIGDB = '64'
     const sgSatIGDB = '32'
+    const errorBool = true
 
     function signUp(email, password) {
         const auth = getAuth();
@@ -117,15 +121,19 @@ export function AuthProvider({ children }) {
         return auth.sendPasswordResetEmail(email)
     }
 
-    function updateEmailAuth(email) {
+    function updateEmailAuth(email, passedError) {
         const auth = getAuth();
+        const user = auth.currentUser;
         return updateEmail(auth.currentUser, email).then(() => {
         // Email updated!
         // ...
+        console.log("Email updated successfully!")
         }).catch((error) => {
-        // An error occurred
-        // ...
-        });
+            const errorCode = error.code
+            if (errorCode === 'auth/email-already-in-use') return (
+                error.push('The email address is already in use by another account.')
+            )
+        })
     }
     
     function updatePasswordAuth(password) {
@@ -179,6 +187,50 @@ export function AuthProvider({ children }) {
         // ...
         });
     }
+
+    // User successfully reauthenticated. New ID tokens should be valid.
+
+    
+    // Function to reauthenticate user via email
+    // Function to compare passwords
+    async function firebaseReauthenticateViaEmail(email, password, setReauthenticationConfirmation) {
+        const auth = getAuth();
+        const user = auth.currentUser;
+        const credential = EmailAuthProvider.credential(
+            email,
+            password
+        )
+    console.log("🚀 ~ file: authContext.js:198 ~ firebaseReauthenticateViaEmail ~ credential:", credential)
+    reauthenticateWithCredential(user, credential).then(() => {
+        // User re-authenticated.
+            console.log('The User have been re-authenticated.')
+            setReauthenticationConfirmation(true)
+        }).catch((error) => {
+        // An error ocurred
+        // ...
+        console.log('The User have not been re-authenticated.')
+        });
+}
+
+    //* Function for user to change password via email
+    function sendVerificationCode(email) {
+        const auth = getAuth();
+        sendPasswordResetEmail(auth, email)
+          .then(() => {
+            // Password reset email sent!
+            // ..
+            console.log('Verification code sent successfully');
+          })
+          .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.log('Failed to send verification code: ', error);
+            console.log(errorCode)
+            console.log(errorMessage)
+          });
+      };
+      
+
 
     async function displayData(collectionName) {
         const querySnapshot = await getDocs(collection(sgDB, collectionName));
@@ -649,6 +701,34 @@ export function AuthProvider({ children }) {
                     errors.push("Email does not match sgParadise's records" + " (" + email + ")");
                 }
             }
+            if (email === currentUser.email) {
+                errors.push('Success!');
+            }
+          
+            return errors;
+        }
+
+        function validateNewEmail(email, currentUser, emailExist) {
+            const errors = []
+            const emailVar = email
+            console.log("🚀 ~ file: authContext.js:716 ~ validateNewEmail ~ emailVar:", emailVar)
+            const currentUserVar = currentUser
+            console.log("🚀 ~ file: authContext.js:718 ~ validateNewEmail ~ currentUserVar:", currentUserVar)
+            const emailExistVar = emailExist
+            console.log("🚀 ~ file: authContext.js:720 ~ validateNewEmail ~ emailExistVar:", emailExistVar)
+          
+            if (!email) {
+              errors.push('Email is required');
+            }
+          
+            if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+              errors.push('Invalid email format');
+            } 
+
+            if (emailExist === true)  {
+                errors.push('Email already exists')
+            } 
+        
           
             return errors;
         }
@@ -738,6 +818,8 @@ export function AuthProvider({ children }) {
         updatePasswordAuth,
         updateUsernameAuth,
         reauthenticateUser,
+        firebaseReauthenticateViaEmail,
+        sendVerificationCode,
         displayData,
         getGameData,
         addGameToConsoleButtonGroup,
@@ -769,6 +851,7 @@ export function AuthProvider({ children }) {
         charLimit,
         backArrow,
         validateEmail,
+        validateNewEmail,
         validatePassword,
     }
 

@@ -51,7 +51,7 @@ export default function UserMainScreen({navigation}) {
     const [message, setMessage] = useState('')
     const [error, setError] = useState('')
     const [errorEmailCheck, setErrorEmailCheck] = useState('')
-    const [errorPasswordCheck, setErrorPasswordPassword] = useState('')
+    const [errorPasswordCheck, setErrorPasswordCheck] = useState('')
     const [errorPasswordAuthCheck, setErrorPasswordAuthCheck] = useState('')
     const [testError, setTestError] = useState('')
     const [authButtonPressed, setAuthButtonPressed] = useState(false)
