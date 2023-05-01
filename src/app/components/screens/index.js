@@ -34,6 +34,7 @@
     export { default as UserProfileScreen } from 'user/userProfileScreen'
     export { default as UpdateUserScreen } from 'user/userUpdateScreen'
     export { default as UserSavesScreen } from 'user/userSavesScreen'
+
 // Assets  
     // Styling
         //Theme Context
@@ -164,7 +165,16 @@
         export { confirmGameContext } from 'main/sgGameSearchScreenContent/sgSelectedGameScreens/sgSelectedGameContext'
 
         //Uploaded Game Context
-        export { gameScreenContext } from 'main/sgGameScreenContent/sgGameScreenContext'    
+        export { gameScreenContext } from 'main/sgGameScreenContent/sgGameScreenContext'   
+
+        //User Screen Context
+        export { UserScreenContext } from 'user/userScreenContext'
+        
+        //User Validation
+        export { UserValidationsContext } from 'user/userValidationsContext'
+
+        //Email Validations
+        export { EmailValidationsContext } from 'user/userEmailValidationContext'
 
     // Modal
 
