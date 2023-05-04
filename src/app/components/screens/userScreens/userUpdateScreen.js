@@ -63,7 +63,11 @@ export default function UpdateUserScreen({navigation}) {
       const {
         UserEmailValidation,
         EmailFirebaseChangeButton,
-        ChangeEmailFunction
+        ChangeEmailFunction,
+        emailValidationPromise,
+        changeUserEmail,
+        validationNewEmailFunction,
+        validationEmailExistenceFunction
       } = useContext(EmailValidationsContext)
     const colors = useContext(CurrentThemeContext)
     const colorsPassThrough = colors
@@ -80,6 +84,7 @@ export default function UpdateUserScreen({navigation}) {
     const [message, setMessage] = useState('')
     const [error, setError] = useState('')
     const [errorNewEmailCheck, setErrorNewEmailCheck] = useState(null)
+    console.log("🚀 ~ file: userUpdateScreen.js:87 ~ UpdateUserScreen ~ errorNewEmailCheck:", errorNewEmailCheck)
     const [errorEmailCheck, setErrorEmailCheck] = useState(null)
     console.log("🚀 ~ file: userUpdateScreen.js:72 ~ UpdateUserScreen ~ errorEmailCheck:", errorEmailCheck)
     const [emailCheckStatus, setEmailCheckStatus] = useState('fulfilled')
@@ -156,15 +161,6 @@ export default function UpdateUserScreen({navigation}) {
   }
   /*-----------------*/
 
-   // Update email
-   function changeUserEmail() {// The user needs to be logged out and back in to see the new email
-    if ( currentUser !== null) {
-      const userId = currentUser.uid 
-      updateUserEmailFirestore(userId, newEmail) //Opposed to saving the email to firestore, you should save the uid to firestore
-      updateEmailAuth(newEmail, errorCode)
-    }
-  }
-  /*-----------------*/
 
   // Update password
   function changeUserPassword() {// The user can make a password change "without" having to loggout and back in
@@ -391,26 +387,6 @@ export default function UpdateUserScreen({navigation}) {
 
 
   //* Validation 
-  function emailValidationPromise() {
-    const emailMatchPromise = new Promise((resolve, reject) => {
-      if (emailValidationErrors.length < 0) {
-        setErrorEmailCheck(emailValidationErrors)
-        console.log('Email validation failed:', emailValidationErrors);
-      } else {
-        if (email == currentUser.email) {
-          resolve('The email has been updated')
-          setErrorEmailCheck(null)
-        } else {
-          reject('The email is still the same')
-          setErrorEmailCheck(emailValidationErrors)
-          setEmailCheckStatus('rejected')
-        }
-        console.log('Email is valid!');
-      }
-    })
-    return emailMatchPromise
-  }
-
   function passwordValidationPromise() {
     const passwordMatchPromise = new Promise((resolve, reject) => {
       if (passwordValidationErrors.length < 0) {
@@ -424,8 +400,8 @@ export default function UpdateUserScreen({navigation}) {
     return passwordMatchPromise
   }
 
-  function validationUserFunction() {
-    Promise.all([emailValidationPromise(), passwordValidationPromise()]).then(() => {
+  function validationUserFunction(passingEmailData) {
+    Promise.all([emailValidationPromise(passingEmailData), passwordValidationPromise()]).then(() => {
       setErrorEmailCheck(emailValidationErrors)
       setErrorPasswordAuthCheck(passwordValidationErrors)
       firebaseReauthenticateViaEmail(email, password, setReauthenticationConfirmation)
@@ -436,81 +412,7 @@ export default function UpdateUserScreen({navigation}) {
     });
   }
   //*-------------------*/
-  function updateEmailAuth(email, passedError) {
-    const auth = getAuth();
-    const user = auth.currentUser;
-    return updateEmail(auth.currentUser, email).then(() => {
-    // Email updated!
-    // ...
-    if(checkEmailExistence === true) return (setCheckEmailExistence(false))
-    console.log("Email updated successfully!")
-    }).catch((error) => {
-      setCheckEmailExistence(true)
-    })
-}
 
-  function newEmailValidationPromise() {
-    const newEmailMatchPromise = new Promise((resolve, reject) => {
-      if (newEmailValidationErrors.length < 0) {
-        setErrorNewEmailCheck(newEmailValidationErrors)
-        reject(('Email validation failed:', newEmailValidationErrors));
-      } else {
-        setErrorNewEmailCheck(newEmailValidationErrors)
-        resolve('Email is valid!')
-      } 
-    })
-
-    return newEmailMatchPromise
-  }
-
-  function validationNewEmailFunction() {
-    Promise.all([newEmailValidationPromise()]).then(() => {
-      setErrorNewEmailCheck(newEmailValidationErrors)
-      changeUserEmail()
-    })
-    .catch((err) => {
-    }).finally(() => {
-      console.log( "The Promise is settled, meaning it has been resolved or rejectedss.")
-    });
-  }
-
-  //*-------------------*/
-  //* Validation for email (email already exists?)
-  function emailExistencePromise() {
-    const emailExistPromise = new Promise((resolve, reject) => {
-      if (checkEmailExistence === true) {
-        setErrorNewEmailCheck(newEmailValidationErrors)
-        reject('Email already exist:', newEmailValidationErrors);
-      } else {
-        setErrorNewEmailCheck(newEmailValidationErrors)
-        resolve('Email is valid!');
-      } 
-    })
-    return emailExistPromise
-  }
-
-  function validationEmailExistenceFunction() {
-    Promise.all([emailExistencePromise()]).then(() => {
-      setErrorEmailCheck(emailValidationErrors)
-      validationNewEmailFunction()
-      //navigation.goBack()
-    })
-    .catch((err) => {
-    }).finally(() => {
-      console.log( "The Promise is settled, meaning it has been resolved or rejected.")
-    });
-  }
-  //*-------------------*/
-
-  
-  
-
-
-
-
-
-
-  
 
   function changePasswordFunction() {
     return (
@@ -523,154 +425,60 @@ export default function UpdateUserScreen({navigation}) {
     )
   }
 
-
-    // Edit Profile (General Info)
-    /*--------------------------*/ 
-
-    // Edit Personal 
-    //* This function is required to pass functions from the child to the parent
-    function editUserDataScreenStructure() {
-      const passingSectionData = {
-        rowPadding: 100,
-        cancelUpdate, //Function
-        colors,
-        setChangeIconButtonPressed,
-        setChangePersonalInfoButtonPressed,
-        customSGFormFieldUsername, //Function
-        errorMessageDataMain, //Function
-        errorEmailCheck,
-        errorPasswordAuthCheck,
-        updateProcess,
-        hasFunctionTrue: true,
-        hasFunctionFalse: false,
-       }
-      return (
-        <View>
-          {editPersonalRow1(passingSectionData)}
-          {editPersonalRow2(passingSectionData)}
-          {editPersonalRow3(passingSectionData)}
-          {editPersonalRow4(passingSectionData)}
-          {editPersonalRow5(passingSectionData)}
-          {editPersonalRow6(passingSectionData)}
-        </View>
-      )
-    }
-    //*-------------------------*/
-
-    function editPersonalInfo() {
-      const warningMessage1 = "Provide your personal information, even if the account is for something like a business or pet. It won't be part of your public profile."
-      const warningMessage2 = 'To keep your account secure, don\'t enter an email that belongs to someone else.'
-     
-      return (
-        <View>
-          {changeIconButtonPressed == false
-            ?  changePersonalInfoButtonPressed == false
-              ? editUserDataScreenStructure()
-              : <View>
-                {personalInfoSection(warningMessage1, warningMessage2)}
-              </View>
-            
-            : <View>
-                {sgCreatorSuite()}
-              </View>
-          }
-        </View>
-      )
-    }
-    /*-------------------------*/
-
-
     // Form Field Functions  
       // Update Form
-      function customSGFormFieldUsername() {
+      function customSGFormFieldContainer(placeholder, currentState, errorMessageVariable, isSensitiveData, setNewState) {
         const passingSectionData = {
-          placeholder: 'Username',
-          value: newUsername,
-          errorMessageVariable: null,
-          isSensitiveData: false,
+          placeholder: placeholder,
+          value: currentState,
+          errorMessageVariable: errorMessageVariable,
+          isSensitiveData: isSensitiveData,
           colors
         }
         return (
-          customSGFormField(passingSectionData, (text) => setNewUsername(text))
+          customSGFormField(passingSectionData, (text) => setNewState(text))
+        )
+      }
+      function customSGFormFieldUsername() {
+        return (
+          customSGFormFieldContainer('Username', newUsername, null, false, setNewUsername)
         )
       }
 
       function customSGFormFieldEmail() {
-        const passingSectionData = {
-          placeholder: 'E-mail',
-          value: email,
-          errorMessageVariable: errorMessageData(errorEmailCheck),
-          isSensitiveData: false,
-          colors
-        }
         return (
-          customSGFormField(passingSectionData, (text) => setEmail(text))
+          customSGFormFieldContainer('E-mail', email, errorMessageData(errorEmailCheck), false, setEmail)
         )
       }
 
       function customSGFormFieldNewEmail() {
-        const passingSectionData = {
-          placeholder: 'E-mail',
-          value: newEmail,
-          errorMessageVariable: errorMessageData(errorEmailCheck),
-          isSensitiveData: false,
-          colors
-        }
         return (
-          customSGFormField(passingSectionData, (text) => setNewEmail(text))
+          customSGFormFieldContainer('E-mail', newEmail, errorMessageData(errorNewEmailCheck), false, setNewEmail)
         )
       }
       
       function customSGFormFieldPassword() {
-        const passingSectionData = {
-          placeholder: 'Password',
-          value: newPassword,
-          errorMessageVariable: null,
-          isSensitiveData: true,
-          colors
-        }
         return (
-          customSGFormField(passingSectionData, (text) => setNewPassword(text))
+          customSGFormFieldContainer('Password', newPassword, null, true, setNewPassword)
         )
       }
       
       function customSGFormFieldPasswordConfirm() {
-        const passingSectionData = {
-          placeholder: 'Confirm Password',
-          value: confirmNewPassword,
-          errorMessageVariable: errorMessageDataMain(errorPasswordCheck, 'password', errorPasswordCheck),
-          isSensitiveData: true,
-          colors
-        }
         return (
-          customSGFormField(passingSectionData, (text) => setConfirmNewPassword(text))
+          customSGFormFieldContainer('Confirm Password', confirmNewPassword, errorMessageDataMain(errorPasswordCheck, 'password', errorPasswordCheck), true, setConfirmNewPassword)
         )
       }
       
       //* Validation Form
       function customSGFormFieldEmailReEntry() {
-        const passingSectionData = {
-          placeholder: 'Email',
-          value: email,
-          errorMessageVariable: errorMessageData(errorEmailCheck),
-          isSensitiveData: false,
-          colors
-        }
         return (
-          customSGFormField(passingSectionData, (text) => setEmail(text))
+          customSGFormFieldContainer('Email', email, errorMessageData(errorEmailCheck), false, setEmail)
         )
       }
 
       function customSGFormFieldPasswordReEntry() {
-        const passingSectionData = {
-          placeholder: 'Password',
-          value: password,
-          errorMessageVariable: errorMessageData(errorPasswordCheck),
-          isSensitiveData: true,
-          colors
-        }
         return (
-          customSGFormField(passingSectionData, (text) => setPassword(text))
+          customSGFormFieldContainer('Password', password, errorMessageData(errorPasswordCheck), true, setPassword)
         )
       }
       //*------------------*/
@@ -678,6 +486,15 @@ export default function UpdateUserScreen({navigation}) {
 
     // Form Button Functions  
     // Custom Button
+    
+    function customSGButtonData(buttonGroup) {
+      const customButtonStyle = buttonGroup.style
+      const customButtonFunction = buttonGroup.function
+      const customButtonTitle = buttonGroup.title
+      return (
+        customSGFormButton(customButtonStyle, customButtonFunction, customButtonTitle)
+      )
+    }
     function customSGFormButton(customButtonStyle, customButtonFunction, customButtonTitle) {
       const buttonStyle = customButtonStyle
       const buttonFunction = customButtonFunction
@@ -689,15 +506,6 @@ export default function UpdateUserScreen({navigation}) {
             onPress={() => buttonFunction}>
             <TouchableButtonFont>{buttonTitle}</TouchableButtonFont>
         </TouchableButton>
-      )
-    }
-
-    function customSGButtonData(buttonGroup) {
-      const customButtonStyle = buttonGroup.style
-      const customButtonFunction = buttonGroup.function
-      const customButtonTitle = buttonGroup.title
-      return (
-        customSGFormButton(customButtonStyle, customButtonFunction, customButtonTitle)
       )
     }
     function customSGButtonGroup(buttonTitle, buttonFunction) {
@@ -773,10 +581,17 @@ export default function UpdateUserScreen({navigation}) {
 
     function verifyFirebaseIdentityButton() {
       const buttonTitle = 'Verify Identity'
+      const passingEmailData = {
+        emailValidationErrors,
+        setErrorEmailCheck,
+        email,
+        currentUser,
+        setEmailCheckStatus
+      }
       return (
         <TouchableButton style={{backgroundColor: colors.secondaryColor }}
             disabled={isLoading}
-            onPress={() => {validationUserFunction()}}>
+            onPress={() => {validationUserFunction(passingEmailData)}}>
             <TouchableButtonFont>{buttonTitle}</TouchableButtonFont>
         </TouchableButton>
       )
@@ -784,11 +599,25 @@ export default function UpdateUserScreen({navigation}) {
 
     function changeFirebaseIdentityButton(changeType) {
       const buttonTitle = 'Verify Identity'
+      const passingEmailData = {
+        updateUserEmailFirestore,
+        newEmail,
+        errorCode,
+        email,
+        currentUser,
+        getAuth,
+        updateEmail,
+        checkEmailExistence,
+        setCheckEmailExistence,
+        newEmailValidationErrors,
+        setErrorEmailCheck,
+        setErrorNewEmailCheck
+      }
       return (
         changeType === 'email'
           ? <TouchableButton style={{backgroundColor: colors.secondaryColor }}
               disabled={isLoading}
-              onPress={() => {validationNewEmailFunction(), setVerifyConfirmationButtonPressed(true), setVerifyEmailButtonPressed(true), setVerifyPasswordButtonPressed(false)}}>
+              onPress={() => {validationNewEmailFunction(passingEmailData), setVerifyConfirmationButtonPressed(true), setVerifyEmailButtonPressed(true), setVerifyPasswordButtonPressed(false)}}>
               <TouchableButtonFont>{buttonTitle}</TouchableButtonFont>
             </TouchableButton>
           : <TouchableButton style={{backgroundColor: colors.secondaryColor }}
@@ -829,51 +658,41 @@ export default function UpdateUserScreen({navigation}) {
     }
     /*-----------------------*/
 
-    function personalInfoSection(warningMessage1, warningMessage2) {
-      return (
-        <View>
-          <View style={{position: 'relative', flex: 1, paddingBottom: 100}}>{BackButton()}</View>
-          <View style={{flex: 1, position: 'absolute', alignSelf: 'flex-end', paddingTop: 10, paddingRight: 100}}>
-            <MainSubFont>Personal Information</MainSubFont>
-          </View>
-          {changeEmailButtonPressed == true || changePasswordButtonPressed == true
-            ? <View>
-                {changeEmailButtonPressed == true
-                  ? <View>{emailChangeSection()}</View> //Email Button
-                  : <View>
-                      {changeFunction('password', verifyFirebaseIdentityButton(), customSGFormFieldEmailReEntry())}
-                  </View>
-                }
-            </View>
-            : <View>
-                {changeSensitiveData()}
-            </View>
-          }
-        </View>
-      )
-    }
+    
 
     // Yes/No Button Functions for Change Personal Information
     const [yesPressed, setYesPressed] = useState(false);
     const [noPressed, setNoPressed] = useState(false);
 
   function handleYesPress() {
+    const passingEmailData = {
+      checkEmailExistence,
+      setErrorNewEmailCheck,
+      newEmailValidationErrors,
+      setErrorEmailCheck
+    }
     return (
       setYesPressed(true),
       setNoPressed(false),
-      validationEmailExistenceFunction(),
-      checkEmailExistence === true 
+      checkEmailExistence === true || newEmail === currentUser.email || newEmailValidationErrors.length > 0
       ? setVerifyConfirmationButtonPressed(false)
       : navigation.goBack() //? change to go back to profile page
-    )
+    ),
+    validationEmailExistenceFunction(passingEmailData)
   }
 
   function handleNoPress() {
+    const passingEmailData = {
+      checkEmailExistence,
+      setErrorNewEmailCheck,
+      newEmailValidationErrors,
+      setErrorEmailCheck
+    }
     return (
       setYesPressed(false),
       setNoPressed(true),
       setVerifyConfirmationButtonPressed(false),
-      validationEmailExistenceFunction()
+      validationEmailExistenceFunction(passingEmailData)
     )
   }
 
@@ -914,6 +733,71 @@ export default function UpdateUserScreen({navigation}) {
 
 
     /*------------------*/
+
+     //* This function is required to pass functions from the child to the parent
+     function editUserDataScreenStructure() {
+      const passingSectionData = {
+        rowPadding: 100,
+        cancelUpdate, //Function
+        colors,
+        setChangeIconButtonPressed,
+        setChangePersonalInfoButtonPressed,
+        customSGFormFieldUsername, //Function
+        errorMessageDataMain, //Function
+        errorEmailCheck,
+        errorPasswordAuthCheck,
+        updateProcess,
+        hasFunctionTrue: true,
+        hasFunctionFalse: false,
+       }
+      return (
+        <View>
+          {editPersonalRow1(passingSectionData)}
+          {editPersonalRow2(passingSectionData)}
+          {editPersonalRow3(passingSectionData)}
+          {editPersonalRow4(passingSectionData)}
+          {editPersonalRow5(passingSectionData)}
+          {editPersonalRow6(passingSectionData)}
+        </View>
+      )
+    }
+    //*-------------------------*/
+
+    function personalInfoSection(warningMessage1, warningMessage2) {
+      return (
+        <View>
+          <View style={{position: 'relative', flex: 1, paddingBottom: 100}}>{BackButton()}</View>
+          <View style={{flex: 1, position: 'absolute', alignSelf: 'flex-end', paddingTop: 10, paddingRight: 100}}>
+            <MainSubFont>Personal Information</MainSubFont>
+          </View>
+          {changeEmailButtonPressed == true || changePasswordButtonPressed == true
+            ? <View>
+                {changeEmailButtonPressed == true
+                  ? emailChangeSection() //Email Button
+                  : changeFunction('password', verifyFirebaseIdentityButton(), customSGFormFieldEmailReEntry()) //Password Button
+                }
+            </View>
+            : changeSensitiveData()
+          }
+        </View>
+      )
+    }
+
+    function editPersonalInfo() {
+      const warningMessage1 = "Provide your personal information, even if the account is for something like a business or pet. It won't be part of your public profile."
+      const warningMessage2 = 'To keep your account secure, don\'t enter an email that belongs to someone else.'
+     
+      return (
+        <View>
+          {changeIconButtonPressed == false
+            ? changePersonalInfoButtonPressed == false
+              ? editUserDataScreenStructure()
+              : personalInfoSection(warningMessage1, warningMessage2)
+            : sgCreatorSuite()
+          }
+        </View>
+      )
+    }
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.primaryColor }}>

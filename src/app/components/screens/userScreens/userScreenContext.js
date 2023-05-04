@@ -135,9 +135,10 @@ function row1LinkRelative(linkFunction, linkColor, linkFont) {
     )
   }
 
-  function customSGFormField(passingSectionData, bummp) {
+  function customSGFormField(passingSectionData, stateChangeFunc) {
     const sgPlaceholderFiled = passingSectionData.placeholder
-    const sgChangeTextField = bummp
+    console.log("🚀 ~ file: userScreenContext.js:140 ~ customSGFormField ~ sgPlaceholderFiled:", sgPlaceholderFiled)
+    const sgChangeTextField = stateChangeFunc
     const sgValueField = passingSectionData.value
     const sgErrorMessageField = passingSectionData.errorMessageVariable
     const isSensitiveData = passingSectionData.isSensitiveData

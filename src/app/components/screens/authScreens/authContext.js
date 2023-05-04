@@ -725,8 +725,12 @@ export function AuthProvider({ children }) {
               errors.push('Invalid email format');
             } 
 
-            if (emailExist === true)  {
-                errors.push('Email already exists')
+            if (email === currentUser.email) {
+                errors.push('This is your current email');
+            }
+
+            if (emailExist === true && email !== currentUser.email)  {
+                errors.push('This email is already in use')
             } 
         
           
