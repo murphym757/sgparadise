@@ -248,7 +248,7 @@ export default function UpdateUserScreen({navigation}) {
 
 
     function cancelUpdate() {
-        setAuthButtonPressed(false)
+        setAuthButtonPressed(false),
         navigation.goBack()
     }
     
@@ -354,10 +354,24 @@ export default function UpdateUserScreen({navigation}) {
       return (
         <View>
           {changeEmailButtonPressed === true 
-            ? <TouchableOpacity onPress={() => {setChangeEmailButtonPressed(false), setReauthenticationConfirmation(false)}}> 
+            ? <TouchableOpacity onPress={() => {
+                setChangeEmailButtonPressed(false), 
+                setReauthenticationConfirmation(false),
+                setEmail(''),
+                setErrorEmailCheck(null)
+                setNewEmail(''),
+                setErrorNewEmailCheck(null),
+                setPassword(''),
+                setPasswordCheckStatus(null),
+                setNewPassword(''),
+                setPasswordAuthCheckStatus(null)
+              }}> 
                 {backArrow(colorsPassThrough, backFunc)}
               </TouchableOpacity>
-            : <TouchableOpacity onPress={() => {setChangePasswordButtonPressed(false), setReauthenticationConfirmation(false)}}> 
+            : <TouchableOpacity onPress={() => {
+                setChangePasswordButtonPressed(false), 
+                setReauthenticationConfirmation(false)
+              }}> 
             {backArrow(colorsPassThrough, backFunc)}
           </TouchableOpacity>
           }
@@ -372,7 +386,10 @@ export default function UpdateUserScreen({navigation}) {
         <View>
         {changeEmailButtonPressed == true || changePasswordButtonPressed == true
           ? changeButtonPressedBack(backNeeded)
-          : <TouchableOpacity onPress={() => {navigation.goBack(), setReauthenticationConfirmation(false)}}> 
+          : <TouchableOpacity onPress={() => {
+              navigation.goBack(), 
+              setReauthenticationConfirmation(false)
+            }}> 
               {backArrow(colorsPassThrough, backNeeded)}
             </TouchableOpacity>
         }
