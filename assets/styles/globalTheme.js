@@ -9,6 +9,7 @@ const secondaryColor = 'rgb(152, 93, 93)' //Rose Taupe
 const secondaryColorAlt = 'rgb(84, 149, 201)' //Blue Grey
 const primaryFontColor = primaryColorAlt
 const secondaryFontColor = 'rgb(103, 162, 162)' // Cadet Blue
+const secondaryFontColorAlt ='rgb(104, 80, 59)' //Coffee
 const successAlertFont = 'rgb(60, 92, 92)' // Dark Slate Grey
 const failureAlertFont = 'rgb(79, 49, 49)' // Old Burgundy
 const primaryRatingColor = 'rgb(188, 10, 0)'
@@ -27,7 +28,7 @@ const sgParadiseDefaultTheme = {
         secondaryColor: secondaryColor,
         secondaryColorAlt: secondaryColorAlt,
         primaryFontColor: primaryColorAlt,
-        secondaryFontColor: secondaryFontColor,
+        secondaryFontColor: secondaryFontColorAlt,
         primaryRatingColor: primaryRatingColor,
         successAlertFont: successAlertFont,
         successAlertColor: secondaryFontColor,

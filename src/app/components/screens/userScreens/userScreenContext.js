@@ -3,7 +3,8 @@ import { View, Pressable } from 'react-native';
 import {
     MainFont,
     MainSubFont,
-    CustomInputField
+    CustomInputField,
+    ContentRow
   } from 'index';
 
 function row1LinkRelative(linkFunction, linkColor, linkFont) {
