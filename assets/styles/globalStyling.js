@@ -204,6 +204,13 @@ export const MainSubFont = styled(Text) `
     color: ${currentTheme.secondaryColor};
 `;
 
+export const MainSecondaryFont = styled(Text) `
+    fontSize: ${RFValue(18, windowHeight)}px;
+	fontWeight: 500;
+    fontFamily: 'SpartanMedium';
+    color: ${currentTheme.secondaryFontColor};
+`;
+
 export const MainHeading = styled(Text) `
     fontSize: ${RFValue(25, windowHeight)}px;
     fontWeight: 700;
@@ -262,4 +269,8 @@ export const GamePageImageBackground = styled(ImageBackground) `
     justifyContent: center;
     paddingTop: ${windowHeight/20}px;
     paddingBottom: ${windowHeight/20}px;
+`;
+
+export const ContentRow = styled(View) `
+    flexDirection: row;
 `;

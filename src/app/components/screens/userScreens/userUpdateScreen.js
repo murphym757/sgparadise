@@ -15,9 +15,11 @@ import {
   UserValidationsContext,
   EmailValidationsContext,
   MainFont,
+  MainSecondaryFont,
   MainSubFont,
   Container,
   useIconCreator,
+  ContentRow
 } from 'index';
 
 export default function UpdateUserScreen({navigation}) {
@@ -713,39 +715,36 @@ export default function UpdateUserScreen({navigation}) {
     )
   }
 
+    function customButtonFunctionYesNo(buttonType, buttonFunction, buttonName) {
+      return (
+        <TouchableButton 
+            style={{
+              backgroundColor: buttonType ? colors.secondaryFontColor : colors.secondaryColor
+            }}
+            disabled={isLoading}
+            onPress={() => {buttonFunction()}}>
+            <TouchableButtonFont style={{color: buttonType ? colors.primaryFontColor : colors.primaryFontColor}}>
+              {buttonName}
+            </TouchableButtonFont>
+          </TouchableButton>
+      )
+    }
 
     function buttonSet(newEmail) {
       return (
-        <View style={{ flexDirection: 'row' }}>
-          <MainFont>Are you sure? {newEmail}</MainFont>
-          <TouchableOpacity
-            onPress={handleYesPress}
-            style={{
-              backgroundColor: yesPressed ? 'green' : 'white',
-              padding: 10,
-              borderRadius: 5,
-              borderWidth: 1,
-              borderColor: 'green',
-              marginRight: 10,
-            }}
-          >
-            <Text style={{ color: yesPressed ? 'white' : 'green' }}>Yes</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={handleNoPress}
-            style={{
-              backgroundColor: noPressed ? 'red' : 'white',
-              padding: 10,
-              borderRadius: 5,
-              borderWidth: 1,
-              borderColor: 'red',
-            }}
-          >
-            <Text style={{ color: noPressed ? 'white' : 'red' }}>No</Text>
-          </TouchableOpacity>
+        <View>
+          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+            <ContentRow>
+              <MainFont>Is this the new email you would like to use?:</MainFont>
+            </ContentRow>
+            <ContentRow style={{ paddingVertical: 25 }}>
+              <MainSecondaryFont>{newEmail}</MainSecondaryFont>
+            </ContentRow>
+          </View>
+          {customButtonFunctionYesNo(yesPressed, handleYesPress, 'Yes')}
+          {customButtonFunctionYesNo(noPressed, handleNoPress, 'No')}
         </View>
-      );
-    
+      ); 
     }
 
 

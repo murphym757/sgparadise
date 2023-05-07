@@ -34,9 +34,9 @@ function row1LinkRelative(linkFunction, linkColor, linkFont) {
   function editPersonalRow1(passingSectionData) {
     return (
       <View style={{paddingBottom: passingSectionData.rowPadding}}>
-        <View style={{flexDirection: 'row'}}>
+        <ContentRow>
           {row1LinkRelative(passingSectionData.cancelUpdate, passingSectionData.colors.primaryFontColor, 'Cancel')}
-        </View>
+        </ContentRow>
       </View>
     )
   }
@@ -44,9 +44,9 @@ function row1LinkRelative(linkFunction, linkColor, linkFont) {
   function editPersonalRow2(passingSectionData) {
     return (
       <View style={{paddingBottom: passingSectionData.rowPadding}}>
-        <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+        <ContentRow style={{justifyContent: 'center', alignItems: 'center'}}>
           {row1LinkAbsolute(passingSectionData.hasFunctionTrue, null, passingSectionData.colors.primaryFontColor, 'User Image Goes Here')}
-        </View>
+        </ContentRow>
       </View>
     )
   }
@@ -90,9 +90,9 @@ function row1LinkRelative(linkFunction, linkColor, linkFont) {
   function editPersonalRow6(passingSectionData) {
     return (
       <View style={{paddingBottom: passingSectionData.rowPadding}}>
-        <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+        <ContentRow style={{justifyContent: 'center', alignItems: 'center'}}>
           {row1LinkAbsolute(passingSectionData.hasFunctionTrue, passingSectionData.updateProcess, passingSectionData.colors.secondaryColor, 'Update')}
-        </View>
+        </ContentRow>
       </View>
     )
   }
