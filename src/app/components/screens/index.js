@@ -178,6 +178,9 @@
         //Email Validations
         export { EmailValidationsContext } from 'user/userEmailValidationContext'
 
+        //Password Validations
+        export { PasswordValidationsContext } from 'user/userPasswordValidationContext'
+
     // Modal
 
     export { ModalButton } from 'auth/sgModal'

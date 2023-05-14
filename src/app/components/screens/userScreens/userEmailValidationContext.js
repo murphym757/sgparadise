@@ -19,17 +19,6 @@ function UserEmailValidation() {
     )
 }
 
-function EmailFirebaseChangeButton(props) {
-  const colors = useContext(CurrentThemeContext)
-  return (
-    <TouchableButton style={{backgroundColor:colors.secondaryColor }}
-      disabled={props.isLoading}
-      onPress={() => {props.validationFunc, props.verifyButtonConfirmPressed, props.verifyButtonEmailPressed, props.verifyButtonPasswordPressed}}>
-      <TouchableButtonFont>{props.buttonTitle}</TouchableButtonFont>
-    </TouchableButton>
-  )
-}
-
 function ChangeEmailFunction(props) {
   const buttonStatement = 'Please enter your new email address'
   return (
@@ -44,7 +33,6 @@ function ChangeEmailFunction(props) {
       </View>
   )
 }
-
 
 //* This is the function is used to reauthenticate the user via checking email and password (universal such be on other screens)
 function emailValidationPromise(passingEmailData) {
@@ -109,8 +97,7 @@ function validationNewEmailFunction(passingEmailData) {
   Promise.all([newEmailValidationPromise(passingEmailData)]).then(() => {
     passingEmailData.setErrorNewEmailCheck(passingEmailData.newEmailValidationErrors)
     changeUserEmail(passingEmailData)
-  })
-  .catch((err) => {
+  }).catch((err) => {
   }).finally(() => {
     console.log( "The Promise is settled, meaning it has been resolved or rejectedss.")
   });
@@ -147,9 +134,8 @@ function validationEmailExistenceFunction(passingEmailData) {
 
 
 const emailValidations = {
-  UserEmailValidation, 
-  EmailFirebaseChangeButton, 
-  ChangeEmailFunction, 
+  UserEmailValidation,
+  ChangeEmailFunction,
   emailValidationPromise,
   validationNewEmailFunction,
   validationEmailExistenceFunction,

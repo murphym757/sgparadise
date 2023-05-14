@@ -136,7 +136,7 @@ export function AuthProvider({ children }) {
         })
     }
     
-    function updatePasswordAuth(password) {
+    async function updatePasswordAuth(password) {
         // Get the current user
         const auth = getAuth();
         const user = auth.currentUser;
@@ -708,32 +708,31 @@ export function AuthProvider({ children }) {
             return errors;
         }
 
-        function validateNewEmail(email, currentUser, emailExist) {
+        function validateNewEmail(newEmail, currentEmail, emailExist) {
             const errors = []
-            const emailVar = email
+            const emailVar = newEmail
             console.log("🚀 ~ file: authContext.js:716 ~ validateNewEmail ~ emailVar:", emailVar)
             const currentUserVar = currentUser
             console.log("🚀 ~ file: authContext.js:718 ~ validateNewEmail ~ currentUserVar:", currentUserVar)
             const emailExistVar = emailExist
             console.log("🚀 ~ file: authContext.js:720 ~ validateNewEmail ~ emailExistVar:", emailExistVar)
           
-            if (!email) {
+            if (!newEmail) {
               errors.push('Email is required');
             }
           
-            if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+            if (!newEmail.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
               errors.push('Invalid email format');
             } 
 
-            if (email === currentUser.email) {
+            if (newEmail === currentEmail) {
                 errors.push('This is your current email');
             }
 
-            if (emailExist === true && email !== currentUser.email)  {
+            if (emailExist === true && newEmail !== currentEmail)  {
                 errors.push('This email is already in use')
             } 
         
-          
             return errors;
         }
           
@@ -751,7 +750,7 @@ export function AuthProvider({ children }) {
     */
         function validatePassword(password) {
             const errors = [];
-          
+            
             if (password.length < 8) {
               errors.push('Password must be at least 8 characters long');
             }
@@ -769,6 +768,36 @@ export function AuthProvider({ children }) {
             }
           
             if (!password.match(/[!@#$%^&*()_+]/)) {
+              errors.push('Password must contain at least one special character');
+            }
+          
+            return errors;
+        }
+
+        function validateNewPassword(newPassword, confirmNewPassword) {
+            const errors = [];
+            
+            if (!newPassword || !confirmNewPassword) {
+                errors.push('Password is required');
+            }
+
+            if (newPassword.length < 8 || confirmNewPassword.length < 8) {
+              errors.push('Password must be at least 8 characters long');
+            }
+          
+            if (!newPassword.match(/[a-z]/) || !confirmNewPassword.match(/[a-z]/)) {
+              errors.push('Password must contain at least one lowercase letter');
+            }
+          
+            if (!newPassword.match(/[A-Z]/) || !confirmNewPassword.match(/[A-Z]/)) {
+              errors.push('Password must contain at least one uppercase letter');
+            }
+          
+            if (!newPassword.match(/\d/) || !confirmNewPassword.match(/\d/)) {
+              errors.push('Password must contain at least one digit');
+            }
+          
+            if (!newPassword.match(/[!@#$%^&*()_+]/) || !confirmNewPassword.match(/[!@#$%^&*()_+]/)) {
               errors.push('Password must contain at least one special character');
             }
           
@@ -857,6 +886,7 @@ export function AuthProvider({ children }) {
         validateEmail,
         validateNewEmail,
         validatePassword,
+        validateNewPassword
     }
 
     return (

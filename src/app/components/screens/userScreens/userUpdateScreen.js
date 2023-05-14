@@ -14,6 +14,7 @@ import {
   UserScreenContext,
   UserValidationsContext,
   EmailValidationsContext,
+  PasswordValidationsContext,
   MainFont,
   MainSecondaryFont,
   MainSubFont,
@@ -41,36 +42,40 @@ export default function UpdateUserScreen({navigation}) {
       updateUsernameAuth,
       validateEmail,
       validateNewEmail,
-      validatePassword
+      validatePassword,
+      validateNewPassword
     } = useAuth()
     const { 
       sgIconCreator,
       sgColorPicker
       } = useIconCreator()
-      const {
-        row1LinkRelative,
-        row1LinkAbsolute,
-        editPersonalRow1,
-        editPersonalRow2,
-        editPersonalRow3,
-        editPersonalRow4,
-        editPersonalRow5,
-        editPersonalRow6,
-        customSGFormField      
-      } = useContext(UserScreenContext)
-      const {
-        ChangeFunction,
-        ChangeFirebaseIdentityButton
-      } = useContext(UserValidationsContext)
-      const {
-        UserEmailValidation,
-        EmailFirebaseChangeButton,
-        ChangeEmailFunction,
-        emailValidationPromise,
-        changeUserEmail,
-        validationNewEmailFunction,
-        validationEmailExistenceFunction
-      } = useContext(EmailValidationsContext)
+    const {
+      row1LinkRelative,
+      row1LinkAbsolute,
+      editPersonalRow1,
+      editPersonalRow2,
+      editPersonalRow3,
+      editPersonalRow4,
+      editPersonalRow5,
+      editPersonalRow6,
+      customSGFormField      
+    } = useContext(UserScreenContext)
+    const {
+      ChangeFunction,
+      ChangeFirebaseIdentityButton
+    } = useContext(UserValidationsContext)
+    const {
+      UserEmailValidation,
+      ChangeEmailFunction,
+      emailValidationPromise,
+      changeUserEmail,
+      validationNewEmailFunction,
+      validationEmailExistenceFunction
+    } = useContext(EmailValidationsContext)
+    const {
+      ChangePasswordFunction,
+      validationPasswordFunction
+    } = useContext(PasswordValidationsContext)
     const colors = useContext(CurrentThemeContext)
     const colorsPassThrough = colors
     const [ isLoading, setIsLoading] = useState(true)
@@ -82,7 +87,9 @@ export default function UpdateUserScreen({navigation}) {
     const [newEmail, setNewEmail] = useState('')
     console.log("🚀 ~ file: userUpdateScreen.js:56 ~ UpdateUserScreen ~ newEmail:", newEmail)
     const [newPassword, setNewPassword] = useState('')
+    console.log("🚀 ~ file: userUpdateScreen.js:90 ~ UpdateUserScreen ~ newPassword:", newPassword)
     const [confirmNewPassword, setConfirmNewPassword] = useState('') 
+    console.log("🚀 ~ file: userUpdateScreen.js:92 ~ UpdateUserScreen ~ confirmNewPassword:", confirmNewPassword)
     const [message, setMessage] = useState('')
     const [error, setError] = useState('')
     const [errorNewEmailCheck, setErrorNewEmailCheck] = useState(null)
@@ -91,8 +98,10 @@ export default function UpdateUserScreen({navigation}) {
     console.log("🚀 ~ file: userUpdateScreen.js:72 ~ UpdateUserScreen ~ errorEmailCheck:", errorEmailCheck)
     const [emailCheckStatus, setEmailCheckStatus] = useState('fulfilled')
     const [errorPasswordCheck, setErrorPasswordCheck] = useState(null)
-    
+    const [errorNewPasswordCheck, setErrorNewPasswordCheck] = useState([])
+    console.log("🚀 ~ file: userUpdateScreen.js:99 ~ UpdateUserScreen ~ errorNewPasswordCheck:", errorNewPasswordCheck)
     const [passwordCheckStatus, setPasswordCheckStatus] = useState('fulfilled')
+    console.log("🚀 ~ file: userUpdateScreen.js:104 ~ UpdateUserScreen ~ passwordCheckStatus:", passwordCheckStatus)
     const [errorPasswordAuthCheck, setErrorPasswordAuthCheck] = useState([])
     const [passwordAuthCheckStatus, setPasswordAuthCheckStatus] = useState('fulfilled')
     const statusChecks = [emailCheckStatus, passwordCheckStatus, passwordAuthCheckStatus]
@@ -119,8 +128,11 @@ export default function UpdateUserScreen({navigation}) {
     //Validation Errors
     const emailValidationErrors = validateEmail(email, currentUser)
     const [errorCode, setErrorCode] = useState(null)
-    const newEmailValidationErrors = validateNewEmail(newEmail, currentUser, checkEmailExistence) //This is where you should look for the error code.....it's working now
+    const newEmailValidationErrors = validateNewEmail(newEmail, email, checkEmailExistence) //This is where you should look for the error code.....it's working now
+    console.log("🚀 ~ file: userUpdateScreen.js:127 ~ UpdateUserScreen ~ newEmailValidationErrors:", newEmailValidationErrors)
     const passwordValidationErrors = validatePassword(password)
+    const newPasswordValidationErrors = validateNewPassword(newPassword, confirmNewPassword)
+    console.log("🚀 ~ file: userUpdateScreen.js:135 ~ UpdateUserScreen ~ newPasswordValidationErrors:", newPasswordValidationErrors)
 
 
     let p = new Promise((resolve, reject) => {
@@ -311,6 +323,22 @@ export default function UpdateUserScreen({navigation}) {
           />
         )
       }
+      if (errorOwner === 'newPassword') {
+        return (
+          <FlatList
+            showsHorizontalScrollIndicator={false}
+            scrollEnabled={false}
+            data={errorNewPasswordCheck}
+            keyboardShouldPersistTaps="always"
+            keyExtractor={item => item.id}
+            renderItem={({ item }) => (
+              <View>
+                <MainFont>{item}</MainFont>
+              </View>
+            )}
+          />
+        )
+      }
     }
 
     // Goes on the "main section" update screen
@@ -329,6 +357,12 @@ export default function UpdateUserScreen({navigation}) {
         </View>
         }
         if (errorOwner === 'password' && errorPasswordAuthCheck.length !== 0) {
+          return <View>
+            <MainSubFont>{errorOwner[0].toUpperCase() + errorOwner.substring(1)}: </MainSubFont>
+            {errorMessageData(errorOwner, errorMessage)}
+          </View>
+        }
+        if (errorOwner === 'newPassword' && errorNewPasswordCheck.length !== 0) {
           return <View>
             <MainSubFont>{errorOwner[0].toUpperCase() + errorOwner.substring(1)}: </MainSubFont>
             {errorMessageData(errorOwner, errorMessage)}
@@ -431,19 +465,6 @@ export default function UpdateUserScreen({navigation}) {
     });
   }
   //*-------------------*/
-
-
-  function changePasswordFunction() {
-    return (
-      <View>
-        <MainFont>Password Statement</MainFont>
-        <MainFont>Password Text Field</MainFont>
-        <MainFont>Password Errors</MainFont>
-        <MainFont>Password Confirm Button</MainFont>
-      </View>
-    )
-  }
-
     // Form Field Functions  
       // Update Form
       function customSGFormFieldContainer(placeholder, currentState, errorMessageVariable, isSensitiveData, setNewState) {
@@ -476,15 +497,15 @@ export default function UpdateUserScreen({navigation}) {
         )
       }
       
-      function customSGFormFieldPassword() {
+      function customSGFormFieldNewPassword() {
         return (
-          customSGFormFieldContainer('Password', newPassword, null, true, setNewPassword)
+          customSGFormFieldContainer('Password', newPassword, errorMessageData(errorNewPasswordCheck), true, setNewPassword)
         )
       }
       
-      function customSGFormFieldPasswordConfirm() {
+      function customSGFormFieldNewPasswordConfirm() {
         return (
-          customSGFormFieldContainer('Confirm Password', confirmNewPassword, errorMessageDataMain(errorPasswordCheck, 'password', errorPasswordCheck), true, setConfirmNewPassword)
+          customSGFormFieldContainer('Confirm Password', confirmNewPassword, errorMessageData(errorNewPasswordCheck), true, setConfirmNewPassword)
         )
       }
       
@@ -616,8 +637,7 @@ export default function UpdateUserScreen({navigation}) {
       )
     }
 
-    function changeFirebaseIdentityButton(changeType) {
-      const buttonTitle = 'Verify Identity'
+    function changeFirebaseIdentityButton(changeType, buttonTitle) {
       const passingEmailData = {
         updateUserEmailFirestore,
         newEmail,
@@ -632,6 +652,16 @@ export default function UpdateUserScreen({navigation}) {
         setErrorEmailCheck,
         setErrorNewEmailCheck
       }
+
+      const passingPasswordData = {
+        newPassword,
+        confirmNewPassword,
+        newPasswordValidationErrors,
+        setPasswordCheckStatus,
+        setErrorNewPasswordCheck,
+        navigation,
+        changeUserPassword
+      }
       return (
         changeType === 'email'
           ? <TouchableButton style={{backgroundColor: colors.secondaryColor }}
@@ -641,7 +671,7 @@ export default function UpdateUserScreen({navigation}) {
             </TouchableButton>
           : <TouchableButton style={{backgroundColor: colors.secondaryColor }}
               disabled={isLoading}
-              onPress={() => {console.log('password'), setVerifyPasswordButtonPressed(true), setVerifyEmailButtonPressed(false)}}>
+              onPress={() => {validationPasswordFunction(passingPasswordData), setVerifyPasswordButtonPressed(true), setVerifyEmailButtonPressed(false), setVerifyConfirmationButtonPressed(false)}}>
               <TouchableButtonFont>{buttonTitle}</TouchableButtonFont>
             </TouchableButton>
       )
@@ -651,15 +681,44 @@ export default function UpdateUserScreen({navigation}) {
     function emailChangeSection() {
       return (
       verifyConfirmationButtonPressed === true
-      ? buttonSet(newEmail)
+      ? buttonSetEmail(newEmail)
       : <View>
         {reauthenticationConfirmation == true
           ? <ChangeEmailFunction
               functionType={'email'} 
-              functionButton={changeFirebaseIdentityButton('email')}
+              functionButton={changeFirebaseIdentityButton('email', 'Verify Identity')}
               emailTextField={customSGFormFieldNewEmail()}
               errorEmailCheck={errorNewEmailCheck}
               errorMessageDataMainEmail={errorMessageDataMain(errorNewEmailCheck, 'newEmail', errorNewEmailCheck)}
+            />
+          : <ChangeFunction 
+              functionType={'email'} 
+              functionButton={verifyFirebaseIdentityButton()} 
+              emailTextField={customSGFormFieldEmailReEntry()} 
+              passwordTextField={customSGFormFieldPasswordReEntry()}
+              errorEmailCheck={errorEmailCheck}
+              errorMessageDataMainEmail={errorMessageDataMain(errorEmailCheck, 'email', errorEmailCheck)}
+              errorPasswordAuthCheck={errorPasswordAuthCheck}
+              errorMessageDataMainPassword={errorMessageDataMain(errorPasswordAuthCheck, 'password', errorPasswordAuthCheck)}
+            />
+        }
+      </View>
+      )
+    }
+
+    function passwordChangeSection() {
+      return (
+      verifyConfirmationButtonPressed === true
+      ? buttonSetEmail(newEmail)
+      : <View>
+        {reauthenticationConfirmation == true
+          ? <ChangePasswordFunction
+              functionType={'password'} 
+              functionButton={changeFirebaseIdentityButton('password', 'Change Password')}
+              passwordTextField={customSGFormFieldNewPassword()}
+              confirmPasswordTextField={customSGFormFieldNewPasswordConfirm()}
+              errorPasswordCheck={errorNewPasswordCheck}
+              errorMessageDataMainPassword={errorMessageDataMain(errorNewPasswordCheck, 'newPassword', errorNewPasswordCheck)}
             />
           : <ChangeFunction 
               functionType={'email'} 
@@ -693,7 +752,7 @@ export default function UpdateUserScreen({navigation}) {
     return (
       setYesPressed(true),
       setNoPressed(false),
-      checkEmailExistence === true || newEmail === currentUser.email || newEmailValidationErrors.length > 0
+      checkEmailExistence === true || newEmail === email || newEmailValidationErrors.length > 0
       ? setVerifyConfirmationButtonPressed(false)
       : navigation.goBack() //? change to go back to profile page
     ),
@@ -730,7 +789,7 @@ export default function UpdateUserScreen({navigation}) {
       )
     }
 
-    function buttonSet(newEmail) {
+    function buttonSetEmail(newEmail) {
       return (
         <View>
           <View style={{ justifyContent: 'center', alignItems: 'center' }}>
@@ -790,7 +849,7 @@ export default function UpdateUserScreen({navigation}) {
             ? <View>
                 {changeEmailButtonPressed == true
                   ? emailChangeSection() //Email Button
-                  : changeFunction('password', verifyFirebaseIdentityButton(), customSGFormFieldEmailReEntry()) //Password Button
+                  : passwordChangeSection() //Password Button
                 }
             </View>
             : changeSensitiveData()
