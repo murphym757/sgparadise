@@ -33,6 +33,7 @@ function row1LinkRelative(linkFunction, linkColor, linkFont) {
   }
 
   function editPersonalRow1(passingSectionData) {
+    //! Change "Cancel" button to "Back" button
     return (
       <View style={{paddingBottom: passingSectionData.rowPadding}}>
         <ContentRow>
@@ -65,10 +66,11 @@ function row1LinkRelative(linkFunction, linkColor, linkFont) {
   }
 
   function editPersonalRow4(passingSectionData) {
+    //! Add the buttons from the "Personal information settings" screen to this screen
     return (
       <View style={{paddingBottom: passingSectionData.rowPadding}}>
         <View>
-          {passingSectionData.customSGFormFieldUsername()}
+          {passingSectionData.customSGFormFieldUsername}
           {passingSectionData.errorEmailCheck !== null ? passingSectionData.errorMessageDataMain(passingSectionData.errorEmailCheck, 'email', passingSectionData.errorEmailCheck) : null}
           {passingSectionData.errorPasswordAuthCheck.length !== 0 ? passingSectionData.errorMessageDataMain(passingSectionData.errorPasswordAuthCheck, 'password', passingSectionData.errorPasswordAuthCheck) : null}
           </View>
@@ -89,6 +91,7 @@ function row1LinkRelative(linkFunction, linkColor, linkFont) {
   }
 
   function editPersonalRow6(passingSectionData) {
+    //! Remove "Update" link from page
     return (
       <View style={{paddingBottom: passingSectionData.rowPadding}}>
         <ContentRow style={{justifyContent: 'center', alignItems: 'center'}}>
