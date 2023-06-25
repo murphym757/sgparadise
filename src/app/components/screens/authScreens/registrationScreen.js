@@ -1,70 +1,61 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { View, SafeAreaView } from 'react-native'
+import { SafeAreaView } from 'react-native'
 import { 
+  Container,
+  RegistrationValidationsContext,
   CurrentThemeContext,
-  CustomInputField,
-  faTimes,
-  FontAwesomeIcon, 
-  FooterFont,
-  FooterLink,
-  FooterView,
-  TouchableButton,
-  TouchableButtonFont,
+  FormFieldsContext,
   useAuth
 } from 'index'
 
 export default function RegistrationScreen({navigation}) {
-  const { sgDB, signUp, currentUser, failureAlert } = useAuth()
-  const [isLoading, setIsLoading] = useState(true)
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
-  const [message, setMessage] = useState('')
-  const [error, setError] = useState('')
-  const appIcon = '../../../../../assets/images/icon.png'
-  const colors = useContext(CurrentThemeContext)
+  //* Context --- (Registration Screen)
+    const colors = useContext(CurrentThemeContext)
+    const { signUp, validateRegisterEmail, validateRegisterPassword } = useAuth()
+    const { validationNewUserFunction } = useContext(RegistrationValidationsContext)  
+    const { 
+      RegistrationFormFunction, 
+      customSGFormFieldContainer, 
+      errorMessageDataMain, 
+      firebaseAuthUserDataFunctionButton 
+    } = useContext(FormFieldsContext)
 
-    function onFooterLinkPress() {
-        navigation.navigate('Login')
+  //* State --- (Registration Screen)
+    const [isLoading, setIsLoading] = useState(true)
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [confirmPassword, setConfirmPassword] = useState('')
+    const [newUserErrorEmailCheck, setNewUserErrorEmailCheck] = useState([])
+    const [checkEmailExistence, setCheckEmailExistence] = useState(false)
+    const [newUserErrorPasswordCheck, setNewUserErrorPasswordCheck] = useState([])
+    const [passwordCheckStatus, setPasswordCheckStatus] = useState('fulfilled')
+
+  //* Validation Errors --- (Registration Screen)
+    const newUserEmailValidationErrors = validateRegisterEmail(email, checkEmailExistence)
+    const newUserPasswordValidationErrors = validateRegisterPassword(password, confirmPassword)
+
+  //* Variables to passed as props --- (Registration Screen)
+    const passingUserData = {
+      checkEmailExistence,
+      confirmPassword,
+      dataCollection: 'registerUser',
+      email,
+      newUserEmailValidationErrors,
+      newUserPasswordValidationErrors,
+      password,
+      setNewUserErrorEmailCheck,
+      setNewUserErrorPasswordCheck,
+      setPasswordCheckStatus,
+      setCheckEmailExistence,
+      signUp,
+      validationNewUserFunction
     }
 
-    async function onRegisterPress() {
-      if (password !== confirmPassword) {
-          alert("Passwords do not match.")
-          return
-      }
-
-      try {
-        setError('')
-        setIsLoading(true)
-        await signUp(email, password)
-          .then((res) => {
-            const uid = res.user.uid
-            const data = {
-              id: uid,
-              email,
-            }
-            sgDB.collection('users')
-              .doc(uid)
-              .set(data)
-              .then(() => {
-                  navigation.navigate('Home')
-              })
-              .catch((err) => {
-                  alert(err)
-              })
-        })
-        .catch((err) => {
-          setError(`${err}`)
-        })
-      } catch {
-        setError('Failed to create an account')
-      }
-      setIsLoading(false)
-    }
-
-    function failureAlertMessage(error) {
-      return failureAlert(error)
+  //* Functions --- (Registration Screen)
+    function onFooterLinkPressLogin() {
+      navigation.navigate('Login')
+      setNewUserErrorEmailCheck([])
+      setNewUserErrorPasswordCheck([])
     }
 
     function pageLoader() {
@@ -72,96 +63,30 @@ export default function RegistrationScreen({navigation}) {
         setIsLoading(false)
       }, 2500)
     }
-  
-    useEffect(() => {
-      pageLoader()
-    })
 
-    return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: colors.primaryColor }}>
-        <View style={{ flex: 1 }}>
-          <View style={{ paddingLeft: 20 }}>
-            <FontAwesomeIcon 
-              icon={ faTimes } color={colors.primaryFontColor} size={50} 
-              onPress={() => navigation.navigate('Main', { screen: 'SgUserStackNavbar' })}
-            />
-          </View>
-            <View>
-              {error !== ''
-                ? failureAlertMessage(error)
-                : <View></View>
-              }
-            </View>
-            <CustomInputField
-                placeholder='E-mail'
-                placeholderTextColor={colors.primaryColor}
-                onChangeText={(text) => setEmail(text)}
-                value={email}
-                color={colors.primaryColor}
-                underlineColorAndroid="transparent"
-                autoCapitalize="none"
-            />
-            <CustomInputField
-                placeholderTextColor={colors.primaryColor}
-                secureTextEntry
-                placeholder='Password'
-                onChangeText={(text) => setPassword(text)}
-                value={password}
-                color={colors.primaryColor}
-                underlineColorAndroid="transparent"
-                autoCapitalize="none"
-            />
-            <CustomInputField
-                placeholderTextColor={colors.primaryColor}
-                secureTextEntry
-                placeholder='Confirm Password'
-                onChangeText={(text) => setConfirmPassword(text)}
-                value={confirmPassword}
-                color={colors.primaryColor}
-                underlineColorAndroid="transparent"
-                autoCapitalize="none"
-            />
-            <TouchableButton 
-                disabled={isLoading}
-                onPress={() => onRegisterPress()}>
-                <TouchableButtonFont>Create account</TouchableButtonFont>
-            </TouchableButton>
-            <FooterView>
-                <FooterFont>Already got an account? <FooterLink onPress={onFooterLinkPress}>Log In</FooterLink></FooterFont>
-            </FooterView>
-        </View>
-      </SafeAreaView>
-    )
-}
-
-/*
-function onRegisterPress() {
-  if (password !== confirmPassword) {
-      alert("Passwords don't match.")
-      return
-  }
-  firebase
-      .auth()
-      .createUserWithEmailAndPassword(email, password)
-      .then((response) => {
-          const uid = response.user.uid
-          const data = {
-              id: uid,
-              email,
-              fullName,
-          }
-          const usersRef = firebase.firestore().collection('users')
-          usersRef
-              .doc(uid)
-              .set(data)
-              .then(() => {
-                  navigation.navigate('Home', {user: data})
-              })
-              .catch((error) => {
-                  alert(error)
-              })
-      })
-      .catch((error) => {
-          alert(error)
+  useEffect(() => {
+    pageLoader()
   })
-} */
+
+  return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.primaryColor }}>
+      <Container style={{ flex: 1, justifyContent: 'center' }}>
+        <RegistrationFormFunction 
+          registerType={'signUp'} 
+          registerUser={true}
+          functionButton={firebaseAuthUserDataFunctionButton('signUp', 'Create Account', passingUserData, isLoading, colors)}
+          emailTextField={customSGFormFieldContainer('Email', email, false, setEmail, colors)} 
+          passwordTextField={customSGFormFieldContainer('Password', password, true, setPassword, colors)}
+          confirmPasswordTextField={customSGFormFieldContainer('Confirm Password', confirmPassword, true, setConfirmPassword, colors)}
+          errorMessageDataRegisterEmail={errorMessageDataMain(newUserErrorEmailCheck, 'email')}
+          errorMessageDataRegisterPassword={errorMessageDataMain(newUserErrorPasswordCheck, 'password')}
+          userErrorEmailCheck={newUserErrorEmailCheck}
+          userErrorPasswordCheck={newUserErrorPasswordCheck}
+          colors
+          isLoading
+          loginLink={() => onFooterLinkPressLogin(navigation)}
+        />
+      </Container>
+    </SafeAreaView>
+  )
+}

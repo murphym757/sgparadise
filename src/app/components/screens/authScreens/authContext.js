@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { View } from 'react-native'
 import { auth, sgDB, sgImageStorage } from 'server/config/config'
+import { bannedWords } from 'server/sgProfanityFilter'
 import { getFirestore, collection, getDocs, setDoc, addDoc, doc, updateDoc, serverTimestamp, deleteField } from "firebase/firestore";
 import { getStorage } from "firebase/storage"; 
 import { 
@@ -62,29 +63,27 @@ export function AuthProvider({ children }) {
     const sgSatIGDB = '32'
     const errorBool = true
 
-    function signUp(email, password) {
+    function signUp(email, password, setCheckEmailExistence) {
         const auth = getAuth();
         return createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-            // Signed in 
-            const user = userCredential.user;
+            const user = userCredential.user
             addUserDataUsers(user.uid, email)
-            // ...
         })
         .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            // ..
+            const errorCode = error.code
+            if (errorCode === 'auth/email-already-in-use') return (
+                setCheckEmailExistence(true)
+            )
         });
-      
     }
 
     function deleteAccountAuth() {
         return auth.currentUser.delete().then(() => {
             navigation.navigate('Home')
-          }).catch((err) => {
+        }).catch((err) => {
             setError(`${err}`)
-          })
+        })
     }
 
     async function deleteAccountDb(userId) {
@@ -95,33 +94,38 @@ export function AuthProvider({ children }) {
         })
     }
 
-    function logIn(email, password) {
+    function logIn(email, password, setCheckUserExistence, setCheckPasswordExistence) {
         const auth = getAuth();
-        return signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            // Signed in 
-            const user = userCredential.user;
-            // ...
-        })
-        .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-        });
+            return signInWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                // Signed in 
+                    const user = userCredential.user
+                //
+            })
+            .catch((error) => {
+                const errorCode = error.code
+                if (errorCode === 'auth/user-not-found') return (
+                    setCheckUserExistence(false)
+                )
+                if (errorCode === 'auth/wrong-password') return (
+                    setCheckPasswordExistence(false)
+                )
+            });
     }
 
     function logOut() {
         return auth.signOut().then(() => {
             navigation.navigate('Home')
-          }).catch((err) => {
+        }).catch((err) => {
             setError(`${err}`)
-          })
+        })
     }
 
     function resetPassword(email) {
         return auth.sendPasswordResetEmail(email)
     }
 
-    function updateEmailAuth(email, passedError) {
+    function updateEmailAuth(email, setCheckEmailExistence) {
         const auth = getAuth();
         const user = auth.currentUser;
         return updateEmail(auth.currentUser, email).then(() => {
@@ -131,7 +135,7 @@ export function AuthProvider({ children }) {
         }).catch((error) => {
             const errorCode = error.code
             if (errorCode === 'auth/email-already-in-use') return (
-                error.push('The email address is already in use by another account.')
+                setCheckEmailExistence(true)
             )
         })
     }
@@ -216,20 +220,19 @@ export function AuthProvider({ children }) {
     function sendVerificationCode(email) {
         const auth = getAuth();
         sendPasswordResetEmail(auth, email)
-          .then(() => {
+        .then(() => {
             // Password reset email sent!
             // ..
             console.log('Verification code sent successfully');
-          })
-          .catch((error) => {
+        })
+        .catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
             console.log('Failed to send verification code: ', error);
             console.log(errorCode)
             console.log(errorMessage)
-          });
-      };
-      
+        })
+    }
 
 
     async function displayData(collectionName) {
@@ -478,7 +481,7 @@ export function AuthProvider({ children }) {
 
     // Gets General Game Data
     async function getGameData(collectionName, consoleName, gamesCollection, gameName) {
-     sgDB.collection(collectionName).doc(consoleName).collection(gamesCollection).doc(gameName).get()
+        sgDB.collection(collectionName).doc(consoleName).collection(gamesCollection).doc(gameName).get()
         .then((doc) => {
             if (doc.exists) {
                 setViewCountFirebase(doc.data().views)
@@ -577,9 +580,9 @@ export function AuthProvider({ children }) {
             })
         return () => subscriber()
     }
-     /*-----------------*/
+    /*-----------------*/
      // Returns the collection of console names from firebase
-     async function sgFirebaseGenreCollection(collectiveGameData){
+    async function sgFirebaseGenreCollection(collectiveGameData){
         const subscriber = sgDB
         .collection(collectiveGameData.collectionName)
         .doc(collectiveGameData.tagDoc)
@@ -599,8 +602,8 @@ export function AuthProvider({ children }) {
             collectiveGameData.setupGenreData(genres)
         })
     return () => subscriber()
-     }
-      /*-----------------*/
+    }
+    /*-----------------*/
     ///Buttons for navigating through uploading games process
     function toNewSection(screenName, navigationPass) {
         navigationPass.navigate(screenName)
@@ -622,13 +625,13 @@ export function AuthProvider({ children }) {
     function successAlert(message) {
         return <CustomSuccessAlert>
         <CustomSuccessAlertFont>{message}</CustomSuccessAlertFont>
-      </CustomSuccessAlert>
+    </CustomSuccessAlert>
     }
 
     function failureAlert(error) {
         return <CustomFailureAlert>
         <CustomFailureAlertFont>{error}</CustomFailureAlertFont>
-      </CustomFailureAlert>
+    </CustomFailureAlert>
     }
 
     function unixTimestampConverter(item) {
@@ -676,7 +679,7 @@ export function AuthProvider({ children }) {
         )
     }
     /*----------------------------------------------*/
-    // Validation for email and password
+    // Validation for email, password, and username
 
     //Email Validation
     /*
@@ -687,35 +690,76 @@ export function AuthProvider({ children }) {
         Followed by a dot
         Ends with one or more characters that are not whitespace or @
     */
-        function validateEmail(email, currentUser) {
+
+        function validateForgotPasswordEmail(email, emailPassed) {
             const errors = [];
-          
+
             if (!email) {
-              errors.push('Email is required');
+                errors.push('Email is required');
             }
-          
+
             if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
-              errors.push('Invalid email format');
-            } else {
-                if (email !== currentUser.email) {
-                    errors.push("Email does not match sgParadise's records" + " (" + email + ")");
-                }
+                errors.push('Invalid email format');
             }
-            if (email === currentUser.email) {
-                errors.push('Success!');
+            
+            if (emailPassed === true) {
+                errors.push('Verification email sent successfully');
             }
-          
+
             return errors;
         }
+
+        function validateRegisterEmail(email, emailExist) {
+            const errors = [];
+
+            if (!email) {
+                errors.push('Email is required');
+            }
+
+            if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+                errors.push('Invalid email format');
+            }
+
+            if (emailExist === true)  {
+                errors.push('This email is already in use')
+            } 
+
+            return errors;
+        }
+
+        //* Used for updating email (opposed to actually logging the user in)
+        function validateLoginEmail(email, userExist, passwordExist) {
+            const errors = [];
+        
+            if (!email) {
+                errors.push('Email is required');
+            }
+        
+            if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+                errors.push('Invalid email format');
+            } 
+            if (userExist === false)  {
+                errors.push('User does not exist')
+            } 
+            if (passwordExist === false)  {
+                errors.push('Password does not match our records')
+            } 
+
+            /*
+                if (userExist === true && passwordExist === null)  {
+                    errors.push('Password required')
+                } 
+            */
+        
+            return errors;
+        }
+        //* ----------------------------//
 
         function validateNewEmail(newEmail, currentEmail, emailExist) {
             const errors = []
             const emailVar = newEmail
-            console.log("🚀 ~ file: authContext.js:716 ~ validateNewEmail ~ emailVar:", emailVar)
             const currentUserVar = currentUser
-            console.log("🚀 ~ file: authContext.js:718 ~ validateNewEmail ~ currentUserVar:", currentUserVar)
             const emailExistVar = emailExist
-            console.log("🚀 ~ file: authContext.js:720 ~ validateNewEmail ~ emailExistVar:", emailExistVar)
           
             if (!newEmail) {
               errors.push('Email is required');
@@ -735,8 +779,6 @@ export function AuthProvider({ children }) {
         
             return errors;
         }
-          
-      
     /*----------------------------------------------*/
 
     //Password 
@@ -748,29 +790,59 @@ export function AuthProvider({ children }) {
         Contains at least one uppercase letter (A-Z)
         Contains at least one special character (!@#$%^&*()_+)
     */
+        function validateRegisterPassword(password, confirmPassword) {
+            const errors = [];  
+
+            if (password.length < 8) {
+                errors.push('Password must be at least 8 characters long');
+            }
+        
+            if (!password.match(/[a-z]/)) {
+                errors.push('Password must contain at least one lowercase letter');
+            }
+        
+            if (!password.match(/[A-Z]/)) {
+                errors.push('Password must contain at least one uppercase letter');
+            }
+        
+            if (!password.match(/\d/)) {
+                errors.push('Password must contain at least one digit');
+            }
+        
+            if (!password.match(/[!@#$%^&*()_+]/)) {
+                errors.push('Password must contain at least one special character');
+            }
+
+            if (password !== confirmPassword) {
+                errors.push('Passwords do not match');
+            }
+
+            return errors;
+        }
+
         function validatePassword(password) {
             const errors = [];
             
             if (password.length < 8) {
-              errors.push('Password must be at least 8 characters long');
+                errors.push('Password must be at least 8 characters long');
             }
-          
+            
             if (!password.match(/[a-z]/)) {
-              errors.push('Password must contain at least one lowercase letter');
+                errors.push('Password must contain at least one lowercase letter');
             }
-          
+            
             if (!password.match(/[A-Z]/)) {
-              errors.push('Password must contain at least one uppercase letter');
+                errors.push('Password must contain at least one uppercase letter');
             }
-          
+            
             if (!password.match(/\d/)) {
-              errors.push('Password must contain at least one digit');
+                errors.push('Password must contain at least one digit');
             }
-          
+            
             if (!password.match(/[!@#$%^&*()_+]/)) {
-              errors.push('Password must contain at least one special character');
+                errors.push('Password must contain at least one special character');
             }
-          
+            
             return errors;
         }
 
@@ -782,29 +854,58 @@ export function AuthProvider({ children }) {
             }
 
             if (newPassword.length < 8 || confirmNewPassword.length < 8) {
-              errors.push('Password must be at least 8 characters long');
+                errors.push('Password must be at least 8 characters long');
             }
-          
+
             if (!newPassword.match(/[a-z]/) || !confirmNewPassword.match(/[a-z]/)) {
-              errors.push('Password must contain at least one lowercase letter');
+                errors.push('Password must contain at least one lowercase letter');
             }
-          
+
             if (!newPassword.match(/[A-Z]/) || !confirmNewPassword.match(/[A-Z]/)) {
-              errors.push('Password must contain at least one uppercase letter');
+                errors.push('Password must contain at least one uppercase letter');
             }
-          
+
             if (!newPassword.match(/\d/) || !confirmNewPassword.match(/\d/)) {
-              errors.push('Password must contain at least one digit');
+                errors.push('Password must contain at least one digit');
             }
-          
+
             if (!newPassword.match(/[!@#$%^&*()_+]/) || !confirmNewPassword.match(/[!@#$%^&*()_+]/)) {
-              errors.push('Password must contain at least one special character');
+                errors.push('Password must contain at least one special character');
             }
-          
+
             return errors;
         }
-          
-      
+    /*----------------------------------------------*/
+
+    //Username
+    /*
+        Checks for the following criteria:
+        Contains no profanity
+        Contains no longer than 30 characters
+        Contains at least 6 characters
+    */
+    function validateNewUsername(username) {
+        const errors = [];
+
+        for (const word of bannedWords) {
+            const regex = new RegExp(`\\b${word}\\b`, 'gi');
+            if (regex.test(username)) {
+                const maskedWord = word.replace(/./g, '*'); // Replace each character with an asterisk
+                const maskedUsername = username.replace(regex, maskedWord);
+                errors.push(`Username contains profanity. Please choose a different username: ${maskedUsername}`);
+            }
+        }
+        
+        if (username.length > 30) {
+            errors.push('Username must be no longer than 30 characters.');
+        }
+
+        if (username.length < 6) {
+            errors.push('Username must be at least 6 characters.');
+        }
+
+        return errors;
+    }
     /*----------------------------------------------*/
 
     /*----------------------------------------------*/
@@ -883,10 +984,14 @@ export function AuthProvider({ children }) {
         unixTimestampConverter,
         charLimit,
         backArrow,
-        validateEmail,
+        validateForgotPasswordEmail,
+        validateRegisterEmail,
+        validateLoginEmail,
         validateNewEmail,
+        validateRegisterPassword,
         validatePassword,
-        validateNewPassword
+        validateNewPassword,
+        validateNewUsername
     }
 
     return (

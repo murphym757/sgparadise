@@ -1,54 +1,61 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { View, SafeAreaView } from 'react-native'
-import { 
+import { SafeAreaView } from 'react-native'
+import {
+  Container,
   CurrentThemeContext,
-  CustomInputField,
-  faTimes,
-  firebase,
-  FontAwesomeIcon, 
-  FooterFont,
-  FooterLink,
-  FooterView,
-  FormHeadingFont,
-  FormHeadingFontContainer,
-  TouchableButton,
-  TouchableButtonFont,
-  useAuth
- } from 'index'
+  ResetPasswordValidationsContext,
+  FormFieldsContext,
+  useAuth,
+} from 'index'
 
 export default function ResetPasswordScreen({navigation}) {
-    const { resetPassword, successAlert, failureAlert } = useAuth()
-    const sgDB = firebase.firestore()
-    const [ isLoading, setIsLoading] = useState(true)
-    const [email, setEmail] = useState('')
-    const [message, setMessage] = useState('Forgotten your password? Enter your e-mail address below, and we\'ll send you an e-mail allowing you to reset it.')
-    const [error, setError] = useState('')
-    const appIcon = '../../../../../assets/images/icon.png'
+  //* Context --- (Reset Password Screen)
     const colors = useContext(CurrentThemeContext)
+    const { 
+      sendVerificationCode, 
+      validateForgotPasswordEmail 
+    } = useAuth()
+    const { 
+      RegistrationFormFunction, 
+      customSGFormFieldContainer, 
+      errorMessageDataMain, 
+      firebaseAuthUserDataFunctionButton
+    } = useContext(FormFieldsContext)
+    const {
+      validationEmailForgotPasswordFunction
+    } = useContext(ResetPasswordValidationsContext)
+    
+  //* State --- (Reset Password Screen)
+    const [isLoading, setIsLoading] = useState(true)
+    const [email, setEmail] = useState('')
+    const [userErrorEmailCheck, setUserErrorEmailCheck] = useState([])
+    const [error, setError] = useState('')
+    const [emailPassed, setEmailPassed] = useState(false)
+    
 
-    function onFooterLinkPress() {
-        navigation.navigate('Login')
+  //* Validation Errors --- (Reset Password Screen)
+    const forgotPasswordUserEmailValidationErrors = validateForgotPasswordEmail(email, emailPassed)
+
+  //* Variables to passed as props --- (Reset Password Screen)
+    const passingUserData = {
+      email,
+      forgotPasswordUserEmailValidationErrors,
+      sendVerificationCode,
+      setEmailPassed,
+      setUserErrorEmailCheck,
+      validationEmailForgotPasswordFunction
     }
 
-    async function onLoginPress() {
-      try {
-        setError('')
-        setIsLoading(true)
-        await resetPassword(email)
-        setMessage('Check your inbox for further instructions')
-      } catch {
-        setError('Failed to reset password')
-      }
-      setIsLoading(false)
+  //* Functions --- (Reset Password Screen)
+    function onFooterLinkPressLogin() {
+      navigation.navigate('Login')
+      setUserErrorEmailCheck([])
     }
 
-    function successAlertMessage(message) {
-        return successAlert(message)
-      }
-  
-      function failureAlertMessage(error) {
-        return failureAlert(error)
-      }
+    function onFooterLinkPressRegistration() {
+      navigation.navigate('Registration')
+      setUserErrorEmailCheck([])
+    }
 
     function pageLoader() {
       setTimeout(() => {
@@ -56,14 +63,32 @@ export default function ResetPasswordScreen({navigation}) {
       }, 2500)
     }
   
-    useEffect(() => {
-      pageLoader()
-    })
+  useEffect(() => {
+    pageLoader()
+  })
 
-    return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: colors.primaryColor }}> 
-        <View style={{ flex: 1 }}>
-          <View style={{ paddingLeft: 20 }}>
+  return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.primaryColor }}> 
+      <Container style={{ flex: 1, justifyContent: 'center' }}>
+        <RegistrationFormFunction 
+          registerType={'forgotPassword'} 
+          registerUser={false}
+          functionButton={firebaseAuthUserDataFunctionButton('forgotPassword', 'Forgot Password', passingUserData, isLoading, colors)}
+          emailTextField={customSGFormFieldContainer('Email', email, false, setEmail, colors)} 
+          errorMessageDataRegisterEmail={errorMessageDataMain(userErrorEmailCheck, 'forgotPassword')}
+          userErrorEmailCheck
+          colors
+          isLoading
+          loginLink={() => onFooterLinkPressLogin(navigation)}
+          signUpLink={() => onFooterLinkPressRegistration(navigation)}
+        />
+      </Container>
+    </SafeAreaView>
+  )
+}
+
+/*
+  <View style={{ paddingLeft: 20 }}>
             <FontAwesomeIcon 
               icon={ faTimes } color={colors.primaryFontColor} size={50} 
               onPress={() => navigation.navigate('Home')}
@@ -103,7 +128,4 @@ export default function ResetPasswordScreen({navigation}) {
                 </FooterLink>
               </FooterFont>
           </FooterView>
-        </View>
-      </SafeAreaView>
-    )
-}
+*/

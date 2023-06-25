@@ -66,19 +66,6 @@ function row1LinkRelative(linkFunction, linkColor, linkFont) {
   }
 
   function editPersonalRow4(passingSectionData) {
-    //! Add the buttons from the "Personal information settings" screen to this screen
-    return (
-      <View style={{paddingBottom: passingSectionData.rowPadding}}>
-        <View>
-          {passingSectionData.customSGFormFieldUsername}
-          {passingSectionData.errorEmailCheck !== null ? passingSectionData.errorMessageDataMain(passingSectionData.errorEmailCheck, 'email', passingSectionData.errorEmailCheck) : null}
-          {passingSectionData.errorPasswordAuthCheck.length !== 0 ? passingSectionData.errorMessageDataMain(passingSectionData.errorPasswordAuthCheck, 'password', passingSectionData.errorPasswordAuthCheck) : null}
-          </View>
-      </View>
-    )
-  }
-
-  function editPersonalRow5(passingSectionData) {
     return (
       <View style={{paddingBottom: passingSectionData.rowPadding}}>
         <View style={{justifyContent: 'center', alignItems: 'center'}}>
@@ -90,7 +77,7 @@ function row1LinkRelative(linkFunction, linkColor, linkFont) {
     )
   }
 
-  function editPersonalRow6(passingSectionData) {
+  function editPersonalRow5(passingSectionData) {
     //! Remove "Update" link from page
     return (
       <View style={{paddingBottom: passingSectionData.rowPadding}}>
@@ -102,63 +89,7 @@ function row1LinkRelative(linkFunction, linkColor, linkFont) {
   }
 
   //* Form Field Function
-  function sgFormFieldSecure(sgPlaceholderFiled, sgChangeTextField, sgValueField, sgErrorMessageField, colors) {
-    return (
-      <View>
-        <CustomInputField
-          placeholder={sgPlaceholderFiled}
-          secureTextEntry
-          placeholderTextColor={colors}
-          onChangeText={sgChangeTextField}
-          required
-          value={sgValueField}
-          color={colors}
-          underlineColorAndroid="transparent"
-          autoCapitalize="none"
-        />
-        {sgErrorMessageField}
-      </View>
-    )
-  }
-
-  function sgFormFieldNonSecure(sgPlaceholderFiled, sgChangeTextField, sgValueField, sgErrorMessageField, colors) {
-    return (
-      <View>
-        <CustomInputField
-          placeholder={sgPlaceholderFiled}
-          placeholderTextColor={colors}
-          onChangeText={sgChangeTextField}
-          required
-          value={sgValueField}
-          color={colors}
-          underlineColorAndroid="transparent"
-          autoCapitalize="none"
-        />
-        {sgErrorMessageField}
-      </View>
-    )
-  }
-
-  function customSGFormField(passingSectionData, stateChangeFunc) {
-    const sgPlaceholderFiled = passingSectionData.placeholder
-    console.log("🚀 ~ file: userScreenContext.js:140 ~ customSGFormField ~ sgPlaceholderFiled:", sgPlaceholderFiled)
-    const sgChangeTextField = stateChangeFunc
-    const sgValueField = passingSectionData.value
-    const sgErrorMessageField = passingSectionData.errorMessageVariable
-    const isSensitiveData = passingSectionData.isSensitiveData
-    const colors = passingSectionData.colors.primaryColor
-
-    if (isSensitiveData == true) {
-      return (
-        sgFormFieldSecure(sgPlaceholderFiled, sgChangeTextField, sgValueField, sgErrorMessageField, colors)
-      )
-    } else {
-      return (
-        sgFormFieldNonSecure(sgPlaceholderFiled, sgChangeTextField, sgValueField, sgErrorMessageField, colors)
-      )
-    }
-  }
-
+  
   //*----------------------------------------------//
 
 const userSection = {
@@ -169,8 +100,6 @@ const userSection = {
     editPersonalRow3,
     editPersonalRow4,
     editPersonalRow5,
-    editPersonalRow6, 
-    customSGFormField,
 }
 
 export const UserScreenContext = React.createContext(userSection)
