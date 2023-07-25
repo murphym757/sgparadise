@@ -45,8 +45,8 @@
         } from 'assets/styles/globalTheme'
         //Global Styling
         export {
-            BackButtonContainer,
             BackButtonBottomLayer,
+            BackButtonContainer,
             BackButtonTopLayer,
             Card,
             CardContent,
@@ -57,6 +57,7 @@
             CenterContent,
             Container,
             ContentContainer,
+            ContentDivider,
             ContentRow,
             CustomSearchBarContainer,
             CustomSearchBarTextInput,
@@ -68,10 +69,10 @@
             LinkedContentGeneralInfoView,
             LinkedContentGenreView,
             MainFont,
-            MainFontPills,
             MainFontArrayLinks,
             MainFontLink,
             MainFontLinkView,
+            MainFontPills,
             MainHeading,
             MainHeadingButton,
             MainHeadingLongTitle,

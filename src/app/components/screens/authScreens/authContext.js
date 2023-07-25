@@ -134,6 +134,7 @@ export function AuthProvider({ children }) {
         console.log("Email updated successfully!")
         }).catch((error) => {
             const errorCode = error.code
+            console.log("🚀 ~ file: authContext.js:137 ~ returnupdateEmail ~ errorCode:", errorCode)
             if (errorCode === 'auth/email-already-in-use') return (
                 setCheckEmailExistence(true)
             )
@@ -757,23 +758,20 @@ export function AuthProvider({ children }) {
 
         function validateNewEmail(newEmail, currentEmail, emailExist) {
             const errors = []
-            const emailVar = newEmail
-            const currentUserVar = currentUser
-            const emailExistVar = emailExist
-          
+        
             if (!newEmail) {
-              errors.push('Email is required');
+                errors.push('Email is required');
             }
-          
+        
             if (!newEmail.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
-              errors.push('Invalid email format');
+                errors.push('Invalid email format');
             } 
 
             if (newEmail === currentEmail) {
                 errors.push('This is your current email');
             }
 
-            if (emailExist === true && newEmail !== currentEmail)  {
+            if (emailExist === null || emailExist === true)  {
                 errors.push('This email is already in use')
             } 
         

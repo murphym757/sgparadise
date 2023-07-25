@@ -1,17 +1,18 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { View, SafeAreaView, TouchableOpacity, FlatList } from 'react-native';
-import { 
+import React from 'react';
+import { View, FlatList } from 'react-native';
+import {
     Container,
+    ContentDivider,
+    ContentRow,
+    CustomInputField,
     FooterFont,
     FooterLink,
     MainFont,
+    MainSecondaryFont,
     MainSubFont,
-    UserScreenContext,
-    CustomInputField,
-    CurrentThemeContext,
     TouchableButton,
-    TouchableButtonFont
-} from 'index'
+    TouchableButtonFont,
+} from 'index';
 
 //* Custom Form Fields
 function sgFormFieldSecure(sgPlaceholderFiled, sgChangeTextField, sgValueField, sgErrorMessageField, colors) {
@@ -71,7 +72,7 @@ function sgFormFieldNonSecure(sgPlaceholderFiled, sgChangeTextField, sgValueFiel
     }
 
 // Form Field Function 
-     function customSGFormFieldContainer(placeholder, currentState, isSensitiveData, setNewState, colors) {
+    function customSGFormFieldContainer(placeholder, currentState, isSensitiveData, setNewState, colors) {
         const passingSectionData = {
             placeholder: placeholder,
             value: currentState,
@@ -100,15 +101,84 @@ function firebaseAuthUserDataFunctionButton(registerType, buttonTitle, passingUs
     )
 }
 
-function sgTouchableButton(pressFunction, buttonTitle, colors, isLoading) {
+function sgTouchableButton(buttonTitle, buttonFunction, colors, isLoading) {
     return (
         <TouchableButton style={{backgroundColor: colors.secondaryColor }}
             disabled={isLoading}
-            onPress={() => {pressFunction}}>
+            onPress={buttonFunction}>
             <TouchableButtonFont>{buttonTitle}</TouchableButtonFont>
         </TouchableButton>
     )
 }
+
+function UpdateButtonGroup(props) {
+    return (
+    <View>
+        {sgTouchableButton(props.usernameChangeButtonTitle, props.usernameChangeButtonFunction, props.colors, props.isLoading)}
+        {sgTouchableButton(props.emailChangeButtonTitle, props.emailChangeButtonFunction, props.colors, props.isLoading)}
+        {sgTouchableButton(props.passwordChangeButtonTitle, props.passwordChangeButtonFunction, props.colors, props.isLoading)}
+    </View>
+    )
+}
+//*------------------------------------userUpdateScreen.js Form------------------------------------*//
+//*(New Code --- 7/3/2023)
+    function UpdateDataSingleFormFunction(passedSingleFormData) {
+        return (
+            <View>
+                <MainFont>{passedSingleFormData.buttonStatement}</MainFont>
+                {passedSingleFormData.textFiled1}
+                {passedSingleFormData.errorMessageDataMainEmail}
+                {passedSingleFormData.errorMessageDataMainUsername}
+                {passedSingleFormData.functionButton}
+            </View>
+        )
+    }
+    function UpdateDataDoubleFormFunction(passedDoubleFormData) {
+        return (
+            <View>
+                <MainFont>{passedDoubleFormData.buttonStatement}</MainFont>
+                {passedDoubleFormData.textFiled1}
+                {passedDoubleFormData.textField2}
+                {passedDoubleFormData.errorMessageDataMainEmail}
+                <ContentDivider />
+                {passedDoubleFormData.errorMessageDataMainPassword}
+                {passedDoubleFormData.functionButton}
+            </View>
+        )
+    }
+    function UpdateDataFormFunction(props) {
+        const passedSingleFormData = {
+            textFiled1: props.textField,
+            buttonStatement: props.buttonStatement,
+            errorCheck: props.errorCheck,
+            errorMessageDataMainEmail: props.errorMessageDataMainEmail,
+            errorMessageDataMainUsername: props.errorMessageDataMainUsername,
+            functionButton: props.functionButton
+        }
+        const passedDoubleFormData = {
+            textFiled1: props.textField,
+            textField2: props.textField2,
+            buttonStatement: props.buttonStatement,
+            errorCheck: props.errorCheck,
+            errorAuthCheck: props.errorAuthCheck,
+            errorMessageDataMainEmail: props.errorMessageDataMainEmail,
+            errorMessageDataMainPassword: props.errorMessageDataMainPassword,
+            functionButton: props.functionButton
+        }
+        return (
+            <View>
+                {props.functionType == 'password' || props.functionType == 'verification'
+                    ?   UpdateDataDoubleFormFunction(passedDoubleFormData)
+                    :   UpdateDataSingleFormFunction(passedSingleFormData)
+                }
+            </View>
+        )
+    }
+//*------------------------------------userUpdateScreen.js Form------------------------------------*//
+
+//*--------------------*/
+
+//*--------------------*/
 
 //*------------------------------------registrationScreen.js Form------------------------------------*//
 function registerUserButton(registerType, colors, isLoading) {
@@ -210,10 +280,13 @@ function RegistrationFormFunction(props) {
                 return flatListError(errorCheck, errorOwner, 0, 1)
             }
             if (errorOwner === 'newPassword' && errorCheck.length !== 0) {
-                return flatListError(errorCheck, errorOwner, 0, 1)
+                return flatListError(errorCheck, errorOwner, 3, 4)
             }
             if (errorOwner === 'forgotPassword') {
                 return flatListError(errorCheck, 'Forgot Password', 0, 1)
+            }
+            if (errorOwner === 'newUsername') { 
+                return flatListError(errorCheck, errorOwner, 3, 4)
             }
         }
     }
@@ -260,12 +333,131 @@ function RegistrationFormFunction(props) {
     }
 //*--------------------*/
 
+//* Confirmation Buttons for Change Personal Information (Finish this)
+function customButtonFunctionYesNo(props, buttonFunction, buttonName) {
+    return (
+    <TouchableButton 
+        style={{
+            backgroundColor: props.yesPressed === props.noPressed
+                ? props.colors.secondaryFontColor 
+                : props.colors.secondaryColor
+        }}
+        disabled={props.isLoading}
+        onPress={() => {buttonFunction()}}
+    >
+        <TouchableButtonFont 
+            style={{
+                color: props.yesPressed === props.noPressed 
+                    ? props.colors.primaryFontColor 
+                    : props.colors.primaryFontColor
+            }}
+        >
+            {buttonName}
+        </TouchableButtonFont>
+    </TouchableButton>
+)
+}
+function buttonConfirmationType(props) {
+    return (
+        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+            <ContentRow>
+                <MainFont>{props.changeMessage}</MainFont>
+            </ContentRow>
+            <ContentRow style={{ paddingVertical: 25 }}>
+            </ContentRow>
+        </View>
+    )
+}
+
+
+
+function ButtonConfirmationSet(props) {
+    return (
+    <View>
+        {buttonConfirmationType(props)}
+        {customButtonFunctionYesNo(props, props.yesButtonFunction(), props.yesButtonTitle)}
+        {customButtonFunctionYesNo(props, props.noButtonFunction(), props.noButtonTitle)}
+    </View>
+    ); 
+}
+//*-----------------------*/
+
+
+    //* Button Group that provides the user with the option to change their username, email, or password
+        function changePersonalInfoButtonGroup(changeButtonsPressed, passingChangeInfo) {
+            return (
+            <TouchableButton style={{backgroundColor: changeButtonsPressed.colors.secondaryColor }}
+                disabled={changeButtonsPressed.isLoading}
+                onPress={() => {
+                    changeButtonsPressed.setChangeEmailButtonPressed(passingChangeInfo.changeEmailStatus),
+                    changeButtonsPressed.setChangePasswordButtonPressed(passingChangeInfo.changePasswordStatus), 
+                    changeButtonsPressed.setChangeUsernameButtonPressed(passingChangeInfo.changeUsernameStatus),
+                    changeButtonsPressed.setUpdateType(passingChangeInfo.changeType)
+                }
+                }>
+                <TouchableButtonFont>{passingChangeInfo.changeButtonTitle}</TouchableButtonFont>
+            </TouchableButton>
+            )
+        }
+        
+        function customSGFormSensitiveDataButton(changeButtonsPressed, passingChangeInfo) {
+            if (passingChangeInfo.customButtonType === 'usernameChangeButton') return (
+                changePersonalInfoButtonGroup(changeButtonsPressed, passingChangeInfo)
+            )
+            if (passingChangeInfo.customButtonType === 'emailChangeButton') return (
+                changePersonalInfoButtonGroup(changeButtonsPressed, passingChangeInfo)
+            )
+            if (passingChangeInfo.customButtonType === 'passwordChangeButton') return (
+                changePersonalInfoButtonGroup(changeButtonsPressed, passingChangeInfo)
+            )
+        }
+
+        function updateUserDataButtonGroup(changeButtonsPressed) {
+            const passingUsernameChangeInfo = {
+                changeType: 'username',
+                changeButtonTitle: 'Change Username',
+                customButtonType: 'usernameChangeButton',
+                changeEmailStatus: false,
+                changePasswordStatus: false,
+                changeUsernameStatus: true
+            }
+            const passingEmailChangeInfo = {
+                changeType: 'email',
+                changeButtonTitle: 'Change Email',
+                customButtonType: 'emailChangeButton',
+                changeEmailStatus: true,
+                changePasswordStatus: false,
+                changeUsernameStatus: false
+            }
+            const passingPasswordChangeInfo = {
+                changeType: 'password',
+                changeButtonTitle: 'Change Password',
+                customButtonType: 'passwordChangeButton',
+                changeEmailStatus: false,
+                changePasswordStatus: true,
+                changeUsernameStatus: false
+            }
+            return (
+            <View>
+                {customSGFormSensitiveDataButton(changeButtonsPressed, passingUsernameChangeInfo)}
+                {customSGFormSensitiveDataButton(changeButtonsPressed, passingEmailChangeInfo)}
+                {customSGFormSensitiveDataButton(changeButtonsPressed, passingPasswordChangeInfo)}
+            </View>
+            )
+        }
+    //*-------------------------*/
+
 
 const formFieldValidations = {
     RegistrationFormFunction,
     errorMessageDataMain,
+    sgTouchableButton,
+    UpdateButtonGroup,
+    UpdateDataFormFunction,
     customSGFormFieldContainer,
-    firebaseAuthUserDataFunctionButton
+    firebaseAuthUserDataFunctionButton,
+    ButtonConfirmationSet,
+    updateUserDataButtonGroup
 }
 
 export const FormFieldsContext = React.createContext(formFieldValidations)

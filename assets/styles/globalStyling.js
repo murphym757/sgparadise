@@ -274,3 +274,8 @@ export const GamePageImageBackground = styled(ImageBackground) `
 export const ContentRow = styled(View) `
     flexDirection: row;
 `;
+
+// Divider beneath the form (and above the button
+export const ContentDivider = styled(View) `
+    paddingVertical: ${RFValue(25, windowHeight)}px;
+`;

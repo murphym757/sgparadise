@@ -1,33 +1,59 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { View } from 'react-native';
-import { MainFont } from 'index';
+import { MainFont, TouchableButton, TouchableButtonFont } from 'index';
 
 //*------------------------------------Update User Information Validation------------------------------------*//
+    //*------------------------------------Update Username Validation------------------------------------*//
 
-    // Username Change Form
-    function ChangeUsernameFunction(props) {
-        const buttonStatement = 'Please enter your new username'
-        return (
-            <View>
-                <MainFont>{buttonStatement}</MainFont>
-                {props.usernameTextField}
-                {props.functionButton}
-            </View>
-        )
+  function updateUsernameValidationPromise(passingUsernameData) {
+    const usernameUpdatePromise = new Promise((resolve, reject) => {
+      if (passingUsernameData.newUsernameValidationErrors.length > 0) {
+        passingUsernameData.setErrorNewUsernameCheck(passingUsernameData.newUsernameValidationErrors)
+        reject(('Username validation failed:', passingUsernameData.newUsernameValidationErrors));
+      } else {
+        passingUsernameData.setErrorNewUsernameCheck(passingUsernameData.newUsernameValidationErrors)
+        passingUsernameData.setCheckUsernameExistence(true)
+        resolve('Username is valid!')
+      } 
+    })
+    return usernameUpdatePromise
+  }
+
+  function validationUpdateUsernameFunction(passingUsernameData) {
+    Promise.all([updateUsernameValidationPromise(passingUsernameData)]).then(() => {
+      const userId = passingUsernameData.currentUser.uid
+      passingUsernameData.updateUsernameFirestore(userId, passingUsernameData.newUsername), 
+      passingUsernameData.updateUsernameAuth(passingUsernameData.newUsername)
+    }).catch((err) => {
+    }).finally(() => {
+      console.log( "The Promise is settled, meaning it has been resolved or rejected. --- Login Email Validation")
+    });
+  }
+
+//*-------------------*/
+
+  // Chnage usernameFunction
+  function changeUsername(passingUsernameData) {
+    if ( passingUsernameData.currentUser !== null) {
+      const userId = passingUsernameData.currentUser.uid
+      passingUsernameData.updateUsernameFirestore(userId, newUsername), 
+      passingUsernameData.updateUsernameAuth(newUsername)
+      console.log('Username has been updated')
     }
-    /*------*/
+  }
+  //----------/
  // Update email
- function changeUserEmail(passingEmailData) {// The user needs to be logged out and back in to see the new email
+  function changeUserEmail(passingEmailData) {// The user needs to be logged out and back in to see the new email
     if (passingEmailData.currentUser !== null) {
       const userId = passingEmailData.currentUser.uid 
       passingEmailData.updateUserEmailFirestore(userId, passingEmailData.newEmail) //Opposed to saving the email to firestore, you should save the uid to firestore
-      passingEmailData.updateEmailAuth(passingEmailData.email, passingEmailData.setCheckEmailExistence)
+      passingEmailData.updateEmailAuth(passingEmailData.newEmail, passingEmailData.setCheckEmailExistence)
     }
   }
   
   function newEmailValidationPromise(passingEmailData) {
     const newEmailMatchPromise = new Promise((resolve, reject) => {
-      if (passingEmailData.newEmailValidationErrors.length < 0) {
+      if (passingEmailData.newEmailValidationErrors.length > 0) {
         passingEmailData.setErrorNewEmailCheck(passingEmailData.newEmailValidationErrors)
         reject(('Email validation failed:', passingEmailData.newEmailValidationErrors));
       } else {
@@ -55,7 +81,7 @@ import { MainFont } from 'index';
 //* Change Password Validation
 function passwordValidationPromise(passingPasswordData) {
   const passwordMatchPromise = new Promise((resolve, reject) => {
-    if (passingPasswordData.newPasswordValidationErrors.length < 0) {
+    if (passingPasswordData.newPasswordValidationErrors.length > 0) {
       passingPasswordData.setErrorNewPasswordCheck(passingPasswordData.newPasswordValidationErrors)
       console.log('Password validation failed:', passingPasswordData.newPasswordValidationErrors);
     } else {
@@ -75,62 +101,27 @@ function passwordValidationPromise(passingPasswordData) {
 function validationPasswordFunction(passingPasswordData) {
   Promise.all([passwordValidationPromise(passingPasswordData)]).then(() => {
     passingPasswordData.setPasswordCheckStatus(passingPasswordData.newPasswordValidationErrors)
-    changeFirebasePassword(passingPasswordData)
+    passingPasswordData.changeUserPassword(passingPasswordData)
+    passingPasswordData.navigation.navigate('User Profile') //* This line of code allows the user to go straight back to the "Main" user screen, opposed to showing (and asking) for the user's confirmation on the change
   }).catch((err) => {
   }).finally(() => {
     console.log( "The Promise is settled, meaning it has been resolved or rejectedssp[ldsl].")
   });
 }
 
-function ChangePasswordFunction(props) {
-    const buttonStatement = 'Please enter your new password'
-    return (
-      <View>
-          <MainFont>{buttonStatement}</MainFont>
-          {props.passwordTextField}
-          {props.confirmPasswordTextField}
-          {props.errorPasswordCheck !== null 
-            ? props.errorMessageDataMainPassword
-            : null
-          }
-          {props.functionButton}
-        </View>
-    )
-  }
 
-
-  //Create a function that actually updates the password and then returns them to the main user screen
+  //TODO: Create a function that actually updates the password and then returns them to the main user screen
   function changeFirebasePassword(passingPasswordData) {
     passingPasswordData.changeUserPassword()
     passingPasswordData.navigation.navigate('User Profile')
   }
   //*-------------------*/
 
-  //*------------------------------------Change Email Validation------------------------------------*//
-  function ChangeEmailFunction(props) {
-    const buttonStatement = 'Please enter your new email address'
-    return (
-      <View>
-        <MainFont>{buttonStatement}</MainFont>
-        {props.emailTextField}
-        {props.errorNewEmailCheck !== null 
-          ? props.errorMessageDataMainEmail
-          : null
-        }
-        {props.functionButton}
-      </View>
-    )
-  }
-  //*-------------------*/
-
-
 const updateUserInfoValidations = {
     changeUserEmail,
-    ChangeUsernameFunction,
+    validationUpdateUsernameFunction,
     validationNewEmailFunction,
-    validationPasswordFunction,
-    ChangePasswordFunction,
-    ChangeEmailFunction
+    validationPasswordFunction
 }
 
 export const UpdateUserInfoValidationsContext = React.createContext(updateUserInfoValidations)

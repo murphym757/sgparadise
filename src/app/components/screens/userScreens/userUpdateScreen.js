@@ -31,6 +31,7 @@ export default function UpdateUserScreen({navigation}) {
     firebaseReauthenticateViaEmail,
     updateUsernameFirestore, 
     updateUserEmailFirestore,
+    updateEmailAuth,
     updateUsernameAuth,
     validateLoginEmail,
     validateNewEmail,
@@ -58,22 +59,24 @@ export default function UpdateUserScreen({navigation}) {
   } = useContext(LoginValidationsContext)
   const {
     changeUserEmail,
-    ChangeUsernameFunction,
+    validationUpdateUsernameFunction,
     validationNewEmailFunction,
-    validationPasswordFunction,
-    ChangePasswordFunction,
-    ChangeEmailFunction
+    validationPasswordFunction
   } = useContext(UpdateUserInfoValidationsContext)
   const {
+    UpdateDataFormFunction,
     customSGFormFieldContainer, 
-    errorMessageDataMain
+    errorMessageDataMain,
+    sgTouchableButton,
+    UpdateButtonGroup,
+    ButtonConfirmationSet,
+    updateUserDataButtonGroup
   } = useContext(FormFieldsContext)
   const colors = useContext(CurrentThemeContext)
   const colorsPassThrough = colors
   const [ isLoading, setIsLoading] = useState(true)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [newUsername, setNewUsername] = useState('')
   const [newEmail, setNewEmail] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [confirmNewPassword, setConfirmNewPassword] = useState('')
@@ -85,7 +88,6 @@ export default function UpdateUserScreen({navigation}) {
   const [passwordCheckStatus, setPasswordCheckStatus] = useState('fulfilled')
   const [errorPasswordAuthCheck, setErrorPasswordAuthCheck] = useState([])
   const [passwordAuthCheckStatus, setPasswordAuthCheckStatus] = useState('fulfilled')
-  const [errorNewUsernameCheck, setErrorNewUsernameCheck] = useState(null)
   const statusChecks = [emailCheckStatus, passwordCheckStatus, passwordAuthCheckStatus]
   const [authButtonPressed, setAuthButtonPressed] = useState(false)
   const [changeIconButtonPressed, setChangeIconButtonPressed] = useState(false)
@@ -96,14 +98,23 @@ export default function UpdateUserScreen({navigation}) {
   const [verifyEmailButtonPressed, setVerifyEmailButtonPressed] = useState(false)
   const [verifyPasswordButtonPressed, setVerifyPasswordButtonPressed] = useState(false)
   const [verifyUsernameButtonPressed, setVerifyUsernameButtonPressed] = useState(false)
-  const [verifyConfirmationButtonPressed, setVerifyConfirmationButtonPressed] = useState(false)
-  const [checkEmailExistence, setCheckEmailExistence] = useState(false)
+  const [verifyConfirmationButtonPressed, setVerifyConfirmationButtonPressed] = useState('')
+  const [checkEmailExistence, setCheckEmailExistence] = useState(null)
+  console.log("🚀 ~ file: userUpdateScreen.js:106 ~ UpdateUserScreen ~ checkEmailExistence:", checkEmailExistence)
   const [reauthenticationConfirmation, setReauthenticationConfirmation] = useState(false)
+  const [changeStatus, setChangeStatus] = useState('')
+  const [updateType, setUpdateType] = useState('')
+
+  //* Update Username
+  const [newUsername, setNewUsername] = useState('')
+  const [errorNewUsernameCheck, setErrorNewUsernameCheck] = useState(null)
+  const [checkUsernameExistence, setCheckUsernameExistence] = useState(false)
 
   //* Validation Errors
   const emailValidationErrors = validateLoginEmail(email, currentUser)
   const [errorCode, setErrorCode] = useState(null)
   const newEmailValidationErrors = validateNewEmail(newEmail, email, checkEmailExistence)
+  console.log("🚀 ~ file: userUpdateScreen.js:121 ~ UpdateUserScreen ~ newEmailValidationErrors:", newEmailValidationErrors)
   const passwordValidationErrors = validatePassword(password)
   const newPasswordValidationErrors = validateNewPassword(newPassword, confirmNewPassword)
   const newUsernameValidationErrors = validateNewUsername(newUsername, currentUser)
@@ -221,7 +232,8 @@ export default function UpdateUserScreen({navigation}) {
     }
   
     useEffect(() => {
-      pageLoader()
+      pageLoader(),
+      updateSwitch()
     })
 
     function changeButtonPressedBack(backFunc) {
@@ -343,239 +355,342 @@ export default function UpdateUserScreen({navigation}) {
       )
     }
 
-    // Change Personal Information Functions
-    function customSGFormSensitiveDataButton(customButtonType, customButtonTitle) {
-      const buttonTitle = customButtonTitle
-      if (customButtonType === 'usernameChangeButton') return (
-        <TouchableButton style={{backgroundColor: colors.secondaryColor }}
-            disabled={isLoading}
-            onPress={() => {setChangeEmailButtonPressed(false), setChangePasswordButtonPressed(false), setChangeUsernameButtonPressed(true)}}>
-            <TouchableButtonFont>{buttonTitle}</TouchableButtonFont>
-        </TouchableButton>
-      )
-      if (customButtonType === 'emailChangeButton') return (
-        <TouchableButton style={{backgroundColor: colors.secondaryColor }}
-            disabled={isLoading}
-            onPress={() => {setChangeEmailButtonPressed(true), setChangePasswordButtonPressed(false), setChangeUsernameButtonPressed(false)}}>
-            <TouchableButtonFont>{buttonTitle}</TouchableButtonFont>
-        </TouchableButton>
-      )
-      if (customButtonType === 'passwordChangeButton') return (
-        <TouchableButton style={{backgroundColor: colors.secondaryColor }}
-            disabled={isLoading}
-            onPress={() => {setChangeEmailButtonPressed(false), setChangePasswordButtonPressed(true), setChangeUsernameButtonPressed(false)}}>
-            <TouchableButtonFont>{buttonTitle}</TouchableButtonFont>
-        </TouchableButton>
-      )
+    
+
+  //? Change Personal Information Functions
+
+  //* Button Group (New Code --- 6/26/2023)
+  function changeSensitiveData() {
+    const usernameChangeButtonTitle = 'Change Username'
+    const emailChangeButtonTitle = 'Change Email'
+    const passwordChangeButtonTitle = 'Change Password'
+    return (
+      <View>
+        <UpdateButtonGroup
+          usernameChangeButtonTitle={usernameChangeButtonTitle}
+          usernameChangeButtonFunction={() => {setChangeEmailButtonPressed(false), setChangePasswordButtonPressed(false), setChangeUsernameButtonPressed(true)}}
+          emailChangeButtonTitle={emailChangeButtonTitle}
+          emailChangeButtonFunction={() => {setChangeEmailButtonPressed(true), setChangePasswordButtonPressed(false), setChangeUsernameButtonPressed(false)}}
+          passwordChangeButtonTitle={passwordChangeButtonTitle}
+          passwordChangeButtonFunction={() => {setChangeEmailButtonPressed(false), setChangePasswordButtonPressed(true), setChangeUsernameButtonPressed(false)}}
+          colors={colors}
+          isLoading={isLoading}
+        />
+      </View>
+    )
+  }
+  //*-------------------*/
+
+  //? Change data via Firebase with these buttons
+
+  //* Verify Identity Button (New Code --- 6/26/2023)
+  function verifyFirebaseIdentityButton() {
+    const buttonTitle = 'Verify Identity'
+    const passingEmailData = {
+      emailValidationErrors,
+      setErrorEmailCheck,
+      email,
+      currentUser,
+      setEmailCheckStatus
+    }
+    const buttonFunction = () => validationUserFunction(passingEmailData)
+    return (
+      sgTouchableButton(buttonTitle, buttonFunction, colors, isLoading)
+    )
+  }
+  //*-------------------*/
+
+  //* Commit Data Change Button (New Code --- 6/26/2023)
+  //TODO: Look into why the email isn't being updated, but the username is. Also make sure the "CheckEmailExistence" is working properly
+  function changeFirebaseIdentityButton(changeType, buttonTitle) {
+    const passingEmailData = {
+      checkEmailExistence,
+      currentUser,
+      email,
+      errorCode,
+      getAuth,
+      newEmail,
+      newEmailValidationErrors,
+      setCheckEmailExistence,
+      setErrorEmailCheck,
+      setErrorNewEmailCheck,
+      updateEmail,
+      updateEmailAuth,
+      updateUserEmailFirestore,
+      setVerifyConfirmationButtonPressed
+    }
+    const passingPasswordData = {
+      newPassword,
+      confirmNewPassword,
+      newPasswordValidationErrors,
+      setPasswordCheckStatus,
+      setErrorNewPasswordCheck,
+      navigation,
+      changeUserPassword
+    }
+    const passingUsernameData = {
+      navigation,
+      currentUser,
+      checkUsernameExistence,
+      newUsername,
+      newUsernameValidationErrors,
+      setCheckUsernameExistence,
+      setErrorNewUsernameCheck,
+      updateUsernameFirestore,
+      updateUsernameAuth,
+      setVerifyUsernameButtonPressed
     }
 
-    function changeSensitiveData() {
-      const usernameChangeButtonTitle = 'Change Username'
-      const emailChangeButtonTitle = 'Change Email'
-      const passwordChangeButtonTitle = 'Change Password'
+    const buttonFunctionEmail = () => {validationNewEmailFunction(passingEmailData), setVerifyConfirmationButtonPressed('email'), setVerifyEmailButtonPressed(true), setVerifyPasswordButtonPressed(false), setVerifyPasswordButtonPressed(false)}
+    const buttonFunctionPassword = () => {validationPasswordFunction(passingPasswordData), setVerifyConfirmationButtonPressed('password'), setVerifyPasswordButtonPressed(true), setVerifyEmailButtonPressed(false), setVerifyPasswordButtonPressed(false)}
+    const buttonFunctionUsername = () => {validationUpdateUsernameFunction(passingUsernameData), setVerifyConfirmationButtonPressed('username'), setVerifyUsernameButtonPressed(true), setVerifyEmailButtonPressed(false), setVerifyPasswordButtonPressed(false)}
+    return (
+      changeType === 'email'
+        ?  sgTouchableButton(buttonTitle, buttonFunctionEmail, colors, isLoading)
+        :  changeType === 'username'
+            ? sgTouchableButton(buttonTitle, buttonFunctionUsername, colors, isLoading)
+            : sgTouchableButton(buttonTitle, buttonFunctionPassword, colors, isLoading)
+          
+    )
+  }
+  //*------------------*/
+
+  //* Data Change Sections (Formfield/s and button)  (New Code --- 6/26/2023)
+    const passingVerificationData = {
+      functionType: 'verification',
+      functionButton: verifyFirebaseIdentityButton(),
+      buttonStatement: 'Please enter your current email address and password',
+      textField: customSGFormFieldContainer('E-mail', email, false, setEmail, colors),
+      textField2: customSGFormFieldContainer('Password', password, true, setPassword, colors),
+      errorCheckEmail: errorEmailCheck,
+      errorMessageDataMainEmail: errorMessageDataMain(errorEmailCheck, 'email'),
+      errorCheckPassword: errorPasswordAuthCheck,
+      errorMessageDataMainPassword: errorMessageDataMain(errorPasswordAuthCheck, 'password'),
+      errorCheckUsername: null,
+      errorMessageDataMainUsername: null
+    }
+    const passingChangeEmailData = {
+      functionType: 'email',
+      functionButton: changeFirebaseIdentityButton('email', 'Change Email'),
+      buttonStatement: 'Please enter your new email address',
+      textField: customSGFormFieldContainer('E-mail', newEmail, false, setNewEmail, colors),
+      textField2: null,
+      errorCheckEmail: errorNewEmailCheck,
+      errorMessageDataMainEmail: errorMessageDataMain(errorNewEmailCheck, 'newEmail'),
+      errorCheckPassword: null,
+      errorMessageDataMainPassword: null,
+      errorCheckUsername: null,
+      errorMessageDataMainUsername: null
+    }
+    const passingChangePasswordData = {
+      functionType: 'password',
+      functionButton: changeFirebaseIdentityButton('password', 'Change Password'),
+      buttonStatement: 'Please enter your new password',
+      textField: customSGFormFieldContainer('Password', newPassword, true, setNewPassword, colors),
+      textField2: customSGFormFieldContainer('Confirm Password', confirmNewPassword, true, setConfirmNewPassword, colors),
+      errorCheckEmail: null,
+      errorMessageDataMainEmail: null,
+      errorCheckPassword: errorNewPasswordCheck,
+      errorMessageDataMainPassword:  errorMessageDataMain(errorNewPasswordCheck, 'newPassword'),
+      errorCheckUsername: null,
+      errorMessageDataMainUsername: null
+
+    }
+    const passingChangeUsernameData = {
+      functionType: 'username',
+      functionButton: changeFirebaseIdentityButton('username', 'Change Username'),
+      buttonStatement: 'Please enter your new username',
+      textField: customSGFormFieldContainer('Username', newUsername, false, setNewUsername, colors),
+      textField2: null,
+      errorCheckEmail: null,
+      errorMessageDataMainEmail: null,
+      errorCheckPassword: null,
+      errorMessageDataMainPassword: null,
+      errorCheckUsername: errorNewUsernameCheck,
+      errorMessageDataMainUsername: errorMessageDataMain(errorNewUsernameCheck, 'newUsername'),
+    }
+    function changeDataSection(passingChangeData) {
       return (
-        <View>
-          {customSGFormSensitiveDataButton('usernameChangeButton', usernameChangeButtonTitle)}
-          {customSGFormSensitiveDataButton('emailChangeButton', emailChangeButtonTitle)}
-          {customSGFormSensitiveDataButton('passwordChangeButton', passwordChangeButtonTitle)}
-        </View>
+        <UpdateDataFormFunction
+          functionType={passingChangeData.functionType} 
+          functionButton={passingChangeData.functionButton}
+          buttonStatement={passingChangeData.buttonStatement}
+          textField={passingChangeData.textField}
+          textField2={passingChangeData.textField2}
+          errorCheck={passingChangeData.errorCheckEmail}
+          errorMessageDataMainEmail={passingChangeData.errorMessageDataMainEmail}
+          errorAuthCheck={passingChangeData.errorCheckPassword}
+          errorMessageDataMainPassword={passingChangeData.errorMessageDataMainPassword}
+          errorCheckUsername={passingChangeData.errorCheckUsername}
+          errorMessageDataMainUsername={passingChangeData.errorMessageDataMainUsername}
+          colors={colors}
+          isLoading={isLoading}
+        />
       )
     }
 
-    //* Change data via Firebase with these buttons
+  const buttonFunctionUsername = () => {
+    verifyUsernameButtonPressed === true, 
+    verifyEmailButtonPressed === true, 
+    verifyPasswordButtonPressed(false)}
 
-    function verifyFirebaseIdentityButton() {
-      const buttonTitle = 'Verify Identity'
-      const passingEmailData = {
-        emailValidationErrors,
-        setErrorEmailCheck,
-        email,
-        currentUser,
-        setEmailCheckStatus
-      }
-      return (
-        <TouchableButton style={{backgroundColor: colors.secondaryColor }}
-            disabled={isLoading}
-            onPress={() => {validationUserFunction(passingEmailData)}}>
-            <TouchableButtonFont>{buttonTitle}</TouchableButtonFont>
-        </TouchableButton>
-      )
-    }
 
-   
-
-    function changeFirebaseIdentityButton(changeType, buttonTitle) {
-      const passingEmailData = {
-        checkEmailExistence,
-        currentUser,
-        email,
-        errorCode,
-        getAuth,
-        newEmail,
-        newEmailValidationErrors,
-        setCheckEmailExistence,
-        setErrorEmailCheck,
-        setErrorNewEmailCheck,
-        updateEmail,
-        updateUserEmailFirestore
-      }
-
-      const passingPasswordData = {
-        newPassword,
-        confirmNewPassword,
-        newPasswordValidationErrors,
-        setPasswordCheckStatus,
-        setErrorNewPasswordCheck,
-        navigation,
-        changeUserPassword
-      }
-
-      const passingUsernameData = {
-        
-      }
-      return (
-        changeType === 'email'
-          ? <TouchableButton style={{backgroundColor: colors.secondaryColor }}
-              disabled={isLoading}
-              onPress={() => {validationNewEmailFunction(passingEmailData), setVerifyConfirmationButtonPressed(true), setVerifyEmailButtonPressed(true), setVerifyPasswordButtonPressed(false)}}>
-              <TouchableButtonFont>{buttonTitle}</TouchableButtonFont>
-            </TouchableButton>
-          : <TouchableButton style={{backgroundColor: colors.secondaryColor }}
-              disabled={isLoading}
-              onPress={() => {validationPasswordFunction(passingPasswordData), setVerifyPasswordButtonPressed(true), setVerifyEmailButtonPressed(false), setVerifyConfirmationButtonPressed(false)}}>
-              <TouchableButtonFont>{buttonTitle}</TouchableButtonFont>
-            </TouchableButton>
-      )
-    }
-    //*------------------*/
-
-    //* Results of both "Update Email" and "Update Password" buttons being pressed
-    function emailChangeSection() {
+    //TODO: This about must be changed to a switch statement
+    //*(https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/switch)
+    function changeDataStructure(passingChangingData) {
       return (
         verifyConfirmationButtonPressed === true
-        ? buttonSetEmail(newEmail)
+        ? updateSwitch()
         : <View>
           {reauthenticationConfirmation == true
-            ? <ChangeEmailFunction
-                functionType={'email'} 
-                functionButton={changeFirebaseIdentityButton('email', 'Verify Identity')}
-                emailTextField={customSGFormFieldContainer('E-mail', newEmail, false, setNewEmail)}
-                errorEmailCheck={errorNewEmailCheck}
-                errorMessageDataMainEmail={errorMessageDataMain(errorNewEmailCheck, 'newEmail')}
-              />
-            : <ChangeFunction 
-                functionType={'email'} 
-                functionButton={verifyFirebaseIdentityButton()} 
-                emailTextField={customSGFormFieldContainer('Email', email, false, setEmail)} 
-                passwordTextField={customSGFormFieldContainer('Password', password, true, setPassword)}
-                errorEmailCheck={errorEmailCheck}
-                errorMessageDataMainEmail={errorMessageDataMain(errorEmailCheck, 'email')}
-                errorPasswordAuthCheck={errorPasswordAuthCheck}
-                errorMessageDataMainPassword={errorMessageDataMain(errorPasswordAuthCheck, 'password')}
-              />
+            ? changeDataSection(passingChangingData)
+            : changeDataSection(passingVerificationData)
           }
         </View>
       )
     }
 
-    function passwordChangeSection() {
+    //*IMPORTANT -------  This is where you want to make those changes to loading the data
+    //* This will appear are you change the data
+    //*I.E. ----- Either use a switch statement or a if statement on any of the following 3 function below
+    
+    function updateSwitch() {
+      switch (verifyConfirmationButtonPressed) {
+        case 'email': 
+          //? Pass the function to update the email
+          console.log('This  will display the email change section');
+          setChangeStatus('This  will display the email change section')
+          break;
+        case 'password':
+          //? Pass the function to update the password
+          console.log('This  will display the password change section');
+          setChangeStatus('This  will display the password change section')
+          break;
+        case 'username':
+          //? Pass the function to update the username
+          console.log('This  will display the username change section');
+          setChangeStatus('This  will display the username change section')
+          // Expected output: "Mangoes and papayas are $2.79 a pound."
+          break;
+        default:
+          console.log(`This is the default message.`);
+          changeDataSection(passingVerificationData)
+          setChangeStatus(`This is the default message.`)
+      }      
+    }
+    
+    
+    
+    function emailChangeSection() { //* Connect this to the button
       return (
-      verifyConfirmationButtonPressed === true
-      ? buttonSetEmail(newEmail)
-      : <View>
-        {reauthenticationConfirmation == true
-          ? <ChangePasswordFunction
-              functionType={'password'} 
-              functionButton={changeFirebaseIdentityButton('password', 'Change Password')}
-              passwordTextField={customSGFormFieldContainer('Password', newPassword, true, setNewPassword)}
-              confirmPasswordTextField={customSGFormFieldContainer('Confirm Password', confirmNewPassword, true, setConfirmNewPassword)}
-              errorPasswordCheck={errorNewPasswordCheck}
-              errorMessageDataMainPassword={errorMessageDataMain(errorNewPasswordCheck, 'newPassword')}
-            />
-          : <ChangeFunction 
-              functionType={'email'} 
-              functionButton={verifyFirebaseIdentityButton()} 
-              emailTextField={customSGFormFieldContainer('Email', email, false, setEmail)} 
-              passwordTextField={customSGFormFieldContainer('Password', password, true, setPassword)}
-              errorEmailCheck={errorEmailCheck}
-              errorMessageDataMainEmail={errorMessageDataMain(errorEmailCheck, 'email')}
-              errorPasswordAuthCheck={errorPasswordAuthCheck}
-              errorMessageDataMainPassword={errorMessageDataMain(errorPasswordAuthCheck, 'password')}
-            />
-        }
-      </View>
+        verifyConfirmationButtonPressed === 'email'
+          ? buttonSetEmail(newEmail) //? This works, do the same for the other two (maybe not the password though)
+          : changeDataStructure(passingChangeEmailData)
       )
     }
 
-    function usernameChangeSection() {
+    function passwordChangeSection() { //* Connect this to the button
       return (
-        verifyConfirmationButtonPressed === true
-        ? buttonSetEmail(newEmail)
-        : <View>
-        {reauthenticationConfirmation == true
-          ? <ChangeUsernameFunction 
-              functionType={'username'} 
-              functionButton={changeFirebaseIdentityButton('username', 'Change Username')}
-              usernameTextField={customSGFormFieldContainer('Username', newUsername, true, setNewUsername)}
-              errorUsernameCheck={errorNewUsernameCheck}
-              errorMessageDataMainUsername={errorMessageDataMain(errorNewUsernameCheck, 'newUsername')}
-            />
-          : <ChangeFunction 
-              functionType={'email'} 
-              functionButton={verifyFirebaseIdentityButton()} 
-              emailTextField={customSGFormFieldContainer('Email', email, false, setEmail)} 
-              passwordTextField={customSGFormFieldContainer('Password', password, true, setPassword)}
-              errorEmailCheck={errorEmailCheck}
-              errorMessageDataMainEmail={errorMessageDataMain(errorEmailCheck, 'email')}
-              errorPasswordAuthCheck={errorPasswordAuthCheck}
-              errorMessageDataMainPassword={errorMessageDataMain(errorPasswordAuthCheck, 'password')}
-            />
-        }
-        </View>
+        verifyConfirmationButtonPressed === 'password'
+          ? buttonSetPassword(newPassword)
+          : changeDataStructure(passingChangePasswordData)
       )
     }
-        //? Create a function that allows the user to change their username
-        //? This function consists of a 'Change Username" button that will appear above the 'Change Email' and 'Change Password' buttons
-        //? There will be a form field and a "Change Username" button
-        //? Upon pressing the "Change Username" button, the user will be asked "Are you sure you want to change your username?"
-        //? If the user presses "Yes", the username will be changed and the user will be redirected to the profile page
-        //? If the user presses "No", the username will not be changed and the user will be redirected to the profile page
-    //*-----------------------*/
+
+    function usernameChangeSection() { //* Connect this to the button
+      return (
+        verifyConfirmationButtonPressed === 'username'
+          ? buttonSetUsername(newUsername)
+          : changeDataStructure(passingChangeUsernameData)
+      )
+    }
+  //*-----------------------*/
+  //*-----------Universal Yes and No Buttons------------*/
+  //? These buttons will take on two seperate functions depending on the changeType
+  //TODO: The functions and state will be passed as props: passingEMailData, passingPasswordData, passingUsernameData
+     //* Yes/No Buttons Email
+    const [yesPressedEmail, setYesPressedEmail] = useState(false)
+    const [noPressedEmail, setNoPressedEmail] = useState(false)
+
+    //* Yes/No Buttons 
+    const [yesPressedPassword, setYesPressedPassword] = useState(false)
+    const [noPressedPassword, setNoPressedPassword] = useState(false)
+    
+    //* Yes/No Buttons Username
+    const [yesPressedUsername, setYesPressedUsername] = useState(false)
+    const [noPressedUsername, setNoPressedUsername] = useState(false)
+    
+    //* Confirmation Buttons Data
+
+    function yesChosen(setYesFunction, setNoFunction) {
+      return (
+        setYesFunction(true),
+        setNoFunction(false)
+      )
+    }
+
+    function noChosen(setNoFunction, setYesFunction) {
+      return (
+        setNoFunction(true),
+        setYesFunction(false)
+      )
+    }
+
+  //Todo: Create a function that determines whether a user reached the confirmation page(the 'verifyPressed' variables should help with that)
+  //? There is a "Too many re-renders" error. Not because of this, but everything related to the confirmation aspects should come from a seperate screen (or file)
+  //? Pass those factors as props to the confirmation screen 
+
+  //TOdo:----------------------/
 
     
-
+    
+    //*-----------------------*/
     //* Yes/No Button Functions for Change Personal Information
     const [yesPressed, setYesPressed] = useState(false);
     const [noPressed, setNoPressed] = useState(false);
 
-  function handleYesPress() {
-    const passingEmailData = {
-      checkEmailExistence,
-      dataCollection: 'updateUser',
-      newEmailValidationErrors,
-      setErrorEmailCheck,
-      setErrorNewEmailCheck
-    }
+  function handleYesPressConfirmation(validationErrors) {
     return (
       setYesPressed(true),
       setNoPressed(false),
-      checkEmailExistence === true || newEmail === email || newEmailValidationErrors.length > 0
-      ? setVerifyConfirmationButtonPressed(false)
-      : navigation.goBack() //? change to go back to profile page
+      validationErrors.length < 1
+        ? navigation.navigate('User Profile')
+        : setVerifyConfirmationButtonPressed('')
     )
   }
+  function handleYesPress() {
+    switch (verifyConfirmationButtonPressed) {
+      case 'email': 
+        //? Pass the function to update the email
+        console.log('This should chnage the email');
+        handleYesPressConfirmation(newEmailValidationErrors)
+        break;
+      case 'password':
+        //? Pass the function to update the password
+        console.log('This  will display the password change section');
+        setChangeStatus('This  will display the password change section')
+        break;
+      case 'username':
+        //? Pass the function to update the username
+        console.log('This  will display the username change section');
+        setChangeStatus('This  will display the username change section')
+        // Expected output: "Mangoes and papayas are $2.79 a pound."
+        break;
+      default:
+        console.log(`This is the default message.`);
+        changeDataSection(passingVerificationData)
+        setChangeStatus(`This is the default message.`)
+    } 
+  }
+
+  //? Goes in each switch above
+  
 
   function handleNoPress() {
-    const passingEmailData = {
-      checkEmailExistence,
-      setErrorNewEmailCheck,
-      newEmailValidationErrors,
-      setErrorEmailCheck
-    }
     return (
       setYesPressed(false),
       setNoPressed(true),
-      setVerifyConfirmationButtonPressed(false)
+      setVerifyConfirmationButtonPressed('')
     )
   }
   
@@ -587,36 +702,60 @@ export default function UpdateUserScreen({navigation}) {
               backgroundColor: buttonType ? colors.secondaryFontColor : colors.secondaryColor
             }}
             disabled={isLoading}
-            onPress={() => {buttonFunction()}}>
+            onPress={
+              checkEmailExistence === null || checkEmailExistence === true 
+                ? () => {buttonFunction(), setCheckEmailExistence(false), setNewEmail('')}
+                : () => {buttonFunction()}
+            }
+          >
             <TouchableButtonFont style={{color: buttonType ? colors.primaryFontColor : colors.primaryFontColor}}>
               {buttonName}
             </TouchableButtonFont>
           </TouchableButton>
       )
     }
-    //*-----------------------*/
 
-    function buttonSetEmail(newEmail) {
+    //? Deconstruct this function
+    function buttonSetData(newData, newDataType, yesChoice, yesFunction, noChoice, noFunction) {
       return (
         <View>
           <View style={{ justifyContent: 'center', alignItems: 'center' }}>
             <ContentRow>
-              <MainFont>Is this the new email you would like to use?:</MainFont>
+              <MainFont>Is this the new {newDataType} you would like to use?:</MainFont>
             </ContentRow>
             <ContentRow style={{ paddingVertical: 25 }}>
-              <MainSecondaryFont>{newEmail}</MainSecondaryFont>
+              <MainSecondaryFont>{newData}</MainSecondaryFont>
             </ContentRow>
           </View>
-          {customButtonFunctionYesNo(yesPressed, handleYesPress, 'Yes')}
-          {customButtonFunctionYesNo(noPressed, handleNoPress, 'No')}
+          {customButtonFunctionYesNo(yesChoice, yesFunction, 'Yes')}
+          {customButtonFunctionYesNo(noChoice, noFunction, 'No')}
         </View>
+      )
+    }
+
+    function buttonSetEmail() {
+      const newDataType = 'email'
+      return (
+        buttonSetData(newEmail, newDataType, yesPressed, handleYesPress, noPressed, handleNoPress)
       ); 
     }
-    /*------------------*/
+    function buttonSetPassword() {
+      const newDataType = 'password'
+      return (
+        buttonSetData(newPassword, newDataType, yesPressed, handleYesPress, noPressed, handleNoPress)
+      )
+    }
 
-     //* This function is required to pass functions from the child to the parent
-     function editUserDataScreenStructure() {
-      
+    function buttonSetUsername() {
+      const newDataType = 'username'
+      return (
+        buttonSetData(newUsername, newDataType, yesPressed, handleYesPress, noPressed, handleNoPress)
+      )
+    }
+    //*------------------*/
+
+  //* This function is required to pass functions from the child to the parent
+    function editUserDataScreenStructure() {
       const passingSectionData = {
         rowPadding: 100,
         cancelUpdate, //Function
@@ -629,7 +768,7 @@ export default function UpdateUserScreen({navigation}) {
         updateProcess,
         hasFunctionTrue: true,
         hasFunctionFalse: false,
-       }
+      }
       return (
         <View>
           {editPersonalRow1(passingSectionData)}
@@ -640,9 +779,17 @@ export default function UpdateUserScreen({navigation}) {
         </View>
       )
     }
-    //*-------------------------*/
+  //*-------------------------*/
 
     function personalInfoSection(warningMessage1, warningMessage2) {
+      const changeButtonsPressed = {
+        setChangeEmailButtonPressed,
+        setChangePasswordButtonPressed,
+        setChangeUsernameButtonPressed,
+        setUpdateType,
+        colors: colors,
+        isLoading: isLoading,
+      }
       return (
         <View>
           <View style={{position: 'relative', flex: 1, paddingBottom: 100}}>{BackButton()}</View>
@@ -658,8 +805,9 @@ export default function UpdateUserScreen({navigation}) {
                     : usernameChangeSection() //Username Button
                 }
             </View>
-            : changeSensitiveData()
+            : updateUserDataButtonGroup(changeButtonsPressed) //? This is where the state is changing based on what you chose in the "Personal Information" section
           }
+          <MainFont>{changeStatus}</MainFont>
         </View>
       )
     }

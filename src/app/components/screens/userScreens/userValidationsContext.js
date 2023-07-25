@@ -43,13 +43,13 @@ import {
     return (
       <View>
           <MainFont>{buttonStatement}</MainFont>
-          {props.emailTextField}
-          {props.passwordTextField}
-          {props.errorEmailCheck !== null 
+          {props.textField}
+          {props.textField2}
+          {props.errorCheck !== null 
             ? props.errorMessageDataMainEmail
             : null
           }
-          {props.errorPasswordAuthCheck.length !== 0 
+          {props.errorAuthCheck.length !== 0 
             ? props.errorMessageDataMainPassword
             : null
           }
