@@ -5,6 +5,17 @@ import { MainFont, TouchableButton, TouchableButtonFont } from 'index';
 //*------------------------------------Update User Information Validation------------------------------------*//
     //*------------------------------------Update Username Validation------------------------------------*//
 
+    // Chnage usernameFunction
+  function changeUsername(passingUsernameData) {
+    if (passingUsernameData.currentUser !== null) {
+      const userId = passingUsernameData.currentUser.uid
+      passingUsernameData.updateUsernameFirestore(userId, passingUsernameData.newUsername), 
+      passingUsernameData.updateUsernameAuth(passingUsernameData.newUsername)
+      console.log('Username has been updated')
+    }
+  }
+
+  //* 
   function updateUsernameValidationPromise(passingUsernameData) {
     const usernameUpdatePromise = new Promise((resolve, reject) => {
       if (passingUsernameData.newUsernameValidationErrors.length > 0) {
@@ -12,7 +23,6 @@ import { MainFont, TouchableButton, TouchableButtonFont } from 'index';
         reject(('Username validation failed:', passingUsernameData.newUsernameValidationErrors));
       } else {
         passingUsernameData.setErrorNewUsernameCheck(passingUsernameData.newUsernameValidationErrors)
-        passingUsernameData.setCheckUsernameExistence(true)
         resolve('Username is valid!')
       } 
     })
@@ -20,10 +30,10 @@ import { MainFont, TouchableButton, TouchableButtonFont } from 'index';
   }
 
   function validationUpdateUsernameFunction(passingUsernameData) {
+    passingUsernameData.getUsername(passingUsernameData.newUsername, passingUsernameData.setCheckUsernameExistence)
     Promise.all([updateUsernameValidationPromise(passingUsernameData)]).then(() => {
-      const userId = passingUsernameData.currentUser.uid
-      passingUsernameData.updateUsernameFirestore(userId, passingUsernameData.newUsername), 
-      passingUsernameData.updateUsernameAuth(passingUsernameData.newUsername)
+      passingUsernameData.setErrorNewUsernameCheck(passingUsernameData.newUsernameValidationErrors)
+      //changeUsername(passingUsernameData)
     }).catch((err) => {
     }).finally(() => {
       console.log( "The Promise is settled, meaning it has been resolved or rejected. --- Login Email Validation")
@@ -32,15 +42,7 @@ import { MainFont, TouchableButton, TouchableButtonFont } from 'index';
 
 //*-------------------*/
 
-  // Chnage usernameFunction
-  function changeUsername(passingUsernameData) {
-    if ( passingUsernameData.currentUser !== null) {
-      const userId = passingUsernameData.currentUser.uid
-      passingUsernameData.updateUsernameFirestore(userId, newUsername), 
-      passingUsernameData.updateUsernameAuth(newUsername)
-      console.log('Username has been updated')
-    }
-  }
+  
   //----------/
  // Update email
   function changeUserEmail(passingEmailData) {// The user needs to be logged out and back in to see the new email
@@ -68,7 +70,7 @@ import { MainFont, TouchableButton, TouchableButtonFont } from 'index';
   function validationNewEmailFunction(passingEmailData) {
     Promise.all([newEmailValidationPromise(passingEmailData)]).then(() => {
       passingEmailData.setErrorNewEmailCheck(passingEmailData.newEmailValidationErrors)
-      changeUserEmail(passingEmailData)
+      //changeUserEmail(passingEmailData)
     }).catch((err) => {
     }).finally(() => {
       console.log( "The Promise is settled, meaning it has been resolved or rejectedss.")
@@ -118,7 +120,9 @@ function validationPasswordFunction(passingPasswordData) {
   //*-------------------*/
 
 const updateUserInfoValidations = {
+    changeUsername,
     changeUserEmail,
+    updateUsernameValidationPromise,
     validationUpdateUsernameFunction,
     validationNewEmailFunction,
     validationPasswordFunction
