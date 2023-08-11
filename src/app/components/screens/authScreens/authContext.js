@@ -426,6 +426,17 @@ export function AuthProvider({ children }) {
             email: userEmail
         })
     }
+
+    // Update User  Icon Data sgUsers (on Cloud Firestore)
+    async function updateUserIconFirestore(userID, userIconData) {
+        const userIconRef = doc(sgDB, 'sgUsers', userID)
+        await updateDoc(userIconRef, {
+            userIconSVG: userIconData.avatar,
+            userIconEyes: userIconData.eyeValue, 
+            userIconMouth: userIconData.mouthValue,
+            userIconColor:'#' + userIconData.iconBackground
+        })
+    }
     
     /*-------------------------------*/
 
@@ -1000,6 +1011,7 @@ export function AuthProvider({ children }) {
         addUserDataUsers,
         updateUsernameFirestore,
         updateUserEmailFirestore,
+        updateUserIconFirestore,
         updateGameViewCount,
         updateGameViewCountReset,
         deleteData,

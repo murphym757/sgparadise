@@ -393,7 +393,7 @@ async function sgFirebaseGamesCollection(passingData) {
 
     /*-----------*/
     // App-Wide Header
-    function BackButton() {
+    function backButton() {
         const stackName = 'Main'
         const backNeeded = true
         return (
@@ -438,7 +438,7 @@ async function sgFirebaseGamesCollection(passingData) {
                             navigation.goBack(stackName)
                         }}>
                             
-                            <BackButton {...props} />
+                            <backButton {...props} />
                         </TouchableOpacity>
                 )}
             </View>
@@ -456,7 +456,7 @@ async function sgFirebaseGamesCollection(passingData) {
             headerLeft: isLoading == true
                 ?   ''
                 : (props) => (
-                    BackButton(props)
+                    backButton(props)
             ),
             headerTitle: isLoading == true
                 ?   ''

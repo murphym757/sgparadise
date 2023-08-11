@@ -75,7 +75,7 @@ export default function GameScreen({navigation, route}) {
         }
     }
 
-    function BackButton() {
+    function backButton() {
         const backNeeded = true
         return (
             backArrow(colorsPassThrough, backNeeded)
@@ -176,7 +176,7 @@ export default function GameScreen({navigation, route}) {
                         updateGameViewCount(collectionName, consoleName, gamesCollection, gameName) // The view count is updated here, but falsely updated on the page. The process was done this way because there was next to no way to properly updated the state in Firebase and have that number represented on the page.
                         navigation.goBack()
                     }}>
-                        <BackButton {...props} />
+                        <backButton {...props} />
                     </TouchableOpacity>
                 )
                 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { View, SafeAreaView, TouchableOpacity, FlatList } from 'react-native';
+import { RFValue } from "react-native-responsive-fontsize";
 import { useAuth } from 'auth/authContext'
 import { 
     getAuth, 
@@ -21,6 +22,7 @@ import {
   Container,
   useIconCreator,
   ContentRow,
+  windowHeight
 } from 'index';
 
 export default function UpdateUserScreen({navigation}) {
@@ -125,11 +127,6 @@ export default function UpdateUserScreen({navigation}) {
   const newPasswordValidationErrors = validateNewPassword(newPassword, confirmNewPassword)
   const newUsernameValidationErrors = validateNewUsername(newUsername, currentUser, checkUsernameExistence)
   console.log("🚀 ~ file: userUpdateScreen.js:119 ~ UpdateUserScreen ~ newUsernameValidationErrors:", newUsernameValidationErrors)
-
-  //* Icon Creator
-  const [userIcon, setUserIcon] = useState('')
-  const sgIconName = 'Felix'
-  const sgIconEyes = ["bulging"]
 
 
   // Update 
@@ -274,10 +271,10 @@ export default function UpdateUserScreen({navigation}) {
       )
     }
 
-    function BackButton() {
+    function backButton() {
       const backNeeded = true
       return (
-        <View>
+        <View style={{position: 'relative', flex: 1, paddingBottom: 100}}>
           {changeEmailButtonPressed == true || changePasswordButtonPressed == true
             ? changeButtonPressedBack(backNeeded)
             : <TouchableOpacity onPress={() => {
@@ -335,6 +332,7 @@ export default function UpdateUserScreen({navigation}) {
     }
     /*------------------*/
     // Go Back Button
+    //TODO: Make this simailar to the other back buttons (CHevrons)
     function customSGButtonChangeIconGoBack() {
       const buttonGroup = {
         style: colors.secondaryColor,
@@ -353,12 +351,12 @@ export default function UpdateUserScreen({navigation}) {
 
     function sgCreatorSuite() {
       return (
-        <View> 
-          <View style={{paddingBottom: 200}}>
-            {sgIconCreator()}
-          </View>
+        <View>
           <View>
-            {customSGButtonChangeIconGoBack()}
+            {backButton()}
+          </View>
+          <View style={{paddingBottom: RFValue(50, windowHeight)}}>
+            {sgIconCreator(setChangeIconButtonPressed)}
           </View>
         </View>
       )
@@ -780,7 +778,6 @@ export default function UpdateUserScreen({navigation}) {
       )
     }
   //*-------------------------*/
-
     function personalInfoSection(warningMessage1, warningMessage2) {
       const changeButtonsPressed = {
         setChangeEmailButtonPressed,
@@ -792,10 +789,7 @@ export default function UpdateUserScreen({navigation}) {
       }
       return (
         <View>
-          <View style={{position: 'relative', flex: 1, paddingBottom: 100}}>{BackButton()}</View>
-          <View style={{flex: 1, position: 'absolute', alignSelf: 'flex-end', paddingTop: 10, paddingRight: 100}}>
-            <MainSubFont>Personal Information</MainSubFont>
-          </View>
+          {backButton()}
           {changeEmailButtonPressed == true || changePasswordButtonPressed == true || changeUsernameButtonPressed == true
             ? <View>
                 {changeEmailButtonPressed == true
