@@ -33,17 +33,6 @@ function row1LinkRelative(linkFunction, linkColor, linkFont) {
   }
 
   function editPersonalRow1(passingSectionData) {
-    //! Change "Cancel" button to "Back" button
-    return (
-      <View style={{paddingBottom: passingSectionData.rowPadding}}>
-        <ContentRow>
-          {row1LinkRelative(passingSectionData.cancelUpdate, passingSectionData.colors.primaryFontColor, 'Cancel')}
-        </ContentRow>
-      </View>
-    )
-  }
-
-  function editPersonalRow2(passingSectionData) {
     return (
       <View style={{paddingBottom: passingSectionData.rowPadding}}>
         <ContentRow style={{justifyContent: 'center', alignItems: 'center'}}>
@@ -53,7 +42,7 @@ function row1LinkRelative(linkFunction, linkColor, linkFont) {
     )
   }
 
-  function editPersonalRow3(passingSectionData) {
+  function editPersonalRow2(passingSectionData) {
     return (
       <View style={{paddingBottom: passingSectionData.rowPadding}}>
         <View style={{justifyContent: 'center', alignItems: 'center'}}>
@@ -65,7 +54,7 @@ function row1LinkRelative(linkFunction, linkColor, linkFont) {
     )
   }
 
-  function editPersonalRow4(passingSectionData) {
+  function editPersonalRow3(passingSectionData) {
     return (
       <View style={{paddingBottom: passingSectionData.rowPadding}}>
         <View style={{justifyContent: 'center', alignItems: 'center'}}>
@@ -73,17 +62,6 @@ function row1LinkRelative(linkFunction, linkColor, linkFont) {
             <MainSubFont>Personal information settings</MainSubFont>
           </Pressable>
           </View>
-      </View>
-    )
-  }
-
-  function editPersonalRow5(passingSectionData) {
-    //! Remove "Update" link from page
-    return (
-      <View style={{paddingBottom: passingSectionData.rowPadding}}>
-        <ContentRow style={{justifyContent: 'center', alignItems: 'center'}}>
-          {row1LinkAbsolute(passingSectionData.hasFunctionTrue, passingSectionData.updateProcess, passingSectionData.colors.secondaryColor, 'Update')}
-        </ContentRow>
       </View>
     )
   }
@@ -98,8 +76,6 @@ const userSection = {
     editPersonalRow1,
     editPersonalRow2,
     editPersonalRow3,
-    editPersonalRow4,
-    editPersonalRow5,
 }
 
 export const UserScreenContext = React.createContext(userSection)

@@ -1,11 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, SafeAreaView, TouchableOpacity, FlatList } from 'react-native';
+import { View, SafeAreaView, TouchableOpacity } from 'react-native';
 import { RFValue } from "react-native-responsive-fontsize";
 import { useAuth } from 'auth/authContext'
-import { 
-    getAuth, 
-    updateEmail,
-} from "firebase/auth";
+import { getAuth, updateEmail } from "firebase/auth";
 import {
   TouchableButton,
   TouchableButtonFont,
@@ -14,15 +11,13 @@ import {
   UserValidationsContext,
   LoginValidationsContext,
   UpdateUserInfoValidationsContext,
-  RegistrationValidationsContext,
   FormFieldsContext,
   MainFont,
   MainSecondaryFont,
-  MainSubFont,
   Container,
   useIconCreator,
   ContentRow,
-  windowHeight
+  windowHeight,
 } from 'index';
 
 export default function UpdateUserScreen({navigation}) {
@@ -51,8 +46,7 @@ export default function UpdateUserScreen({navigation}) {
     editPersonalRow1,
     editPersonalRow2,
     editPersonalRow3,
-    editPersonalRow4,
-    editPersonalRow5      
+    editPersonalRow4    
   } = useContext(UserScreenContext)
   const {
     ChangeFunction,
@@ -93,7 +87,6 @@ export default function UpdateUserScreen({navigation}) {
   const [passwordCheckStatus, setPasswordCheckStatus] = useState('fulfilled')
   const [errorPasswordAuthCheck, setErrorPasswordAuthCheck] = useState([])
   const [passwordAuthCheckStatus, setPasswordAuthCheckStatus] = useState('fulfilled')
-  const statusChecks = [emailCheckStatus, passwordCheckStatus, passwordAuthCheckStatus]
   const [authButtonPressed, setAuthButtonPressed] = useState(false)
   const [changeIconButtonPressed, setChangeIconButtonPressed] = useState(false)
   const [changePersonalInfoButtonPressed, setChangePersonalInfoButtonPressed] = useState(false)
@@ -114,10 +107,8 @@ export default function UpdateUserScreen({navigation}) {
   //* Update Username
   const currentUserName = currentUser.displayName
   const [newUsername, setNewUsername] = useState('')
-  console.log("🚀 ~ file: userUpdateScreen.js:109 ~ UpdateUserScreen ~ newUsername:", newUsername)
   const [errorNewUsernameCheck, setErrorNewUsernameCheck] = useState(null)
   const [checkUsernameExistence, setCheckUsernameExistence] = useState(null)
-  console.log("🚀 ~ file: userUpdateScreen.js:111 ~ UpdateUserScreen ~ checkUsernameExistence:", checkUsernameExistence)
 
   //* Validation Errors
   const emailValidationErrors = validateLoginEmail(email, currentUser)
@@ -126,7 +117,6 @@ export default function UpdateUserScreen({navigation}) {
   const passwordValidationErrors = validatePassword(password)
   const newPasswordValidationErrors = validateNewPassword(newPassword, confirmNewPassword)
   const newUsernameValidationErrors = validateNewUsername(newUsername, currentUser, checkUsernameExistence)
-  console.log("🚀 ~ file: userUpdateScreen.js:119 ~ UpdateUserScreen ~ newUsernameValidationErrors:", newUsernameValidationErrors)
 
 
   // Update 
@@ -143,88 +133,14 @@ export default function UpdateUserScreen({navigation}) {
   /*-----------------*/
 
 
-  // Update password
+  //* Update password
   function changeUserPassword() {
     if ( currentUser !== null) {
       updatePasswordAuth(newPassword)
       console.log('Password has been updated')
     }
   }
-  /*-----------------*/
-  function checkStatus(statusChecks) {
-    return statusChecks === 'fulfilled'
-  }
-
-    function updateProcess() {//You shouldn't have to update any info to "add the username" ***IMPORTANT***
-      const usernameMatchPromise = new Promise((resolve, reject) => {
-        if (newUsername !== currentUser.username) {
-          resolve('This checks for matching usernames')
-          changeUsername()
-        } else {
-          reject('username is still the same')
-          
-        }
-      })
-      const emailMatchPromise = new Promise((resolve, reject) => {
-        const errors = validateLoginEmail(newEmail);
-        if (errors.length > 0) {
-          setErrorEmailCheck(errors)
-          console.log('Email validation failed:', errors);
-        } else {
-          if (newEmail !== currentUser.email) {
-            resolve('The email has been updated')
-            setEmailCheckStatus('fulfilled')
-            changeUserEmail()
-          } else {
-            reject('The email is still the same')
-            setErrorEmailCheck('Email is still the same' + " (" + newEmail + ")")
-            setEmailCheckStatus('rejected')
-          }
-          console.log('Email is valid!');
-        }
-      })
-      const passwordMatchPromise = new Promise((resolve, reject) => {
-        const errors = validatePassword(newPassword);
-        if (errors.length > 0) {
-          setErrorPasswordAuthCheck(errors)
-          console.log('Password validation failed:', errors);
-        } else {
-          if (password !== newPassword) {
-            if (newPassword == confirmNewPassword) {
-              resolve('This password has been updated')
-              setPasswordCheckStatus('fulfilled')
-              setPasswordAuthCheckStatus('fulfilled')
-              changeUserPassword()
-            } else {
-              reject('Password and Confirm Password do not match')
-              setErrorPasswordPassword('Password and Confirm Password do not match')
-              setPasswordCheckStatus('rejected')
-              setPasswordAuthCheckStatus('rejected')
-            }
-          } else {
-            reject('Password has not been updated')
-          }
-          console.log('Password is valid!');
-        } 
-      })
-      Promise.allSettled([usernameMatchPromise, emailMatchPromise, passwordMatchPromise]).then(() => {
-        if (statusChecks.every(checkStatus) === true) {
-          if (changePersonalInfoButtonPressed === true) {
-            setChangePersonalInfoButtonPressed(false), 
-            setChangeIconButtonPressed(false)
-          } else if (changeIconButtonPressed === true) {
-            setChangePersonalInfoButtonPressed(false), 
-            setChangeIconButtonPressed(false)
-          } else {
-            navigation.navigate('User Profile')
-          }
-        }
-      })
-      .catch((err) => {
-      }).finally(() => {
-        console.log( "The Promise is settled, meaning it has been resolved or rejected.")
-      });
-    }
+  //*-----------------*/
       
     function cancelUpdate() {
         setAuthButtonPressed(false),
@@ -242,126 +158,107 @@ export default function UpdateUserScreen({navigation}) {
       updateSwitch()
     })
 
-    function changeButtonPressedBack(backFunc) {
-      return (
-        <View>
-          {changeEmailButtonPressed === true 
-            ? <TouchableOpacity onPress={() => {
-                setChangeEmailButtonPressed(false), 
-                setReauthenticationConfirmation(false),
-                setEmail(''),
-                setErrorEmailCheck(null)
-                setNewEmail(''),
-                setErrorNewEmailCheck(null),
-                setPassword(''),
-                setPasswordCheckStatus(null),
-                setNewPassword(''),
-                setPasswordAuthCheckStatus(null)
-              }}> 
-                {backArrow(colorsPassThrough, backFunc)}
-              </TouchableOpacity>
-            : <TouchableOpacity onPress={() => {
-                setChangePasswordButtonPressed(false), 
-                setReauthenticationConfirmation(false)
-              }}> 
-            {backArrow(colorsPassThrough, backFunc)}
-          </TouchableOpacity>
-          }
-        </View>
-      )
-    }
+    //*Back Button
+      function changeButtonPressedBack(backFunc) {
+        return (
+          <View>
+            {changeEmailButtonPressed === true 
+              ? <TouchableOpacity onPress={() => {
+                  setChangeEmailButtonPressed(false), 
+                  setReauthenticationConfirmation(false),
+                  setEmail(''),
+                  setErrorEmailCheck(null)
+                  setNewEmail(''),
+                  setErrorNewEmailCheck(null),
+                  setPassword(''),
+                  setPasswordCheckStatus(null),
+                  setNewPassword(''),
+                  setPasswordAuthCheckStatus(null)
+                }}> 
+                  {backArrow(colorsPassThrough, backFunc)}
+                </TouchableOpacity>
+              : <TouchableOpacity onPress={() => {
+                  setChangePasswordButtonPressed(false), 
+                  setReauthenticationConfirmation(false)
+                }}> 
+              {backArrow(colorsPassThrough, backFunc)}
+            </TouchableOpacity>
+            }
+          </View>
+        )
+      }
 
-    function backButton() {
-      const backNeeded = true
-      return (
-        <View style={{position: 'relative', flex: 1, paddingBottom: 100}}>
-          {changeEmailButtonPressed == true || changePasswordButtonPressed == true
-            ? changeButtonPressedBack(backNeeded)
-            : <TouchableOpacity onPress={() => {
-                navigation.goBack(), 
-                setReauthenticationConfirmation(false)
-              }}> 
-                {backArrow(colorsPassThrough, backNeeded)}
-              </TouchableOpacity>
-          }
-        </View>
-      )
-  }
+      function backButton() {
+        const backNeeded = true
+        return (
+          <View style={{position: 'relative', flex: 1, paddingBottom: 100}}>
+            {changeEmailButtonPressed == true || changePasswordButtonPressed == true
+              ? changeButtonPressedBack(backNeeded)
+              : <TouchableOpacity onPress={() => {
+                  navigation.goBack(), 
+                  setReauthenticationConfirmation(false)
+                }}> 
+                  {backArrow(colorsPassThrough, backNeeded)}
+                </TouchableOpacity>
+            }
+          </View>
+        )
+    }
+  //*------------------*/
 
   //* Validation 
-  function passwordValidationPromise() {
-    const passwordMatchPromise = new Promise((resolve, reject) => {
-      if (passwordValidationErrors.length < 0) {
-        setErrorPasswordAuthCheck(passwordValidationErrors)
-        reject('Password validation failed:', passwordValidationErrors);
-      } else {
-        setErrorPasswordAuthCheck(passwordValidationErrors)
-        resolve('Password is valid!');
-      } 
-    })
-    return passwordMatchPromise
-  }
+    function passwordValidationPromise() {
+      const passwordMatchPromise = new Promise((resolve, reject) => {
+        if (passwordValidationErrors.length < 0) {
+          setErrorPasswordAuthCheck(passwordValidationErrors)
+          reject('Password validation failed:', passwordValidationErrors);
+        } else {
+          setErrorPasswordAuthCheck(passwordValidationErrors)
+          resolve('Password is valid!');
+        } 
+      })
+      return passwordMatchPromise
+    }
 
-  function validationUserFunction(passingEmailData) {
-    Promise.all([emailValidationPromise(passingEmailData), passwordValidationPromise()]).then(() => {
-      setErrorEmailCheck(emailValidationErrors)
-      setErrorPasswordAuthCheck(passwordValidationErrors)
-      firebaseReauthenticateViaEmail(email, password, setReauthenticationConfirmation)
-    })
-    .catch((err) => {
-    }).finally(() => {
-      console.log( "The Promise is settled, meaning it has been resolved or rejected.")
-    });
-  }
+    function validationUserFunction(passingEmailData) {
+      Promise.all([emailValidationPromise(passingEmailData), passwordValidationPromise()]).then(() => {
+        setErrorEmailCheck(emailValidationErrors)
+        setErrorPasswordAuthCheck(passwordValidationErrors)
+        firebaseReauthenticateViaEmail(email, password, setReauthenticationConfirmation)
+      })
+      .catch((err) => {
+      }).finally(() => {
+        console.log( "The Promise is settled, meaning it has been resolved or rejected.")
+      });
+    }
   //*-------------------*/
-    // Form Button Functions  
-    // Custom Button
-    
-    function customSGFormButton(customButtonStyle, customButtonFunction, customButtonTitle) {
-      const buttonStyle = customButtonStyle
-      const buttonFunction = customButtonFunction
-      const buttonTitle = customButtonTitle
-      
-      return (
-        <TouchableButton style={{backgroundColor: buttonStyle }}
-            disabled={isLoading}
-            onPress={() => buttonFunction}>
-            <TouchableButtonFont>{buttonTitle}</TouchableButtonFont>
-        </TouchableButton>
-      )
-    }
-    /*------------------*/
-    // Go Back Button
-    //TODO: Make this simailar to the other back buttons (CHevrons)
-    function customSGButtonChangeIconGoBack() {
-      const buttonGroup = {
-        style: colors.secondaryColor,
-        function: () => setChangeIconButtonPressed(false),
-        title: 'Change User Information'
-      }
-      const customButtonStyle = buttonGroup.style
-      const customButtonFunction = buttonGroup.function
-      const customButtonTitle = buttonGroup.title
-      return (
-        customSGFormButton(customButtonStyle, customButtonFunction, customButtonTitle)
-      )
-    }
-    /*------------------*/
-    /*---------------- */
 
-    function sgCreatorSuite() {
-      return (
-        <View>
+    //* Suite for Setting (and Changing) User Icon
+      function sgCreatorSuite() {
+        return (
           <View>
-            {backButton()}
+            <View>
+              {backButton()}
+            </View>
+            <View style={{paddingBottom: RFValue(50, windowHeight)}}>
+              {sgIconCreator(setChangeIconButtonPressed)}
+            </View>
           </View>
-          <View style={{paddingBottom: RFValue(50, windowHeight)}}>
-            {sgIconCreator(setChangeIconButtonPressed)}
-          </View>
-        </View>
-      )
-    }
+        )
+      }
+    //*-------------------*/
 
+    //TODO: Create a function that takes all of the user Icon data from Firebase Cloudstore and displays it on the screen
+
+    //TODO-------------------*/
+
+    //TODO: Rearrange the main Account screen to store data pertaining to the user's account (such as posts count, comments count, liked posts, posts created that are liked by others).
+
+    //TODO-------------------*/
+
+    //TODO: Come up with w series of titles for the user based on total posts, in an effort to encourage them to post more (10 Tops)
+    
+    //TODO-------------------*/
     
 
   //? Change Personal Information Functions
@@ -641,56 +538,57 @@ export default function UpdateUserScreen({navigation}) {
     
     //*-----------------------*/
     //* Yes/No Button Functions for Change Personal Information
-    const [yesPressed, setYesPressed] = useState(false);
-    const [noPressed, setNoPressed] = useState(false);
+      const [yesPressed, setYesPressed] = useState(false);
+      const [noPressed, setNoPressed] = useState(false);
 
-  function handleYesPressConfirmation(validationErrors, changeFunction, passingData) {
-    return (
-      setYesPressed(true),
-      setNoPressed(false),
-      validationErrors.length < 1
-        ? <View>
-            {verifyConfirmationButtonPressed === 'email' || verifyConfirmationButtonPressed === 'username'
-              ? changeFunction(passingData)
-              : null
-            }
-            {navigation.navigate('User Profile')}  
-        </View>
-        : setVerifyConfirmationButtonPressed('')
-    )
-  }
-  function handleYesPress() {
-    switch (verifyConfirmationButtonPressed) {
-      case 'email': 
-        //? Pass the function to update the email
-        handleYesPressConfirmation(newEmailValidationErrors, changeUserEmail, passingEmailData)
-        break;
-      case 'password':
-        //? Pass the function to update the password
-        handleYesPressConfirmation(newPasswordValidationErrors)
-        break;
-      case 'username':
-        //? Pass the function to update the username
-        handleYesPressConfirmation(newUsernameValidationErrors, changeUsername, passingUsernameData)
-        // Expected output: "Mangoes and papayas are $2.79 a pound."
-        break;
-      default:
-        console.log(`This is the default message.`);
-        changeDataSection(passingVerificationData)
-        setChangeStatus(`This is the default message.`)
-    } 
-  }
+      function handleYesPressConfirmation(validationErrors, changeFunction, passingData) {
+        return (
+          setYesPressed(true),
+          setNoPressed(false),
+          validationErrors.length < 1
+            ? <View>
+                {verifyConfirmationButtonPressed === 'email' || verifyConfirmationButtonPressed === 'username'
+                  ? changeFunction(passingData)
+                  : null
+                }
+                {navigation.navigate('User Profile')}  
+            </View>
+            : setVerifyConfirmationButtonPressed('')
+        )
+      }
+      function handleYesPress() {
+        switch (verifyConfirmationButtonPressed) {
+          case 'email': 
+            //? Pass the function to update the email
+            handleYesPressConfirmation(newEmailValidationErrors, changeUserEmail, passingEmailData)
+            break;
+          case 'password':
+            //? Pass the function to update the password
+            handleYesPressConfirmation(newPasswordValidationErrors)
+            break;
+          case 'username':
+            //? Pass the function to update the username
+            handleYesPressConfirmation(newUsernameValidationErrors, changeUsername, passingUsernameData)
+            // Expected output: "Mangoes and papayas are $2.79 a pound."
+            break;
+          default:
+            console.log(`This is the default message.`);
+            changeDataSection(passingVerificationData)
+            setChangeStatus(`This is the default message.`)
+        } 
+      }
 
-  //? Goes in each switch above
-  
+      //? Goes in each switch above
+      
 
-  function handleNoPress() {
-    return (
-      setYesPressed(false),
-      setNoPressed(true),
-      setVerifyConfirmationButtonPressed('')
-    )
-  }
+      function handleNoPress() {
+        return (
+          setYesPressed(false),
+          setNoPressed(true),
+          setVerifyConfirmationButtonPressed('')
+        )
+      }
+  //*-----------------------*/
   
 
     function customButtonFunctionYesNo(buttonType, buttonFunction, buttonName) {
@@ -763,17 +661,16 @@ export default function UpdateUserScreen({navigation}) {
         errorMessageDataMain, //Function
         errorEmailCheck,
         errorPasswordAuthCheck,
-        updateProcess,
         hasFunctionTrue: true,
         hasFunctionFalse: false,
+        backButton
       }
       return (
         <View>
+          {backButton()}
           {editPersonalRow1(passingSectionData)}
           {editPersonalRow2(passingSectionData)}
           {editPersonalRow3(passingSectionData)}
-          {editPersonalRow4(passingSectionData)}
-          {editPersonalRow5(passingSectionData)}
         </View>
       )
     }
