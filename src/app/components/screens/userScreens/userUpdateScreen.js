@@ -241,7 +241,7 @@ export default function UpdateUserScreen({navigation}) {
               {backButton()}
             </View>
             <View style={{paddingBottom: RFValue(50, windowHeight)}}>
-              {sgIconCreator(setChangeIconButtonPressed)}
+              {sgIconCreator(setChangeIconButtonPressed, navigation)}
             </View>
           </View>
         )

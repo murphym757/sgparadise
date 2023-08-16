@@ -15,7 +15,7 @@ export function useIconCreator() {
     return useContext(IconContext)
 }
 
-export function IconCreatorProvider({ children, navigation }) {
+export function IconCreatorProvider({ children }) {
     const { 
         currentUser,
         updateUserIconFirestore
@@ -213,8 +213,8 @@ export function IconCreatorProvider({ children, navigation }) {
             )
         }
 
-        //TODO: Upon clicking the "Set User Icon" button, send the user back to the Profile page (via the setChangeIconButtonPressed function....maybe)
-            function firebaseIconData(avatar) {
+        //* It was easier to pass the "navaigation" prop from the parent component rather than the child component. This is because the child component is a function and not a component. This is a workaround to pass the navigation prop to the child component.
+            function firebaseIconData(avatar, setChangeIconButtonPressed, navigation) {
                 const userIconData = {
                     eyeValue,
                     mouthValue,
@@ -224,21 +224,21 @@ export function IconCreatorProvider({ children, navigation }) {
                 const userID = currentUser.uid
                 const buttonName = 'Set User Icon'
                 return (
-                    <TouchableButton onPress={() => updateUserIconFirestore(userID, userIconData)}>
+                    <TouchableButton onPress={() => {updateUserIconFirestore(userID, userIconData), setChangeIconButtonPressed(false), navigation.goBack()} }>
                         <TouchableButtonFont>{buttonName}</TouchableButtonFont>
                     </TouchableButton>
                 )
             }
-        //TODO
-        function sgIconCreatorButton(avatar) {
+        //*
+        function sgIconCreatorButton(avatar, setChangeIconButtonPressed, navigation) {
             return (
                 <View style={{paddingTop: RFValue(25, windowHeight), paddingBottom: RFValue(50, windowHeight)}}>
-                    {firebaseIconData(avatar)}
+                    {firebaseIconData(avatar, setChangeIconButtonPressed, navigation)}
                 </View>
             )   
         }
 
-        function sgIconCreator() {
+        function sgIconCreator(setChangeIconButtonPressed, navigation) {
             const avatar = createAvatar(botttsNeutral, {
                 seed: sgIconName,
                 eyes: sgIconSetter(eyeValue), //* This data will come from firebase
@@ -252,7 +252,7 @@ export function IconCreatorProvider({ children, navigation }) {
                     {sgIconCreatorPreview(avatar)}
                     {sgIconCreatorDropdowns()}
                     {sgIcronCreatorColorPicker()}
-                    {sgIconCreatorButton(avatar)}
+                    {sgIconCreatorButton(avatar, setChangeIconButtonPressed, navigation)}
                 </View>
             )
         }
