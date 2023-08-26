@@ -68,6 +68,7 @@
             ItemWidth,
             LinkedContentGeneralInfoView,
             LinkedContentGenreView,
+            LinksCard,
             MainFont,
             MainFontArrayLinks,
             MainFontLink,
@@ -114,12 +115,15 @@
 
         //Screens Styling
         export {
-            AlgoliaSearchListLabelText,
-            AlgoliaSearchTitleText,
             AccordionHeader,
             AccordionView,
+            AlgoliaSearchListLabelText,
+            AlgoliaSearchTitleText,
             CustomFontAwesomeIcon,
             GameDescription,
+            GameNameBig,
+            GameDescriptorSmall,
+            GameDescriptorSmallAlt,
             GameReleaseDate,
             GameTitle,
             LastAccordionView,

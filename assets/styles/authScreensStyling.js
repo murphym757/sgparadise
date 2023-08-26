@@ -1,143 +1,144 @@
 import styled from 'styled-components';
-import { View, Text, TextInput, Button, Image, ScrollView, SafeAreaView, Platform, TouchableOpacity } from 'react-native';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-
+import { View, Text, TextInput, Dimensions, TouchableOpacity } from 'react-native';
+import { RFValue } from "react-native-responsive-fontsize";
 import {
     currentTheme
 } from './globalTheme';
 
+function responsivePxSize(pixelSize){
+    return (
+        `${windowController(pixelSize, windowHeight)}px`
+    )
+}
+export const windowController = RFValue
+export const windowHeight = Dimensions.get('window').height
+export const windowWidth = Dimensions.get('window').width
+
 export const FormHeadingFontContainer = styled(View) `
     justifyContent: center; 
     alignItems: center;
-    margin: 30px;
+    margin: ${responsivePxSize(30)};
 `;
 
 export const FormHeadingFont = styled(Text) `
     color: ${currentTheme.primaryFontColor};
-    fontSize: 30px;
-    fontFamily: 'SpartanBold';
+    fontSize: ${responsivePxSize(30)};
+    fontFamily: ${currentTheme.fontsGroup.appWideFontBold};
 `;
 
 export const CustomSuccessAlert = styled(View) `
-    height: 80px;
-    borderRadius: 5px;
+    height: ${responsivePxSize(80)};
+    borderRadius: ${responsivePxSize(5)};
     overflow: hidden;
     justifyContent: center;
     backgroundColor: ${currentTheme.successAlertColor};
-    marginTop: 10px;
-    marginBottom: 10px;
-    marginLeft: 30px;
-    marginRight: 30px;
-    paddingLeft: 16px;
+    marginTop: ${responsivePxSize(10)};
+    marginBottom: ${responsivePxSize(10)};
+    marginLeft: ${responsivePxSize(30)};
+    marginRight: ${responsivePxSize(30)};
+    paddingLeft: ${responsivePxSize(16)};
 `;
 
 export const CustomSuccessAlertFont = styled(Text) `
     color: ${currentTheme.successAlertFont};
-    fontSize: 15px;
-    fontFamily: 'SpartanBold';
+    fontSize: ${responsivePxSize(15)};
+    fontFamily: ${currentTheme.fontsGroup.appWideFontBold};
 `;
 
 export const CustomFailureAlert = styled(View) `
-    height: 80px;
-    borderRadius: 5px;
+    height: ${responsivePxSize(80)};
+    borderRadius: ${responsivePxSize(5)};
     overflow: hidden;
     justifyContent: center;
     backgroundColor: ${currentTheme.failureAlertColor};
-    marginTop: 10px;
-    marginBottom: 10px;
-    marginLeft: 30px;
-    marginRight: 30px;
-    paddingLeft: 16px;
+    marginVertical: ${responsivePxSize(10)};
+    marginHorizontal: ${responsivePxSize(30)};
+    paddingLeft: ${responsivePxSize(16)};
 `;
 
 export const CustomFailureAlertFont = styled(Text) `
     color: ${currentTheme.failureAlertFont};
-    fontSize: 15px;
-    fontFamily: 'SpartanBold';
+    fontSize: ${responsivePxSize(15)};
+    fontFamily: ${currentTheme.fontsGroup.appWideFontBold};
 `;
 
 /* Login Screen */
 /*---------------------------------------*/
 export const CustomInputField = styled(TextInput) `
-    height: 48px;
-    borderRadius: 5px;
+    height: ${responsivePxSize(48)};
+    borderRadius: ${responsivePxSize(5)};
     overflow: hidden;
-    fontFamily: 'SpartanRegular';
+    fontFamily: ${currentTheme.fontsGroup.appWideFont};
     backgroundColor: ${currentTheme.primaryColorAlt};
-    marginTop: 10px;
-    marginBottom: 10px;
-    marginLeft: 1px;
-    marginRight: 1px;
+    marginVertical: ${responsivePxSize(10)};
+    marginHorizontal: ${responsivePxSize(1)};
     paddingLeft: 16px;
 `;
 
 export const TouchableButton = styled(TouchableOpacity) `
     backgroundColor: ${currentTheme.secondaryColor};
-    marginLeft: 30px;
-    marginRight: 30px;
-    marginTop: 20px;
-    height: 48px;
-    borderRadius: 5px;
+    marginHorizontal: ${responsivePxSize(30)};
+    marginTop: ${responsivePxSize(20)};
+    height: ${responsivePxSize(48)};
+    borderRadius: ${responsivePxSize(5)};
     alignItems: center;
     justifyContent: center;
 `;
 
 export const TouchableButtonFont = styled(Text) `
     color: ${currentTheme.primaryFontColor};
-    fontSize: 15px;
-    fontFamily: 'SpartanMedium';
+    fontSize: ${responsivePxSize(15)};
+    fontFamily: ${currentTheme.fontsGroup.appWideFontSecondary};
 `;
 
 export const TouchableButtonAlt = styled(TouchableOpacity) `
     backgroundColor: ${currentTheme.primaryColor};
-    marginLeft: 30px;
-    marginRight: 30px;
-    marginTop: 20px;
-    height: 48px;
+    marginHorizontal: ${responsivePxSize(30)};
+    marginTop: ${responsivePxSize(20)};
+    height: ${responsivePxSize(48)};
     border: ${currentTheme.secondaryColor};
-    borderRadius: 5px;
+    borderRadius: ${responsivePxSize(5)};
     alignItems: center;
     justifyContent: center;
 `;
 
 export const TouchableButtonFontAlt = styled(Text) `
     color: ${currentTheme.primaryFontColor};
-    fontSize: 15px;
-    fontFamily: 'SpartanMedium';
+    fontSize: ${responsivePxSize(15)};
+    fontFamily: ${currentTheme.fontsGroup.appWideFontSecondary};
 `;
 
 export const TouchableButtonDelete = styled(TouchableOpacity) `
     backgroundColor: ${currentTheme.primaryColorAltLight};
-    marginLeft: 30px;
-    marginRight: 30px;
-    marginTop: 20px;
-    height: 48px;
+    marginHorizontal: ${responsivePxSize(30)};
+    marginTop: ${responsivePxSize(20)};
+    height: ${responsivePxSize(48)};
     border: ${currentTheme.secondaryColor};
-    borderRadius: 5px;
+    borderRadius: ${responsivePxSize(5)};
     alignItems: center;
     justifyContent: center;
 `;
 
 export const TouchableButtonFontDelete = styled(Text) `
     color: ${currentTheme.primaryColor};
-    fontSize: 15px;
-    fontFamily: 'SpartanMedium';
+    fontSize: ${responsivePxSize(15)};
+    fontFamily: ${currentTheme.fontsGroup.appWideFontSecondary}
 `;
 
 export const FooterView = styled(View) `
     flex: 1;
     alignItems: center;
-    marginTop: 20px;
+    marginTop: ${responsivePxSize(20)};
 `;
 export const FooterFont = styled(Text) `
-    fontSize: 15px;
-    fontFamily: 'SpartanRegular';
+    fontSize: ${responsivePxSize(15)};
+    fontFamily: ${currentTheme.fontsGroup.appWideFont};
     color: ${currentTheme.primaryFontColor};
 `;
 export const FooterLink = styled(Text) `
     color: ${currentTheme.secondaryColor};
-    fontFamily: 'SpartanMedium';
-    fontSize: 15px;
+    fontFamily: ${currentTheme.fontsGroup.appWideFontSecondary}
+    fontSize: ${responsivePxSize(15)};
 `;
 
 /*---------------------------------------*/

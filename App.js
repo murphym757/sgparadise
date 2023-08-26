@@ -26,7 +26,15 @@ export default function Home() {
     'SpartanMedium': require('./assets/fonts/spartanFonts/Spartan-Medium.ttf'),
     'SpartanRegular': require('./assets/fonts/spartanFonts/Spartan-Regular.ttf'),
     'SpartanSemiBold': require('./assets/fonts/spartanFonts/Spartan-SemiBold.ttf'),
-    'SpartanThin': require('./assets/fonts/spartanFonts/Spartan-Thin.ttf')
+    'SpartanThin': require('./assets/fonts/spartanFonts/Spartan-Thin.ttf'),
+    'LemonMilkBold': require('./assets/fonts/lemonMilkFonts/LEMONMILK-Bold.otf'),
+    'LemonMilkBoldItalic': require('./assets/fonts/lemonMilkFonts/LEMONMILK-BoldItalic.otf'),
+    'LemonMilkLight': require('./assets/fonts/lemonMilkFonts/LEMONMILK-Light.otf'),
+    'LemonMilkLightItalic': require('./assets/fonts/lemonMilkFonts/LEMONMILK-LightItalic.otf'),
+    'LemonMilkMedium': require('./assets/fonts/lemonMilkFonts/LEMONMILK-Medium.otf'),
+    'LemonMilkMediumItalic': require('./assets/fonts/lemonMilkFonts/LEMONMILK-MediumItalic.otf'),
+    'LemonMilkRegular': require('./assets/fonts/lemonMilkFonts/LEMONMILK-Regular.otf'),
+    'LemonMilkRegularItalic': require('./assets/fonts/lemonMilkFonts/LEMONMILK-RegularItalic.otf')
   });
   useEffect(() => {
     async function prepare() {

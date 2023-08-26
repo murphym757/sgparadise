@@ -1,6 +1,7 @@
 
 import React, { useState, useContext } from 'react';
 import { View, SafeAreaView } from 'react-native';
+import { RFValue } from "react-native-responsive-fontsize";
 import {
     useAuth,
     TouchableButton,
@@ -8,7 +9,10 @@ import {
     MainFont,
     Container,
     MainSubFont,
-    CurrentThemeContext
+    CurrentThemeContext,
+    ViewSortRow,
+    ViewSortColumn,
+    windowHeight
 } from 'index'
 
 export default function UserProfileScreen({navigation}) {
@@ -23,6 +27,10 @@ export default function UserProfileScreen({navigation}) {
     const colors = useContext(CurrentThemeContext)
     const newEmail = 'brickellLife@gmail.com'
     const newUsername = 'brickellLife'
+    const userPosts = 21
+    const userComments = 35
+    const userLikes = 44
+    const userLikedPosts = 20
     const [error, setError] = useState('')
 
     function onUpdateUser() {
@@ -37,21 +45,61 @@ export default function UserProfileScreen({navigation}) {
             setError('Failed to log out')
         }
     }
-    
-    function createUser() {
-        logOut()
-    }
 
-    function changeUsername() {
-        {currentUser !== null
-        updateUsernameFirestore(currentUser.uid, currentUser.displayName)
-        //updateUsernameAuth(currentUser.displayName)
+    //* User Contribution Section
+        function displayUserDataTop(int) {
+            const displayInt = int
+            return (
+                <View style={{alignItems: 'center'}}>
+                    <MainFont>{displayInt}</MainFont>
+                </View>
+            )
         }
-    }
 
-    function unixTimestamp (date = Date.now()) {  
-        return Math.floor(date / 1000)
-      }
+        function displayUserDataBottom(string) {
+            const displayString = string
+            return (
+                <View>
+                    <MainFont>{displayString}</MainFont>
+                </View>
+            )
+        }
+
+        function displayUserData(int, string) {
+            return (
+                <ViewSortColumn style={{paddingHorizontal: RFValue(20, windowHeight)}}>
+                    {displayUserDataTop(int)}
+                    {displayUserDataBottom(string)}
+                </ViewSortColumn>
+            )
+        }
+
+        function displayUserDataSection() {
+            return (
+                <ViewSortRow style={{justifyContent: 'center', paddingVertical: RFValue(50, windowHeight)}}>
+                    {displayUserData(userPosts, 'Posts')}
+                    {displayUserData(userComments, 'Comments')}
+                    {displayUserData(userLikes, 'Likes')}
+                    {displayUserData(userLikedPosts, 'Liked Posts')}
+                </ViewSortRow>
+            )
+        }
+    //*
+
+    //* User Info Section
+        function displayUserInfo() {
+            return (
+                <Container style={{alignItems: 'center'}}>
+                    <View style={{paddingVertical: RFValue(20, windowHeight)}}>
+                        <MainFont>Image Goes Here</MainFont>
+                    </View>
+                    <View style={{paddingTop: RFValue(20, windowHeight), paddingBottom: RFValue(5, windowHeight)}}>
+                        <MainFont>{currentUser.displayName}</MainFont>
+                    </View>
+                </Container>
+            )
+        }
+    //*
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.primaryColor }}>
@@ -61,9 +109,8 @@ export default function UserProfileScreen({navigation}) {
                 ?   <View>
                         <MainFont>{error}</MainFont>
                         <MainFont>{JSON.stringify(currentUser.lastLoginAt)}</MainFont>
-                        <Container style={{alignItems: 'center'}}>
-                            <MainFont>{currentUser.displayName}</MainFont>
-                        </Container>
+                        {displayUserInfo()}
+                        {displayUserDataSection()}
                         <TouchableButton 
                             onPress={() => onUpdateUser()}>
                             <TouchableButtonFont>Account</TouchableButtonFont>
@@ -71,18 +118,6 @@ export default function UserProfileScreen({navigation}) {
                         <TouchableButton 
                             onPress={() => onHandleLogout()}>
                             <TouchableButtonFont>Log Out</TouchableButtonFont>
-                        </TouchableButton>
-                        <TouchableButton 
-                            onPress={() => addUserDataUsers(currentUser.uid, currentUser.email)}>
-                            <TouchableButtonFont>Add User Data to Firebase</TouchableButtonFont>
-                        </TouchableButton>
-                        <TouchableButton 
-                            onPress={() => { changeUsername() }}>
-                            <TouchableButtonFont>Change username in Firestore</TouchableButtonFont>
-                        </TouchableButton>
-                        <TouchableButton 
-                            onPress={() => updateUserEmailFirestore(currentUser.uid, currentUser.email)}>
-                            <TouchableButtonFont>Update user email in Firebase</TouchableButtonFont>
                         </TouchableButton>
                 </View>
                 :   <View>

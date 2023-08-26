@@ -6,6 +6,12 @@ import {
     currentTheme
 } from './globalTheme';
 
+function responsivePxSize(pixelSize){
+    return (
+        `${windowController(pixelSize, windowHeight)}px`
+    )
+}
+export const windowController = RFValue
 export const windowHeight = Dimensions.get('window').height
 export const windowWidth = Dimensions.get('window').width
 
@@ -19,13 +25,13 @@ export const ViewSearchBar = styled(View) `
     flexDirection: row; 
     width: 80%;  
     backgroundColor: ${currentTheme.primaryColorAlt};
-    marginHorizontal: 20px;
+    marginHorizontal: ${responsivePxSize(20)};
 `;
 
 export const PopGamesView = styled(View) `
     flex: 1;
     height: 300;
-    marginTop: 10;
+    marginTop: ${responsivePxSize(10)};
 `;
 
 /*---------------------------------------*/
@@ -33,24 +39,49 @@ export const PopGamesView = styled(View) `
 /* Sg Game Page */
 /*---------------------------------------*/
 export const AccordionHeader = styled(Text) `
-    fontFamily: 'SpartanMedium';
-    fontSize: 15px;
+    fontFamily: ${currentTheme.fontsGroup.appWideFontSecondary};
+    fontSize: ${responsivePxSize(15)};
     color: ${currentTheme.primaryFontColor};
 `;
 
 export const AccordionView = styled(View) `
-    padding-top: 10;
-    padding-bottom: 10;
+    paddingVertical: ${responsivePxSize(10)};
+
 `;
 
 export const LastAccordionView = styled(View) `
-    padding-top: 10;
+    paddingTop: ${responsivePxSize(10)};
 `;
 
 export const TagFont = styled(Text) `
-    fontFamily: 'SpartanRegular';
-    fontSize: 10px;
+    fontFamily: ${currentTheme.fontsGroup.appWideFont};
+    fontSize: ${responsivePxSize(10)};
     color: ${currentTheme.primaryColor};
+`;
+
+export const GameNameBig = styled(Text) `
+    fontFamily: ${currentTheme.fontsGroup.appWideFontBoldStandout};
+    fontSize: ${responsivePxSize(52)};
+    color: ${currentTheme.secondaryColor};
+`;
+
+export const GameDescriptorSmall = styled(Text) `
+    fontFamily: ${currentTheme.fontsGroup.appWideFontStandout};
+    fontSize: ${responsivePxSize(16)};
+    color: ${currentTheme.secondaryColor};
+`;
+
+export const GameDescriptorSmallAlt = styled(Text) `
+    fontFamily: ${currentTheme.fontsGroup.appWideFont};
+    fontSize: ${responsivePxSize(16)};
+    color: ${currentTheme.primaryFontColor};
+`;
+
+
+
+export const GameScreenSpacing = styled(View) `
+    position: 'relative';
+    paddingTop: ${responsivePxSize(125)};
 `;
 
 /*---------------------------------------*/
@@ -63,25 +94,25 @@ export const TagFont = styled(Text) `
 /* Sg Newly Added */
 /*---------------------------------------*/
 export const GameTitle = styled(Text) `
-    fontFamily: 'SpartanBlack';
-    fontSize: 20px;
+    fontFamily: ${currentTheme.fontsGroup.appWideFontBoldStandoutMini};
+    fontSize: ${responsivePxSize(20)};
     color: ${currentTheme.primaryFontColor};
 `;
 
 export const GameDescription = styled(Text) `
-    fontFamily: 'SpartanRegular';
-    fontSize: 10px;
+    fontFamily: ${currentTheme.fontsGroup.appWideFont};
+    fontSize: ${responsivePxSize(10)};
     color: ${currentTheme.primaryFontColor};
 `;
 
 export const GameReleaseDate = styled(Text) `
-    fontFamily: 'SpartanMedium';
-    fontSize: 14px;
+    fontFamily: ${currentTheme.fontsGroup.appWideFontSecondary};
+    fontSize: ${responsivePxSize(14)};
     color: ${currentTheme.primaryFontColor};
 `;
 
 export const CustomFontAwesomeIcon = styled(FontAwesomeIcon) `
-    marginTop: 4px;
+    marginTop: ${responsivePxSize(4)};
     color: ${currentTheme.secondaryColor};
 `;
 /*---------------------------------------*/
@@ -89,15 +120,15 @@ export const CustomFontAwesomeIcon = styled(FontAwesomeIcon) `
 /* Sg Search Query Screen */
 /*---------------------------------------*/
 export const SearchGameTitle = styled(Text) `
-    fontFamily: 'SpartanBlack';
-    fontSize: 15px;
-    margin-bottom: 25px;
+    fontFamily: ${currentTheme.fontsGroup.appWideFontBoldStandoutMini};
+    fontSize: ${responsivePxSize(15)};
+    marginBottom: ${responsivePxSize(25)};
     color: ${currentTheme.primaryFontColor};
 `;
 export const SearchGameData = styled(Text) `
-    fontFamily: 'SpartanMedium';
-    fontSize: 15px;
-    margin-bottom: 5px;
+    fontFamily: ${currentTheme.fontsGroup.appWideFontSecondary};
+    fontSize: ${responsivePxSize(15)};
+    marginBottom: ${responsivePxSize(5)};
     color: ${currentTheme.primaryFontColor};
 `;
 /*---------------------------------------*/
@@ -105,19 +136,19 @@ export const SearchGameData = styled(Text) `
 /*---------------------------------------*/
 export const SearchGameResults = styled(View) `
     flexDirection: column;
-    paddingBottom: ${RFValue(20, windowHeight)}px;
+    paddingBottom: ${responsivePxSize(20)};
 `;
 /*---------------------------------------*/
 /* Sg Algolia RefinementList Page */
 /*---------------------------------------*/
 export const AlgoliaSearchListLabelText = styled(Text) `
     color: ${currentTheme.primaryFontColor};
-    fontSize: ${RFValue(16, windowHeight)}px;
+    fontSize: ${responsivePxSize(16)};
 `;
 
 export const AlgoliaSearchTitleText = styled(Text) `
-    fontFamily: 'SpartanMedium';
-    color: ${currentTheme.primaryFontColor};
-    fontSize: ${RFValue(32, windowHeight)}px;
+    fontFamily: ${currentTheme.fontsGroup.appWideFontSecondary};
+    color: ${currentTheme.secondaryFontColor};
+    fontSize: ${responsivePxSize(32)};
 `;
 /*---------------------------------------*/

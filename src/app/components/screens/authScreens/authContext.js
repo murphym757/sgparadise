@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { View } from 'react-native'
 import { auth, sgDB, sgImageStorage } from 'server/config/config'
 import { bannedWords } from 'server/sgProfanityFilter'
-import { getFirestore, collection, getDocs, setDoc, addDoc, doc, updateDoc, serverTimestamp, deleteField, query, where  } from "firebase/firestore";
+import { getFirestore, collection, getDocs, getDoc, setDoc, addDoc, doc, updateDoc, serverTimestamp, deleteField, query, where  } from "firebase/firestore";
 import { getStorage } from "firebase/storage"; 
 import { 
     createUserWithEmailAndPassword,
@@ -251,6 +251,16 @@ export function AuthProvider({ children }) {
             console.log(errorCode)
             console.log(errorMessage)
         })
+    }
+
+    async function displayDataNew() {
+        const q = query(collection(sgDB, "cities"), where("capital", "==", true));
+
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        console.log(doc.id, " => ", doc.data());
+        });
     }
 
 
@@ -509,7 +519,7 @@ export function AuthProvider({ children }) {
         })
     }
 
-    // Gets General Game Data
+    //? Gets General Game Data ---Not used in the app---
     async function getGameData(collectionName, consoleName, gamesCollection, gameName) {
         sgDB.collection(collectionName).doc(consoleName).collection(gamesCollection).doc(gameName).get()
         .then((doc) => {

@@ -15,9 +15,41 @@ const failureAlertFont = 'rgb(79, 49, 49)' // Old Burgundy
 const primaryRatingColor = 'rgb(188, 10, 0)'
 const white = primaryColor
 const black = primaryFontColor
-const offBlack= 'rgb(112, 112, 112)'
+const offBlack = 'rgb(112, 112, 112)'
 const dayThemeOpacity = 0.95
 const nightThemeOpacity = 0.85
+
+//* App-Wide Shared Colors/Fonts
+const sgUniStyles = {
+    primaryRatingColor,
+    successAlertFont,
+    successAlertColor: secondaryFontColor,
+    failureAlertFont,
+    failureAlertColor: secondaryColor,
+    white,
+    black,
+    offBlack,
+    imageOpacityOverlay: primaryColorAlt,
+}
+
+//*-------------*/
+
+//* App-Wide Fonts
+    const appWideFont = 'SpartanRegular'
+    const appWideFontBold = 'SpartanBold'
+    const appWideFontBoldStandout = 'LemonMilkBold'
+    const appWideFontBoldStandoutMini = 'SpartanBlack'
+    const appWideFontSecondary = 'SpartanMedium'
+    const appWideFontStandout = 'LemonMilkLight'
+    const fontsGroup = {
+        appWideFont,
+        appWideFontBold,
+        appWideFontBoldStandout,
+        appWideFontBoldStandoutMini,
+        appWideFontSecondary,
+        appWideFontStandout
+    }
+//*-------------*/
 
 const sgParadiseDefaultTheme = {
     light: {
@@ -29,15 +61,8 @@ const sgParadiseDefaultTheme = {
         secondaryColorAlt: secondaryColorAlt,
         primaryFontColor: primaryColorAlt,
         secondaryFontColor: secondaryFontColorAlt,
-        primaryRatingColor: primaryRatingColor,
-        successAlertFont: successAlertFont,
-        successAlertColor: secondaryFontColor,
-        failureAlertFont: failureAlertFont,
-        failureAlertColor: secondaryColor,
-        white: white,
-        black: black,
-        offBlack: offBlack,
-        imageOpacityOverlay: primaryColorAlt
+        sgUniStyles,
+        fontsGroup
     },
     dark: {
         primaryColor: primaryColorAlt,
@@ -48,15 +73,8 @@ const sgParadiseDefaultTheme = {
         secondaryColorAlt: secondaryColor,
         primaryFontColor: primaryColor,
         secondaryFontColor: secondaryFontColor,
-        primaryRatingColor: primaryRatingColor,
-        successAlertFont: successAlertFont,
-        successAlertColor: secondaryFontColor,
-        failureAlertFont: failureAlertFont,
-        failureAlertColor: secondaryColor,
-        white: white,
-        black: black,
-        offBlack: offBlack,
-        imageOpacityOverlay: primaryColorAlt
+        sgUniStyles,
+        fontsGroup
     }
     
 }
