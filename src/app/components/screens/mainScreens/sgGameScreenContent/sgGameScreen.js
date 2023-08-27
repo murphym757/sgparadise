@@ -22,11 +22,11 @@ export default function GameScreen({navigation, route}) {
     const [gameScreenshot2, setGameScreenshot2] = useState([])
     const [gameScreenshot3, setGameScreenshot3] = useState([])
     const gameScreenshots = [gameScreenshot1.toString(), gameScreenshot2.toString(), gameScreenshot3.toString()]
-    console.log("🚀 ~ file: sgGameScreen.js:25 ~ GameScreen ~ gameScreenshots:", gameScreenshots)
     const [gameHomeScreenCover, setGameHomeScreenCover] = useState('')
     const [gameHomeScreenShot, setGameHomeScreenShot] = useState('')
     console.log("🚀 ~ file: sgGameScreen.js:27 ~ GameScreen ~ gameHomeScreenShot:", gameHomeScreenShot)
-    const [gamePageNewHomeScreen, setGamePageNewHomeScreen] = useState('')
+    const [gameHomeNewScreenShot, setGameHomeNewScreenShot] = useState('')
+    console.log("🚀 ~ file: sgGameScreen.js:29 ~ GameScreen ~ gameHomeNewScreenShot:", gameHomeNewScreenShot)
     const colorsPassThrough = colors
     const [dataToBePassed, setDataToBePassed] = useState('')
 
@@ -110,7 +110,7 @@ export default function GameScreen({navigation, route}) {
             setIsLoading(true),
             setTimeout(() => {
                     setIsLoading(false),
-                    setGamePageNewHomeScreen(item)
+                    setGameHomeNewScreenShot(item)
             }, 2000)
         )
     }
@@ -160,8 +160,8 @@ export default function GameScreen({navigation, route}) {
     }
 
     function GamePageStructure() {
-        if (gamePageNewHomeScreen == '') return gameScreenFunc.preDeterminedGameHomeScreen(currentGameArray, gameScreenshots, gameHomeScreenCover, gameHomeScreenShot, gamePageScrollView, isLoading, colors)
-        if (gamePageNewHomeScreen !== '') return gameScreenFunc.updatedGameHomeScreen(currentGameArray, gameScreenshots, gamePageNewHomeScreen, gamePageScrollView, isLoading, colors)
+        if (gameHomeNewScreenShot == '') return gameScreenFunc.preDeterminedGameHomeScreen(currentGameArray, gameScreenshots, gameHomeScreenCover, gameHomeScreenShot, gamePageScrollView, isLoading, colors)
+        if (gameHomeNewScreenShot !== '') return gameScreenFunc.updatedGameHomeScreen(currentGameArray, gameScreenshots, gameHomeNewScreenShot, gamePageScrollView, isLoading, colors)
     }
 
     /*----------------------------------------------*/

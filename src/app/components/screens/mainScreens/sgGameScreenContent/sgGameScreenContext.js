@@ -227,7 +227,7 @@ function mutliLinkedContent(linkedData, linkedDataTitleSingular, linkedDataTitle
         }
     //*----------------------------------------------*/
     //* Detailed Data for returnedGameScreenshots()
-        function detailedGameScreenshot(gameScreenshots, gamePageNewHomeScreen, selectedGameScreenshot, colors) {
+        function detailedGameScreenshot(gameScreenshots, gameHomeNewScreenShot, selectedGameScreenshot, colors) {
             return (
                 <View style={{paddingTop: 20, paddingHorizontal: 40}}>
                     <View style={{height: 110}}>
@@ -237,7 +237,7 @@ function mutliLinkedContent(linkedData, linkedDataTitleSingular, linkedDataTitle
                                 <TouchableOpacity
                                     onPress={() => selectedGameScreenshot(item, selectedGameScreenshot)}>
                                         <View style={{marginVertical: 5}}>
-                                            {gamePageNewHomeScreen == item
+                                            {gameHomeNewScreenShot == item
                                                 ?    <Image
                                                         style={{
                                                             height: 70,
@@ -272,10 +272,10 @@ function mutliLinkedContent(linkedData, linkedDataTitleSingular, linkedDataTitle
             )
         }
 
-        function returnedGameScreenshots(gameScreenshots, gamePageNewHomeScreen, selectedGameScreenshot, colors) {
+        function returnedGameScreenshots(gameScreenshots, gameHomeNewScreenShot, selectedGameScreenshot, colors) {
             return (
                 <View>
-                    {detailedGameScreenshot(gameScreenshots, gamePageNewHomeScreen, selectedGameScreenshot, colors)}
+                    {detailedGameScreenshot(gameScreenshots, gameHomeNewScreenShot, selectedGameScreenshot, colors)}
                 </View>
             )
         }
@@ -402,7 +402,39 @@ function mutliLinkedContent(linkedData, linkedDataTitleSingular, linkedDataTitle
             )
         }
     //*----------------------------------------------*/
-    function upperHalfOfGamePage(currentGameArray, gameScreenshots) {
+    function upperHalfOfGamePageImageSelector(item, image, preDeterminedImage){ 
+        function imageStructure(imageChosen) {
+            const gameScreenshot = imageChosen
+            return (
+                <Image
+                    style={{
+                        height: 250,
+                        width: 375,
+                        resizeMode: 'stretch',
+                        borderRadius: 20,
+                    }}
+                    source={{
+                        url: `${gameScreenshot}`,
+                    }}
+                />
+            )
+        }
+        return (
+            <View style={{alignContent: 'center', alignItems: 'center'}}>
+                <View style={{paddingBottom: 20}}>
+                    {image == ''
+                        ? imageStructure(preDeterminedImage)
+                        : imageStructure(image)
+                    }
+                </View>
+                <View style={{paddingTop: 20}}>
+                    <GameNameBig style={{fontSize: 18 }}>{item. gameName}</GameNameBig>
+                </View>
+            </View>
+        )
+    }
+    function upperHalfOfGamePage(currentGameArray, gameScreenshots, image) {
+        const gameScreenshot = image
         return (
             <Container style={{paddingVertical: 20}}>
                 <FlatList
@@ -413,24 +445,7 @@ function mutliLinkedContent(linkedData, linkedDataTitleSingular, linkedDataTitle
                     keyboardShouldPersistTaps="always"
                     keyExtractor={item => item.id}
                     renderItem={({ item }) => (
-                        <View style={{alignContent: 'center', alignItems: 'center'}}>
-                            <View style={{paddingBottom: 20}}>
-                                <Image
-                                    style={{
-                                        height: 250,
-                                        width: 375,
-                                        resizeMode: 'stretch',
-                                        borderRadius: 20,
-                                    }}
-                                    source={{
-                                        url: `${gameScreenshots[0]}`,
-                                    }}
-                                />
-                            </View>
-                            <View style={{paddingTop: 20}}>
-                                <GameNameBig style={{fontSize: 18 }}>{item.gameName}</GameNameBig>
-                            </View>
-                        </View>
+                        upperHalfOfGamePageImageSelector(item, image, gameScreenshots[0])
                     )}
                 />
                 
@@ -443,16 +458,7 @@ function mutliLinkedContent(linkedData, linkedDataTitleSingular, linkedDataTitle
     //TODO: Remove 'GamePageImageBackground' all together
     
     function preDeterminedGameHomeScreen(currentGameArray, gameScreenshots, gameHomeScreenCover, gameHomeScreenShot, gamePageScrollView, isLoading, colors) {
-        function gameScreenBackground() {
-            if (gameHomeScreenShot !== '') {
-                let image = { url: gameHomeScreenShot }
-                return image
-            } else {
-                let image = { url: gameHomeScreenCover }
-                return image
-            }
-        }
-        
+        let image = { url: gameHomeScreenShot };
         return (
             <View>
                 {isLoading == true
@@ -462,7 +468,7 @@ function mutliLinkedContent(linkedData, linkedDataTitleSingular, linkedDataTitle
                         </SafeAreaViewLoader>
                     </View>
                     :  <View style={{position: 'relative', paddingTop: 100}}>
-                        {upperHalfOfGamePage(currentGameArray, gameScreenshots)}
+                        {upperHalfOfGamePage(currentGameArray, gameScreenshots, gameHomeScreenShot)}
                         {gamePageScrollView()}
                 </View>
                 }
@@ -470,8 +476,8 @@ function mutliLinkedContent(linkedData, linkedDataTitleSingular, linkedDataTitle
         )
     }
 
-    function updatedGameHomeScreen(currentGameArray, gameScreenshots, gamePageNewHomeScreen, gamePageScrollView, isLoading, colors) {
-        let image = { url: gamePageNewHomeScreen };
+    function updatedGameHomeScreen(currentGameArray, gameScreenshots, gameHomeNewScreenShot, gamePageScrollView, isLoading, colors) {
+        let image = { url: gameHomeNewScreenShot };
         return (
             <View>
                 {isLoading == true
@@ -481,7 +487,8 @@ function mutliLinkedContent(linkedData, linkedDataTitleSingular, linkedDataTitle
                         </SafeAreaViewLoader>
                     </View>
                     : <View style={{position: 'relative'}}>
-                        <View style={{position: 'relative', paddingTop: 400}}>
+                        <View style={{position: 'relative', paddingTop: 100}}>
+                            {upperHalfOfGamePage(currentGameArray, gameScreenshots, gameHomeNewScreenShot)}
                             {gamePageScrollView()}
                         </View>
                     </View>
