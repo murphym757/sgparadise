@@ -24,9 +24,7 @@ export default function GameScreen({navigation, route}) {
     const gameScreenshots = [gameScreenshot1.toString(), gameScreenshot2.toString(), gameScreenshot3.toString()]
     const [gameHomeScreenCover, setGameHomeScreenCover] = useState('')
     const [gameHomeScreenShot, setGameHomeScreenShot] = useState('')
-    console.log("🚀 ~ file: sgGameScreen.js:27 ~ GameScreen ~ gameHomeScreenShot:", gameHomeScreenShot)
     const [gameHomeNewScreenShot, setGameHomeNewScreenShot] = useState('')
-    console.log("🚀 ~ file: sgGameScreen.js:29 ~ GameScreen ~ gameHomeNewScreenShot:", gameHomeNewScreenShot)
     const colorsPassThrough = colors
     const [dataToBePassed, setDataToBePassed] = useState('')
 
@@ -160,8 +158,11 @@ export default function GameScreen({navigation, route}) {
     }
 
     function GamePageStructure() {
-        if (gameHomeNewScreenShot == '') return gameScreenFunc.preDeterminedGameHomeScreen(currentGameArray, gameScreenshots, gameHomeScreenCover, gameHomeScreenShot, gamePageScrollView, isLoading, colors)
-        if (gameHomeNewScreenShot !== '') return gameScreenFunc.updatedGameHomeScreen(currentGameArray, gameScreenshots, gameHomeNewScreenShot, gamePageScrollView, isLoading, colors)
+        const imageData = {
+            currentGameArray, gameScreenshots, isLoading, colors
+        }
+        if (gameHomeNewScreenShot == '') return gameScreenFunc.preDeterminedGameHomeScreen(imageData, gameHomeScreenShot, gamePageScrollView)
+        if (gameHomeNewScreenShot !== '') return gameScreenFunc.updatedGameHomeScreen(imageData, gameHomeNewScreenShot, gamePageScrollView)
     }
 
     /*----------------------------------------------*/

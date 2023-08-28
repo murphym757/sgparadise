@@ -402,23 +402,23 @@ function mutliLinkedContent(linkedData, linkedDataTitleSingular, linkedDataTitle
             )
         }
     //*----------------------------------------------*/
+    function imageStructure(imageChosen) {
+        const gameScreenshot = imageChosen
+        return (
+            <Image
+                style={{
+                    height: 250,
+                    width: 375,
+                    resizeMode: 'stretch',
+                    borderRadius: 20,
+                }}
+                source={{
+                    url: `${gameScreenshot}`,
+                }}
+            />
+        )
+    }
     function upperHalfOfGamePageImageSelector(item, image, preDeterminedImage){ 
-        function imageStructure(imageChosen) {
-            const gameScreenshot = imageChosen
-            return (
-                <Image
-                    style={{
-                        height: 250,
-                        width: 375,
-                        resizeMode: 'stretch',
-                        borderRadius: 20,
-                    }}
-                    source={{
-                        url: `${gameScreenshot}`,
-                    }}
-                />
-            )
-        }
         return (
             <View style={{alignContent: 'center', alignItems: 'center'}}>
                 <View style={{paddingBottom: 20}}>
@@ -434,7 +434,6 @@ function mutliLinkedContent(linkedData, linkedDataTitleSingular, linkedDataTitle
         )
     }
     function upperHalfOfGamePage(currentGameArray, gameScreenshots, image) {
-        const gameScreenshot = image
         return (
             <Container style={{paddingVertical: 20}}>
                 <FlatList
@@ -453,12 +452,7 @@ function mutliLinkedContent(linkedData, linkedDataTitleSingular, linkedDataTitle
         )
     }
 
-    //*  Change Background image
-    //TODO: Repurpose so this simply displays the image and keep the background the same for all games
-    //TODO: Remove 'GamePageImageBackground' all together
-    
-    function preDeterminedGameHomeScreen(currentGameArray, gameScreenshots, gameHomeScreenCover, gameHomeScreenShot, gamePageScrollView, isLoading, colors) {
-        let image = { url: gameHomeScreenShot };
+    function secondaryGamePageStructure(currentGameArray, gameScreenshots, image, gamePageScrollView, isLoading, colors) {
         return (
             <View>
                 {isLoading == true
@@ -468,7 +462,7 @@ function mutliLinkedContent(linkedData, linkedDataTitleSingular, linkedDataTitle
                         </SafeAreaViewLoader>
                     </View>
                     :  <View style={{position: 'relative', paddingTop: 100}}>
-                        {upperHalfOfGamePage(currentGameArray, gameScreenshots, gameHomeScreenShot)}
+                        {upperHalfOfGamePage(currentGameArray, gameScreenshots, image)}
                         {gamePageScrollView()}
                 </View>
                 }
@@ -476,24 +470,15 @@ function mutliLinkedContent(linkedData, linkedDataTitleSingular, linkedDataTitle
         )
     }
 
-    function updatedGameHomeScreen(currentGameArray, gameScreenshots, gameHomeNewScreenShot, gamePageScrollView, isLoading, colors) {
-        let image = { url: gameHomeNewScreenShot };
+    function preDeterminedGameHomeScreen(imageData, gameHomeScreenShot, gamePageScrollView) {
         return (
-            <View>
-                {isLoading == true
-                    ? <View style={{ backgroundColor: colors.primaryColor }}>
-                        <SafeAreaViewLoader>
-                            <ActivityIndicator size="large" hidesWhenStopped="true"/>
-                        </SafeAreaViewLoader>
-                    </View>
-                    : <View style={{position: 'relative'}}>
-                        <View style={{position: 'relative', paddingTop: 100}}>
-                            {upperHalfOfGamePage(currentGameArray, gameScreenshots, gameHomeNewScreenShot)}
-                            {gamePageScrollView()}
-                        </View>
-                    </View>
-                }
-            </View>
+            secondaryGamePageStructure(imageData.currentGameArray, imageData.gameScreenshots, gameHomeScreenShot, gamePageScrollView, imageData.isLoading, imageData.colors)
+        )
+    }
+
+    function updatedGameHomeScreen(imageData, gameHomeNewScreenShot, gamePageScrollView) {
+        return (
+            secondaryGamePageStructure(imageData.currentGameArray, imageData.gameScreenshots, gameHomeNewScreenShot, gamePageScrollView, imageData.isLoading, imageData.colors)
         )
     }
 //*--------------------Second Page of Game Screen--------------------------*/
