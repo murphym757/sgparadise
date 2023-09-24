@@ -96,15 +96,15 @@ function detailedGameScreenshot(item) {
 
 function charLengthSet(nameValue, nameLength, maxNameLength, nameLengthSet) {
     if (nameLength < maxNameLength) {
-      return (
-        <MainFont>{nameValue}</MainFont>
-      )
+        return (
+            <MainFont>{nameValue}</MainFont>
+        )
     } else {
-      return (
-        <MainFont>{nameValue.substring(0, nameLengthSet) + '...'}</MainFont>
-      )
+        return (
+            <MainFont>{nameValue.substring(0, nameLengthSet) + '...'}</MainFont>
+        )
     }
-  }
+}
 
 
 function sgGameListingSpotlight(passingSectionData, item, laymanConsoleName, consoleName) {

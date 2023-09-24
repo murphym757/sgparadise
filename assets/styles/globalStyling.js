@@ -187,7 +187,7 @@ export const MainFontLinkView = styled(View) `
 `;
 
 export const MainFontLink = styled(MainFont) `
-    textDecorationLine: underline;
+    
 `;
 
 export const MainFontArrayLinks = styled(MainFontLink) `

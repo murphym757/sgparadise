@@ -137,6 +137,8 @@
         } from 'assets/styles/sgScreensStyling'
     /*-----------------*/
     //Context
+        //Images Context
+        export { AppWideImageContext } from 'main/sgImageContext'
         //Axios Context
         export { axiosSearchContext } from 'main/sgGameSearchScreenContent/axiosSearchContext'
         
@@ -192,7 +194,6 @@
         //Update User Information Validations
         export { UpdateUserInfoValidationsContext } from 'user/updateUserInfoValidationContext'
         
-
         //Form Fields Context
         export { FormFieldsContext } from 'user/userScreenFormFieldsContext'
     // Modal
@@ -203,7 +204,9 @@
     
     // Font Awesome
     export { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-    export { 
+    export {
+        faArrowLeft,
+        faArrowRight,
         faBasketballBall,
         faBook,
         faCaretDown,

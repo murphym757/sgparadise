@@ -134,7 +134,7 @@ export default function SgSearchHome({navigation, route}) {
                             </TouchableOpacity>
                     </View>
                 }
-                    <SearchBox gamePageLinkProp={gameDataToBePassed} gamePageLinkPressed={gamePageLinkPressed} searchBarTitle={'Search Games'} onChange={scrollToTop} />
+                    <SearchBox gamePageLinkProp={gameDataToBePassed} gamePageLinkPressed={gamePageLinkPressed} gamePageLinkPressedSearchable={'tec toy'} searchBarTitle={'Search Games'} onChange={scrollToTop} />
                 </ViewTopRow>
             </CustomSearchBarContainer>
         )
@@ -208,8 +208,8 @@ export default function SgSearchHome({navigation, route}) {
     }
 
 
-  return (
-    <SafeAreaView style={{ flex: 1 }}>
+    return (
+        <SafeAreaView style={{ flex: 1 }}>
             {isLoading !== true
                 ?   <View style={{ flex: 1 }}>
                 {loadedData()}
@@ -218,6 +218,6 @@ export default function SgSearchHome({navigation, route}) {
                     {preLoadedData()} 
                 </View>
             }
-    </SafeAreaView>
-  )
+        </SafeAreaView>
+    )
 }

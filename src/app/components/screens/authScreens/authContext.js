@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { View } from 'react-native'
+import { View, ActivityIndicator } from 'react-native'
 import { auth, sgDB, sgImageStorage } from 'server/config/config'
 import { bannedWords } from 'server/sgProfanityFilter'
 import { getFirestore, collection, getDocs, getDoc, setDoc, addDoc, doc, updateDoc, serverTimestamp, deleteField, query, where  } from "firebase/firestore";
@@ -22,6 +22,7 @@ import {
     BackButtonBottomLayer,
     BackButtonTopLayer,
     Container,
+    ContentContainer,
     CustomFailureAlert,
     CustomFailureAlertFont,
     CustomSuccessAlert,
@@ -29,6 +30,7 @@ import {
     faChevronLeft,
     faCircle,
     FontAwesomeIcon,
+    MainFont,
     TouchableButton,
     TouchableButtonAlt,
     TouchableButtonFont,
@@ -961,6 +963,17 @@ export function AuthProvider({ children }) {
 
     //*----------------------------------------------*/
 
+    //* Loading Screen
+    function preLoadedData(loadingScreenText, loadingScreenTextColor, loaderColor) {
+        return (
+            <ContentContainer style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <ActivityIndicator size="small" color={loaderColor} />
+                <MainFont style={{color: loadingScreenTextColor}}>{loadingScreenText}</MainFont>
+            </ContentContainer>
+        )
+    }
+    //*----------------------------------------------*/
+
     useEffect(() => {
         const auth = getAuth();
         onAuthStateChanged(auth, (user) => {
@@ -1044,7 +1057,8 @@ export function AuthProvider({ children }) {
         validateRegisterPassword,
         validatePassword,
         validateNewPassword,
-        validateNewUsername
+        validateNewUsername,
+        preLoadedData
     }
 
     return (
