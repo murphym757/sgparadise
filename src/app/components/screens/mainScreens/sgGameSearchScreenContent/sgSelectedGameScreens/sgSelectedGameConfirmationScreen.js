@@ -3,6 +3,7 @@ import { View, ActivityIndicator } from 'react-native'
 // React Navigation
 import { useIsFocused } from '@react-navigation/native'
 import {
+    AppWideImageContext,
     confirmGameContext,
     firebase,
     PageContainer,
@@ -20,6 +21,7 @@ export default function SgSelectedGameConfirmationScreen({route, navigation}) {
     } = useAuth()
     //let { searchBarTitle, searchType, searchQuery } = route.params
     const confirmGame = useContext(confirmGameContext)
+    const images = useContext(AppWideImageContext)
     const [isLoading, setIsLoading] = useState()
     
     const { 
@@ -103,6 +105,19 @@ export default function SgSelectedGameConfirmationScreen({route, navigation}) {
       }, [isFocused])
 
 
+    function confirmationGameCoverImage(buttonGroupData) {
+        const imageData = {
+            height: 200,
+            width: 150,
+            marginVertical: 15,
+            contentFit: 'stretch',
+            borderRadius: 25,
+            source: `https://images.igdb.com/igdb/image/upload/t_1080p/${buttonGroupData.passingContent.gameCover}.jpg`
+        }
+        return images.gameCoverImageConfirmationScreen(imageData)
+    }
+
+
     function complexID(characterLength) {
         const randomString = (n, r='') => {
             while (n--) r += String.fromCharCode((r=Math.random()*62|0, r+=r>9?(r<36?55:61):48))
@@ -117,7 +132,7 @@ export default function SgSelectedGameConfirmationScreen({route, navigation}) {
             {isLoading == undefined
                 ? <ActivityIndicator size="large" hidesWhenStopped="true"/>
                 : <View>
-                    {confirmGame.gameConfirmationResults(tagArrayData, buttonGroupData, windowHeight, confirmationPage, undefined)}
+                    {confirmGame.gameConfirmationResults(tagArrayData, buttonGroupData, windowHeight, undefined, confirmationGameCoverImage)}
                     {addGameToConsoleButtonGroup(buttonGroupData)}
                 </View>
             }

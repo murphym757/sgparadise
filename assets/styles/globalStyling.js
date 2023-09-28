@@ -1,6 +1,7 @@
 import styled from 'styled-components'
-import { View, Text, Image, ScrollView, SafeAreaView, Dimensions, ImageBackground, StyleSheet, TextInput } from 'react-native';
-import { RFValue } from "react-native-responsive-fontsize";
+import { View, Text, ScrollView, SafeAreaView, Dimensions, StyleSheet, TextInput } from 'react-native';
+import { RFValue } from "react-native-responsive-fontsize"
+import { Image } from 'expo-image'
 import {
     currentTheme
 } from './globalTheme'

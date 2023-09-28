@@ -1,15 +1,16 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { View, Image, FlatList, ScrollView, SafeAreaView, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect, useContext } from 'react'
+import { View, FlatList, ScrollView, SafeAreaView, TouchableOpacity } from 'react-native'
 // React Navigation
 import { createStackNavigator } from '@react-navigation/stack'
 import {
     modalConfirmation,
     searchGameIcon
 } from '../sgGameScreenContent/sgAPIIndex'
-import { SafeAreaViewContainer, CurrentThemeContext, TestImageDB, FontAwesomeIcon, faChevronLeft, CustomInputField } from 'index';
+import { AppWideImageContext, SafeAreaViewContainer, CurrentThemeContext, TestImageDB, FontAwesomeIcon, faChevronLeft, CustomInputField } from 'index';
 
 export default function SgGameSearchScreen({route, navigation}, props) {
     const colors = useContext(CurrentThemeContext)
+    const images = useContext(AppWideImageContext)
     const { selectedSystemLogo } = route.params
     const testGamesDb = TestImageDB.results
     const searchType = props.searchType
@@ -21,7 +22,7 @@ export default function SgGameSearchScreen({route, navigation}, props) {
     useEffect(() => {
         setTimeout(() => {
             setIsLoading(false)
-          }, 2500)
+        }, 2500)
         setModalSelected(false)
     }, [])
 
@@ -65,7 +66,7 @@ export default function SgGameSearchScreen({route, navigation}, props) {
         navigation.navigate('SgAddGameConfirm', { 
             gameName: gameName
         })
-          setModalSelected(true)
+            setModalSelected(true)
     }
 
     function setGameConfirmation(item) {
@@ -77,7 +78,7 @@ export default function SgGameSearchScreen({route, navigation}, props) {
     function sgModalScreen() {
         return (
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.primaryColor }}>
-               {setGameConfirmation()}
+                {setGameConfirmation()}
             </View>
         );
     }
@@ -98,7 +99,7 @@ export default function SgGameSearchScreen({route, navigation}, props) {
 
     function SgGameStack() {
         const currentSearchDB = filterList(testGamesDb)
-      return (
+        return (
             <FlatList
                 data={currentSearchDB}
                 keyboardShouldPersistTaps="always" 
@@ -113,18 +114,14 @@ export default function SgGameSearchScreen({route, navigation}, props) {
         ) 
     }
 
-    function setConsole() {
-        return (
-            <Image
-                style={{
-                    width: 200,
-                    height: 60
-                }}
-                source={{
-                    url: `${selectedSystemLogo}`,
-                }}
-            />
-        )
+    function determineConsoleSelection() {
+        const imageData = {
+            height: 60,
+            weight: 200,
+            source: selectedSystemLogo,
+            Transition: 1000
+        }
+        return images.chooseConsoleImage(imageData)
     }
 
     function sgDBGameSearch() {
@@ -136,7 +133,7 @@ export default function SgGameSearchScreen({route, navigation}, props) {
                     />
                     <MainFont>Received params: {JSON.stringify(route.params)}</MainFont>
                     <MainFont>Your here now</MainFont>
-                        {setConsole()}
+                        {determineConsoleSelection()}
                         <CustomInputField
                             placeholderTextColor={colors.primaryColor}
                             placeholder='Search Games'
@@ -191,11 +188,11 @@ export default function SgGameSearchScreen({route, navigation}, props) {
                     {sgModal}
                 </ModalStack.Navigator>
             )
-      }
-     
-  return (
+    }
+
+    return (
         <SafeAreaViewContainer>
             {sgSearchGameStack()}
         </SafeAreaViewContainer>
-  );
+    );
 }

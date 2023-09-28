@@ -1,21 +1,8 @@
-import { useContext, useEffect, useRef, useState } from 'react';
-import {
-    FlatList,
-    Image,
-    SafeAreaView,
-    ScrollView,
-    TouchableOpacity,
-    useIsFocused,
-    Alert,
-    Modal,
-    StyleSheet,
-    Text,
-    Pressable,
-    View,
-} from 'react-native';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { SafeAreaView, ScrollView, TouchableOpacity, useIsFocused, View } from 'react-native';
 import { useSearchBar } from 'main/sgGameSearchScreenContent/searchIndex'
 import { SearchBox } from 'main/sgGameSearchScreenContent/sgAlgoliaComponents/sgAlgoliaSearchBarContext'
-import { InfiniteHits, Hit, AlgoliaSGPagination } from 'main/sgGameSearchScreenContent/sgAlgoliaComponents/sgAlgoliaSearchHitsContext'
+import { InfiniteHits, Hit } from 'main/sgGameSearchScreenContent/sgAlgoliaComponents/sgAlgoliaSearchHitsContext';
 import algoliasearch from 'algoliasearch'
 import { InstantSearch } from 'react-instantsearch-hooks'
 import {
@@ -29,26 +16,12 @@ import {
     MainFont,
     ModalButton,
     ViewTopRow,
-    windowHeight
 } from 'index';
 import { useAuth } from 'auth/authContext'
 
 export default function SgSearchHome({navigation, route}) {
-    const { 
-        searchBar,  
-        gamesFilterListName,
-        testDb,
-        } = useSearchBar()
-        const { 
-            currentUser, 
-            currentUID, 
-            displayData,
-            toNewSection,
-            sgFirebaseGamesCollectionSubGenre,
-            sgFirebaseConsolesCollection,
-            sgFirebaseGenreCollection,
-            sgDB,
-            backArrow } = useAuth()
+    const { testDb } = useSearchBar()
+    const { backArrow } = useAuth()
     const { gamePageLinkPressed, gameDataToBePassed } = route.params
     const colors = useContext(CurrentThemeContext)
     const customRefinements = useContext(customRefinementContext)
@@ -60,15 +33,14 @@ export default function SgSearchHome({navigation, route}) {
     const backNeeded = true
     const chosenDb = testDb
     
-
     useEffect(() => {
         function loadingTime() {
             return new Promise(resolve => {
-              setTimeout(() => {
-                resolve(
-                    setIsLoading(false),
-                )
-              }, 2000)
+                setTimeout(() => {
+                    resolve(
+                        setIsLoading(false),
+                    )
+                }, 2000)
             }, [])
         }
         async function sgLoader() {
@@ -91,7 +63,8 @@ export default function SgSearchHome({navigation, route}) {
     // Algolia Search Bar and Modal
     function scrollToTop() {
         listRef.current?.scrollToOffset({ animated: false, offset: 0 });
-      }
+    }
+
     function sgAlgolia() {
         const searchClient = algoliasearch(algoliaConfig.appId, algoliaConfig.apiKey);
         return (
@@ -118,6 +91,7 @@ export default function SgSearchHome({navigation, route}) {
             </InstantSearch>
         )
     }
+
     function sgAlgoliaCustomSearchBar() {
         return (
             <CustomSearchBarContainer>
@@ -139,56 +113,26 @@ export default function SgSearchHome({navigation, route}) {
             </CustomSearchBarContainer>
         )
     }
+
     function sgAlgoliaConsoleRefinements() {
         return (
             <customRefinements.refinementConsoleList colors={colors} />
         )
     }
+
     function sgAlgoliaFilters() {
         return (
             <ModalButton refinementColors={colors} />
         )
     }
+
     function sgAlgoliaHits() {
         return (
             <InfiniteHits hitComponent={Hit} nav={navigation} />
         )
     }
     /*----------------------------*/
-
-    function sgAlgoliaDeleteObject() {
-        const searchClient = algoliasearch(algoliaConfig.appId, algoliaConfig.apiKey);
-        const index = searchClient.initIndex('games');
-        index.deleteObject('pac-man-2-the-new-adventures (Genesis)').then(({ hits }) => {
-          console.log(hits);
-        });
-      }
-
-    // Filter Image (Should appear on top of the data on page in the lower right corner, just above the navbar)
-      function headerLogo() {
-        const logoLink = 'https://reactnative.dev/img/tiny_logo.png'
-        return (
-            <View style={{
-                width: '100%',
-            }}>
-                <Image
-                    style={{
-                        height: 45,
-                        width: 45,
-                        resizeMode: 'stretch',
-                        borderRadius: 5,
-                    }}
-                    source={{
-                        url: logoLink,
-                    }}
-                />
-            </View>
-        )
-    }
-    /*----------------------------*/
     
-    /*----------------------------*/
-
     function preLoadedData() {
         return (
             <View style={{ flex: 1 }}>
@@ -206,7 +150,6 @@ export default function SgSearchHome({navigation, route}) {
             </View>
         )
     }
-
 
     return (
         <SafeAreaView style={{ flex: 1 }}>

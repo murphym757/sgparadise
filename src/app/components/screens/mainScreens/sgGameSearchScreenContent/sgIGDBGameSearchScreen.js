@@ -2,13 +2,12 @@ import React, { useState, useEffect, useContext } from 'react';
 import {
     View,
     Button,
-    Image,
     FlatList,
     ScrollView,
     SafeAreaView,
     TouchableOpacity,
     ActivityIndicator,
-} from 'react-native';
+} from 'react-native'
 import axios from 'axios'
 // React Navigation
 import { createStackNavigator } from '@react-navigation/stack'
@@ -18,6 +17,7 @@ import {
     searchGameIcon
 } from '../sgGameScreenContent/sgAPIIndex'
 import {
+    AppWideImageContext,
     Container,
     CurrentThemeContext,
     CustomInputField,
@@ -41,22 +41,23 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
         selectedTags,
         tagsSelection} = useTags()
     const colors = useContext(CurrentThemeContext)
+    const images = useContext(AppWideImageContext)
     const sgDB = firebase.firestore()
     const [isLoading, setIsLoading] = useState(true)
     const { selectedSystemLogo } = route.params
     const testGamesDb = TestImageDB.results
      // For Search Bar
-     const { searchBar, searchResults } = useSearchBar()
-     const [searchType, setSearchType] = useState('sgIGDBSearch')
-     const [searchBarTitle, setSearchBarTitle] = useState('Search Games')
-     const [searchQuery, setSearchQuery] = useState('')
-     const [searchFilterSelected, setSearchFilterSelected] = useState(false)
-     const [sgConsoleIcons, setSgConsoleIcons] = useState([])
-     const [chosenGenre, setChosenGenre] = useState()
-     const [modalSelected, setModalSelected] = useState(route.params?.modal)
-     const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be readconst [modalSelected, setModalSelected] = useState(route.params?.modal)
-     const tagData = sgConsoleIcons
-     const Root = createStackNavigator();
+    const { searchBar, searchResults } = useSearchBar()
+    const [searchType, setSearchType] = useState('sgIGDBSearch')
+    const [searchBarTitle, setSearchBarTitle] = useState('Search Games')
+    const [searchQuery, setSearchQuery] = useState('')
+    const [searchFilterSelected, setSearchFilterSelected] = useState(false)
+    const [sgConsoleIcons, setSgConsoleIcons] = useState([])
+    const [chosenGenre, setChosenGenre] = useState()
+    const [modalSelected, setModalSelected] = useState(route.params?.modal)
+    const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be readconst [modalSelected, setModalSelected] = useState(route.params?.modal)
+    const tagData = sgConsoleIcons
+    const Root = createStackNavigator();
 
     function unixTimestampConverter(item) {
         const unixTimestamp = item.first_release_date
@@ -92,32 +93,29 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
         setIgdbUnixTimestamp(item.first_release_date)
         setigdbGameSelected(true)
     }
-    
-    
 
     useEffect(() => {
         setTimeout(() => {
             setIsLoading(false)
-          }, 2000)
+        }, 2000)
         const subscriber = sgDB
-          .collection('sgAPI').doc('sgTags').collection('genreTags').orderBy('tagName', 'asc')
-          .onSnapshot(querySnapshot => {
-            const consoles = []
-            querySnapshot.forEach(documentSnapshot => {
-                consoles.push({
-                ...documentSnapshot.data(),
-                key: documentSnapshot.id,
-              })
-            })
-      
+            .collection('sgAPI').doc('sgTags').collection('genreTags').orderBy('tagName', 'asc')
+            .onSnapshot(querySnapshot => {
+                const consoles = []
+                querySnapshot.forEach(documentSnapshot => {
+                        consoles.push({
+                        ...documentSnapshot.data(),
+                        key: documentSnapshot.id,
+                    })
+                })
             setSgConsoleIcons(genreTags)
-          });
-          if(isFocused){  
+        });
+        if(isFocused){  
             setModalSelected(false)
         }
         // Unsubscribe from events when no longer in use
         return () => subscriber();
-      }, [isFocused])
+    }, [isFocused])
 
     async function igdbSearchFuction() {
         let api = axios.create({
@@ -195,7 +193,7 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
             gameSummary: gameSummary,
             igdbUnixTimestamp: igdbUnixTimestamp
         })
-          setModalSelected(true)
+            setModalSelected(true)
     }
 
     function setGameConfirmation(item) {
@@ -207,7 +205,7 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
     function sgModalScreen() {
         return (
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.primaryColor }}>
-               {setGameConfirmation()}
+                {setGameConfirmation()}
             </View>
         );
     }
@@ -228,7 +226,7 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
 
     function SgGameStack() {
         const currentSearchDB = filterList(testGamesDb)
-      return (
+        return (
             <FlatList
                 data={currentSearchDB}
                 keyboardShouldPersistTaps="always" 
@@ -320,18 +318,17 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
                     {sgModal}
                 </ModalStack.Navigator>
             )
-      }
+    }
 
-
-      function resetAll() {
+    function resetAll() {
         setChosenGenre(null)
         navigation.goBack()
     }
+
     function confirmGenreSelection(item){
         navigation.navigate('Page1')
         setChosenGenre(item)
     }
-    
 
     function searchBarGoBack() {
         return (
@@ -402,46 +399,46 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
                 />
             )
         }
-
+    function chooseConsoleImage() {
+        const imageData = {
+            height: 60,
+            weight: 200,
+            source: selectedSystemLogo,
+            Transition: 1000
+        }
+        return images.igdbConsoleListImage(imageData)
+    }
     function chooseGameOptions() {
         return(
             <SafeAreaViewContainer>
-            {searchBarGoBack()}
-            {isLoading == undefined
-                ?   <ActivityIndicator size="large" hidesWhenStopped="true"/>
-                :   <View>
-                        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                            <Image
-                                style={{
-                                    width: 200,
-                                    height: 60
-                                }}
-                                source={{
-                                    url: `${selectedSystemLogo}`,
-                                }}
-                            />
-                            <MainFont>Test</MainFont>
-                            {isLoading && (
-                                <ActivityIndicator size="small" />
-                            )}
+                {searchBarGoBack()}
+                {isLoading == undefined
+                    ?   <ActivityIndicator size="large" hidesWhenStopped="true"/>
+                    :   <View>
+                            <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                                {chooseConsoleImage()}
+                                <MainFont>Test</MainFont>
+                                {isLoading && (
+                                    <ActivityIndicator size="small" />
+                                )}
+                            </View>
+                            <Container>
+                                {selectedTags(tagData)}
+                                <ScrollViewContainer>
+                                    <View style={{paddingBottom: windowHeight/8}}>
+                                        <MainFont>This is where youll confirm your chose</MainFont>
+                                        {searchResults()}
+                                        {genreTagCollection()}
+                                        {searchFilterSelected == false
+                                            ?   <MainFont>Ocean Drive</MainFont>
+                                            :   tagsSelection(tagData)
+                                        }
+                                    </View>
+                                </ScrollViewContainer>
+                            </Container>
                         </View>
-                        <Container>
-                            {selectedTags(tagData)}
-                            <ScrollViewContainer>
-                                <View style={{paddingBottom: windowHeight/8}}>
-                                    <MainFont>This is where youll confirm your chose</MainFont>
-                                    {searchResults()}
-                                    {genreTagCollection()}
-                                    {searchFilterSelected == false
-                                        ?   <MainFont>Ocean Drive</MainFont>
-                                        :   tagsSelection(tagData)
-                                    }
-                                </View>
-                            </ScrollViewContainer>
-                        </Container>
-                    </View>
-            }
-        </SafeAreaViewContainer>
+                }
+            </SafeAreaViewContainer>
         )
     }
 
@@ -480,8 +477,7 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
             </View>
         );
     }
-    
-     
+
     return (
         <Root.Navigator headerMode="none" initialRouteName="Home">
             <Root.Screen name="Home" component={chooseGameOptions} />

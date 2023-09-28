@@ -1,7 +1,7 @@
 
-import React, { useState, useEffect, useContext } from 'react'
-import { View, Image, Text, FlatList, ActivityIndicator } from 'react-native'
-import { axiosSearchContext, confirmGameContext, MainSubHeading, CenterContent, ContentContainer, algoliaConfig, sgGenNATitles, PageContainerCover, CurrentThemeContext, SafeAreaViewContainer, useAuth } from 'index'
+import React, { useState, useEffect, useContext } from 'react';
+import { View, FlatList, ActivityIndicator } from 'react-native'
+import { AppWideImageContext, axiosSearchContext, confirmGameContext, MainSubHeading, CenterContent, ContentContainer, algoliaConfig, sgGenNATitles, PageContainerCover, CurrentThemeContext, SafeAreaViewContainer, useAuth } from 'index'
 import axios from 'axios'
 import algoliasearch from 'algoliasearch'
 import stringSimilarity from 'string-similarity'
@@ -15,6 +15,7 @@ export default function SgSelectedGameCoverScreen({route, navigation}) {
     const colors = useContext(CurrentThemeContext)
     const confirmGame = useContext(confirmGameContext)
     const searchAxios = useContext(axiosSearchContext)
+    const images = useContext(AppWideImageContext)
     const [isLoading, setIsLoading] = useState()
     const { 
         accessTokenIGDB,
@@ -91,21 +92,22 @@ export default function SgSelectedGameCoverScreen({route, navigation}) {
             })
             return new Promise(resolve => {
                 setTimeout(() => {
-                  resolve(
-                    searchAxios.findCover(api, igdbGameId, setCoversResults),
-                    searchAxios.findScreenshots(api, igdbGameId, setGameScreenshots),
-                    searchAxios.findPublishers(api, igdbGameId, setGamePublishersResults),
-                    searchAxios.findDevelopers(api, igdbGameId, setGameDevelopersResults),
-                    searchAxios.findGameNameJPN(api, igdbGameId, setGameNameJPNAlt),
-                    searchAxios.findGameNameEUR(api, igdbGameId, setGameNameEURAlt),
-                    searchAxios.findGameNameBRZ(api, igdbGameId, setGameNameBRZAlt),
-                    setIsLoading(false)),
+                    resolve(
+                        searchAxios.findCover(api, igdbGameId, setCoversResults),
+                        searchAxios.findScreenshots(api, igdbGameId, setGameScreenshots),
+                        searchAxios.findPublishers(api, igdbGameId, setGamePublishersResults),
+                        searchAxios.findDevelopers(api, igdbGameId, setGameDevelopersResults),
+                        searchAxios.findGameNameJPN(api, igdbGameId, setGameNameJPNAlt),
+                        searchAxios.findGameNameEUR(api, igdbGameId, setGameNameEURAlt),
+                        searchAxios.findGameNameBRZ(api, igdbGameId, setGameNameBRZAlt),
+                        setIsLoading(false)
+                    ),
                     findConsoleName(igdbConsoleId)
                 }, 2000)
                 setFirebaseGameName(),
                 foundGameinSGDB()
-              })
-            }
+            })
+        }
 
         async function sgLoader() {
             await searchTesting()
@@ -113,6 +115,20 @@ export default function SgSelectedGameCoverScreen({route, navigation}) {
         sgLoader()
         
     }, [])
+
+    function providedGameCoverImage() {
+        const imageData = {
+            height: 500,
+            width: 380,
+            marginVertical: 15,
+            contentFit: 'stretch',
+            transition: 1000,
+            borderRadius: 25,
+            borderWidth: null,
+            borderColor: null
+        }
+        return images.gameSelectionCoverImage(imageData, gameCover, setIsLoading)
+    }
 
     function gameCoverImage(buttonGroupData, updatedGameRating, setUpdatedGameRating, colors) {
         const stackName = ''
@@ -131,20 +147,7 @@ export default function SgSelectedGameCoverScreen({route, navigation}) {
                             width: '100%',
                             height: undefined,
                         }}>
-                            <Image
-                                style={{
-                                    height: 500,
-                                    width: 380,
-                                    marginVertical: 15,
-                                    resizeMode: 'stretch',
-                                    borderRadius: 25,
-                                }}
-                                source={{
-                                    url: `https://images.igdb.com/igdb/image/upload/t_1080p/${gameCover}.jpg`,
-                                }}
-                                onLoadStart={() => {setIsLoading(true)}}
-                                onLoadEnd={() => {setIsLoading(false)}}
-                            />
+                            {providedGameCoverImage()}
                             {gameExistence === true
                                 ?   <CenterContent>
                                         <MainSubHeading>This game is already uploaded, sorry</MainSubHeading>

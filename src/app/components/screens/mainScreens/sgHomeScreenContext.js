@@ -1,21 +1,14 @@
-import React from 'react'
-import { View, Image, FlatList, TouchableOpacity } from 'react-native'
-import { 
-    MainFont, 
-    MainHeading, 
-    MainHeadingLongTitle, 
-    ViewTopRow, 
-    Container, 
-    ContentContainer,
-    CarouselCardBody,
-    CarouselCardContainer,
-    CarouselCardHeader,
-    CarouselCardImage,
+import React, { useContext } from 'react'
+import { View, FlatList, TouchableOpacity } from 'react-native'
+import {
+    AppWideImageContext,
+    MainFont,
+    MainHeading,
+    MainHeadingLongTitle,
     PlatformCard,
     SliderWidth,
-    Styles
- } from 'index'
- import {FlatListSlider} from 'react-native-flatlist-slider'
+    ViewTopRow
+} from 'index';
 
 // Links to the game page
 function passDataToNextPage(navigation, item, consoleName) {
@@ -28,69 +21,6 @@ function passDataToNextPage(navigation, item, consoleName) {
             gameImageCount: item.firebaseGameNameImageCount,
             gamesCollection: 'games'
         })
-    )
-}
-
-// Cover image
-function detailedGameCover(coverLink, coverHeight, coverWidth) {
-    return (
-        <View style={{
-            width: '100%',
-        }}>
-            <Image
-                style={{
-                    height: coverHeight,
-                    width: coverWidth,
-                    resizeMode: 'stretch',
-                    borderRadius: 5,
-                }}
-                source={{
-                    url: `${coverLink}`,
-                }}
-            />
-        </View>
-    )
-}
-
-// Platform Logo
-function detailedPlatformLogo(item, coverHeight, coverWidth) {
-    return (
-        <View style={{
-            width: '100%',
-        }}>
-            <Image
-                style={{
-                    height: coverHeight,
-                    width: coverWidth,
-                    resizeMode: 'stretch',
-                    borderRadius: 5,
-                }}
-                source={{
-                    url: `${item.systemLogoDay}`,
-                }}
-            />
-        </View>
-    )
-}
-
-// Spotlight Gameplay Image 
-function detailedGameScreenshot(item) {
-    return (
-        <View style={{
-            width: '100%',
-        }}>
-            <Image
-                style={{
-                    height: 400,
-                    width: SliderWidth,
-                    resizeMode: 'stretch',
-                    borderRadius: 5,
-                }}
-                source={{
-                    url: `${item.firebaseScreenshot1Url}`,
-                }}
-            />
-        </View>
     )
 }
 
@@ -108,10 +38,33 @@ function charLengthSet(nameValue, nameLength, maxNameLength, nameLengthSet) {
 
 
 function sgGameListingSpotlight(passingSectionData, item, laymanConsoleName, consoleName) {
+    function gameCoverSpotlightHomeScreen() {
+        const imageData = {
+            height: coverHeight,
+            width: coverWidth,
+            contentFit: 'stretch',
+            borderRadius: 5,
+            transition: 1000
+        }
+        return images.detailedGameCover(imageData, coverLink)
+    }
+    function gameScreenshotSpotlightHomeScreen(item) {
+        const imageDataScreenshot = {
+            height: screenshotHeight,
+            width: SliderWidth,
+            contentFit: 'stretch',
+            borderRadius: 5,
+            transition: 1000
+        }
+        return images.detailedGameScreenshot(imageDataScreenshot, item)
+    }
+    const images = useContext(AppWideImageContext)
     const coverLink = item.firebaseCoverUrl
     const coverHeight = 100
     const coverWidth = 75
+    const screenshotHeight = 400
     const nameValue = item.gameName
+    
     return (
         <View style={{paddingBottom: 75, flex: 1, flexDirection: 'column'}}>
             <TouchableOpacity style={{height:100, marginTop: 3, marginBottom: 100}}
@@ -120,7 +73,7 @@ function sgGameListingSpotlight(passingSectionData, item, laymanConsoleName, con
                     position: 'relative'
                 }}>
                 <MainHeading style={{color: `${passingSectionData.colors.black}`, paddingBottom: 10}}>Spotlight</MainHeading>
-                    {detailedGameScreenshot(item)}
+                    {gameScreenshotSpotlightHomeScreen(item)}
                 </View>
                 
                 <View style={{
@@ -140,7 +93,7 @@ function sgGameListingSpotlight(passingSectionData, item, laymanConsoleName, con
                     }}/>
                         <ViewTopRow style={{paddingTop: 215, position: 'absolute', flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'flex-start', paddingVertical: 25}}>
                             <View style={{paddingRight: 15, paddingVertical: 5}}>
-                                {detailedGameCover(coverLink, coverHeight, coverWidth)}
+                                {gameCoverSpotlightHomeScreen(imageData, coverLink)}
                             </View>
                             <View style={{paddingVertical: 25}}>
                                 {charLengthSet(nameValue, nameValue.length, 18, 13)}
@@ -172,6 +125,17 @@ function sgGameSetSpotlight(passingSectionData, laymanConsoleName, consoleName) 
 
 // Data beneath cover
 function sgGameListing(passingSectionData, item, consoleName) {
+    function gameCoverListingHomeScreen() {
+        const imageData = {
+            height: coverHeight,
+            width: coverWidth,
+            contentFit: 'stretch',
+            borderRadius: 5,
+            transition: 1000
+        }
+        return images.detailedGameCover(imageData, coverLink)
+    }
+    const images = useContext(AppWideImageContext)
     const coverLink = item.firebaseCoverUrl
     const coverHeight = 150
     const coverWidth = 125
@@ -179,7 +143,7 @@ function sgGameListing(passingSectionData, item, consoleName) {
     return (
         <TouchableOpacity style={{height:125, marginTop: 3, marginBottom: 100}}
             onPress={() => passDataToNextPage(passingSectionData.navigation, item, consoleName)}>
-            {detailedGameCover(coverLink, coverHeight, coverWidth)}
+            {gameCoverListingHomeScreen()}
             <View style={{paddingVertical: 5}}>
                 {charLengthSet(nameValue, nameValue.length, 18, 13)}
             </View>
@@ -190,6 +154,17 @@ function sgGameListing(passingSectionData, item, consoleName) {
 }
 
 function sgConsoleSet(passingSectionData, titleForRelatedData) {
+    function gameCoverListingHomeScreen(item) {
+        const imageData = {
+            height: coverHeight,
+            width: coverWidth,
+            contentFit: 'stretch',
+            borderRadius: 5,
+            transition: 1000
+        }
+        return images.detailedPlatformLogo(item, imageData)
+    }
+    const images = useContext(AppWideImageContext)
     const coverHeight = 80
     const coverWidth = 200
     return (
@@ -212,8 +187,8 @@ function sgConsoleSet(passingSectionData, titleForRelatedData) {
                                     justifyContent: 'center',
                                     alignItems: 'center'
                                 }}>
-                                    {detailedPlatformLogo(item, coverHeight, coverWidth)}
-                                    </View>
+                                    {gameCoverListingHomeScreen(item)}
+                                </View>
                             </PlatformCard>
                         </ViewTopRow>
                     </View>
@@ -327,7 +302,6 @@ export const gameData = {
     sgGameSetSpotlight,
     sgGameSet,
     charLengthSet,
-    detailedGameCover,
     dataCollector,
     dataCollectorConsole,
     dataActionGenreCollector

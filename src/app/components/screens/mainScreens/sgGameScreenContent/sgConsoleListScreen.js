@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { View, FlatList, Image, SafeAreaView, TouchableOpacity, ActivityIndicator } from 'react-native'
+import { View, FlatList, SafeAreaView, TouchableOpacity, ActivityIndicator } from 'react-native'
 import axios from 'axios'
 import { createStackNavigator } from '@react-navigation/stack'
 import { useIsFocused } from "@react-navigation/native"
 import {
+    AppWideImageContext,
     CurrentThemeContext,
     dayTime,
     faChevronLeft,
@@ -17,6 +18,7 @@ import { modalConfirmation } from './sgAPIIndex'
 
 export default function SgConsoleListScreens({route, navigation}, props) {
     const colors = useContext(CurrentThemeContext)
+    const images = useContext(AppWideImageContext)
     const sgDB = firebase.firestore()
     const consoleData = sgDB.collection("sgAPI").get()
     const { addGameLinkPressed } = route.params
@@ -65,27 +67,26 @@ export default function SgConsoleListScreens({route, navigation}, props) {
     useEffect(() => {
         setTimeout(() => {
             setIsLoading(false)
-          }, 2000)
+        }, 2000)
         const subscriber = sgDB
-          .collection("sgAPI").orderBy('sgId', 'asc')
-          .onSnapshot(querySnapshot => {
-            const consoles = []
-            querySnapshot.forEach(documentSnapshot => {
-                consoles.push({
-                ...documentSnapshot.data(),
-                key: documentSnapshot.id,
-              })
+            .collection("sgAPI").orderBy('sgId', 'asc')
+            .onSnapshot(querySnapshot => {
+                const consoles = []
+                querySnapshot.forEach(documentSnapshot => {
+                    consoles.push({
+                        ...documentSnapshot.data(),
+                        key: documentSnapshot.id,
+                    })
+                })
+                setSgConsoleIcons(consoles)
             })
-      
-            setSgConsoleIcons(consoles)
-          })
-          if(isFocused){  
+        if(isFocused) {  
             setModalSelected(false)
             igbdbAPI()
         }
         // Unsubscribe from events when no longer in use
         return () => subscriber()
-      }, [isFocused])    
+    }, [isFocused])    
 
     function setConsoleId(item) {
         navigation.navigate('MyModal')
@@ -120,7 +121,7 @@ export default function SgConsoleListScreens({route, navigation}, props) {
                 searchType: searchType
             })
         }
-          setModalSelected(true)
+            setModalSelected(true)
     }
 
     function setConsoleConfirmation(item) {
@@ -137,89 +138,87 @@ export default function SgConsoleListScreens({route, navigation}, props) {
         )
     }
 
-   function sgConsolesStack() {
-       return (
-        <View style={{ backgroundColor: colors.primaryColor }}>
-            
-        </View>
-       )
-   }
-
-   function sgHomeModalStack() {
-    const ModalStack = createStackNavigator()
-    const sgModal = modalSelected == true 
-        ? null
-        : <ModalStack.Screen name="MyModal" component={sgModalScreen} />
-            return (
-                <ModalStack.Navigator mode="modal" 
-                    screenOptions={{
-                        headerStyle: {
-                            backgroundColor: colors.primaryColor,
-                            elevation: 0,
-                            shadowOpacity: 0,
-                            borderBottomWidth: 0
-                        },
-                        headerTintColor: colors.primaryFontColor,
-                        style: {
-                            shadowColor: 'transparent',
-                        },
-                    }}
-                >
-                    <ModalStack.Screen
-                        name="SgConsoleOptions"
-                        component={sgConsolesStack}
-                        options={{ headerShown: false }}
-                    />
-                        {sgModal}
-                </ModalStack.Navigator>
-            )
-  }
-
-  return (
-    <SafeAreaView style={{ flex: 1, justifyContent: 'center', backgroundColor: colors.primaryColor }}>
-        {isLoading == undefined
-            ? <ActivityIndicator size="large" hidesWhenStopped="true"/>
-            : <View>
-            {sgHomeModalStack()}
-            <View style={{ alignItems: 'left', justifyContent: 'center', backgroundColor: colors.primaryColor }}>
-                <FontAwesomeIcon 
-                    icon={ faChevronLeft } color={colors.primaryFontColor} size={50} 
-                    onPress={() => navigation.goBack()}
-                />
+    function sgConsolesStack() {
+        return (
+            <View style={{ backgroundColor: colors.primaryColor }}>
+                
             </View>
-            <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                    <MainFont>Select one of the following consoles:</MainFont>
-                    <FlatList
-                        scrollEnabled={false}
-                        data={sgConsoleIcons}
-                        keyboardShouldPersistTaps="always"
-                        keyExtractor={item => item.id}
-                        renderItem={({ item }) => (
-                        <View>
-                            <TouchableOpacity onPress={() => setConsoleId(item)}>
-                                <Image
-                                    style={{
-                                        width: 300,
-                                        height: 85,
-                                        marginVertical: 15
-                                    }}
-                                    source={{
-                                        url: `${item.systemLogoSelectedDay}`,
-                                    }}
-                                    onLoadStart={() => {setIsLoading(true)}}
-                                    onLoadEnd={() => {setIsLoading(false)}}
-                                />
-                                {isLoading && (
-                                    <ActivityIndicator size="large" />
-                                )}
-                            </TouchableOpacity>
-                        </View>
-                        )}
+        )
+    }
+
+    function sgHomeModalStack() {
+        const ModalStack = createStackNavigator()
+        const sgModal = modalSelected == true 
+            ? null
+            : <ModalStack.Screen name="MyModal" component={sgModalScreen} />
+                return (
+                    <ModalStack.Navigator mode="modal" 
+                        screenOptions={{
+                            headerStyle: {
+                                backgroundColor: colors.primaryColor,
+                                elevation: 0,
+                                shadowOpacity: 0,
+                                borderBottomWidth: 0
+                            },
+                            headerTintColor: colors.primaryFontColor,
+                            style: {
+                                shadowColor: 'transparent',
+                            },
+                        }}
+                    >
+                        <ModalStack.Screen
+                            name="SgConsoleOptions"
+                            component={sgConsolesStack}
+                            options={{ headerShown: false }}
+                        />
+                            {sgModal}
+                    </ModalStack.Navigator>
+                )
+        }
+
+    function consoleListImage(item) {
+        const imageData = {
+            width: 300,
+            height: 85,
+            borderRadius: 10,
+            marginVertical: 15
+        }
+        return images.consoleListImageStyling(imageData, item, setIsLoading)
+    }
+
+    return (
+        <SafeAreaView style={{ flex: 1, justifyContent: 'center', backgroundColor: colors.primaryColor }}>
+            {isLoading == undefined
+                ? <ActivityIndicator size="large" hidesWhenStopped="true"/>
+                : <View>
+                {sgHomeModalStack()}
+                <View style={{ alignItems: 'left', justifyContent: 'center', backgroundColor: colors.primaryColor }}>
+                    <FontAwesomeIcon 
+                        icon={ faChevronLeft } color={colors.primaryFontColor} size={50} 
+                        onPress={() => navigation.goBack()}
                     />
                 </View>
-            </View>
-        }
-    </SafeAreaView>
-  )
- }
- 
+                <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                        <MainFont>Select one of the following consoles:</MainFont>
+                        <FlatList
+                            scrollEnabled={false}
+                            data={sgConsoleIcons}
+                            keyboardShouldPersistTaps="always"
+                            keyExtractor={item => item.id}
+                            renderItem={({ item }) => (
+                            <View>
+                                <TouchableOpacity onPress={() => setConsoleId(item)}>
+                                    {consoleListImage(item)}
+                                    {isLoading && (
+                                        <ActivityIndicator size="large" />
+                                    )}
+                                </TouchableOpacity>
+                            </View>
+                            )}
+                        />
+                    </View>
+                </View>
+            }
+        </SafeAreaView>
+    )
+}

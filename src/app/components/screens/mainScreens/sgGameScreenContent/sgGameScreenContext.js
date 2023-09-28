@@ -1,6 +1,5 @@
 import React from 'react';
 import { ActivityIndicator, FlatList, TouchableOpacity, View} from 'react-native';
-import { Image } from 'expo-image'
 import {
     Card,
     CardContent,
@@ -361,20 +360,18 @@ function returnedGameSummary(currentGameArray) {
         return (
             <View style={{paddingTop: 20, paddingHorizontal: 40}}>
                 <View style={{height: 110}}>
-                    <View>
-                        <GameDescriptorSmall>Choose One</GameDescriptorSmall>
-                        {gameScreenshots.map((item) =>
-                            <TouchableOpacity
-                                onPress={() => selectedGameScreenshot(item, selectedGameScreenshot)}>
-                                    <View style={{marginVertical: 5}}>
-                                        {gameHomeNewScreenShot === item
-                                            ?    gamePageGameplayImagesSelected(item)
-                                            :    gamePageGameplayImagesNotSelected(item)
-                                        }  
-                                    </View>
-                            </TouchableOpacity>
-                        )}
-                    </View>
+                    <GameDescriptorSmall>Choose One</GameDescriptorSmall>
+                    {gameScreenshots.map((item) =>
+                        <TouchableOpacity
+                            onPress={() => selectedGameScreenshot(item, selectedGameScreenshot)}>
+                                <View style={{marginVertical: 5}}>
+                                    {gameHomeNewScreenShot === item
+                                        ?    gamePageGameplayImagesSelected(item)
+                                        :    gamePageGameplayImagesNotSelected(item)
+                                    }  
+                                </View>
+                        </TouchableOpacity>
+                    )}
                 </View>
             </View>
         )
@@ -511,29 +508,15 @@ function returnedGameGenresAndModes(currentGameArray, chosenDataOption) {
     )
 }
 //*----------------------------------------------*/
-function imageStructure(imageChosen) {
-    const gameScreenshot = imageChosen
-    return (
-        <Image
-            style={{
-                height: 250,
-                width: 375,
-                resizeMode: 'stretch',
-                borderRadius: 20,
-            }}
-            source={`${gameScreenshot}`}
-        />
-    )
-}
-function upperHalfOfGamePageImageSelector(item, image, preDeterminedImage){ 
+function upperHalfOfGamePageImageSelector(item, image, preDeterminedImage, gamePageGameplayImage){ 
     const nameLocation = 'secondaryGamePage'
     const nameValue = item.gameName
     return (
         <View style={{alignContent: 'center', alignItems: 'center'}}>
             <View>
                 {image == ''
-                    ? imageStructure(preDeterminedImage)
-                    : imageStructure(image)
+                    ? gamePageGameplayImage(preDeterminedImage)
+                    : gamePageGameplayImage(image)
                 }
             </View>
             <View style={{paddingTop: 20}}>
@@ -542,7 +525,7 @@ function upperHalfOfGamePageImageSelector(item, image, preDeterminedImage){
         </View>
     )
 }
-function upperHalfOfGamePage(currentGameArray, gameScreenshots, image) {
+function upperHalfOfGamePage(currentGameArray, gameScreenshots, image, gamePageGameplayImage) {
     return (
         <Container style={{paddingVertical: 20}}>
             <FlatList
@@ -553,7 +536,7 @@ function upperHalfOfGamePage(currentGameArray, gameScreenshots, image) {
                 keyboardShouldPersistTaps="always"
                 keyExtractor={item => item.id}
                 renderItem={({ item }) => (
-                    upperHalfOfGamePageImageSelector(item, image, gameScreenshots[0])
+                    upperHalfOfGamePageImageSelector(item, image, gameScreenshots[0], gamePageGameplayImage)
                 )}
             />
             
@@ -561,7 +544,7 @@ function upperHalfOfGamePage(currentGameArray, gameScreenshots, image) {
     )
 }
 
-function secondaryGamePageStructure(currentGameArray, gameScreenshots, image, gamePageScrollView, isLoading, colors, navigation) {
+function secondaryGamePageStructure(currentGameArray, gameScreenshots, image, gamePageScrollView, isLoading, colors, navigation, gamePageGameplayImage) {
     return (
         <View>
             {isLoading == true
@@ -571,7 +554,7 @@ function secondaryGamePageStructure(currentGameArray, gameScreenshots, image, ga
                         </SafeAreaViewLoader>
                 </View>
                 :  <View style={{position: 'relative', paddingTop: 100}}>
-                    {upperHalfOfGamePage(currentGameArray, gameScreenshots, image)}
+                    {upperHalfOfGamePage(currentGameArray, gameScreenshots, image, gamePageGameplayImage)}
                     {gamePageScrollView()}
                     {detailedPrevArrow(navigation, colors)}
             </View>
@@ -580,15 +563,15 @@ function secondaryGamePageStructure(currentGameArray, gameScreenshots, image, ga
     )
 }
 
-function preDeterminedGameHomeScreen(imageData, gameHomeScreenShot, gamePageScrollView) {
+function preDeterminedGameHomeScreen(imageData, gameHomeScreenShot, gamePageScrollView, gamePageGameplayImage) {
     return (
-        secondaryGamePageStructure(imageData.currentGameArray, imageData.gameScreenshots, gameHomeScreenShot, gamePageScrollView, imageData.isLoading, imageData.colors, imageData.navigation)
+        secondaryGamePageStructure(imageData.currentGameArray, imageData.gameScreenshots, gameHomeScreenShot, gamePageScrollView, imageData.isLoading, imageData.colors, imageData.navigation, gamePageGameplayImage)
     )
 }
 
-function updatedGameHomeScreen(imageData, gameHomeNewScreenShot, gamePageScrollView) {
+function updatedGameHomeScreen(imageData, gameHomeNewScreenShot, gamePageScrollView, gamePageGameplayImage) {
     return (
-        secondaryGamePageStructure(imageData.currentGameArray, imageData.gameScreenshots, gameHomeNewScreenShot, gamePageScrollView, imageData.isLoading, imageData.colors, imageData.navigation)
+        secondaryGamePageStructure(imageData.currentGameArray, imageData.gameScreenshots, gameHomeNewScreenShot, gamePageScrollView, imageData.isLoading, imageData.colors, imageData.navigation, gamePageGameplayImage)
     )
 }
 //*--------------------Second Page of Game Screen--------------------------*/

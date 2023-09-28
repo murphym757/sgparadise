@@ -1,28 +1,14 @@
-import React, { useState, useContext } from 'react'
-import { Alert, Modal, Button,
-  StyleSheet,
-  SafeAreaView,
-  Text,
-  TouchableOpacity,
-  View,
-  Image, Pressable, ScrollView } from 'react-native';
-import { useClearRefinements,
-  useCurrentRefinements,
-  useRefinementList, } from 'react-instantsearch-hooks';
-import { 
-  CurrentThemeContext, 
-  MainFontPills, 
-  MainHeading,
+import React, { useState, useContext } from 'react';
+import { Alert, Modal, StyleSheet, SafeAreaView, Text, View, Pressable } from 'react-native';
+import { useClearRefinements } from 'react-instantsearch-hooks';
+import {
   ViewContainer,
   ContentContainer,
-  MainFont,
   FontAwesomeIcon,
   faFilter,
-  MainSubFont,
-  AlgoliaSearchListLabelText,
   AlgoliaSearchTitleText,
-  customRefinementContext
-} from 'index'
+  customRefinementContext,
+} from 'index';
 
 export function ModalButton(props) { 
   const customRefinements = useContext(customRefinementContext)

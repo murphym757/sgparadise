@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Image } from 'react-native'
+import { View } from 'react-native'
 import {
     CenterContent,
     Container,
@@ -16,11 +16,10 @@ import {
     TouchableButtonFont,
     TouchableButtonFontAlt,
     TouchableButtonFontDelete,
-    useAuth,
     useTags,
     ViewSortColumn,
-    ViewSortRow
-} from 'index'
+    ViewSortRow,
+} from 'index';
 import { AirbnbRating } from 'react-native-ratings'
 
 function starRatingSystem(buttonGroupData, updatedGameRating, setUpdatedGameRating, colors) {
@@ -85,7 +84,7 @@ function gameSummaryResults(buttonGroupData, updatedGameSummary, setUpdatedGameS
     )
 }
 
-function gameConfirmationResults(tagArrayData, buttonGroupData, windowHeight, confirmationPage, undefined) {
+function gameConfirmationResults(tagArrayData, buttonGroupData, windowHeight, undefined, confirmationGameCoverImage) {
     return (
         <Container>
             <View style={{paddingBottom: 25}}><MainFont>{tagArrayData.pageDescription}</MainFont></View>
@@ -96,18 +95,7 @@ function gameConfirmationResults(tagArrayData, buttonGroupData, windowHeight, co
                         width: 200,
                         height: undefined,
                     }}>
-                        <Image
-                            style={{
-                                height: 200,
-                                width: 150,
-                                marginVertical: 15,
-                                resizeMode: 'stretch',
-                                borderRadius: 25,
-                            }}
-                            source={{
-                                url: `https://images.igdb.com/igdb/image/upload/t_1080p/${buttonGroupData.passingContent.gameCover}.jpg`,
-                            }}
-                        />
+                        {confirmationGameCoverImage(buttonGroupData)}
                     </View>
                     <View style={{width: 200, paddingLeft: windowHeight/20, height: undefined}}>
                         <ViewSortRow><MainSubFont>{buttonGroupData.passingContent.gameId}</MainSubFont></ViewSortRow>

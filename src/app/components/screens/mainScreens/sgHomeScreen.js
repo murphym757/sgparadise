@@ -1,16 +1,15 @@
-import React, { useState, useEffect, useContext } from 'react'
-import { View, Button, Image, FlatList, TouchableOpacity } from 'react-native'
+import React, { useState, useEffect, useContext } from 'react';
+import { View, TouchableOpacity } from 'react-native'
 import { useAuth } from 'auth/authContext'
 import { useSearchBar } from 'main/sgGameSearchScreenContent/searchIndex'
 import { loadingScreen } from 'auth/loadingScreen'
 import {
+    AppWideImageContext,
     ContentContainer,
     CurrentThemeContext,
     SafeAreaViewContainer,
     ScrollViewContainer,
     Container,
-    SgHomeActionGames,
-    MainHeadingLongTitle,
     firebaseSearchContext,
     homeScreenDatesContext,
     homeScreenSpotlightGamesContext,
@@ -19,14 +18,12 @@ import {
     homeScreenGenreContext,
     homeScreenActionContext,
     MainFont,
-    MainFontPills,
-    MainHeading,
     GeneralFontColor,
     TouchableButton,
     TouchableButtonFont,
     ViewTopRow,
-    windowHeight
-} from 'index'
+    windowHeight,
+} from 'index';
 import { useIsFocused } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 const Stack = createStackNavigator()
@@ -52,6 +49,7 @@ export default function SgHomeScreen({ navigation, route }) {
     const date = useContext(homeScreenDatesContext)
     const spotlights = useContext(homeScreenSpotlightGamesContext)
     const sgGameSearch = useContext(firebaseSearchContext)
+    const images = useContext(AppWideImageContext)
     const colorsPassThrough = colors
     const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be read
     const [isLoading, setIsLoading] = useState(true)
@@ -63,12 +61,12 @@ export default function SgHomeScreen({ navigation, route }) {
     // For Spotlight Section
     const [spotlightGameConsoleName, setSpotlightGameConsoleName] = useState()
      // For the Spotlight Game
-     const [spotlightArray, setSpotlightArray] = useState([])
-     const [spotlightArrayTitle, setSpotlightArrayTitle] = useState('')
-     const [spotlightArrayTagLine, setSpotlightArrayTagLine] = useState('')
+    const [spotlightArray, setSpotlightArray] = useState([])
+    const [spotlightArrayTitle, setSpotlightArrayTitle] = useState('')
+    const [spotlightArrayTagLine, setSpotlightArrayTagLine] = useState('')
      // For the consoles section
-     const [consoleArray, setConsoleArray] = useState([])
-     const [consoleArrayTitle, setConsoleArrayTitle] = useState('')
+    const [consoleArray, setConsoleArray] = useState([])
+    const [consoleArrayTitle, setConsoleArrayTitle] = useState('')
     // For the 1st Section
     const [gamesArray, setGamesArray] = useState([])
     const [gamesArrayTitle, setGamesArrayTitle] = useState('')
@@ -172,15 +170,15 @@ export default function SgHomeScreen({ navigation, route }) {
     useEffect(() => {
         function loadingTime() {
             return new Promise(resolve => {
-              setTimeout(() => {
-                resolve(
-                    setUserInfo(currentUID),
-                    setIsLoading(false)
-                )
-                homepageSpotlightCollection()
-                spotlights.findWeekofYear(spotlightData, gamesArray)
-              }, 2000)
-              arrayOfFunctions()
+                setTimeout(() => {
+                    resolve(
+                        setUserInfo(currentUID),
+                        setIsLoading(false)
+                    )
+                    homepageSpotlightCollection()
+                    spotlights.findWeekofYear(spotlightData, gamesArray)
+                }, 2000)
+                    arrayOfFunctions()
             }, [])
         }
         async function sgLoader() {
@@ -190,7 +188,6 @@ export default function SgHomeScreen({ navigation, route }) {
         if(currentUID !== null) 
             return 
                 displayData(collectionName)
-               
     }, [isFocused])
 
     function arrayOfFunctions() {
@@ -406,45 +403,19 @@ async function sgFirebaseGamesCollection(passingData) {
         )
     }
 
-      function HeaderLogo() {
+    function homeScreenLogo() {
         const logoLink = 'https://reactnative.dev/img/tiny_logo.png'
-        return (
-            <View style={{
-                width: '100%',
-            }}>
-                <Image
-                    style={{
-                        height: 45,
-                        width: 45,
-                        resizeMode: 'stretch',
-                        borderRadius: 5,
-                    }}
-                    source={{
-                        url: logoLink,
-                    }}
-                />
-            </View>
-        )
+        const logoImageData = {
+            height: 45,
+            width: 45,
+            borderRadius: 5,
+            contentFit: 'cover',
+            transition: 1000,
+            logoLink: logoLink
+        }
+        return images.HeaderLogo(logoImageData)
     }
-
-    function HeaderBackButton() {
-        const stackName = 'Main'
-        return (
-            <View>
-                {isLoading == true
-                    ?   ''
-                    : (props) => (
-                        <TouchableOpacity onPress={() => {
-                            navigation.goBack(stackName)
-                        }}>
-                            
-                            <backButton {...props} />
-                        </TouchableOpacity>
-                )}
-            </View>
-        )
-    }
-
+    
     function HomeOptions() {
         const pageLoadedHeader = {
             title: 'SGParadise home',
@@ -461,7 +432,7 @@ async function sgFirebaseGamesCollection(passingData) {
             headerTitle: isLoading == true
                 ?   ''
                 : (props) => (
-                    HeaderLogo(props)
+                    homeScreenLogo(props)
             ),
             headerTintColor: '#fff',
             headerTitleStyle: {
@@ -503,7 +474,7 @@ async function sgFirebaseGamesCollection(passingData) {
         )
     }
 
-  return (
-    HomeStack()
-  )
+    return (
+        HomeStack()
+    )
 }

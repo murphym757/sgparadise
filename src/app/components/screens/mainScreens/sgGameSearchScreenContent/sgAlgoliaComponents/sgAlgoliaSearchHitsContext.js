@@ -11,7 +11,8 @@ import {
   homeScreenGenreContext,
   FontAwesomeIcon,
   faStar,
-  ViewTopRow
+  ViewTopRow, 
+  AppWideImageContext,
 } from 'index'
 
 export const InfiniteHits = forwardRef(
@@ -71,17 +72,26 @@ export const InfiniteHits = forwardRef(
 );
 
 export function Hit({ hit }) {
+  function gameCoverSearch() {
+    const imageData = {
+      height: 75,
+      width: 50,
+      contentFit: 'stretch',
+      borderRadius: 5,
+      transition: 1000
+    }
+    return images.detailedGameCover(imageData, coverLink)
+  }
   const colors = useContext(CurrentThemeContext) 
   const genreSpecFunc = useContext(homeScreenGenreContext)
+  const images = useContext(AppWideImageContext)
   const gameNameValue = hit.gameName
   const gameSubGenreValue = hit.gameSubgenre
   const coverLink = hit.gameCover
-  const coverHeight = 75
-  const coverWidth = 50
     return (
       <View style={{flexDirection: "row"}}>
         <View style={{}}>
-          {genreSpecFunc.detailedGameCover(coverLink, coverHeight, coverWidth)}
+          {gameCoverSearch()}
         </View>
         <View style={{paddingLeft: 25}}>
           <View>

@@ -1,23 +1,20 @@
-import React from 'react'
-import { View, Button, Image } from 'react-native'
-import { SearchGameTitle, SearchGameData } from 'index';
+import React, { useContext } from 'react';
+import { View, Button } from 'react-native'
+import { AppWideImageContext, SearchGameTitle, SearchGameData } from 'index';
 
 export function setImage(imageWidth, imageHeight, imageUrl) {
-  return (
-      <Image
-          style={{
-              width: imageWidth,
-              height: imageHeight
-          }}
-          source={{
-              url: `${imageUrl}`,
-          }}
-      />
-  )
+    const images = useContext(AppWideImageContext)
+    const imageData = {
+        height: imageHeight,
+        width: imageWidth,
+        source: imageUrl,
+        transition: 1000
+    }
+    return images.sgAPISetImage(imageData)
 }
 
 export function modalConfirmation(resetConfirmation, setConfirmation) {
-  return (
+    return (
         <View style={{ flexDirection: 'row' }}>
             <Button
                 onPress={() => resetConfirmation}
@@ -28,77 +25,82 @@ export function modalConfirmation(resetConfirmation, setConfirmation) {
                 title="Yes"
             />
         </View>
-  )
+    )
+}
+
+function searchGameImage(item) {
+    const images = useContext(AppWideImageContext)
+    const imageData = {
+        height: 180,
+        width: null,
+        marginHorizontal: 20,
+        marginTop: 20,
+        contentFit: 'cover',
+        borderTopLeftRadius: 25,
+        borderTopRightRadius: 25,
+        zIndex: 3,
+        source: item.gameImages.gameplay[0],
+        transition: 1000
+    }
+    return images.sgAPISearchGameImage(imageData)
+}
+
+function searchGameCoverImage(item) {
+    const images = useContext(AppWideImageContext)
+    const imageData = {
+        height: 150,
+        width: 120,
+        borderRadius: 25 / 2,
+        justifyContent: 'flex-end',
+        source: item.gameImages.coverArt,
+        contentFit: 'stretch',
+        transition: 1000
+    }
+    return images.sgAPISearchCoverArtImage(imageData)
 }
 
 export function searchGameIcon(colors, item) {
-        return (
+    return (
+        <View>
             <View>
-                <View>
-                    <Image
-                        source={{
-                            url: item.gameImages.gameplay[0]
-                        }}
-                        style={{ 
-                        height: 180,
-                        marginLeft: 20,
-                        marginRight: 20,
-                        marginTop: 20,
-                        flexWrap:'wrap',
-                        resizeMode: 'cover', 
-                        borderTopLeftRadius: 25,
-                        borderTopRightRadius: 25,
-                        zIndex: 3
-                    }}/>
-                </View>
-                <View style={{ 
-                    marginLeft: 20,
-                    marginRight: 20,
-                    marginTop: 20,
-                    flexWrap:'wrap',
-                    height: 180,
-                    opacity: 0.65,
-                    borderTopLeftRadius: 25,
-                    borderTopRightRadius: 25,
-                    backgroundColor: colors.primaryColorLight,
-                    zIndex: 2,
-                    width: '90.5%',
-                    position: 'absolute',
-                    right: 0
-                }}/>
-                <View style={{ 
-                    marginLeft: 20,
-                    marginRight: 20,
-                    marginTop: 200,
-                    flexWrap:'wrap',
-                    height: 120,
-                    borderBottomLeftRadius: 25,
-                    borderBottomRightRadius: 25,
-                    backgroundColor: colors.primaryColorLight,
-                    zIndex: 2,
-                    width: '90.5%',
-                    position: 'absolute',
-                    right: 0
-                }}/>
+                {searchGameImage(item)}
+            </View>
+            <View style={{ 
+                marginLeft: 20,
+                marginRight: 20,
+                marginTop: 20,
+                flexWrap:'wrap',
+                height: 180,
+                opacity: 0.65,
+                borderTopLeftRadius: 25,
+                borderTopRightRadius: 25,
+                backgroundColor: colors.primaryColorLight,
+                zIndex: 2,
+                width: '90.5%',
+                position: 'absolute',
+                right: 0
+            }}/>
+            <View style={{ 
+                marginLeft: 20,
+                marginRight: 20,
+                marginTop: 200,
+                flexWrap:'wrap',
+                height: 120,
+                borderBottomLeftRadius: 25,
+                borderBottomRightRadius: 25,
+                backgroundColor: colors.primaryColorLight,
+                zIndex: 2,
+                width: '90.5%',
+                position: 'absolute',
+                right: 0
+            }}/>
 
-                {/* Top Row */}
-
+            {/* Top Row */}
                 <View style={{flexDirection:'row', zIndex: 4, position: 'absolute', marginTop: 35, paddingLeft: 260}}> 
-                    <Image 
-                        source={{
-                            url: item.gameImages.coverArt
-                        }}
-                        style={{ 
-                        height: 150, 
-                        width: 120, 
-                        resizeMode: 'stretch', 
-                        borderRadius: 25 / 2,
-                        justifyContent: 'flex-end'}}
-                    />
+                    {searchGameCoverImage(item)}
                 </View>
-
-                {/* ------- */}
-                {/* Bottom Row */}
+            {/* ------- */}
+            {/* Bottom Row */}
                 <View style={{flexDirection:'row', zIndex: 4, position: 'absolute', marginTop: 210}}> 
                     <View style={{ flex: 1 }}>
                         <View style={{flexDirection:'row'}}>
@@ -114,7 +116,8 @@ export function searchGameIcon(colors, item) {
                         </View>
                     </View>
                 </View>
+                {/* ------- */}
             </View>
-        )
-    }
+    )
+}
     

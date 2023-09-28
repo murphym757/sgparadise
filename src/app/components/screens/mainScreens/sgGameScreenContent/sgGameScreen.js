@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { ScrollView, TouchableOpacity, View, Button } from 'react-native';
-import { CurrentThemeContext, gameScreenContext, useAuth, MainFont, AppWideImageContext} from 'index';
+import { ScrollView, TouchableOpacity, View } from 'react-native';
+import { CurrentThemeContext, gameScreenContext, useAuth, AppWideImageContext } from 'index';
 import { useIsFocused } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack'
 import { doc, getDoc } from "firebase/firestore"
@@ -117,17 +117,19 @@ export default function GameScreen({navigation, route}) {
             setKeySearchDataPartOfArray(true)
         )
     }
+    
     //* PrimaryGamePageStructure
         function gamePageCoverImages(imageChosen) {
             const imageData = {
                 height: 500,
                 width: 400,
-                contentFit: 'contain',
-                borderRadius: 5,
+                contentFit: 'fill',
+                borderRadius: 25,
                 transition: 1000,
             }
             return images.gamePageCoverImage(imageData, imageChosen)
         }
+
         function PrimaryGamePageStructure() {
             const passingPrimaryGamePageData = {
                 currentGameArray, navigation, colors, gamePageCoverImages
@@ -140,7 +142,7 @@ export default function GameScreen({navigation, route}) {
             const imageData = {
                 height: 70,
                 width: 120,
-                contentFit: 'contain',
+                contentFit: 'fill',
                 borderRadius: 5,
                 borderWidth: borderWidth,
                 borderColor: borderColor,
@@ -148,12 +150,26 @@ export default function GameScreen({navigation, route}) {
             }
             return images.gamePageGameplayImages(imageData, item)
         }
+
         function gamePageGameplayImagesSelected(item) {
             return gamePageGameplayImages(7, colors.secondaryColor, item)
         }
+
         function gamePageGameplayImagesNotSelected(item) {
             return gamePageGameplayImages(0, null, item)
         }
+
+        function gamePageGameplayImage(imageChosen) {
+            const imageData = {
+                height: 250,
+                width: 400,
+                contentFit: 'fill',
+                borderRadius: 25,
+                transition: 1000,
+            }
+            return images.gamePageGameplayImageBigDisplay(imageData, imageChosen)
+        }
+        
         function informationExcludedImages() {
             return (
                 <ScrollView 
@@ -196,8 +212,8 @@ export default function GameScreen({navigation, route}) {
         const imageData = {
             currentGameArray, gameScreenshots, isLoading, colors, navigation
         }
-        if (gameHomeNewScreenShot == '') return gameScreenFunc.preDeterminedGameHomeScreen(imageData, gameHomeScreenShot, gamePageScrollView)
-        if (gameHomeNewScreenShot !== '') return gameScreenFunc.updatedGameHomeScreen(imageData, gameHomeNewScreenShot, gamePageScrollView)
+        if (gameHomeNewScreenShot == '') return gameScreenFunc.preDeterminedGameHomeScreen(imageData, gameHomeScreenShot, gamePageScrollView, gamePageGameplayImage)
+        if (gameHomeNewScreenShot !== '') return gameScreenFunc.updatedGameHomeScreen(imageData, gameHomeNewScreenShot, gamePageScrollView, gamePageGameplayImage)
     }
 
     /*----------------------------------------------*/
