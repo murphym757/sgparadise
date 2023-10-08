@@ -2,26 +2,36 @@ import React, { useContext, useEffect, useState } from 'react'
 import { View, ActivityIndicator } from 'react-native'
 import { auth, sgDB, sgImageStorage } from 'server/config/config'
 import { bannedWords } from 'server/sgProfanityFilter'
-import { getFirestore, collection, getDocs, getDoc, setDoc, addDoc, doc, updateDoc, serverTimestamp, deleteField, query, where  } from "firebase/firestore";
-import { getStorage } from "firebase/storage"; 
+import {
+    collection,
+    deleteField,
+    doc,
+    getDocs,
+    limit,
+    orderBy,
+    query,
+    serverTimestamp,
+    setDoc,
+    updateDoc,
+    where,
+} from "firebase/firestore"
 import { 
     createUserWithEmailAndPassword,
-    getAuth, 
-    reauthenticateWithCredential, 
     EmailAuthProvider,
+    getAuth, 
     onAuthStateChanged,
-    signInWithEmailAndPassword,
+    reauthenticateWithCredential, 
     sendPasswordResetEmail,
+    signInWithEmailAndPassword,
     updateEmail,
     updatePassword,
     updateProfile,
-} from "firebase/auth";
+} from "firebase/auth"
 
 import {
     BackButtonContainer,
     BackButtonBottomLayer,
     BackButtonTopLayer,
-    Container,
     ContentContainer,
     CustomFailureAlert,
     CustomFailureAlertFont,
@@ -37,7 +47,6 @@ import {
     TouchableButtonFontAlt,
     windowController,
     windowHeight,
-    windowWidth
 } from 'index'
 
 const AuthContext = React.createContext()
@@ -47,23 +56,23 @@ export function useAuth() {
 }
 
 export function AuthProvider({ children }) {
-    const [currentUser, setCurrentUser] = useState()
     const [currentUID, setCurrentUID] = useState()
-    const [notLoggedInCurrentUser, setNotLoggedInCurrentUser ] = useState()
-    const [isLoading, setIsLoading] = useState(true)
-    const [stateTest, setStateTest] = useState('')
-    const [entryText, setEntryText] = useState('')
-    const [viewCountFirebase, setViewCountFirebase] = useState(0)
+    const [currentUser, setCurrentUser] = useState()
     const [entries, setEntries] = useState([])
+    const [entryText, setEntryText] = useState('')
+    const [isLoading, setIsLoading] = useState(true)
+    const [notLoggedInCurrentUser, setNotLoggedInCurrentUser ] = useState()
+    const [stateTest, setStateTest] = useState('')
+    const [viewCountFirebase, setViewCountFirebase] = useState(0)
     console.log("🚀 ~ file: authContext.js:42 ~ AuthProvider ~ entries:", entries)
+    const errorBool = true
     const sg1000IGDB = '84'
     const sg32XIGDB = '30'
     const sgCDIGDB = '78'
-    const sgGGIGDB = '35'
     const sgGenIGDB = '29'
+    const sgGGIGDB = '35'
     const sgMSIGDB = '64'
     const sgSatIGDB = '32'
-    const errorBool = true
 
     function signUp(email, password, setCheckEmailExistence) {
         const auth = getAuth();
@@ -266,23 +275,12 @@ export function AuthProvider({ children }) {
     }
 
 
-    async function displayData(collectionName) {
-        const querySnapshot = await getDocs(collection(sgDB, collectionName));
+    async function displayData(collectionName, sgConsoleName, subGenreName, setGameArrayTest) {
+        const q = query(collection(sgDB, collectionName, sgConsoleName, 'games'), where("gameSubgenre", "==", subGenreName), orderBy("gameName", "desc"), limit(3))
+        const querySnapshot = await getDocs(q)
         querySnapshot.forEach((doc) => {
+            setGameArrayTest(querySnapshot.docs.map(doc => doc.data()))
             console.log(`${doc.id} => ${doc.data()}`);
-        })
-
-        return sgDB.collection(collectionName)
-        .get().then((querySnapshot) => {
-            const newEntries = []
-            querySnapshot.forEach((doc) => {
-                const entry = doc.data()
-                entry.id = doc.id
-                newEntries.push(entry)
-            })
-            setEntries(newEntries)
-        }, err => {
-            console.log("Error getting document:", err)
         })
     }
 
@@ -700,7 +698,7 @@ export function AuthProvider({ children }) {
         const backButtonChevronPaddingHor = backButtonBackgroundSize / 4.55
         return (
             <BackButtonContainer>
-                <View style={{ flex: 1, alignItems: 'left', justifyContent: 'center' }}> 
+                <View style={{ flex: 1, alignItems: 'flex-start', justifyContent: 'center' }}> 
                     {backOptionRequired === true
                         ?   <View>
                                 <BackButtonTopLayer style={{paddingTop: backButtonBackgroundPaddingVert}}>
@@ -991,7 +989,7 @@ export function AuthProvider({ children }) {
                 // ...
             }
         })
-    })
+    }, [])
 
     const value = {
         sg1000IGDB,

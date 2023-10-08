@@ -1,41 +1,30 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { View, FlatList, SafeAreaView, TouchableOpacity, ActivityIndicator } from 'react-native'
+import { AppWideImageContext } from 'main/sgImageContext'
 import axios from 'axios'
 import { createStackNavigator } from '@react-navigation/stack'
 import { useIsFocused } from "@react-navigation/native"
-import {
-    AppWideImageContext,
-    CurrentThemeContext,
-    dayTime,
-    faChevronLeft,
-    firebase,
-    FontAwesomeIcon, 
-    gamesConfig,
-    MainFont,
-    nightTime
-} from 'index'
+import { CurrentThemeContext, dayTime, faChevronLeft, firebase, FontAwesomeIcon, gamesConfig, MainFont, nightTime } from 'index'
 import { modalConfirmation } from './sgAPIIndex'
 
 export default function SgConsoleListScreens({route, navigation}, props) {
-    const colors = useContext(CurrentThemeContext)
-    const images = useContext(AppWideImageContext)
-    const sgDB = firebase.firestore()
-    const consoleData = sgDB.collection("sgAPI").get()
+    const [ accessTokenIGDB, setAccessTokenIGDB ] = useState('')
+    const [ gbConsoleId, setGbConsoleId ] = useState()
+    const [ igdbConsoleId, setIgdbConsoleId ] = useState()
+    const [ isLoading, setIsLoading ] = useState()
+    const [ modalSelected, setModalSelected ] = useState(route.params?.modal)
+    const [ searchType, setSearchType ] = useState('sgIGDBSearch')
+    const [ selectedSystemLogo, setSelectedSystemLogo ] = useState('')
+    const [ sgConsoleIcons, setSgConsoleIcons ] = useState([])
     const { addGameLinkPressed } = route.params
-    const [isLoading, setIsLoading] = useState()
-    const [searchType, setSearchType] = useState('sgIGDBSearch')
-    const [selectedSystemLogo, setSelectedSystemLogo] = useState('')
-    const [accessTokenIGDB, setAccessTokenIGDB] = useState('')
-    const [gbConsoleId, setGbConsoleId] = useState()
-    const [igdbConsoleId, setIgdbConsoleId] = useState()
-    const [sgConsoleIcons, setSgConsoleIcons] = useState([])
-    const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be read
-    const [modalSelected, setModalSelected] = useState(route.params?.modal)
-
-    // For IGDB API Search Endpoint
     const clientIdIGDB = `${gamesConfig.igdbClientId}`
     const clientSecretIGDB = `${gamesConfig.igdbClientSecret}`
-  
+    const colors = useContext(CurrentThemeContext)
+    const consoleData = sgDB.collection("sgAPI").get()
+    const images = useContext(AppWideImageContext)
+    const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be read
+    const sgDB = firebase.firestore()
+
     function consoleLogo() {
         const nightImages = sgDB.collection("sgAPI").orderBy("systemLogoNight", "asc")
         const dayImages = sgDB.collection("sgAPI")
@@ -63,7 +52,7 @@ export default function SgConsoleListScreens({route, navigation}, props) {
             setSgConsoleIcons(objectsArray)
         })
     }
-        
+
     useEffect(() => {
         setTimeout(() => {
             setIsLoading(false)
@@ -80,45 +69,45 @@ export default function SgConsoleListScreens({route, navigation}, props) {
                 })
                 setSgConsoleIcons(consoles)
             })
-        if(isFocused) {  
+        if(isFocused) {
             setModalSelected(false)
             igbdbAPI()
         }
         // Unsubscribe from events when no longer in use
         return () => subscriber()
-    }, [isFocused])    
+    }, [isFocused])
 
     function setConsoleId(item) {
         navigation.navigate('MyModal')
-        setSelectedSystemLogo(item.systemLogoSelectedDay)
         setGbConsoleId(item.systemgbId)
         setIgdbConsoleId(item.systemigdbId)
+        setSelectedSystemLogo(item.systemLogoSelectedDay)
     }
 
     function resetConsoleId() {
-            setSelectedSystemLogo({ ...selectedSystemLogo })
+            setAccessTokenIGDB({ ...accessTokenIGDB })
             setGbConsoleId({ ...gbConsoleId })
             setIgdbConsoleId({ ...igdbConsoleId })
-            setAccessTokenIGDB({ ...accessTokenIGDB })
+            setSelectedSystemLogo({ ...selectedSystemLogo })
     }
 
     function confirmSetConsoleId(){
         {addGameLinkPressed !== true
             ?   navigation.navigate('sgIGDBSearch',{
+                accessTokenIGDB: accessTokenIGDB,
                 clientIdIGDB: clientIdIGDB,
-                accessTokenIGDB: accessTokenIGDB, 
-                igdbConsoleId: igdbConsoleId,
                 gbConsoleId: gbConsoleId,
+                igdbConsoleId: igdbConsoleId,
+                searchType: searchType,
                 selectedSystemLogo: selectedSystemLogo,
-                searchType: searchType
             })
             :   navigation.navigate('Page1',{
+                accessTokenIGDB: accessTokenIGDB,
                 clientIdIGDB: clientIdIGDB,
-                accessTokenIGDB: accessTokenIGDB, 
-                igdbConsoleId: igdbConsoleId,
                 gbConsoleId: gbConsoleId,
+                igdbConsoleId: igdbConsoleId,
+                searchType: searchType,
                 selectedSystemLogo: selectedSystemLogo,
-                searchType: searchType
             })
         }
             setModalSelected(true)
@@ -141,18 +130,18 @@ export default function SgConsoleListScreens({route, navigation}, props) {
     function sgConsolesStack() {
         return (
             <View style={{ backgroundColor: colors.primaryColor }}>
-                
+
             </View>
         )
     }
 
     function sgHomeModalStack() {
         const ModalStack = createStackNavigator()
-        const sgModal = modalSelected == true 
+        const sgModal = modalSelected == true
             ? null
             : <ModalStack.Screen name="MyModal" component={sgModalScreen} />
                 return (
-                    <ModalStack.Navigator mode="modal" 
+                    <ModalStack.Navigator mode="modal"
                         screenOptions={{
                             headerStyle: {
                                 backgroundColor: colors.primaryColor,
@@ -192,9 +181,9 @@ export default function SgConsoleListScreens({route, navigation}, props) {
                 ? <ActivityIndicator size="large" hidesWhenStopped="true"/>
                 : <View>
                 {sgHomeModalStack()}
-                <View style={{ alignItems: 'left', justifyContent: 'center', backgroundColor: colors.primaryColor }}>
-                    <FontAwesomeIcon 
-                        icon={ faChevronLeft } color={colors.primaryFontColor} size={50} 
+                <View style={{ alignItems: 'flex-start', justifyContent: 'center', backgroundColor: colors.primaryColor }}>
+                    <FontAwesomeIcon
+                        icon={ faChevronLeft } color={colors.primaryFontColor} size={50}
                         onPress={() => navigation.goBack()}
                     />
                 </View>

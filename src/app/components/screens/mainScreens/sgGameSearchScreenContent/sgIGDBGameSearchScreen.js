@@ -1,23 +1,14 @@
 import React, { useState, useEffect, useContext } from 'react';
-import {
-    View,
-    Button,
-    FlatList,
-    ScrollView,
-    SafeAreaView,
-    TouchableOpacity,
-    ActivityIndicator,
-} from 'react-native'
+import { ActivityIndicator, Button, FlatList, SafeAreaView, ScrollView, TouchableOpacity, View } from 'react-native'
+import { AppWideImageContext } from 'main/sgImageContext'
+import { useTags } from 'auth/tagsContext'
+import { useSearchBar } from 'main/sgGameSearchScreenContent/searchIndex'
 import axios from 'axios'
 // React Navigation
 import { createStackNavigator } from '@react-navigation/stack'
 import { useIsFocused } from '@react-navigation/native';
+import { modalConfirmation, searchGameIcon } from '../sgGameScreenContent/sgAPIIndex'
 import {
-    modalConfirmation,
-    searchGameIcon
-} from '../sgGameScreenContent/sgAPIIndex'
-import {
-    AppWideImageContext,
     Container,
     CurrentThemeContext,
     CustomInputField,
@@ -31,67 +22,62 @@ import {
     SafeAreaViewContainer,
     ScrollViewContainer,
     TestImageDB,
-    useSearchBar,
-    useTags,
     windowHeight,
 } from 'index';
 
 export default function SgIGDBGameSearchScreen({route, navigation}, props) {
-    const {
-        selectedTags,
-        tagsSelection} = useTags()
+    const [ chosenGenre, setChosenGenre ] = useState()
+    const [ isLoading, setIsLoading ] = useState(true)
+    const [ modalSelected, setModalSelected ] = useState(route.params?.modal)
+    const [ searchBarTitle, setSearchBarTitle ] = useState('Search Games')
+    const [ searchFilterSelected, setSearchFilterSelected ] = useState(false)
+    const [ searchQuery, setSearchQuery ] = useState('')
+    const [ searchType, setSearchType ] = useState('sgIGDBSearch')
+    const [ sgConsoleIcons, setSgConsoleIcons ] = useState([])
+    const { searchBar, searchResults } = useSearchBar()
+    const { selectedSystemLogo } = route.params
+    const { selectedTags, tagsSelection } = useTags()
     const colors = useContext(CurrentThemeContext)
     const images = useContext(AppWideImageContext)
-    const sgDB = firebase.firestore()
-    const [isLoading, setIsLoading] = useState(true)
-    const { selectedSystemLogo } = route.params
-    const testGamesDb = TestImageDB.results
-     // For Search Bar
-    const { searchBar, searchResults } = useSearchBar()
-    const [searchType, setSearchType] = useState('sgIGDBSearch')
-    const [searchBarTitle, setSearchBarTitle] = useState('Search Games')
-    const [searchQuery, setSearchQuery] = useState('')
-    const [searchFilterSelected, setSearchFilterSelected] = useState(false)
-    const [sgConsoleIcons, setSgConsoleIcons] = useState([])
-    const [chosenGenre, setChosenGenre] = useState()
-    const [modalSelected, setModalSelected] = useState(route.params?.modal)
     const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be readconst [modalSelected, setModalSelected] = useState(route.params?.modal)
-    const tagData = sgConsoleIcons
     const Root = createStackNavigator();
+    const sgDB = firebase.firestore()
+    const tagData = sgConsoleIcons
+    const testGamesDb = TestImageDB.results
 
     function unixTimestampConverter(item) {
-        const unixTimestamp = item.first_release_date
-        const milliseconds = unixTimestamp * 1000
         const dateObject = new Date(milliseconds)
         const humanDateFormat = dateObject.toLocaleString("en-US", { year: 'numeric', month: '2-digit', day: '2-digit' })
+        const milliseconds = unixTimestamp * 1000
+        const unixTimestamp = item.first_release_date
     }
 
     // IGDB search data (Put on confirmation page)
-    const [igdbGameSelected, setigdbGameSelected] = useState(false)
-    const [igdbSearchResults, setIgdbSearchResults] = useState([])
-    const [igdbSearch, setIgdbSearch] = useState("Sonic")
-    const [igdbGameId, setIgdbGameId] = useState()
-    const [gameName, setIgdbGameName] = useState()
-    const [igdbGameCover, setIgdbGameCover] = useState()
-    const [igdbGameRating, setIgdbGameRating] = useState()
-    const [igdbGameAgeRating, setIgdbGameAgeRating] = useState()
-    const [igdbGameGenres, setIgdbGameGenres] = useState([])
-    const [igdbGameScreenshots, setIgdbGameScreenshots] = useState([])
-    const [gameSummary, setIgdbGameSummary] = useState()
-    const [igdbUnixTimestamp, setIgdbUnixTimestamp]= useState()
+
+    const [ gameName, setIgdbGameName ] = useState()
+    const [ gameSummary, setIgdbGameSummary ] = useState()
+    const [ igdbGameAgeRating, setIgdbGameAgeRating ] = useState()
+    const [ igdbGameCover, setIgdbGameCover ] = useState()
+    const [ igdbGameGenres, setIgdbGameGenres ] = useState([])
+    const [ igdbGameId, setIgdbGameId ] = useState()
+    const [ igdbGameRating, setIgdbGameRating ] = useState()
+    const [ igdbGameScreenshots, setIgdbGameScreenshots ] = useState([])
+    const [ igdbGameSelected, setIgdbGameSelected ] = useState(false)
+    const [ igdbSearch, setIgdbSearch ] = useState("Sonic")
+    const [ igdbSearchResults, setIgdbSearchResults ] = useState([])
+    const [ igdbUnixTimestamp, setIgdbUnixTimestamp ]= useState()
     const igdbSearchPlatforms = `(${JSON.stringify(route.params.igdbConsoleId)})`
     const igdbTestField = `fields name, cover, rating, age_ratings, genres, screenshots, summary, first_release_date; search "${igdbSearch}"; limit 20; where platforms =${igdbSearchPlatforms}& cover != null;`
-
     function igdbGameData(item) {
+        setIgdbGameAgeRating(item.age_ratings)
+        setIgdbGameCover(item.cover)
         setIgdbGameId(item.id)
         setIgdbGameName(item.name)
-        setIgdbGameCover(item.cover)
         setIgdbGameRating(item.rating)
-        setIgdbGameAgeRating(item.age_ratings)
         setIgdbGameScreenshots(item.screenshots)
+        setIgdbGameSelected(true)
         setIgdbGameSummary(item.summary)
         setIgdbUnixTimestamp(item.first_release_date)
-        setigdbGameSelected(true)
     }
 
     useEffect(() => {
@@ -110,7 +96,7 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
                 })
             setSgConsoleIcons(genreTags)
         });
-        if(isFocused){  
+        if(isFocused){
             setModalSelected(false)
         }
         // Unsubscribe from events when no longer in use
@@ -170,27 +156,27 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
 
     function resetGameId() {
         navigation.navigate('SgGameSearch')
-        setIgdbGameId({ ...igdbGameId }) 
+        setIgdbGameAgeRating({ ...igdbGameAgeRating })
+        setIgdbGameCover({ ...igdbGameCover })
+        setIgdbGameGenres({ ...igdbGameGenres })
+        setIgdbGameId({ ...igdbGameId })
         setIgdbGameName({ ...gameName })
-        setIgdbGameCover({ ...igdbGameCover }) 
-        setIgdbGameRating({ ...igdbGameRating }) 
-        setIgdbGameAgeRating({ ...igdbGameAgeRating }) 
-        setIgdbGameGenres({ ...igdbGameGenres }) 
-        setIgdbGameScreenshots({ ...igdbGameScreenshots }) 
-        setIgdbGameSummary({ ...gameSummary }) 
-        setIgdbUnixTimestamp({ ...igdbUnixTimestamp }) 
+        setIgdbGameRating({ ...igdbGameRating })
+        setIgdbGameScreenshots({ ...igdbGameScreenshots })
+        setIgdbGameSummary({ ...gameSummary })
+        setIgdbUnixTimestamp({ ...igdbUnixTimestamp })
     }
 
     function confirmSetGameId(){
-        navigation.navigate('SgAddGameConfirm', { 
-            igdbGameId: igdbGameId,
-            gameName: gameName,
+        navigation.navigate('SgAddGameConfirm', {
             gameCover:gameCover,
-            igdbGameRating: igdbGameRating,
+            gameName: gameName,
+            gameSummary: gameSummary,
             igdbGameAgeRating: igdbGameAgeRating,
             igdbGameGenres: igdbGameGenres,
+            igdbGameId: igdbGameId,
+            igdbGameRating: igdbGameRating,
             igdbGameScreenshots: igdbGameScreenshots,
-            gameSummary: gameSummary,
             igdbUnixTimestamp: igdbUnixTimestamp
         })
             setModalSelected(true)
@@ -229,7 +215,7 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
         return (
             <FlatList
                 data={currentSearchDB}
-                keyboardShouldPersistTaps="always" 
+                keyboardShouldPersistTaps="always"
                 contentContainerStyle={{
                     justifyContent: 'center'
                 }}
@@ -238,9 +224,9 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
                     sgGSRenderItem(item)
                 )}
             />
-        ) 
+        )
     }
-    
+
 
     function sgDBGameSearch() {
         return (
@@ -255,7 +241,7 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
                         underlineColorAndroid="transparent"
                         autoCapitalize="none"
                     />
-                    <ScrollView 
+                    <ScrollView
                         scrollEventThrottle={16}
                     >
                         <View style={{ flex: 1 }}>
@@ -288,11 +274,11 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
             </SafeAreaView>
         )
     }
-    
+
 
     function sgSearchGameStack() {
         const ModalStack = createStackNavigator()
-        const sgModal = modalSelected == true 
+        const sgModal = modalSelected == true
         ? null
         : <ModalStack.Screen name="SgGameModal" component={sgModalScreen} />
             return (
@@ -310,9 +296,9 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
                         },
                     }}
                 >
-                    <ModalStack.Screen 
+                    <ModalStack.Screen
                         name="SgDBGameSearch"
-                        component={sgDBGameSearch} 
+                        component={sgDBGameSearch}
                         options={{ headerShown: false }}
                     />
                     {sgModal}
@@ -337,8 +323,8 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
                     flexDirection: 'row'
                 }}>
                     <TouchableOpacity onPress={() => resetAll()}>
-                        <View style={{ marginTop: 10, alignItems: 'left', justifyContent: 'center', backgroundColor: colors.primaryColor }}>
-                            <FontAwesomeIcon 
+                        <View style={{ marginTop: 10, alignItems: 'flex-start', justifyContent: 'center', backgroundColor: colors.primaryColor }}>
+                            <FontAwesomeIcon
                                 icon={ faChevronLeft } color={colors.primaryFontColor} size={50}
                             />
                         </View>
@@ -346,16 +332,16 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
                     <View style={{
                         width: 300
                     }}>
-                        {searchBar(searchBarTitle, searchType, searchQuery)}  
+                        {searchBar(searchBarTitle, searchType, searchQuery)}
                     </View>
                     <TouchableOpacity onPress={() => setSearchFilterSelected(true)}>
                     <View style={{ paddingLeft: 10, marginTop: 20, alignItems: 'right', justifyContent: 'center', backgroundColor: colors.primaryColor }}>
-                        <FontAwesomeIcon 
+                        <FontAwesomeIcon
                             icon={ faFilter } color={colors.primaryFontColor} size={30}
                         />
                     </View>
                 </TouchableOpacity>
-                </View> 
+                </View>
         )
     }
 
@@ -376,22 +362,22 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
                     keyboardShouldPersistTaps="always"
                     keyExtractor={item => item.id}
                     renderItem={({ item }) => (
-                        <TouchableOpacity 
-                        style={{ 
-                            flex: 1, 
-                            justifyContent: 'center', 
-                            alignItems: 'center', 
+                        <TouchableOpacity
+                        style={{
+                            flex: 1,
+                            justifyContent: 'center',
+                            alignItems: 'center',
                             margin: 3,
                             borderRadius: 10,
                             width: 100 * 2,
                             height: 100,
                             backgroundColor: colors.secondaryColor,
-                        }} 
+                        }}
                         onPress={() => confirmGenreSelection(item)}>
                             <MainHeadingButton style={{justifyContent: 'center', alignItems: 'center',}}>{item}</MainHeadingButton>
                             <View style={{ justifyContent: 'center', alignItems: 'center', margin: 7 }}>
-                                <FontAwesomeIcon 
-                                    icon={ item.tagIcon } color={colors.primaryColorLight} size={35} 
+                                <FontAwesomeIcon
+                                    icon={ item.tagIcon } color={colors.primaryColorLight} size={35}
                                 />
                             </View>
                     </TouchableOpacity>

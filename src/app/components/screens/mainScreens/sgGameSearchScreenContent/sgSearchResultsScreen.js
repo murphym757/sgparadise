@@ -1,32 +1,17 @@
 
 import React, { useState, useEffect, useContext } from 'react'
-import { View, FlatList, TouchableOpacity } from 'react-native'
-  import { 
-    Container, 
-    CurrentThemeContext, 
-    MainFont, 
-    MainHeading, 
-    MainSubFont, 
-    SafeAreaViewContainer, 
-    SearchGameResults, 
-    useAuth, 
-    useSearchBar, 
-    windowHeight
-} from 'index'
-  import axios from 'axios'
+import { FlatList, TouchableOpacity, View } from 'react-native'
+import { Container, CurrentThemeContext, MainFont, MainHeading, MainSubFont, SafeAreaViewContainer, SearchGameResults, windowHeight } from 'index'
+import { useAuth } from 'auth/authContext'
+import { useSearchBar } from 'main/sgGameSearchScreenContent/searchIndex'
+import axios from 'axios'
 
 export default function sgSearchResultsScreen({route, navigation}) {
-    const {
-        unixTimestampConverter
-    } = useAuth()
-    const { 
-        gamesFilterListName,
-        sgIGDBSearchQuery
-     } = useSearchBar()
     //let { searchBarTitle, searchType, searchQuery } = route.params
-    const colors = useContext(CurrentThemeContext)
     const { clientIdIGDB, accessTokenIGDB, igdbConsoleId, gbConsoleId, selectedSystemLogo, searchType } = route.params
-
+    const { gamesFilterListName, sgIGDBSearchQuery } = useSearchBar()
+    const { unixTimestampConverter } = useAuth()
+    const colors = useContext(CurrentThemeContext)
 
     // IGDB search data (Put on confirmation pag
     const [igdbSearchResults, setIgdbSearchResults] = useState([])
@@ -44,52 +29,52 @@ export default function sgSearchResultsScreen({route, navigation}) {
             })
             return new Promise(resolve => {
                 setTimeout(() => {
-                  resolve(
-                    api.post('https://api.igdb.com/v4/games', igdbSearchResultField, {timeout: 2000})
-                        .then(res => {
-                            setIgdbSearchResults(res.data)
-                        }, [])
-                        .catch(err => {
-                            console.log(err);
-                        })
-                        .then(function () {
-                            // always executed
-                        })
+                    resolve(
+                        api.post('https://api.igdb.com/v4/games', igdbSearchResultField, {timeout: 2000})
+                            .then(res => {
+                                setIgdbSearchResults(res.data)
+                            }, [])
+                            .catch(err => {
+                                console.log(err);
+                            })
+                            .then(function () {
+                                // always executed
+                            })
                     )
                 }, 2000)
-              })
-            }
+            })
+        }
 
         async function sgLoader() {
             await searchTesting()
         }
         sgLoader()
     }, [])
-    
+
     function searchResults() {
         return (
-              <FlatList
-                  data={gamesFilterListName(igdbSearchResults.sort((a, b) => a.first_release_date - b.first_release_date))}
-                  keyboardShouldPersistTaps="always" 
-                  contentContainerStyle={{
-                      justifyContent: 'center'
-                  }}
-                  keyExtractor={item => item.id}
-                  renderItem={({ item }) => (
+            <FlatList
+                data={gamesFilterListName(igdbSearchResults.sort((a, b) => a.first_release_date - b.first_release_date))}
+                keyboardShouldPersistTaps="always"
+                contentContainerStyle={{
+                    justifyContent: 'center'
+                }}
+                keyExtractor={item => item.id}
+                renderItem={({ item }) => (
                     <SearchGameResults>
                         <TouchableOpacity onPress={() => chosenGame(item)}>
-                           <MainSubFont>{item.name}</MainSubFont>
-                           <MainFont>{unixTimestampConverter(item)}</MainFont>
+                        <MainSubFont>{item.name}</MainSubFont>
+                        <MainFont>{unixTimestampConverter(item)}</MainFont>
                         </TouchableOpacity>
                     </SearchGameResults>
-                  )}
-              />
-          ) 
+                )}
+            />
+        )
     }
 
     function chosenGame(item) {
         navigation.navigate('Page3', {
-            accessTokenIGDB: accessTokenIGDB, 
+            accessTokenIGDB: accessTokenIGDB,
             clientIdIGDB: clientIdIGDB,
             gameName: item.name,
             gameReleaseDate: unixTimestampConverter(item),
@@ -99,7 +84,7 @@ export default function sgSearchResultsScreen({route, navigation}) {
             igdbGameId: item.id
         })
     }
-    
+
 
     function searchData() {
         return (

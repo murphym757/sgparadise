@@ -1,34 +1,31 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { ScrollView, TouchableOpacity, View } from 'react-native';
-import { CurrentThemeContext, gameScreenContext, useAuth, AppWideImageContext } from 'index';
-import { useIsFocused } from '@react-navigation/native';
+import React, { useState, useEffect, useContext } from 'react'
+import { ScrollView, TouchableOpacity, View } from 'react-native'
+import { AppWideImageContext } from 'main/sgImageContext'
 import { createStackNavigator } from '@react-navigation/stack'
+import { CurrentThemeContext } from 'index';
 import { doc, getDoc } from "firebase/firestore"
+import { gameScreenContext } from 'main/sgGameScreenContent/sgGameScreenContext'
+import { useAuth } from 'auth/authContext'
+import { useIsFocused } from '@react-navigation/native';
 
 export default function GameScreen({navigation, route}) {
-    const { 
-        sgDB,
-        currentUID,
-        updateGameViewCount,
-        backArrow,
-        preLoadedData
-    } = useAuth()
+    const [ currentGameArray, setCurrentGameArray ] = useState([])
+    const [ dataToBePassed, setDataToBePassed] = useState('')
+    const [ gameHomeNewScreenShot, setGameHomeNewScreenShot ] = useState('')
+    const [ gameHomeScreenCover, setGameHomeScreenCover ] = useState('')
+    const [ gameHomeScreenShot, setGameHomeScreenShot ] = useState('')
+    const [ gameScreenshot1, setGameScreenshot1 ] = useState([])
+    const [ gameScreenshot2, setGameScreenshot2 ] = useState([])
+    const [ gameScreenshot3, setGameScreenshot3 ] = useState([])
+    const [ isLoading, setIsLoading ] = useState(true)
+    const { collectionName, gamesCollection, consoleName, gameName, gameImageCount, gameSummary, back2Search } = route.params
+    const { sgDB, currentUID, updateGameViewCount, backArrow, preLoadedData } = useAuth()
     const colors = useContext(CurrentThemeContext)
-    const gameScreenFunc = useContext(gameScreenContext)
-    const images = useContext(AppWideImageContext)
-    const { collectionName, gamesCollection, consoleName, gameName, gameImageCount, gameSummary, back2Search} = route.params
-    const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be read
-    const [isLoading, setIsLoading] = useState(true)
-    const [currentGameArray, setCurrentGameArray] = useState([])
-    const [gameScreenshot1, setGameScreenshot1] = useState([])
-    const [gameScreenshot2, setGameScreenshot2] = useState([])
-    const [gameScreenshot3, setGameScreenshot3] = useState([])
-    const gameScreenshots = [gameScreenshot1.toString(), gameScreenshot2.toString(), gameScreenshot3.toString()]
-    const [gameHomeScreenCover, setGameHomeScreenCover] = useState('')
-    const [gameHomeScreenShot, setGameHomeScreenShot] = useState('')
-    const [gameHomeNewScreenShot, setGameHomeNewScreenShot] = useState('')
     const colorsPassThrough = colors
-    const [dataToBePassed, setDataToBePassed] = useState('')
+    const gameScreenFunc = useContext(gameScreenContext)
+    const gameScreenshots = [ gameScreenshot1.toString(), gameScreenshot2.toString(), gameScreenshot3.toString() ]
+    const images = useContext(AppWideImageContext)
+    const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be read
 
     useEffect(() => {
         function loadingTime() {
@@ -45,8 +42,8 @@ export default function GameScreen({navigation, route}) {
             await loadingTime()
         }
         sgLoader()
-        if(currentUID !== undefined) 
-            return 
+        if(currentUID !== undefined)
+            return
                 displayData(collectionName)
     }, [isFocused])
 
@@ -83,7 +80,7 @@ export default function GameScreen({navigation, route}) {
             backArrow(colorsPassThrough, backNeeded)
         )
     }
-    
+
     function chosenDataOption(item) {
         return (
             navigation.navigate('SgSearchSet', {
@@ -117,7 +114,7 @@ export default function GameScreen({navigation, route}) {
             setKeySearchDataPartOfArray(true)
         )
     }
-    
+
     //* PrimaryGamePageStructure
         function gamePageCoverImages(imageChosen) {
             const imageData = {
@@ -169,11 +166,11 @@ export default function GameScreen({navigation, route}) {
             }
             return images.gamePageGameplayImageBigDisplay(imageData, imageChosen)
         }
-        
+
         function informationExcludedImages() {
             return (
-                <ScrollView 
-                    horizontal={true} 
+                <ScrollView
+                    horizontal={true}
                     showsHorizontalScrollIndicator={false}
                     contentContainerStyle={{flexWrap: "wrap", paddingHorizontal: 20}}>
                         {gameScreenFunc.returnedGameSummary(currentGameArray)}
@@ -186,8 +183,8 @@ export default function GameScreen({navigation, route}) {
 
         function allInformationIncluded() {
             return (
-                <ScrollView 
-                    horizontal={true} 
+                <ScrollView
+                    horizontal={true}
                     showsHorizontalScrollIndicator={false}
                     contentContainerStyle={{flexWrap: "wrap", paddingHorizontal: 20}}>
                         {gameScreenFunc.returnedGameSummary(currentGameArray)}
@@ -233,22 +230,22 @@ export default function GameScreen({navigation, route}) {
                         <BackButton {...props} />
                     </TouchableOpacity>
                 )
-                
+
         }
     }
     /*----------------------------------------------*/
-    
+
     function selectedGameStack() {
         const Stack = createStackNavigator()
         return (
             <Stack.Navigator initialRouteName="PrimaryGamePage">
-                <Stack.Screen 
-                    name="PrimaryGamePage" 
+                <Stack.Screen
+                    name="PrimaryGamePage"
                     component={PrimaryGamePageStructure}
                     options={ homeOptions()}
                 />
-                <Stack.Screen 
-                    name="SecondaryGamePage" 
+                <Stack.Screen
+                    name="SecondaryGamePage"
                     component={SecondaryGamePageStructure}
                     options={homeOptions()}
                     screenOptions={{ presentation: 'modal' }}
@@ -271,7 +268,7 @@ export default function GameScreen({navigation, route}) {
                 </View>
         )
     }
-    
+
     return (
         gamePageStructure()
     )

@@ -1,22 +1,22 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { View, TouchableOpacity } from 'react-native'
+import { AppWideImageContext } from 'main/sgImageContext'
+import { firebaseSearchContext } from 'main/sgHomeScreenGames/sgHomeSearchScreen'
+import { homeScreenActionContext } from 'main/sgHomeScreenGames/sgHomeActionGames'
+import { homeScreenDatesContext } from 'main/sgHomeScreenGames/sgHomeDates'
+import { homeScreenGenreContext } from 'main/sgHomeScreenContext'
+import { homeScreenSpotlightGamesContext } from 'main/sgHomeScreenGames/sgSpotlightedGames'
+import { loadingScreen } from 'auth/loadingScreen'
 import { useAuth } from 'auth/authContext'
 import { useSearchBar } from 'main/sgGameSearchScreenContent/searchIndex'
-import { loadingScreen } from 'auth/loadingScreen'
 import {
-    AppWideImageContext,
     ContentContainer,
     CurrentThemeContext,
     SafeAreaViewContainer,
     ScrollViewContainer,
     Container,
-    firebaseSearchContext,
-    homeScreenDatesContext,
-    homeScreenSpotlightGamesContext,
     faStar,
     FontAwesomeIcon,
-    homeScreenGenreContext,
-    homeScreenActionContext,
     MainFont,
     GeneralFontColor,
     TouchableButton,
@@ -30,35 +30,34 @@ const Stack = createStackNavigator()
 
 export default function SgHomeScreen({ navigation, route }) {
     const { 
-        currentUser, 
+        backArrow,
         currentUID, 
+        currentUser, 
         displayData,
-        toNewSection,
-        sgFirebaseGamesCollectionSubGenre,
-        sgFirebaseConsolesCollection,
-        sgFirebaseGenreCollection,
         sgDB,
-        backArrow } = useAuth()
+        sgFirebaseConsolesCollection,
+        sgFirebaseGamesCollectionSubGenre,
+        sgFirebaseGenreCollection,
+        toNewSection
+    } = useAuth()
 
-    const { 
-        searchBar,  
-        gamesFilterListName,
-        testDb,
-        } = useSearchBar()
-    const colors = useContext(CurrentThemeContext)
-    const date = useContext(homeScreenDatesContext)
-    const spotlights = useContext(homeScreenSpotlightGamesContext)
-    const sgGameSearch = useContext(firebaseSearchContext)
-    const images = useContext(AppWideImageContext)
-    const colorsPassThrough = colors
-    const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be read
+    // For Spotlight Section
+    const [collectionName, setCollectionName] = useState('sgAPI')
+    const [gameArrayTest, setGameArrayTest] = useState([])
+    console.log("🚀 ~ file: sgHomeScreen.js:47 ~ SgHomeScreen ~ gameArrayTest:", gameArrayTest)
+    const [gameIndex, setGameIndex] = useState()
+    const [homepageSearchBar, setHomepageSearchBar] = useState(true)
     const [isLoading, setIsLoading] = useState(true)
     const [searchBarTouched, setSearchBarTouched] = useState(false)
-    const [homepageSearchBar, setHomepageSearchBar] = useState(true)
     const [userInfo, setUserInfo] = useState()
-    const [collectionName, setCollectionName] = useState('sgAPI')
-    const [gameIndex, setGameIndex] = useState()
-    // For Spotlight Section
+    const { searchBar } = useSearchBar()
+    const colors = useContext(CurrentThemeContext)
+    const colorsPassThrough = colors
+    const date = useContext(homeScreenDatesContext)
+    const images = useContext(AppWideImageContext)
+    const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be read
+    const sgGameSearch = useContext(firebaseSearchContext)
+    const spotlights = useContext(homeScreenSpotlightGamesContext)
     const [spotlightGameConsoleName, setSpotlightGameConsoleName] = useState()
      // For the Spotlight Game
     const [spotlightArray, setSpotlightArray] = useState([])
@@ -77,16 +76,22 @@ export default function SgHomeScreen({ navigation, route }) {
     const [gamesArrayDescription2, setgamesArrayDescription2] = useState('')
     // For the 3rd Section
     const [gamesArray3, setgamesArray3] = useState([])
+    console.log("🚀 ~ file: sgHomeScreen.js:82 ~ SgHomeScreen ~ gamesArray3:", gamesArray3)
     const [gamesArrayTitle3, setgamesArrayTitle3] = useState('')
     const [gamesArrayDescription3, setgamesArrayDescription3] = useState('')
     // For the 4th Section
     const [gamesArray4, setgamesArray4] = useState([])
+    console.log("🚀 ~ file: sgHomeScreen.js:87 ~ SgHomeScreen ~ gamesArray4:", gamesArray4)
     const [gamesArrayTitle4, setgamesArrayTitle4] = useState('')
     const [gamesArrayDescription4, setgamesArrayDescription4] = useState('')
     // For the 5th Section
     const [gamesArray5, setgamesArray5] = useState([])
     const [gamesArrayTitle5, setgamesArrayTitle5] = useState('')
     const [gamesArrayDescription5, setgamesArrayDescription5] = useState('')
+
+    const [gamesArray6, setgamesArray6] = useState([])
+    const [gamesArrayTitle6, setgamesArrayTitle6] = useState('')
+    const [gamesArrayDescription6, setgamesArrayDescription6] = useState('')
 
     const [genreArray, setGenreArray] = useState([])
     const [genreArrayTitle, setGenreArrayTitle] = useState('')
@@ -96,13 +101,12 @@ export default function SgHomeScreen({ navigation, route }) {
 
 
     // For Search Bar
-    const [searchType, setSearchType] = useState('sgIGDBSearch')
-    const [searchBarTitle, setSearchBarTitle] = useState('Search Games')
-    const [searchBarCancel, setSearchBarCancel] = useState('Search Games')
-    const [searchQuery, setSearchQuery] = useState('')
-    const genreSpecFunc = useContext(homeScreenGenreContext)
+    const [ searchBarCancel, setSearchBarCancel ] = useState('Search Games')
+    const [ searchBarTitle, setSearchBarTitle ] = useState('Search Games')
+    const [ searchQuery, setSearchQuery ] = useState('')
+    const [ searchType, setSearchType ] = useState('sgIGDBSearch')
     const actionGenreContext = useContext(homeScreenActionContext)
-    const chosenDb = testDb
+    const genreSpecFunc = useContext(homeScreenGenreContext)
     const navigationPass = navigation
     const toGameData = {
         navigationPass,
@@ -158,8 +162,8 @@ export default function SgHomeScreen({ navigation, route }) {
         if (month == 3) return date.mayGames(consoleData, gameData1, gameData2, gameData3)
         if (month == 4) return date.mayGames(consoleData, gameData1, gameData2, gameData3)
         if (month == 5) return date.mayGames(consoleData, gameData1, gameData2, gameData3)
-        if (month == 6) return null
-        if (month == 7) return null
+        if (month == 6) return date.mayGames(consoleData, gameData1, gameData2, gameData3)
+        if (month == 7) return date.mayGames(consoleData, gameData1, gameData2, gameData3)
         if (month == 8) return date.mayGames(consoleData, gameData1, gameData2, gameData3)
         if (month == 9) return date.mayGames(consoleData, gameData1, gameData2, gameData3)
         if (month == 10) return date.mayGames(consoleData, gameData1, gameData2, gameData3)
@@ -167,34 +171,112 @@ export default function SgHomeScreen({ navigation, route }) {
         if (month == 12) return date.mayGames(consoleData, gameData1, gameData2, gameData3)
     }
 
-    useEffect(() => {
-        function loadingTime() {
-            return new Promise(resolve => {
-                setTimeout(() => {
-                    resolve(
-                        setUserInfo(currentUID),
-                        setIsLoading(false)
-                    )
-                    homepageSpotlightCollection()
-                    spotlights.findWeekofYear(spotlightData, gamesArray)
-                }, 2000)
-                    arrayOfFunctions()
-            }, [])
-        }
-        async function sgLoader() {
-            await loadingTime()
-        }
-        sgLoader()
-        if(currentUID !== null) 
-            return 
-                displayData(collectionName)
-    }, [isFocused])
+    const items = [
+        { id: 1, consoleName: 'sgGenesis', gameSubgenre: 'Racing' },
+        { id: 2, consoleName: 'sgGenesis', gameSubgenre: 'Basketball' },
+        { id: 3, consoleName: 'sgGenesis', gameSubgenre: 'Platformer' },
+        { id: 4, consoleName: 'sgGenesis', gameSubgenre: 'Football' },  
+      ];
+      
+      function doSomething(item, setArrayForGames) {
+        displayData(collectionName, `${item.consoleName}`, `${item.gameSubgenre}`, setArrayForGames)
+      }
 
-    function arrayOfFunctions() {
-        const turtleSoup = [0, 1]
-        const random = Math.floor(Math.random() * turtleSoup.length);
-        return setGameIndex(random)
+      function testing() {
+        const array2 = [
+            {id: 1, gameArrayToBeSet: setgamesArray3},
+            {id: 2, gameArrayToBeSet: setgamesArray4},
+            {id: 3, gameArrayToBeSet: setgamesArray5},
+            {id: 4, gameArrayToBeSet: setgamesArray6},
+          ];
+        for (let i = 0; i < array2.length; i++) {
+            doSomething(items[i], array2[i].gameArrayToBeSet);
+        }
+      }
+
+    function testFunc() {
+        const array1 = [
+            { id: 1, consoleName: 'sgGenesis', gameSubgenre: 'Racing' },
+            { id: 2, consoleName: 'sgGenesis', gameSubgenre: 'Basketball' },
+            { id: 3, consoleName: 'sgGenesis', gameSubgenre: 'Platformer' },
+            { id: 4, consoleName: 'sgGenesis', gameSubgenre: 'Football' },     
+          ];
+          
+          const array2 = [
+            {id: 1, gameArrayToBeSet: setgamesArray3},
+            {id: 2, gameArrayToBeSet: setgamesArray4},
+            {id: 3, gameArrayToBeSet: setgamesArray5},
+            {id: 4, gameArrayToBeSet: setgamesArray6},
+          ];
+          
+          const mergedArray = array1.map(item1 => {
+            const item2 = array2.find(item2 => item2.id === item1.id);
+            return { ...item1, ...item2 };
+          });ray4
+          
+          for (let i = 0; i < array2.length; i++) {
+            displayData(collectionName, mergedArray.consoleName, mergedArray.gameSubgenre, mergedArray.gameArrayToBeSet)
+          }
     }
+    
+
+    async function homePageContentDisplay(consoleName, gameSubgenre, setGameArrayTest) {
+        const sgConsoleName = 'sgGenesis'
+        const gameExamples = [
+            { id: 1, consoleName: 'sgGenesis', gameSubgenre: 'Racing' },
+            { id: 2, consoleName: 'sgGenesis', gameSubgenre: 'Basketball' },
+            { id: 3, consoleName: 'sgGenesis', gameSubgenre: 'Platformer' },
+            { id: 4, consoleName: 'sgGenesis', gameSubgenre: 'Football' },
+            { id: 5, consoleName: 'sgGenesis', gameSubgenre: 'Shooter' },     
+          ];
+        const gameArrays = [
+            {id: 1, gameArrayToBeSet: setgamesArray3},
+            {id: 2, gameArrayToBeSet: setgamesArray4},
+            {id: 3, gameArrayToBeSet: setgamesArray5},
+            {id: 4, gameArrayToBeSet: setgamesArray6},
+        ]
+        for (let i = 0; i < 4 && i < gameExamples.length; i++) {
+            displayData(collectionName, 'sgGenesis', 'Racing')
+            const item = gameExamples[i];
+            items.push(<div key={item.id}>{item.name}</div>);
+        }
+        return displayData(collectionName, 'sgGenesis', 'Racing')
+    }
+
+    const objects = [
+        { id: 1, name: 'Object 1' },
+        { id: 2, name: 'Object 2' },
+        { id: 3, name: 'Object 3' },
+        { id: 4, name: 'Object 4' },
+        { id: 5, name: 'Object 5' }
+      ];
+      
+      function getRandomObjects(objects, count) {
+        const selectedObjects = [];
+        const updatedObjects = objects.slice();
+        for (let i = 0; i < count; i++) {
+          const index = Math.floor(Math.random() * updatedObjects.length);
+          const selectedObject = updatedObjects[index];
+          selectedObjects.push(selectedObject);
+          updatedObjects.splice(index, 1);
+        }
+        return [selectedObjects, updatedObjects];
+      }
+      
+      let [selectedObjects, remainingObjects] = getRandomObjects(objects, 3);
+      console.log(selectedObjects);
+      console.log(remainingObjects);
+
+    useEffect(() => {  
+        const fetchData = async () => {
+            displayData(collectionName, 'sgGenesis', 'Racing', setGameArrayTest)
+        }
+        setTimeout(() => {
+            setUserInfo(currentUID),
+            setIsLoading(false)
+          }, 2000)
+        getRandomObjects(objects)
+    }, [isFocused])
 
     function findLaymanConsoleName(consoleName) {
         if (consoleName == 'sgGenesis') return 'Sega Genesis'
@@ -219,48 +301,6 @@ const newStr = str.substring(5)
 console.log('After removing the first character:', newStr);
 */
 
-async function sgFirebaseGamesCollection(passingData) {
-    const subscriber = sgDB
-        .collection(collectiveGameData.collectionName)
-        .doc(collectiveGameData.consoleName)
-        .collection(collectiveGameData.gamesCollection)
-        .orderBy(collectiveGameData.gamesCollectionOrderBy, collectiveGameData.gamesCollectionOrderDirection)
-        .limit(collectiveGameData.gamesCollectionOrderLimit)
-        .onSnapshot(querySnapshot => {
-            const games = []
-            querySnapshot.forEach(documentSnapshot => {
-                games.push({
-                ...documentSnapshot.data(),
-                key: documentSnapshot.id,
-                })
-            })
-    
-            collectiveGameData.setupGameData(games)
-        })
-    return () => subscriber()
-}
-    
-
-    async function sgFirebaseGamesCollection(passingData) {
-        const subscriber = sgDB
-            .collection(collectiveGameData.collectionName)
-            .doc(collectiveGameData.consoleName)
-            .collection(collectiveGameData.gamesCollection)
-            .orderBy(collectiveGameData.gamesCollectionOrderBy, collectiveGameData.gamesCollectionOrderDirection)
-            .limit(collectiveGameData.gamesCollectionOrderLimit)
-            .onSnapshot(querySnapshot => {
-                const games = []
-                querySnapshot.forEach(documentSnapshot => {
-                    games.push({
-                    ...documentSnapshot.data(),
-                    key: documentSnapshot.id,
-                    })
-                })
-        
-                collectiveGameData.setupGameData(games)
-            })
-        return () => subscriber()
-    }
     /*-----------*/
     // Links to the search page
     function confirmViewGames() {
@@ -323,7 +363,7 @@ async function sgFirebaseGamesCollection(passingData) {
                     ?   <View>
                             <ViewTopRow>
                                 <View style={{paddingTop: 30, flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'flex-start'}}>
-                                    <MainFont style={{alignItems: 'left', justifyContent: 'center'}}>Logo goes here</MainFont>
+                                    <MainFont style={{alignItems: 'flex-start', justifyContent: 'center'}}>Logo goes here</MainFont>
                                 </View>
                             </ViewTopRow>
                             <ViewTopRow>
@@ -337,7 +377,7 @@ async function sgFirebaseGamesCollection(passingData) {
                     :   <View style={{}}>
                             <ViewTopRow>
                                 <View style={{paddingTop: 30, flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'flex-start'}}>
-                                    <MainFont style={{alignItems: 'left', justifyContent: 'center'}}>Logo goes here</MainFont>
+                                    <MainFont style={{alignItems: 'flex-start', justifyContent: 'center'}}>Logo goes here</MainFont>
                                 </View>
                             </ViewTopRow>
                         </View>
@@ -351,6 +391,7 @@ async function sgFirebaseGamesCollection(passingData) {
             <View style={{paddingBottom: 200}}>
             {homepageHeader()}
                 <ScrollViewContainer showsVerticalScrollIndicator={false}>
+                    {spotlightSection()}
                     {actionSection()}
                     {actionsasSection()}
                     {homepageButtonLayout()}
@@ -385,7 +426,7 @@ async function sgFirebaseGamesCollection(passingData) {
                         </ContentContainer>
                 }
             </SafeAreaViewContainer>
-          )
+        )
     }
 
     /*-----------*/
@@ -451,11 +492,7 @@ async function sgFirebaseGamesCollection(passingData) {
                 fontWeight: 'bold',
             }
         }
-        return (
-            isLoading !== true 
-                ?   pageLoadedHeader
-                :   pageUnloadedHeader
-        )
+        return isLoading !== true ? pageLoadedHeader : pageUnloadedHeader
     }
 
     /*-----------------------------------*/

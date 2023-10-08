@@ -1,0 +1,1 @@
+export { default as SgHomeScreen } from 'main/sgHomeScreen'

@@ -1,6 +1,8 @@
-import React, { forwardRef, useState, useContext } from 'react';
-import { StyleSheet, View, FlatList, Text, TouchableOpacity } from 'react-native';
-import { useInfiniteHits, usePagination } from 'react-instantsearch-hooks';
+import React, { forwardRef, useState, useContext } from 'react'
+import { StyleSheet, View, FlatList, Text, TouchableOpacity } from 'react-native'
+import { AppWideImageContext } from 'main/sgImageContext'
+import { homeScreenGenreContext } from 'main/sgHomeScreenContext'
+import { useInfiniteHits, usePagination } from 'react-instantsearch-hooks'
 import { 
   algoliaConfig,
   CurrentThemeContext,
@@ -8,11 +10,9 @@ import {
   CustomSearchBarTextInput, 
   MainFont,
   MainSubFont,
-  homeScreenGenreContext,
   FontAwesomeIcon,
   faStar,
-  ViewTopRow, 
-  AppWideImageContext,
+  ViewTopRow
 } from 'index'
 
 export const InfiniteHits = forwardRef(

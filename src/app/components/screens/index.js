@@ -1,40 +1,4 @@
 // Screens
-    // Auth Screens
-    export { default as LoginScreen } from 'auth/loginScreen'
-    export { default as RegistrationScreen } from 'auth/registrationScreen'
-    export { default as ResetPasswordScreen } from 'auth/resetPasswordScreen' 
-
-    // Main Screens
-    export { default as SgHomeScreen } from 'main/sgHomeScreen'
-
-        // Search Screens
-        
-        export { default as SgSearchHome } from 'main/sgGameSearchScreenContent/sgSearchHome'   
-        export { default as SgGameSearchScreen } from 'main/sgGameSearchScreenContent/sgGameSearchScreen'   
-        export { default as SgSelectedGameCoverScreen } from 'main/sgGameSearchScreenContent/sgSelectedGameScreens/sgSelectedGameCoverScreen' 
-        export { default as SgSelectedGameSummaryScreen } from 'main/sgGameSearchScreenContent/sgSelectedGameScreens/sgSelectedGameSummaryScreen'
-        export { default as SgSelectedGameplayScreen } from 'main/sgGameSearchScreenContent/sgSelectedGameScreens/sgSelectedGameplayScreen'
-        export { default as SgSelectedGameSetGenreScreen } from 'main/sgGameSearchScreenContent/sgSelectedGameScreens/sgSelectedGameSetGenreScreen'
-        export { default as sgSelectedGameSetSubgenreScreen } from 'main/sgGameSearchScreenContent/sgSelectedGameScreens/sgSelectedGameSetSubgenreScreen'
-        export { default as SgSelectedGameSetGameModesScreen } from 'main/sgGameSearchScreenContent/sgSelectedGameScreens/sgSelectedGameModesScreen'
-        export { default as SgSelectedGameConfirmationScreen } from 'main/sgGameSearchScreenContent/sgSelectedGameScreens/sgSelectedGameConfirmationScreen'
-        export { default as SgIGDBGameSearchScreen } from 'main/sgGameSearchScreenContent/sgIGDBGameSearchScreen'   
-        export { default as SgConsoleListScreen } from 'main/sgGameScreenContent/sgConsoleListScreen'
-        export { default as TestImageDB } from 'main/sgGameScreenContent/TestImageDB'
-        export { default as SgSearchQuery } from 'main/sgGameScreenContent/sgConfirmAddGameScreen'
-        export { default as SgSearchScreen } from 'main/sgGameSearchScreenContent/sgSearchScreen'
-        export { default as sgSearchResultsScreen } from 'main/sgGameSearchScreenContent/sgSearchResultsScreen'
-
-        // Game Screens
-        export { default as GameScreen } from 'main/sgGameScreenContent/sgGameScreen'
-        export { default as ConfirmAddGameScreen } from 'main/sgGameScreenContent/sgConfirmAddGameScreen'
-        export { default as EditGameScreen } from 'main/sgGameScreenContent/sgEditGameScreen'
-        
-    // User Screens
-    export { default as UserProfileScreen } from 'user/userProfileScreen'
-    export { default as UpdateUserScreen } from 'user/userUpdateScreen'
-    export { default as UserSavesScreen } from 'user/userSavesScreen'
-
 // Assets  
     // Styling
         //Theme Context
@@ -136,69 +100,6 @@
             ViewTopRow
         } from 'assets/styles/sgScreensStyling'
     /*-----------------*/
-    //Context
-        //Images Context
-        export { AppWideImageContext } from 'main/sgImageContext'
-        //Axios Context
-        export { axiosSearchContext } from 'main/sgGameSearchScreenContent/axiosSearchContext'
-        
-        //Auth Context
-        export { useAuth } from 'auth/authContext'
-
-        //Tags Context
-        export { useTags } from 'auth/tagsContext'
-
-        //Refinements Context
-        export { customRefinementContext } from 'main/sgGameSearchScreenContent/sgAlgoliaComponents/sgAlgoliaRefinementContext'
-        
-        //Search Bar Context
-        export { useSearchBar } from 'main/sgGameSearchScreenContent/searchIndex'
-
-        //USer Icon Creator Context
-        export { useIconCreator } from 'user/userIconContext'
-
-        //Home Context
-        export { homeScreenGenreContext } from 'main/sgHomeScreenContext'
-             //Home Search Context
-            export { firebaseSearchContext } from 'main//sgHomeScreenGames/sgHomeSearchScreen'
-            //Date Context
-            export { homeScreenDatesContext } from 'main/sgHomeScreenGames/sgHomeDates'
-
-            //Spotlight Context
-            export { homeScreenSpotlightGamesContext } from 'main/sgHomeScreenGames/sgSpotlightedGames'
-            
-            //Genre Context
-            export { homeScreenActionContext } from 'main/sgHomeScreenGames/sgHomeActionGames'
-
-        //Game Uploads Context
-        export { confirmGameContext } from 'main/sgGameSearchScreenContent/sgSelectedGameScreens/sgSelectedGameContext'
-
-        //Uploaded Game Context
-        export { gameScreenContext } from 'main/sgGameScreenContent/sgGameScreenContext'   
-
-        //User Screen Context
-        export { UserScreenContext } from 'user/userScreenContext'
-        
-        //User Validation
-        export { UserValidationsContext } from 'user/userValidationsContext'
-
-        //Login Validations
-        export { LoginValidationsContext } from 'user/loginValidationContext'
-
-        //Registration Validations
-        export { RegistrationValidationsContext } from 'user/registrationValidationContext'
-
-        //Reset Password Validations
-        export { ResetPasswordValidationsContext } from 'user/resetPasswordValidationContext'
-
-        //Update User Information Validations
-        export { UpdateUserInfoValidationsContext } from 'user/updateUserInfoValidationContext'
-        
-        //Form Fields Context
-        export { FormFieldsContext } from 'user/userScreenFormFieldsContext'
-    // Modal
-    export { ModalButton } from 'auth/sgModal'
-
     //Firebase and Elastic
     export { firebase, algoliaConfig, gamesConfig, getStorage, ref, getDownloadURL } from 'server/config/config'
     

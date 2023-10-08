@@ -1,24 +1,35 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react'
 import { View, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native'
+import { useAuth } from 'auth/authContext'
+import { AppWideImageContext } from 'main/sgImageContext'
+import { confirmGameContext } from 'main/sgGameSearchScreenContent/sgSelectedGameScreens/sgSelectedGameContext'
 import {
-    AppWideImageContext,
-    confirmGameContext,
     CurrentThemeContext,
     PageContainer,
-    SafeAreaViewContainer,
-    useAuth,
+    SafeAreaViewContainer
 } from 'index';
 
 export default function SgSelectedGameplayScreen({route, navigation}) {
-    const {
-        forwardToNextPage,
-        backToPreviousPage
-    } = useAuth()
     //let { searchBarTitle, searchType, searchQuery } = route.params
+    const [ chosenGameplaysArray, setChosenGameplaysArray ] = useState([])
+    const [ imageCount, setImageCount ] = useState()
+    console.log("🚀 ~ file: sgSelectedGameplayScreen.js:49 ~ SgSelectedGameplayScreen ~ imageCount", imageCount)
+    const [ isLoading, setIsLoading ] = useState()
+    const { 0: gameScreenshot1, 1: gameScreenshot2, 2: gameScreenshot3 } = chosenGameplaysArray
+    const { backToPreviousPage, forwardToNextPage } = useAuth()
     const colors = useContext(CurrentThemeContext)
     const confirmGame = useContext(confirmGameContext)
+    const gameNameLastChar = gameName.charAt(gameName.length - 1)
+    const gameplaysNewArray = Array.from(new Set(chosenGameplaysArray)) //Removes the ability to add duplicate
     const images = useContext(AppWideImageContext)
-    const [isLoading, setIsLoading] = useState()
+    const nextPageNumber = 'Page5'
+    const pageDescription = `To add another image, select one of the chosen images. To remove all images, press the Clear Images Button`
+    const pageDescriptionPlural = `Choose ${imageCount} ${confirmGame.imgWordingSelector(imageCount)} that perfectly showcases some of ${gameName}'s highlights:`
+    const pageDescriptionPluralForS = `Choose ${imageCount} ${confirmGame.imgWordingSelector(imageCount)} that perfectly showcases some of ${gameName}' highlights:`
+    let currentGameplaysArray = []
+    currentGameplaysArray = initArray.filter(item => !deletionArray.includes(item))
+    let deletionArray = gameplaysNewArray
+    let initArray = gameScreenshots
     const {
         accessTokenIGDB,
         clientIdIGDB,
@@ -34,25 +45,13 @@ export default function SgSelectedGameplayScreen({route, navigation}) {
         gameNameJPN,
         gameNameMatchInSgDB,
         gamePublishers,
-        gameRating, 
+        gameRating,
         gameReleaseDate,
         gameScreenshots,
         gameSlug,
         gameSummary,
         sortedGameName
     } = route.params
-    
-    const gameNameLastChar = gameName.charAt(gameName.length - 1)
-    const [chosenGameplaysArray, setChosenGameplaysArray] = useState([])
-    const {0: gameScreenshot1, 1: gameScreenshot2, 2: gameScreenshot3 } = chosenGameplaysArray
-    const [ imageCount, setImageCount ] = useState()
-    console.log("🚀 ~ file: sgSelectedGameplayScreen.js:49 ~ SgSelectedGameplayScreen ~ imageCount", imageCount)
-    const gameplaysNewArray = Array.from(new Set(chosenGameplaysArray)) //Removes the ability to add duplicate
-    const pageDescriptionPluralForS = `Choose ${imageCount} ${confirmGame.imgWordingSelector(imageCount)} that perfectly showcases some of ${gameName}' highlights:`
-    const pageDescriptionPlural = `Choose ${imageCount} ${confirmGame.imgWordingSelector(imageCount)} that perfectly showcases some of ${gameName}'s highlights:`
-    const pageDescription = `To add another image, select one of the chosen images. To remove all images, press the Clear Images Button`
-    const nextPageNumber = 'Page5'
-
     // Image Styling
     const imageData = {
         height: 100,
@@ -95,7 +94,7 @@ export default function SgSelectedGameplayScreen({route, navigation}) {
         gameNameJPN,
         gameNameMatchInSgDB,
         gamePublishers: filteredPubs,
-        gameRating, 
+        gameRating,
         gameReleaseDate,
         gameScreenshot1,
         gameScreenshot2,
@@ -107,17 +106,13 @@ export default function SgSelectedGameplayScreen({route, navigation}) {
     }
     const navigationPass = navigation
     const buttonGroupData = {
-        forwardToNextPage, 
-        backToPreviousPage, 
-        nextPageNumber, 
-        passingContent, 
-        navigationPass
+        backToPreviousPage,
+        forwardToNextPage,
+        navigationPass,
+        nextPageNumber,
+        passingContent
     }
-    let initArray = gameScreenshots
-    let deletionArray = gameplaysNewArray
-    let currentGameplaysArray = []
-    currentGameplaysArray = initArray.filter(item => !deletionArray.includes(item))
-    
+
     async function chosenGameplayData(item) {
         setChosenGameplaysArray(gameplaysArray => [...gameplaysArray, item])
         setImageCount(imageCount - 1 )
@@ -159,7 +154,7 @@ export default function SgSelectedGameplayScreen({route, navigation}) {
         return (
             <FlatList
                 data={gameplaySelection}
-                keyboardShouldPersistTaps="always" 
+                keyboardShouldPersistTaps="always"
                 contentContainerStyle={{
                     justifyContent: 'space-between'
                 }}
@@ -183,7 +178,7 @@ export default function SgSelectedGameplayScreen({route, navigation}) {
                     </View>
                 )}
             />
-            
+
         )
     }
 
@@ -223,7 +218,7 @@ export default function SgSelectedGameplayScreen({route, navigation}) {
             }, 2000)
         })
     }, [])
-            
+
     return (
         <PageContainer>
             <SafeAreaViewContainer>

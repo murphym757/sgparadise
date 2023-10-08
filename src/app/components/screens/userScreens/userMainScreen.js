@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { View, SafeAreaView, Pressable, TouchableOpacity, Text } from 'react-native';
 import { useAuth } from 'auth/authContext'
+import { useIconCreator } from 'user/userIconContext'
 import {
   CustomInputField,
   faTimes, 
@@ -15,8 +16,7 @@ import {
   CurrentThemeContext,
   MainFont,
   MainSubFont,
-  Container,
-  useIconCreator
+  Container
 } from 'index'
 
 export default function UserMainScreen({navigation}) {
@@ -67,11 +67,11 @@ export default function UserMainScreen({navigation}) {
         setIsLoading(false)
       }, 2500)
     }
-  
+  ``
     useEffect(() => {
       setUserId(`${currentUser.uid}`)
       pageLoader()
-    })
+    }, [])
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.primaryColor }}>

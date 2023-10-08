@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { View, Button } from 'react-native'
-import { AppWideImageContext, SearchGameTitle, SearchGameData } from 'index';
+import { AppWideImageContext } from 'main/sgImageContext'
+import { SearchGameTitle, SearchGameData } from 'index';
 
 export function setImage(imageWidth, imageHeight, imageUrl) {
     const images = useContext(AppWideImageContext)

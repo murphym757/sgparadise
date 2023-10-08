@@ -1,43 +1,29 @@
 
-import React, { useState, useEffect, useContext } from 'react';
-import { View } from 'react-native';
-import {
-    windowHeight,
-    MainHeading,
-    Container,
-    CurrentThemeContext,
-    SafeAreaViewContainer,
-    TouchableButton,
-    TouchableButtonFont,
-    useSearchBar,
-} from 'index';
+import React, { useState, useEffect, useContext } from 'react'
+import { View } from 'react-native'
+import { useSearchBar } from 'main/sgGameSearchScreenContent/searchIndex'
+import { Container, CurrentThemeContext, MainHeading, SafeAreaViewContainer, TouchableButton, TouchableButtonFont, windowHeight } from 'index';
 import axios from 'axios'
 
 export default function SgSearchScreen({route, navigation}) {
-    const { 
-        searchBar,
-        gamesFilterListName,
-        testDb,
-        sgIGDBSearchQuery
-     } = useSearchBar()
-    //let { searchBarTitle, searchType, searchQuery } = route.params
-    const colors = useContext(CurrentThemeContext)
-    const { keySearchData, keySearchDataPartOfArray, clientIdIGDB, accessTokenIGDB, igdbConsoleId, gbConsoleId, selectedSystemLogo, searchType } = route.params
     // For Search Bar
-    const [searchBarTitle, setSearchBarTitle] = useState('Search Games')
-    const [searchQuery, setSearchQuery] = useState('') //Figure out why searchQuery is coming back as "undefined"
+    //let { searchBarTitle, searchType, searchQuery } = route.params
     const [ gameName, setGameName ] = useState('')
-    const [searchQueryArray, setSearchQueryArray] = useState([])
-    const [searchBarTouched, setSearchBarTouched] = useState(true)
-    const [homepageSearchBar, setHomepageSearchBar] = useState(false)
+    const [ homepageSearchBar, setHomepageSearchBar ] = useState(false)
+    const [ searchBarTitle, setSearchBarTitle ] = useState('Search Games')
+    const [ searchBarTouched, setSearchBarTouched ] = useState(true)
+    const [ searchQuery, setSearchQuery ] = useState('') //Figure out why searchQuery is coming back as "undefined"
+    const [ searchQueryArray, setSearchQueryArray ] = useState([])
+    const { keySearchData, keySearchDataPartOfArray, clientIdIGDB, accessTokenIGDB, igdbConsoleId, gbConsoleId, selectedSystemLogo, searchType } = route.params
+    const { searchBar, sgIGDBSearchQuery } = useSearchBar()
+    const colors = useContext(CurrentThemeContext)
 
     // IGDB search data (Put on confirmation page)
-    const [igdbGameSelected, setigdbGameSelected] = useState(false)
-    const [igdbSearchResults, setIgdbSearchResults] = useState([])
-    const [igdbSearch, setIgdbSearch] = useState(sgIGDBSearchQuery)
+    const [ igdbGameSelected, setigdbGameSelected ] = useState(false)
+    const [ igdbSearch, setIgdbSearch ] = useState(sgIGDBSearchQuery)
+    const [ igdbSearchResults, setIgdbSearchResults ] = useState([])
     const igdbSearchPlatforms = `(${JSON.stringify(route.params.igdbConsoleId)})`
     const igdbSearchResultField = `fields name, category, slug, first_release_date, cover; search "${sgIGDBSearchQuery}"; limit 20; where category != 5 & platforms =${igdbSearchPlatforms}& cover != null;`
-    
     function igdbSearchDetector() {
         function searchTesting() {
             let api = axios.create({
@@ -74,7 +60,7 @@ export default function SgSearchScreen({route, navigation}) {
         if (route.params.keySearchDataPartOfArray == true) return (setSearchQueryArray([route.params.keySearchData[0]]))
         if (route.params.keySearchDataPartOfArray == false) return (setSearchQueryArray([route.params.keySearchData]))
     }
-    
+
     useEffect(() => {
         if (route.params.clientIdIGDB != null) {
             return igdbSearchDetector()
@@ -87,13 +73,13 @@ export default function SgSearchScreen({route, navigation}) {
         if(route.params.clientIdIGDB != null) {
             return (
                 navigation.navigate('Page2', {
+                    accessTokenIGDB: accessTokenIGDB,
                     clientIdIGDB: clientIdIGDB,
-                    accessTokenIGDB: accessTokenIGDB, 
-                    igdbConsoleId: igdbConsoleId,
                     gbConsoleId: gbConsoleId,
-                    selectedSystemLogo: selectedSystemLogo,
+                    igdbConsoleId: igdbConsoleId,
+                    searchQuery: igdbSearch,
                     searchType: searchType,
-                    searchQuery: igdbSearch
+                    selectedSystemLogo: selectedSystemLogo,
                 })
             )
         }

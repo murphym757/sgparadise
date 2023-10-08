@@ -6,7 +6,8 @@ import {
     modalConfirmation,
     searchGameIcon
 } from '../sgGameScreenContent/sgAPIIndex'
-import { AppWideImageContext, SafeAreaViewContainer, CurrentThemeContext, TestImageDB, FontAwesomeIcon, faChevronLeft, CustomInputField } from 'index';
+import { AppWideImageContext, SafeAreaViewContainer, CurrentThemeContext, FontAwesomeIcon, faChevronLeft, CustomInputField } from 'index';
+import { TestImageDB } from '../sgGameScreenContent/sgGameScreenContentIndex'
 
 export default function SgGameSearchScreen({route, navigation}, props) {
     const colors = useContext(CurrentThemeContext)

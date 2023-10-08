@@ -1,5 +1,6 @@
 import React from 'react'
 import { View } from 'react-native'
+import { useTags } from 'auth/tagsContext'
 import {
     CenterContent,
     Container,
@@ -16,7 +17,6 @@ import {
     TouchableButtonFont,
     TouchableButtonFontAlt,
     TouchableButtonFontDelete,
-    useTags,
     ViewSortColumn,
     ViewSortRow,
 } from 'index';
@@ -43,7 +43,7 @@ function starRatingSystem(buttonGroupData, updatedGameRating, setUpdatedGameRati
                         selectedColor={colors.secondaryColor}
                         unSelectedColor={colors.primaryColorAlt}
                         ratingContainerStyle={{
-                            alignItems: 'left'
+                            alignItems: 'flex-start'
                         }}
                         count={5}
                         onFinishRating={setUpdatedGameRating}
@@ -146,10 +146,10 @@ function gameResults(tagArrayData, buttonGroupData) {
 function gameModesResults(tagArrayData, buttonGroupData) {
     const { selectedTags, tagCollection } = useTags() 
     const stackName = ''
-    let initArray = tagArrayData.gameArray
-    let deletionArray = tagArrayData.tagsNewArray
     let currentTagsArray = []
     currentTagsArray = initArray.filter(item => !deletionArray.includes(item))
+    let deletionArray = tagArrayData.tagsNewArray
+    let initArray = tagArrayData.gameArray
 
     return (
         <Container>
@@ -225,16 +225,16 @@ function buttonGroupImages(buttonGroupData, resetChosenGameplayData) {
 }
 
 function coverImageCapture(passingImageData) {
-    const coverUrl = passingImageData.coverUrl
-    const folderName = passingImageData.folderName
-    const firebaseStorageConsoleName = passingImageData.firebaseStorageConsoleName
-    const subFolderName = passingImageData.subFolderName
-    const sortedGameName = passingImageData.sortedGameName
-    const gameNameFolder = passingImageData.gameNameFolder
-    const coverArtFolder = passingImageData.coverArtFolder
     const coverArtFileName = passingImageData.coverArtFileName
-    const fileType = passingImageData.fileType
     const coverArtFileRoute = `${folderName}/${firebaseStorageConsoleName}/${subFolderName}/${sortedGameName}/${gameNameFolder}/${coverArtFolder}/${coverArtFileName}.${fileType}`
+    const coverArtFolder = passingImageData.coverArtFolder
+    const coverUrl = passingImageData.coverUrl
+    const fileType = passingImageData.fileType
+    const firebaseStorageConsoleName = passingImageData.firebaseStorageConsoleName
+    const folderName = passingImageData.folderName
+    const gameNameFolder = passingImageData.gameNameFolder
+    const sortedGameName = passingImageData.sortedGameName
+    const subFolderName = passingImageData.subFolderName
     fetch(coverUrl)
         .then(res => {
             return res.blob()
@@ -284,17 +284,17 @@ function coverImageCapture(passingImageData) {
     }
 
     function screenshotImageCapture(item) {
-        const screenshotUrl = item.imageUrl
-        const folderName = item.folderName
+        const fileType = item.fileType
         const firebaseStorageConsoleName = item.firebaseStorageConsoleName
-        const subFolderName = item.subFolderName
-        const sortedGameName = item.sortedGameName
+        const folderName = item.folderName
         const gameNameFolder = item.gameNameFolder
-        const screenshotFolder = item.screenshotFolder
         const gameNameLength = item.gameNameCharCount
         const screenshotFileName = `${gameNameFolder.substring(0, gameNameLength)}-(screenshot${item.imageNumber})`
-        const fileType = item.fileType
         const screenshotFileRoute = `${folderName}/${firebaseStorageConsoleName}/${subFolderName}/${sortedGameName}/${gameNameFolder}/${screenshotFolder}/${screenshotFileName}.${fileType}`
+        const screenshotFolder = item.screenshotFolder
+        const screenshotUrl = item.imageUrl
+        const sortedGameName = item.sortedGameName
+        const subFolderName = item.subFolderName
         fetch(screenshotUrl)
             .then(res => {
                 return res.blob()
@@ -316,18 +316,18 @@ function coverImageCapture(passingImageData) {
     }
 
 export const confirmGame = {
-    gameConfirmationResults,
-    gameSummaryResults,
-    gameModesResults,
-    gameResults,
-    starRatingSystem,
     buttonGroup,
-    imgWordingSelector,
+    buttonGroupImages,
     chooseImages,
     chosenImages,
-    buttonGroupImages,
     coverImageCapture,
-    screenshotUpload
+    gameConfirmationResults,
+    gameModesResults,
+    gameResults,
+    gameSummaryResults,
+    imgWordingSelector,
+    screenshotUpload,
+    starRatingSystem,
 }
 
 export const confirmGameContext = React.createContext(confirmGame)

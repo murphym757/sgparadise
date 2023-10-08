@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { View, ActivityIndicator } from 'react-native'
+import { useAuth } from 'auth/authContext'
+import { confirmGameContext } from 'main/sgGameSearchScreenContent/sgSelectedGameScreens/sgSelectedGameContext'
 // React Navigation
 import { useIsFocused } from '@react-navigation/native'
-import { confirmGameContext, firebase, PageContainer, SafeAreaViewContainer, useAuth } from 'index'
+import { firebase, PageContainer, SafeAreaViewContainer } from 'index'
 
 export default function SgSelectedGameSetGameModesScreen({route, navigation}) {
     const {

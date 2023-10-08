@@ -1,14 +1,14 @@
-import React, { useState, useContext } from 'react';
-import { Alert, Modal, StyleSheet, SafeAreaView, Text, View, Pressable } from 'react-native';
-import { useClearRefinements } from 'react-instantsearch-hooks';
+import React, { useState, useContext } from 'react'
+import { Alert, Modal, StyleSheet, SafeAreaView, Text, View, Pressable } from 'react-native'
+import { customRefinementContext } from 'main/sgGameSearchScreenContent/sgAlgoliaComponents/sgAlgoliaRefinementContext'
+import { useClearRefinements } from 'react-instantsearch-hooks'
 import {
   ViewContainer,
   ContentContainer,
   FontAwesomeIcon,
   faFilter,
-  AlgoliaSearchTitleText,
-  customRefinementContext,
-} from 'index';
+  AlgoliaSearchTitleText
+} from 'index'
 
 export function ModalButton(props) { 
   const customRefinements = useContext(customRefinementContext)

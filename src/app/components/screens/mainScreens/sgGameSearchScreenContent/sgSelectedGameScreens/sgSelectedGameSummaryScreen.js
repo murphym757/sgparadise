@@ -1,28 +1,23 @@
 
 import React, { useState, useEffect, useContext } from 'react'
 import { View, ActivityIndicator } from 'react-native'
-import {
-    axiosSearchContext,
-    confirmGameContext,
-    CurrentThemeContext,
-    PageContainer,
-    SafeAreaViewContainer,
-    useAuth,
-    windowHeight,
-} from 'index'
+import { useAuth } from 'auth/authContext'
+import { axiosSearchContext } from 'main/sgGameSearchScreenContent/axiosSearchContext'
+import { confirmGameContext } from 'main/sgGameSearchScreenContent/sgSelectedGameScreens/sgSelectedGameContext'
+import { CurrentThemeContext, PageContainer, SafeAreaViewContainer, windowHeight } from 'index'
 import axios from 'axios'
 
 export default function SgSelectedGameSummaryScreen({route, navigation}) {
     const {
-        forwardToNextPage,
         backToPreviousPage,
-        charLimit
+        charLimit,
+        forwardToNextPage,
     } = useAuth()
     //let { searchBarTitle, searchType, searchQuery } = route.params
+    const [isLoading, setIsLoading] = useState()
     const colors = useContext(CurrentThemeContext)
     const confirmGame = useContext(confirmGameContext)
     const searchAxios = useContext(axiosSearchContext)
-    const [isLoading, setIsLoading] = useState()
     const { 
         accessTokenIGDB,
         clientIdIGDB,
@@ -40,39 +35,39 @@ export default function SgSelectedGameSummaryScreen({route, navigation}) {
         gamePublishers,
         gameRating, 
         gameReleaseDate,
-        gameScreenshots,
         gameScreenshot1,
         gameScreenshot2,
         gameScreenshot3,
-        gameSummary,
+        gameScreenshots,
         gameSlug,
+        gameSummary,
         imagesChosen
     } = route.params
     
     const [adminUser, setAdminUser] = useState(true)
+    const [chosenDevelopersArray, setChosenDevelopersArray] = useState([])
+    const [chosenPublishersArray, setChosenPublishersArray] = useState([])
+    const [coverArtFileName, setCoverArtFileName] = useState(`${gameSlug}-(coverArt)`)
+    const [coverArtFolder, setCoverArtFolder] = useState('coverArt')
+    const [coverUrl, setCoverUrl] = useState(`https://images.igdb.com/igdb/image/upload/t_1080p/${gameCover}.jpg`)
+    const [fileType, setFileType] = useState(coverUrl.slice(-3))
     const [firebaseCoverUrl, setFirebaseCoverUrl] = useState('')
     const [firebaseScreenshot1Url, setFirebaseScreenshot1Url] = useState('')
     const [firebaseScreenshot2Url, setFirebaseScreenshot2Url] = useState('')
     const [firebaseScreenshot3Url, setFirebaseScreenshot3Url] = useState('')
-    const [coverUrl, setCoverUrl] = useState(`https://images.igdb.com/igdb/image/upload/t_1080p/${gameCover}.jpg`)
+    const [folderName, setFolderName] = useState('images')
+    const [gameNameFolder, setGameNameFolder] = useState(gameSlug)
+    const [gameNameImageCount, setGameImageCount] = useState(imagesChosen) 
+    const [nextPageNumber, setNextPageNumber] = useState('Page6')
     const [screenshot1Url, setScreenshot1Url] = useState(`https://images.igdb.com/igdb/image/upload/t_1080p/${gameScreenshot1}.jpg`)
     const [screenshot2Url, setScreenshot2Url] = useState(`https://images.igdb.com/igdb/image/upload/t_1080p/${gameScreenshot2}.jpg`)
     const [screenshot3Url, setScreenshot3Url] = useState(`https://images.igdb.com/igdb/image/upload/t_1080p/${gameScreenshot3}.jpg`)
-    const [folderName, setFolderName] = useState('images')
-    const [subFolderName, setSubFolderName] = useState('Uploaded Games')
-    const [sortedGameName, setSortGameName] = useState(gameSlug.slice(0, 2))
-    const [gameNameFolder, setGameNameFolder] = useState(gameSlug)
-    const [coverArtFolder, setCoverArtFolder] = useState('coverArt')
-    const [screenshotFolder, setScreenshotFolder] = useState('screenshots')
-    const [coverArtFileName, setCoverArtFileName] = useState(`${gameSlug}-(coverArt)`)
     const [screenshotFileName, setScreenshotFileName] = useState(`${gameSlug}-(screenshot)`)
-    const [fileType, setFileType] = useState(coverUrl.slice(-3))
+    const [screenshotFolder, setScreenshotFolder] = useState('screenshots')
+    const [sortedGameName, setSortGameName] = useState(gameSlug.slice(0, 2))
+    const [subFolderName, setSubFolderName] = useState('Uploaded Games')
     const [updatedGameSummary, setUpdatedGameSummary] = useState(gameSummary)
-    const [chosenPublishersArray, setChosenPublishersArray] = useState([])
-    const [chosenDevelopersArray, setChosenDevelopersArray] = useState([])
     const pageDescription = `What is ${gameName} about, exactly?`
-    const [nextPageNumber, setNextPageNumber] = useState('Page6')
-    const [gameNameImageCount, setGameImageCount] = useState(imagesChosen) 
     console.log("🚀 ~ file: sgSelectedGameSummaryScreen.js:76 ~ SgSelectedGameSummaryScreen ~ gameNameImageCount", gameNameImageCount)
     const passingImageData = {
         coverArtFileName,
@@ -147,20 +142,20 @@ export default function SgSelectedGameSummaryScreen({route, navigation}) {
             })
             return new Promise(resolve => {
                 setTimeout(() => {
-                  resolve(
-                    searchAxios.findPublishersName(api, gamePublishers, setChosenPublishersArray),
-                    searchAxios.findDevelopersName(api, gameDevelopers, setChosenDevelopersArray),
-                    setIsLoading(false),
-                    setUpdatedGameSummary(charLimit(gameSummary, 500))
-                )
-                if (gameScreenshots == 0) {
-                    return setNextPageNumber('Page6')
-                } else {
-                    return nextPageNumber
-                }
-            }, 2000)
-              })
-            }
+                    resolve(
+                        searchAxios.findPublishersName(api, gamePublishers, setChosenPublishersArray),
+                        searchAxios.findDevelopersName(api, gameDevelopers, setChosenDevelopersArray),
+                        setIsLoading(false),
+                        setUpdatedGameSummary(charLimit(gameSummary, 500))
+                    )
+                    if (gameScreenshots == 0) {
+                        return setNextPageNumber('Page6')
+                    } else {
+                        return nextPageNumber
+                    }
+                }, 2000)
+            })
+        }
 
         async function sgLoader() {
             await searchTesting()

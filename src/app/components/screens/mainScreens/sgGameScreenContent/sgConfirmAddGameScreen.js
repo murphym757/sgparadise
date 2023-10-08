@@ -1,5 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { View, FlatList, TouchableOpacity } from 'react-native'
+import { useTags } from 'auth/tagsContext'
+import { useSearchBar } from 'main/sgGameSearchScreenContent/searchIndex'
 import { createStackNavigator } from '@react-navigation/stack'
 import { useIsFocused } from '@react-navigation/native'
 import {
@@ -27,66 +29,56 @@ import {
     SgConsoleListScreen,
     sgSearchResultsScreen,
     SgSearchScreen,
+    windowHeight
+} from 'index'
+import { 
     SgSelectedGameConfirmationScreen,
     SgSelectedGameCoverScreen,
     SgSelectedGameplayScreen,
     SgSelectedGameSetGameModesScreen,
     SgSelectedGameSetGenreScreen,
-    sgSelectedGameSetSubgenreScreen,
-    SgSelectedGameSummaryScreen,
-    useSearchBar,
-    useTags,
-    windowHeight
-} from 'index'
+    SgSelectedGameSetSubgenreScreen,
+    SgSelectedGameSummaryScreen
+} from '../sgGameSearchScreenContent/sgSelectedGameScreens/sgSelectedGameScreensIndex'
 
 export default function ConfirmAddGameScreen({navigation, route}) {
-    const {
-        selectedTags,
-        tagsSelection} = useTags()
-    const { 
-        searchBar,  
-        gameName, 
-        gamesFilterListName,
-        testDb,
-     } = useSearchBar()
+    const [ isLoading, setIsLoading] = useState(true)
+    const { searchBar, gameName } = useSearchBar()
+    const { selectedTags, tagsSelection} = useTags()
     const colors = useContext(CurrentThemeContext)
     const sgDB = firebase.firestore()
-    const [isLoading, setIsLoading] = useState(true)
     
     // For Search Bar
-    const [searchType, setSearchType] = useState('sgIGDBSearch')
-    const [searchBarTitle, setSearchBarTitle] = useState('Search Games')
-    const [searchQuery, setSearchQuery] = useState('')
-    const chosenDb = testDb
-
-    const [searchFilterSelected, setSearchFilterSelected] = useState(false)
-    const [sgConsoleIcons, setSgConsoleIcons] = useState([])
-    const [chosenGenre, setChosenGenre] = useState()
-    const [modalSelected, setModalSelected] = useState(route.params?.modal)
+    const [ chosenGenre, setChosenGenre ] = useState()
+    const [ modalSelected, setModalSelected ] = useState(route.params?.modal)
+    const [ searchBarTitle, setSearchBarTitle ] = useState('Search Games')
+    const [ searchFilterSelected, setSearchFilterSelected ] = useState(false)
+    const [ searchQuery, setSearchQuery ] = useState('')
+    const [ searchType, setSearchType ] = useState('sgIGDBSearch')
+    const [ sgConsoleIcons, setSgConsoleIcons ] = useState([])
     const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be read
     useEffect(() => {
         setTimeout(() => {
             setIsLoading(false)
-          }, 2000)
+        }, 2000)
         const subscriber = sgDB
-          .collection('sgAPI').doc('sgTags').collection('genreTags').orderBy('tagName', 'asc')
-          .onSnapshot(querySnapshot => {
-            const consoles = []
-            querySnapshot.forEach(documentSnapshot => {
-                consoles.push({
-                ...documentSnapshot.data(),
-                key: documentSnapshot.id,
-              })
-            })
-      
+            .collection('sgAPI').doc('sgTags').collection('genreTags').orderBy('tagName', 'asc')
+            .onSnapshot(querySnapshot => {
+                const consoles = []
+                querySnapshot.forEach(documentSnapshot => {
+                    consoles.push({
+                        ...documentSnapshot.data(),
+                        key: documentSnapshot.id,
+                    })
+                })
             setSgConsoleIcons(consoles)
-          })
-          if(isFocused){  
+        })
+        if(isFocused){  
             setModalSelected(false)
         }
         // Unsubscribe from events when no longer in use
         return () => subscriber()
-      }, [isFocused])  
+    }, [isFocused])  
 
     const [genreTags, setGenreTags] = useState([
         {
@@ -160,7 +152,7 @@ export default function ConfirmAddGameScreen({navigation, route}) {
                     flexDirection: 'row'
                 }}>
                     <TouchableOpacity onPress={() => resetAll()}>
-                        <View style={{ marginTop: 10, alignItems: 'left', justifyContent: 'center', backgroundColor: colors.primaryColor }}>
+                        <View style={{ marginTop: 10, alignItems: 'flex-start', justifyContent: 'center', backgroundColor: colors.primaryColor }}>
                             <FontAwesomeIcon 
                                 icon={ faChevronLeft } color={colors.primaryFontColor} size={50}
                             />
@@ -244,29 +236,6 @@ export default function ConfirmAddGameScreen({navigation, route}) {
         </SafeAreaViewContainer>
         )
     }
-
-    function searchResults() {
-        return (
-              <FlatList
-                  data={gamesFilterListName(chosenDb)}
-                  keyboardShouldPersistTaps="always" 
-                  contentContainerStyle={{
-                      justifyContent: 'center'
-                  }}
-                  keyExtractor={item => item.id}
-                  renderItem={({ item }) => (
-                    <View style={{
-                        flexDirection: 'column',
-                        flex: 1
-                    }}>
-                        <TouchableOpacity onPress={() => chosenGame(item)}>
-                           <MainFont>{item.name}</MainFont>
-                        </TouchableOpacity>
-                    </View>
-                  )}
-              />
-          ) 
-    }
     
     function addGamePage10() {
         return (
@@ -288,7 +257,7 @@ export default function ConfirmAddGameScreen({navigation, route}) {
                 <Stack.Screen name="Page4" component={SgSelectedGameplayScreen} />
                 <Stack.Screen name="Page5" component={SgSelectedGameSummaryScreen} />
                 <Stack.Screen name="Page6" component={SgSelectedGameSetGenreScreen} />
-                <Stack.Screen name="Page7" component={sgSelectedGameSetSubgenreScreen} />
+                <Stack.Screen name="Page7" component={SgSelectedGameSetSubgenreScreen} />
                 <Stack.Screen name="Page8" component={SgSelectedGameSetGameModesScreen} />
                 <Stack.Screen name="Page9" component={SgSelectedGameConfirmationScreen} />
             </Stack.Navigator>

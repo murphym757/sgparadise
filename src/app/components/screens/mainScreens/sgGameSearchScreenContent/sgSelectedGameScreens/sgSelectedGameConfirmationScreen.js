@@ -1,30 +1,19 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { View, ActivityIndicator } from 'react-native'
-// React Navigation
+import { ActivityIndicator, View } from 'react-native'
+import { AppWideImageContext } from 'main/sgImageContext'
+import { confirmGameContext } from 'main/sgGameSearchScreenContent/sgSelectedGameScreens/sgSelectedGameContext'
+import { PageContainer, SafeAreaViewContainer, windowHeight } from 'index'
+import { useAuth } from 'auth/authContext'
 import { useIsFocused } from '@react-navigation/native'
-import {
-    AppWideImageContext,
-    confirmGameContext,
-    firebase,
-    PageContainer,
-    SafeAreaViewContainer,
-    useAuth,
-    windowHeight
-} from 'index'
-  
+
 export default function SgSelectedGameConfirmationScreen({route, navigation}) {
-    const {
-        addGameToConsoleButtonGroup,
-        backToPreviousPage,
-        currentUID,
-        toNewStack
-    } = useAuth()
     //let { searchBarTitle, searchType, searchQuery } = route.params
+    const [ isLoading, setIsLoading ] = useState()
+    const { addGameToConsoleButtonGroup, backToPreviousPage, currentUID, toNewStack } = useAuth()
     const confirmGame = useContext(confirmGameContext)
     const images = useContext(AppWideImageContext)
-    const [isLoading, setIsLoading] = useState()
-    
-    const { 
+
+    const {
         consoleName,
         firebaseConsoleName,
         firebaseCoverUrl,
@@ -43,20 +32,20 @@ export default function SgSelectedGameConfirmationScreen({route, navigation}) {
         gameNameJPN,
         gameNameMatchInSgDB,
         gamePublishers,
-        gameRating, 
+        gameRating,
         gameReleaseDate,
         gameSlug,
         gameSubgenre,
         gameSummary,
         sortedGameName
     } = route.params
-  
-    const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be read
     const [gameUploaded, setGameUploaded] = useState(false)
-    const pageDescription = `Here is all the information about ${gameName}. Is there anything you would like to change?`
-    const stackName = 'Game'
-    const screenName = 'SgUserStackNavbar'
     const confirmationPage = true
+    const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be read
+    const navigationPass = navigation
+    const pageDescription = `Here is all the information about ${gameName}. Is there anything you would like to change?`
+    const screenName = 'SgUserStackNavbar'
+    const stackName = 'Game'
     const passingContent = {
         consoleName,
         firebaseConsoleName,
@@ -76,7 +65,7 @@ export default function SgSelectedGameConfirmationScreen({route, navigation}) {
         gameNameJPN,
         gameNameMatchInSgDB,
         gamePublishers: gamePublishers.map(game => game[0].name),
-        gameRating, 
+        gameRating,
         gameReleaseDate,
         gameSgID: complexID(20),
         gameSlug,
@@ -84,25 +73,23 @@ export default function SgSelectedGameConfirmationScreen({route, navigation}) {
         gameSummary,
         gameUploadedBy: currentUID,
     }
-    
-    const navigationPass = navigation
     let tagArrayData = {
         pageDescription
     }
     const buttonGroupData = {
-        toNewStack, 
-        backToPreviousPage, 
+        toNewStack,
+        backToPreviousPage,
         stackName,
         screenName,
-        passingContent, 
+        passingContent,
         navigationPass
     }
 
     useEffect(() => {
         setTimeout(() => {
             setIsLoading(false)
-          }, 2000)
-      }, [isFocused])
+        }, 2000)
+    }, [isFocused])
 
 
     function confirmationGameCoverImage(buttonGroupData) {

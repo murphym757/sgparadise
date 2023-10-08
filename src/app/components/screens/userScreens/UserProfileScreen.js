@@ -1,42 +1,35 @@
 
 import React, { useState, useContext } from 'react';
-import { View, SafeAreaView } from 'react-native';
+import { SafeAreaView, View} from 'react-native';
 import { RFValue } from "react-native-responsive-fontsize";
+import { useAuth } from 'auth/authContext'
 import {
-    useAuth,
+    Container,
+    CurrentThemeContext,
+    MainFont,
+    MainSubFont,
     TouchableButton,
     TouchableButtonFont,
-    MainFont,
-    Container,
-    MainSubFont,
-    CurrentThemeContext,
-    ViewSortRow,
     ViewSortColumn,
+    ViewSortRow,
     windowHeight
 } from 'index'
 
 export default function UserProfileScreen({navigation}) {
-    const { 
-        currentUser, 
-        logOut, 
-        addUserDataUsers, 
-        updateUsernameFirestore, 
-        updateUserEmailFirestore,
-        updateUsernameAuth
-     } = useAuth()
+    const [ error, setError ] = useState('')
+    const { currentUser, logOut } = useAuth()
     const colors = useContext(CurrentThemeContext)
     const newEmail = 'brickellLife@gmail.com'
     const newUsername = 'brickellLife'
-    const userPosts = 21
     const userComments = 35
-    const userLikes = 44
     const userLikedPosts = 20
-    const [error, setError] = useState('')
+    const userLikes = 44
+    const userPosts = 21
 
     function onUpdateUser() {
         navigation.navigate('Update Account')
     }
-    
+
     async function onHandleLogout() {
         setError('')
         try {
@@ -103,28 +96,28 @@ export default function UserProfileScreen({navigation}) {
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.primaryColor }}>
-          <Container style={{ flex: 1, justifyContent: 'center' }}>
-            <MainSubFont>Account Page</MainSubFont>
-            {currentUser !== null
-                ?   <View>
-                        <MainFont>{error}</MainFont>
-                        <MainFont>{JSON.stringify(currentUser.lastLoginAt)}</MainFont>
-                        {displayUserInfo()}
-                        {displayUserDataSection()}
-                        <TouchableButton 
-                            onPress={() => onUpdateUser()}>
-                            <TouchableButtonFont>Account</TouchableButtonFont>
-                        </TouchableButton>
-                        <TouchableButton 
-                            onPress={() => onHandleLogout()}>
-                            <TouchableButtonFont>Log Out</TouchableButtonFont>
-                        </TouchableButton>
-                </View>
-                :   <View>
-                        <MainFont>Not Logged In</MainFont>
-                </View>
-            }
-          </Container>
-      </SafeAreaView>
+            <Container style={{ flex: 1, justifyContent: 'center' }}>
+                <MainSubFont>Account Page</MainSubFont>
+                {currentUser !== null
+                    ?   <View>
+                            <MainFont>{error}</MainFont>
+                            <MainFont>{JSON.stringify(currentUser.lastLoginAt)}</MainFont>
+                            {displayUserInfo()}
+                            {displayUserDataSection()}
+                            <TouchableButton
+                                onPress={() => onUpdateUser()}>
+                                <TouchableButtonFont>Account</TouchableButtonFont>
+                            </TouchableButton>
+                            <TouchableButton
+                                onPress={() => onHandleLogout()}>
+                                <TouchableButtonFont>Log Out</TouchableButtonFont>
+                            </TouchableButton>
+                    </View>
+                    :   <View>
+                            <MainFont>Not Logged In</MainFont>
+                    </View>
+                }
+            </Container>
+        </SafeAreaView>
     )
 }

@@ -1,21 +1,22 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { View, SafeAreaView, TouchableOpacity } from 'react-native';
-import { RFValue } from "react-native-responsive-fontsize";
+import React, { useState, useEffect, useContext } from 'react'
+import { View, SafeAreaView, TouchableOpacity } from 'react-native'
 import { useAuth } from 'auth/authContext'
-import { getAuth, updateEmail } from "firebase/auth";
+import { useIconCreator } from 'user/userIconContext'
+import { UserScreenContext } from 'user/userScreenContext'
+import { UserValidationsContext } from 'user/userValidationsContext'
+import { LoginValidationsContext } from 'user/loginValidationContext'
+import { UpdateUserInfoValidationsContext } from 'user/updateUserInfoValidationContext'
+import { FormFieldsContext } from 'user/userScreenFormFieldsContext'
+import { getAuth, updateEmail } from "firebase/auth"
+import { RFValue } from "react-native-responsive-fontsize"
+
 import {
   TouchableButton,
   TouchableButtonFont,
   CurrentThemeContext,
-  UserScreenContext,
-  UserValidationsContext,
-  LoginValidationsContext,
-  UpdateUserInfoValidationsContext,
-  FormFieldsContext,
   MainFont,
   MainSecondaryFont,
   Container,
-  useIconCreator,
   ContentRow,
   windowHeight,
 } from 'index';
@@ -156,7 +157,7 @@ export default function UpdateUserScreen({navigation}) {
     useEffect(() => {
       pageLoader(),
       updateSwitch()
-    })
+    }, [])
 
     //*Back Button
       function changeButtonPressedBack(backFunc) {

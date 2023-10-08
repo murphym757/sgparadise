@@ -1,18 +1,25 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { View, ActivityIndicator } from 'react-native'
+import { confirmGameContext } from 'main/sgGameSearchScreenContent/sgSelectedGameScreens/sgSelectedGameContext'
+import { firebase, PageContainer, SafeAreaViewContainer } from 'index'
+import { useAuth } from 'auth/authContext'
 // React Navigation
 import { useIsFocused } from '@react-navigation/native'
-import { confirmGameContext, firebase, PageContainer, SafeAreaViewContainer, useAuth } from 'index'
 
 export default function sgSelectedGameSetSubgenreScreen({route, navigation}) {
-    const {
-        forwardToNextPage,
-        backToPreviousPage
-    } = useAuth()
+    const [ chosenName, setChosenName ] = useState()
+    const [ chosenTagsArray, setChosenTagsArray ] = useState([])
+    const [ gameArray, setGameArray ] = useState([])
+    const [ isLoading, setIsLoading ] = useState()
+    const [ tagSelected, setTagsSelected ] = useState(false)
+    const { backToPreviousPage, forwardToNextPage } = useAuth()
     const confirmGame = useContext(confirmGameContext)
+    const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be read
+    const nextPageNumber = 'Page8'
+    const pageDescription = `What subgenre is ideal for ${gameName}?`
     const sgDB = firebase.firestore()
-    const [isLoading, setIsLoading] = useState()
-    const { 
+    const tagsNewArray = Array.from(new Set(chosenTagsArray))
+    const {
         consoleName,
         firebaseConsoleName,
         firebaseCoverUrl,
@@ -31,20 +38,12 @@ export default function sgSelectedGameSetSubgenreScreen({route, navigation}) {
         gameNameJPN,
         gameNameMatchInSgDB,
         gamePublishers,
-        gameRating, 
+        gameRating,
         gameReleaseDate,
         gameSlug,
         gameSummary,
         sortedGameName
     } = route.params
-    const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be read
-    const [ gameArray, setGameArray ]= useState([])
-    const [chosenTagsArray, setChosenTagsArray] = useState([])
-    const tagsNewArray = Array.from(new Set(chosenTagsArray))
-    const [tagSelected, setTagsSelected] = useState(false)
-    const [chosenName, setChosenName] = useState()
-    const pageDescription = `What subgenre is ideal for ${gameName}?`
-    const nextPageNumber = 'Page8'
     const passingContent = {
         consoleName,
         firebaseConsoleName,
@@ -64,7 +63,7 @@ export default function sgSelectedGameSetSubgenreScreen({route, navigation}) {
         gameNameJPN,
         gameNameMatchInSgDB,
         gamePublishers,
-        gameRating, 
+        gameRating,
         gameReleaseDate,
         gameSlug,
         gameSubgenre: chosenName,
@@ -73,45 +72,38 @@ export default function sgSelectedGameSetSubgenreScreen({route, navigation}) {
     }
     const navigationPass = navigation
     let tagArrayData = {
-        pageDescription, 
-        tagSelected, 
         chosenTagsArray,
-        tagsNewArray, 
-        removeChosenTagData, 
-        gameArray, 
-        confirmTagSelection, 
+        confirmTagSelection,
+        gameArray,
+        pageDescription,
+        removeChosenTagData,
+        tagSelected,
+        tagsNewArray,
     }
-    const buttonGroupData = {
-        forwardToNextPage, 
-        backToPreviousPage, 
-        nextPageNumber, 
-        passingContent, 
-        navigationPass
-    }
-
+    const buttonGroupData = { backToPreviousPage, forwardToNextPage, navigationPass, nextPageNumber, passingContent }
     useEffect(() => {
         setTimeout(() => {
             setIsLoading(false)
-          }, 2000)
-          firebaseSubgenreCollection()
-      }, [isFocused])  
+        }, 2000)
+            firebaseSubgenreCollection()
+    }, [isFocused])
 
-      function firebaseSubgenreCollection() {
+    function firebaseSubgenreCollection() {
         const subscriber = sgDB
         .collection('sgAPI').doc('sgTags').collection('genreTags').doc(gameGenre).collection('genreSpecificTags').orderBy('tagName', 'asc')
         .onSnapshot(querySnapshot => {
-          const subGenreTags = []
-          querySnapshot.forEach(documentSnapshot => {
-            subGenreTags.push({
-              ...documentSnapshot.data(),
-              key: documentSnapshot.id,
+            const subGenreTags = []
+            querySnapshot.forEach(documentSnapshot => {
+                subGenreTags.push({
+                    ...documentSnapshot.data(),
+                    key: documentSnapshot.id,
+                })
             })
-          })
-          setGameArray(subGenreTags)
+            setGameArray(subGenreTags)
         })
-      // Unsubscribe from events when no longer in use
-      return () => subscriber()
-      }
+        // Unsubscribe from events when no longer in use
+        return () => subscriber()
+    }
 
     async function chosenTagData(item) {
         setChosenTagsArray(chosenSubgenreTagsArray => [...chosenSubgenreTagsArray, item])

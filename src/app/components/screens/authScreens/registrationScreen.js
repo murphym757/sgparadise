@@ -1,36 +1,28 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { SafeAreaView } from 'react-native'
-import { 
-  Container,
-  RegistrationValidationsContext,
-  CurrentThemeContext,
-  FormFieldsContext,
-  useAuth
-} from 'index'
+import { Container, CurrentThemeContext } from 'index'
+import { FormFieldsContext } from 'user/userScreenFormFieldsContext'
+import { RegistrationValidationsContext } from 'user/registrationValidationContext'
+import { useAuth } from 'auth/authContext'
 
 export default function RegistrationScreen({navigation}) {
   //* Context --- (Registration Screen)
-    const colors = useContext(CurrentThemeContext)
+    const { customSGFormFieldContainer, errorMessageDataMain, firebaseAuthUserDataFunctionButton, RegistrationFormFunction } = useContext(FormFieldsContext)
     const { signUp, validateRegisterEmail, validateRegisterPassword } = useAuth()
-    const { validationNewUserFunction } = useContext(RegistrationValidationsContext)  
-    const { 
-      RegistrationFormFunction, 
-      customSGFormFieldContainer, 
-      errorMessageDataMain, 
-      firebaseAuthUserDataFunctionButton 
-    } = useContext(FormFieldsContext)
+    const { validationNewUserFunction } = useContext(RegistrationValidationsContext)
+    const colors = useContext(CurrentThemeContext)
 
   //* State --- (Registration Screen)
-    const [isLoading, setIsLoading] = useState(true)
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [confirmPassword, setConfirmPassword] = useState('')
-    const [newUserErrorEmailCheck, setNewUserErrorEmailCheck] = useState([])
-    const [checkEmailExistence, setCheckEmailExistence] = useState(false)
-    const [newUserErrorPasswordCheck, setNewUserErrorPasswordCheck] = useState([])
-    const [passwordCheckStatus, setPasswordCheckStatus] = useState('fulfilled')
-
-  //* Validation Errors --- (Registration Screen)
+    const [ checkEmailExistence, setCheckEmailExistence ] = useState(false)
+    const [ confirmPassword, setConfirmPassword ] = useState('')
+    const [ email, setEmail ] = useState('')
+    const [ isLoading, setIsLoading ] = useState(true)
+    const [ newUserErrorEmailCheck, setNewUserErrorEmailCheck] = useState([])
+    const [ newUserErrorPasswordCheck,  ] = useState([])
+    const [ password, setPassword ] = useState('')
+    const [ passwordCheckStatus, setPasswordCheckStatus ] = useState('fulfilled')
+  
+    //* Validation Errors --- (Registration Screen)
     const newUserEmailValidationErrors = validateRegisterEmail(email, checkEmailExistence)
     const newUserPasswordValidationErrors = validateRegisterPassword(password, confirmPassword)
 
@@ -43,10 +35,10 @@ export default function RegistrationScreen({navigation}) {
       newUserEmailValidationErrors,
       newUserPasswordValidationErrors,
       password,
+      setCheckEmailExistence,
       setNewUserErrorEmailCheck,
       setNewUserErrorPasswordCheck,
       setPasswordCheckStatus,
-      setCheckEmailExistence,
       signUp,
       validationNewUserFunction
     }
@@ -66,16 +58,16 @@ export default function RegistrationScreen({navigation}) {
 
   useEffect(() => {
     pageLoader()
-  })
+  }, [])
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.primaryColor }}>
       <Container style={{ flex: 1, justifyContent: 'center' }}>
-        <RegistrationFormFunction 
-          registerType={'signUp'} 
+        <RegistrationFormFunction
+          registerType={'signUp'}
           registerUser={true}
           functionButton={firebaseAuthUserDataFunctionButton('signUp', 'Create Account', passingUserData, isLoading, colors)}
-          emailTextField={customSGFormFieldContainer('Email', email, false, setEmail, colors)} 
+          emailTextField={customSGFormFieldContainer('Email', email, false, setEmail, colors)}
           passwordTextField={customSGFormFieldContainer('Password', password, true, setPassword, colors)}
           confirmPasswordTextField={customSGFormFieldContainer('Confirm Password', confirmPassword, true, setConfirmPassword, colors)}
           errorMessageDataRegisterEmail={errorMessageDataMain(newUserErrorEmailCheck, 'email')}

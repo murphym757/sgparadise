@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { View, FlatList, TouchableOpacity } from 'react-native'
+import { AppWideImageContext } from 'main/sgImageContext'
 import {
-    AppWideImageContext,
     MainFont,
     MainHeading,
     MainHeadingLongTitle,

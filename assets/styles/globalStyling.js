@@ -72,7 +72,7 @@ export const ContentContainer = styled(ViewContainer) `
 
 export const CenterContent = styled(View) `
 	justifyContent: left;
-	alignItems: left;
+	alignItems: flex-start;
 `;
 
 //* Card Styling *//
@@ -182,7 +182,7 @@ export const MainFontPills = styled(Text) `
 
 export const MainFontLinkView = styled(View) `
     justifyContent: Left;
-	alignItems: left;
+	alignItems: flex-start;
     flexDirection: row;
     flexWrap: wrap;
 `;

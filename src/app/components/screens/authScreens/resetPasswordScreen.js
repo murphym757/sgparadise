@@ -1,37 +1,34 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { SafeAreaView } from 'react-native'
-import {
-  Container,
-  CurrentThemeContext,
-  ResetPasswordValidationsContext,
-  FormFieldsContext,
-  useAuth,
-} from 'index'
+import { Container, CurrentThemeContext } from 'index'
+import { FormFieldsContext } from 'user/userScreenFormFieldsContext'
+import { ResetPasswordValidationsContext } from 'user/resetPasswordValidationContext'
+import { useAuth } from 'auth/authContext'
 
 export default function ResetPasswordScreen({navigation}) {
   //* Context --- (Reset Password Screen)
     const colors = useContext(CurrentThemeContext)
-    const { 
-      sendVerificationCode, 
-      validateForgotPasswordEmail 
+    const {
+      sendVerificationCode,
+      validateForgotPasswordEmail
     } = useAuth()
-    const { 
-      RegistrationFormFunction, 
-      customSGFormFieldContainer, 
-      errorMessageDataMain, 
+    const {
+      RegistrationFormFunction,
+      customSGFormFieldContainer,
+      errorMessageDataMain,
       firebaseAuthUserDataFunctionButton
     } = useContext(FormFieldsContext)
     const {
       validationEmailForgotPasswordFunction
     } = useContext(ResetPasswordValidationsContext)
-    
+
   //* State --- (Reset Password Screen)
     const [isLoading, setIsLoading] = useState(true)
     const [email, setEmail] = useState('')
     const [userErrorEmailCheck, setUserErrorEmailCheck] = useState([])
     const [error, setError] = useState('')
     const [emailPassed, setEmailPassed] = useState(false)
-    
+
 
   //* Validation Errors --- (Reset Password Screen)
     const forgotPasswordUserEmailValidationErrors = validateForgotPasswordEmail(email, emailPassed)
@@ -62,19 +59,19 @@ export default function ResetPasswordScreen({navigation}) {
         setIsLoading(false)
       }, 2500)
     }
-  
+
   useEffect(() => {
     pageLoader()
-  })
+  }, [])
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.primaryColor }}> 
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.primaryColor }}>
       <Container style={{ flex: 1, justifyContent: 'center' }}>
-        <RegistrationFormFunction 
-          registerType={'forgotPassword'} 
+        <RegistrationFormFunction
+          registerType={'forgotPassword'}
           registerUser={false}
           functionButton={firebaseAuthUserDataFunctionButton('forgotPassword', 'Forgot Password', passingUserData, isLoading, colors)}
-          emailTextField={customSGFormFieldContainer('Email', email, false, setEmail, colors)} 
+          emailTextField={customSGFormFieldContainer('Email', email, false, setEmail, colors)}
           errorMessageDataRegisterEmail={errorMessageDataMain(userErrorEmailCheck, 'forgotPassword')}
           userErrorEmailCheck
           colors
@@ -89,8 +86,8 @@ export default function ResetPasswordScreen({navigation}) {
 
 /*
   <View style={{ paddingLeft: 20 }}>
-            <FontAwesomeIcon 
-              icon={ faTimes } color={colors.primaryFontColor} size={50} 
+            <FontAwesomeIcon
+              icon={ faTimes } color={colors.primaryFontColor} size={50}
               onPress={() => navigation.navigate('Home')}
             />
           </View>

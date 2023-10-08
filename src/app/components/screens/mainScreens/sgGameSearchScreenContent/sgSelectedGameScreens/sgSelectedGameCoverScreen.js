@@ -1,56 +1,47 @@
 
 import React, { useState, useEffect, useContext } from 'react';
-import { View, FlatList, ActivityIndicator } from 'react-native'
-import { AppWideImageContext, axiosSearchContext, confirmGameContext, MainSubHeading, CenterContent, ContentContainer, algoliaConfig, sgGenNATitles, PageContainerCover, CurrentThemeContext, SafeAreaViewContainer, useAuth } from 'index'
-import axios from 'axios'
+import { ActivityIndicator, FlatList, View } from 'react-native'
+import { AppWideImageContext, MainSubHeading, CenterContent, ContentContainer, algoliaConfig, sgGenNATitles, PageContainerCover, CurrentThemeContext, SafeAreaViewContainer } from 'index'
+import { axiosSearchContext } from 'main/sgGameSearchScreenContent/axiosSearchContext'
+import { confirmGameContext } from 'main/sgGameSearchScreenContent/sgSelectedGameScreens/sgSelectedGameContext'
+import { useAuth } from 'auth/authContext'
 import algoliasearch from 'algoliasearch'
+import axios from 'axios'
 import stringSimilarity from 'string-similarity'
 
 export default function SgSelectedGameCoverScreen({route, navigation}) {
-    const {
-        forwardToNextPage,
-        backToPreviousPage,
-    } = useAuth()
     //let { searchBarTitle, searchType, searchQuery } = route.params
+    const [ consoleName, setConsoleName ] = useState()
+    const [ coversResults, setCoversResults ] = useState([])
+    const [ firebaseConsoleName, setFirebaseConsoleName ] = useState()
+    const [ firebaseStorageConsoleName, setFirebaseStorageConsoleName ] = useState()
+    const [ gameDevelopers, setGameDevelopersResults ] = useState([])
+    const [ gameExistence, setGameExistence ] = useState(false)
+    console.log("🚀 ~ file: sgSelectedGameCoverScreen.js:44 ~ SgSelectedGameCoverScreen ~ gameExistence", gameExistence)
+    const [ gameNameBRZAlt, setGameNameBRZAlt ] = useState([])
+    const [ gameNameEURAlt, setGameNameEURAlt ] = useState([])
+    const [ gameNameJPNAlt, setGameNameJPNAlt ] = useState([])
+    const [ gameNameMatchInSgDB, setGameNameMatchInSgDB ] = useState('')
+    const [ gamePublishers, setGamePublishersResults ] = useState([])
+    const [ gameScreenshots, setGameScreenshots ] = useState([])
+    const [ isLoading, setIsLoading ] = useState()
+    const [ updatedGameRating, setUpdatedGameRating ] = useState()
+    const { accessTokenIGDB, clientIdIGDB, gameName, gameReleaseDate, gameSlug, gameSummary, igdbConsoleId, igdbGameId } = route.params
+    const { forwardToNextPage, backToPreviousPage } = useAuth()
     const colors = useContext(CurrentThemeContext)
     const confirmGame = useContext(confirmGameContext)
-    const searchAxios = useContext(axiosSearchContext)
-    const images = useContext(AppWideImageContext)
-    const [isLoading, setIsLoading] = useState()
-    const { 
-        accessTokenIGDB,
-        clientIdIGDB,
-        gameName,
-        gameReleaseDate,
-        gameSlug,
-        gameSummary,
-        igdbConsoleId,
-        igdbGameId
-    } = route.params
-    
-    const [coversResults, setCoversResults] = useState([])
     const gameCover = coversResults.map(game => game.image_id)
-    const [gameDevelopers, setGameDevelopersResults] = useState([])
-    const [gamePublishers, setGamePublishersResults] = useState([])
-    const [gameNameJPNAlt, setGameNameJPNAlt] = useState([])
-    const [gameNameEURAlt, setGameNameEURAlt] = useState([])
-    const [gameNameBRZAlt, setGameNameBRZAlt] = useState([])
-    const [consoleName, setConsoleName] = useState()
-    const [firebaseConsoleName, setFirebaseConsoleName] = useState()
-    const [firebaseStorageConsoleName, setFirebaseStorageConsoleName] = useState()
-    const [gameScreenshots, setGameScreenshots] = useState([])
-    const [updatedGameRating, setUpdatedGameRating] = useState()
-    const [gameNameMatchInSgDB, setGameNameMatchInSgDB] = useState('')
-    const [gameExistence, setGameExistence] = useState(false)
-    console.log("🚀 ~ file: sgSelectedGameCoverScreen.js:44 ~ SgSelectedGameCoverScreen ~ gameExistence", gameExistence)
+    const images = useContext(AppWideImageContext)
+    const navigationPass = navigation
     const nextPageNumber = 'Page4'
+    const searchAxios = useContext(axiosSearchContext)
     const passingContent = {
-        accessTokenIGDB, 
+        accessTokenIGDB,
         clientIdIGDB,
         consoleName,
         firebaseConsoleName,
         firebaseStorageConsoleName,
-        gameCover, 
+        gameCover,
         gameDevelopers: gameDevelopers.map(game => game.company),
         gameId: igdbGameId,
         gameName,
@@ -65,10 +56,9 @@ export default function SgSelectedGameCoverScreen({route, navigation}) {
         gameSlug,
         gameSummary
     }
-    const navigationPass = navigation
     const buttonGroupData = {
-        backToPreviousPage, 
-        forwardToNextPage, 
+        backToPreviousPage,
+        forwardToNextPage,
         navigationPass,
         nextPageNumber,
         passingContent
@@ -80,7 +70,7 @@ export default function SgSelectedGameCoverScreen({route, navigation}) {
             setGameNameMatchInSgDB(matches.bestMatch.target)
         )
     }
-    
+
     useEffect(() => {
         function searchTesting() {
             let api = axios.create({
@@ -94,12 +84,12 @@ export default function SgSelectedGameCoverScreen({route, navigation}) {
                 setTimeout(() => {
                     resolve(
                         searchAxios.findCover(api, igdbGameId, setCoversResults),
-                        searchAxios.findScreenshots(api, igdbGameId, setGameScreenshots),
-                        searchAxios.findPublishers(api, igdbGameId, setGamePublishersResults),
                         searchAxios.findDevelopers(api, igdbGameId, setGameDevelopersResults),
-                        searchAxios.findGameNameJPN(api, igdbGameId, setGameNameJPNAlt),
-                        searchAxios.findGameNameEUR(api, igdbGameId, setGameNameEURAlt),
                         searchAxios.findGameNameBRZ(api, igdbGameId, setGameNameBRZAlt),
+                        searchAxios.findGameNameEUR(api, igdbGameId, setGameNameEURAlt),
+                        searchAxios.findGameNameJPN(api, igdbGameId, setGameNameJPNAlt),
+                        searchAxios.findPublishers(api, igdbGameId, setGamePublishersResults),
+                        searchAxios.findScreenshots(api, igdbGameId, setGameScreenshots),
                         setIsLoading(false)
                     ),
                     findConsoleName(igdbConsoleId)
@@ -113,7 +103,7 @@ export default function SgSelectedGameCoverScreen({route, navigation}) {
             await searchTesting()
         }
         sgLoader()
-        
+
     }, [])
 
     function providedGameCoverImage() {
@@ -136,7 +126,7 @@ export default function SgSelectedGameCoverScreen({route, navigation}) {
             <ContentContainer>
                 <FlatList
                     data={coversResults}
-                    keyboardShouldPersistTaps="always" 
+                    keyboardShouldPersistTaps="always"
                     contentContainerStyle={{
                         justifyContent: 'center'
                     }}
@@ -170,14 +160,14 @@ export default function SgSelectedGameCoverScreen({route, navigation}) {
     function foundGameinSGDB() {
         const searchClient = algoliasearch(algoliaConfig.appId, algoliaConfig.apiKey);
         const index = searchClient.initIndex('games');
-        
+
         // Search for "query string" in the index "contacts"
         index.search("" + gameSlug +"").then(({ hits }) => {
             if (hits[0]._highlightResult.gameSlug.value === "<em>" + gameSlug + "</em>") {
                 return (
                     setGameExistence(true)
                 )
-            } 
+            }
         });
     }
 

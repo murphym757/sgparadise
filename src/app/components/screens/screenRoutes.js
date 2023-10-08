@@ -1,43 +1,28 @@
 import 'react-native-gesture-handler'
 import React, { useState, useContext } from 'react'
-import { useColorScheme } from 'react-native'
-import { NavigationContainer, DefaultTheme } from '@react-navigation/native'
-import { createStackNavigator } from '@react-navigation/stack'
-import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
-import {
-  ConfirmAddGameScreen,
-  CurrentThemeContext,
-  EditGameScreen,
-  faSearch,
-  faHome,
-  faUser,
-  FontAwesomeIcon,
-  GameScreen,
-  LoginScreen,
-  RegistrationScreen,
-  ResetPasswordScreen,
-  SgConsoleListScreen,
-  SgGameSearchScreen,
-  SgHomeScreen,
-  SgIGDBGameSearchScreen,
-  useAuth,
-  UserProfileScreen,
-  UserSavesScreen,
-  UpdateUserScreen,
-  SgSearchHome,
-} from 'index'
-import {decode, encode} from 'base-64'
-if (!global.btoa) { global.btoa = encode }
 if (!global.atob) { global.atob = decode }
+if (!global.btoa) { global.btoa = encode }
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
+import { createStackNavigator } from '@react-navigation/stack'
+import { CurrentThemeContext, faSearch, faHome, faUser, FontAwesomeIcon } from 'index'
+import { decode, encode } from 'base-64'
+import { LoginScreen, RegistrationScreen, ResetPasswordScreen } from 'auth/authScreensIndex'
+import { NavigationContainer, DefaultTheme } from '@react-navigation/native'
+import { SgConsoleListScreen, GameScreen, ConfirmAddGameScreen, EditGameScreen } from 'main/sgGameScreenContent/sgGameScreenContentIndex'
+import { SgHomeScreen } from 'main/sgHomeScreenIndex'
+import { SgSearchHome, SgGameSearchScreen, SgIGDBGameSearchScreen } from 'main/sgGameSearchScreenContent/sgGameSearchScreenContentIndex'
+import { useAuth } from 'auth/authContext'
+import { useColorScheme } from 'react-native'
+import { UserProfileScreen, UserSavesScreen, UpdateUserScreen } from 'user/userScreensIndex'
+
 
 const Stack = createStackNavigator()
 const Tab = createMaterialBottomTabNavigator()
 
 export default function App() {
+  const [ notLoggingIn, setNotLoggingIn ] = useState(false)
   const { currentUser } = useAuth()
-  const [notLoggingIn, setNotLoggingIn] = useState(false)
-  const colors = useContext(CurrentThemeContext) 
-  const scheme = useColorScheme()
+  const colors = useContext(CurrentThemeContext)
   const ReactNavTheme = {
     ...DefaultTheme,
     colors: {
@@ -45,9 +30,10 @@ export default function App() {
       background: colors.primaryColor,
     },
   }
+  const scheme = useColorScheme()
   const tabBarListeners = ({ navigation, route }) => ({
     tabPress: () => navigation.navigate(route.name),
-});
+  });
   console.log("🚀 ~ file: screenRoutes.js:51 ~ tabBarListeners ~ tabBarListeners:", tabBarListeners)
 
   function SgUserStackNavbar() {
@@ -58,9 +44,9 @@ export default function App() {
         inactiveColor={colors.secondaryColor}
         labelStyle={{ fontSize: 12 }}
         style={{ backgroundColor: colors.primaryColor }}
-        barStyle={{ backgroundColor: colors.primaryColor }}     
+        barStyle={{ backgroundColor: colors.primaryColor }}
       >
-        <Tab.Screen 
+        <Tab.Screen
           name="Home"
           options={{
             tabBarLabel: 'Home',
@@ -71,7 +57,7 @@ export default function App() {
           component={SgGameStack} // HomePage
           listeners={tabBarListeners}
         />
-        <Tab.Screen 
+        <Tab.Screen
           name="Search"
           options={{
             tabBarLabel: 'Search',
@@ -79,10 +65,10 @@ export default function App() {
               <FontAwesomeIcon icon={ faSearch } color={color} size={size} />
             ),
           }}
-          component={SgSearchStack} 
+          component={SgSearchStack}
           listeners={tabBarListeners}
         />
-        <Tab.Screen 
+        <Tab.Screen
           name="UserProfileScreen"
           options={{
             tabBarLabel: 'Account',
@@ -91,7 +77,7 @@ export default function App() {
             ),
             screenOptions: { unmountOnBlur: true }
           }}
-          component={SgAuthStack} 
+          component={SgAuthStack}
           listeners={tabBarListeners}
         />
       </Tab.Navigator>
@@ -101,44 +87,44 @@ export default function App() {
   function SgGameStack() {
     return (
       <Stack.Navigator initialRouteName="Game">
-        <Stack.Screen 
-          name="sgMainGamePage" 
-          options={{ headerShown: false }} 
+        <Stack.Screen
+          name="sgMainGamePage"
+          options={{ headerShown: false }}
           component={SgHomeScreen}
         />
-        <Stack.Screen 
-          name="sgGamePage" 
-          options={{ headerShown: false, gestureEnabled: false }} 
+        <Stack.Screen
+          name="sgGamePage"
+          options={{ headerShown: false, gestureEnabled: false }}
           component={GameScreen}
         />
         <Stack.Screen //For sg Paradise search
             name="SgGameSearch"
             options={{ headerShown: false }}
-            component={SgGameSearchScreen} 
+            component={SgGameSearchScreen}
         />
         <Stack.Screen //For IGDB search
             name="sgIGDBSearch"
             options={{ headerShown: false }}
-            component={SgIGDBGameSearchScreen} 
+            component={SgIGDBGameSearchScreen}
         />
-        <Stack.Screen 
+        <Stack.Screen
             name="SgConsoleList"
             options={{ headerShown: false }}
-            component={SgConsoleListScreen} 
+            component={SgConsoleListScreen}
         />
-        <Stack.Screen 
+        <Stack.Screen
             name="SgAddGameConfirm"
             options={{ headerShown: false }}
-            component={ConfirmAddGameScreen} 
+            component={ConfirmAddGameScreen}
         />
-        <Stack.Screen 
+        <Stack.Screen
             name="SgEditGame"
             options={{ headerShown: false }}
-            component={EditGameScreen} 
+            component={EditGameScreen}
         />
-        <Stack.Screen 
-          name="SgSearchSet" 
-          options={{ headerShown: false, gestureEnabled: false  }} 
+        <Stack.Screen
+          name="SgSearchSet"
+          options={{ headerShown: false, gestureEnabled: false  }}
           component={SgSearchHome}
           initialParams={{ gamePageLinkPressed: false, gameDataToBePassed: null }}
         />
@@ -149,15 +135,15 @@ export default function App() {
   function SgSearchStack() {
     return (
       <Stack.Navigator initialRouteName="Search">
-        <Stack.Screen 
-          name="SgSearchHome" 
-          options={{ headerShown: false, gestureEnabled: false }} 
+        <Stack.Screen
+          name="SgSearchHome"
+          options={{ headerShown: false, gestureEnabled: false }}
           component={SgSearchHome}
           initialParams={{ gamePageLinkPressed: false, gameDataToBePassed: null }}
         />
-        <Stack.Screen 
-          name="sgGamePageSearch" 
-          options={{ headerShown: false, gestureEnabled: false }} 
+        <Stack.Screen
+          name="sgGamePageSearch"
+          options={{ headerShown: false, gestureEnabled: false }}
           component={GameScreen}
         />
       </Stack.Navigator>
@@ -167,69 +153,69 @@ export default function App() {
   function SgAuthStack() {
     function AccountAccess() {
       return (
-        currentUser !== null 
+        currentUser !== null
           ? "User Profile"
           : "Login"
       )
     }
     return (
       <Stack.Navigator initialRouteName={AccountAccess()}>
-        <Stack.Screen 
-          name="Login" 
-          options={{ headerShown: false }} 
+        <Stack.Screen
+          name="Login"
+          options={{ headerShown: false }}
           component={LoginScreen}
         />
-        <Stack.Screen 
-          name="Registration" 
+        <Stack.Screen
+          name="Registration"
           options={{ headerShown: false }}
-          component={RegistrationScreen} 
+          component={RegistrationScreen}
         />
-        
-        <Stack.Screen 
-          name="User Profile" 
-          options={{ headerShown: false }} 
+
+        <Stack.Screen
+          name="User Profile"
+          options={{ headerShown: false }}
           component={UserProfileScreen}
         />
-        <Stack.Screen 
-          name="Reset Password" 
+        <Stack.Screen
+          name="Reset Password"
           options={{ headerShown: false }}
-          component={ResetPasswordScreen} 
+          component={ResetPasswordScreen}
         />
-        <Stack.Screen 
-        name="Update Account" 
+        <Stack.Screen
+        name="Update Account"
         options={{ headerShown: false }}
-        component={UpdateUserScreen} 
+        component={UpdateUserScreen}
       />
       </Stack.Navigator>
     )
   }
 
   function userAuthStatus() {
-    if(currentUser !== null) return "Main" 
+    if(currentUser !== null) return "Main"
     return "Auth"
   }
 
   return (
-      <NavigationContainer theme={ReactNavTheme}> 
+      <NavigationContainer theme={ReactNavTheme}>
         <Stack.Navigator initialRouteName={userAuthStatus}>
-          <Stack.Screen 
-            name="Main" 
-            options={{ headerShown: false }} 
+          <Stack.Screen
+            name="Main"
+            options={{ headerShown: false }}
             component={SgUserStackNavbar}
           />
-          <Stack.Screen 
-            name="Game" 
-            options={{ headerShown: false, gestureEnabled: false }} 
+          <Stack.Screen
+            name="Game"
+            options={{ headerShown: false, gestureEnabled: false }}
             component={SgGameStack}
           />
-          <Stack.Screen 
-            name="Search" 
-            options={{ headerShown: false, gestureEnabled: false }} 
+          <Stack.Screen
+            name="Search"
+            options={{ headerShown: false, gestureEnabled: false }}
             component={SgSearchStack}
           />
-          <Stack.Screen 
-            name="Auth" 
-            options={{ headerShown: false }} 
+          <Stack.Screen
+            name="Auth"
+            options={{ headerShown: false }}
             component={SgAuthStack}
           />
         </Stack.Navigator>
