@@ -276,7 +276,7 @@ export function AuthProvider({ children }) {
 
 
     async function displayData(collectionName, sgConsoleName, subGenreName, setGameArrayTest) {
-        const q = query(collection(sgDB, collectionName, sgConsoleName, 'games'), where("gameSubgenre", "==", subGenreName), orderBy("gameName", "desc"), limit(3))
+        const q = query(collection(sgDB, collectionName, sgConsoleName, 'games'), where("gameSubgenre", "==", subGenreName), orderBy("gameName", "desc"), limit(5))
         const querySnapshot = await getDocs(q)
         querySnapshot.forEach((doc) => {
             setGameArrayTest(querySnapshot.docs.map(doc => doc.data()))

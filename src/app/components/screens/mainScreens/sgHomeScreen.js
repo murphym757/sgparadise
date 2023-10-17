@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, TouchableOpacity } from 'react-native'
+import { View, TouchableOpacity, FlatList } from 'react-native'
 import { AppWideImageContext } from 'main/sgImageContext'
 import { firebaseSearchContext } from 'main/sgHomeScreenGames/sgHomeSearchScreen'
 import { homeScreenActionContext } from 'main/sgHomeScreenGames/sgHomeActionGames'
@@ -9,6 +9,7 @@ import { homeScreenSpotlightGamesContext } from 'main/sgHomeScreenGames/sgSpotli
 import { loadingScreen } from 'auth/loadingScreen'
 import { useAuth } from 'auth/authContext'
 import { useSearchBar } from 'main/sgGameSearchScreenContent/searchIndex'
+import { Image } from 'expo-image'
 import {
     ContentContainer,
     CurrentThemeContext,
@@ -17,7 +18,9 @@ import {
     Container,
     faStar,
     FontAwesomeIcon,
+    MainHeadingLongTitle,
     MainFont,
+    MainSubFont,
     GeneralFontColor,
     TouchableButton,
     TouchableButtonFont,
@@ -171,28 +174,39 @@ export default function SgHomeScreen({ navigation, route }) {
         if (month == 12) return date.mayGames(consoleData, gameData1, gameData2, gameData3)
     }
 
-    const items = [
-        { id: 1, consoleName: 'sgGenesis', gameSubgenre: 'Racing' },
-        { id: 2, consoleName: 'sgGenesis', gameSubgenre: 'Basketball' },
-        { id: 3, consoleName: 'sgGenesis', gameSubgenre: 'Platformer' },
-        { id: 4, consoleName: 'sgGenesis', gameSubgenre: 'Football' },  
-      ];
-      
-      function doSomething(item, setArrayForGames) {
+    
+    
+    function doSomething(item, setArrayForGames) {
         displayData(collectionName, `${item.consoleName}`, `${item.gameSubgenre}`, setArrayForGames)
-      }
+    }
 
-      function testing() {
+    function testing(consoleGroup, subGenreGroup) {
+        const items = [
+            { id: 1, consoleName: consoleGroup[0].console, gameSubgenre: subGenreGroup[0].subGenre },
+            { id: 2, consoleName: consoleGroup[0].console, gameSubgenre: subGenreGroup[1].subGenre },
+            { id: 3, consoleName: consoleGroup[0].console, gameSubgenre: subGenreGroup[2].subGenre },
+            { id: 4, consoleName: consoleGroup[0].console, gameSubgenre: subGenreGroup[3].subGenre },  
+        ]
         const array2 = [
             {id: 1, gameArrayToBeSet: setgamesArray3},
             {id: 2, gameArrayToBeSet: setgamesArray4},
             {id: 3, gameArrayToBeSet: setgamesArray5},
             {id: 4, gameArrayToBeSet: setgamesArray6},
-          ];
+        ];
         for (let i = 0; i < array2.length; i++) {
             doSomething(items[i], array2[i].gameArrayToBeSet);
         }
-      }
+    }
+
+    function homePageConsoleSubGenreCombo() {
+        const consoleGroup = [
+            {console: 'sgGenesis'}, {console: 'sgGenesis'}, {console: 'sgGenesis'}, {console: 'sgGenesis'}
+        ]
+        const subGenreGroup = [
+            {subGenre: 'Racing'}, {subGenre: 'Basketball'}, {subGenre: 'Platformer'}, {subGenre: 'Football'}
+        ]
+        return testing(consoleGroup, subGenreGroup)
+    }
 
     function testFunc() {
         const array1 = [
@@ -200,23 +214,23 @@ export default function SgHomeScreen({ navigation, route }) {
             { id: 2, consoleName: 'sgGenesis', gameSubgenre: 'Basketball' },
             { id: 3, consoleName: 'sgGenesis', gameSubgenre: 'Platformer' },
             { id: 4, consoleName: 'sgGenesis', gameSubgenre: 'Football' },     
-          ];
-          
-          const array2 = [
-            {id: 1, gameArrayToBeSet: setgamesArray3},
-            {id: 2, gameArrayToBeSet: setgamesArray4},
-            {id: 3, gameArrayToBeSet: setgamesArray5},
-            {id: 4, gameArrayToBeSet: setgamesArray6},
-          ];
-          
-          const mergedArray = array1.map(item1 => {
-            const item2 = array2.find(item2 => item2.id === item1.id);
-            return { ...item1, ...item2 };
-          });ray4
-          
-          for (let i = 0; i < array2.length; i++) {
-            displayData(collectionName, mergedArray.consoleName, mergedArray.gameSubgenre, mergedArray.gameArrayToBeSet)
-          }
+        ];
+        
+        const array2 = [
+        {id: 1, gameArrayToBeSet: setgamesArray3},
+        {id: 2, gameArrayToBeSet: setgamesArray4},
+        {id: 3, gameArrayToBeSet: setgamesArray5},
+        {id: 4, gameArrayToBeSet: setgamesArray6},
+        ];
+        
+        const mergedArray = array1.map(item1 => {
+        const item2 = array2.find(item2 => item2.id === item1.id);
+        return { ...item1, ...item2 };
+        });
+        
+        for (let i = 0; i < array2.length; i++) {
+        displayData(collectionName, mergedArray.consoleName, mergedArray.gameSubgenre, mergedArray.gameArrayToBeSet)
+        }
     }
     
 
@@ -228,7 +242,7 @@ export default function SgHomeScreen({ navigation, route }) {
             { id: 3, consoleName: 'sgGenesis', gameSubgenre: 'Platformer' },
             { id: 4, consoleName: 'sgGenesis', gameSubgenre: 'Football' },
             { id: 5, consoleName: 'sgGenesis', gameSubgenre: 'Shooter' },     
-          ];
+        ];
         const gameArrays = [
             {id: 1, gameArrayToBeSet: setgamesArray3},
             {id: 2, gameArrayToBeSet: setgamesArray4},
@@ -249,23 +263,23 @@ export default function SgHomeScreen({ navigation, route }) {
         { id: 3, name: 'Object 3' },
         { id: 4, name: 'Object 4' },
         { id: 5, name: 'Object 5' }
-      ];
-      
-      function getRandomObjects(objects, count) {
+    ];
+    
+    function getRandomObjects(objects, count) {
         const selectedObjects = [];
         const updatedObjects = objects.slice();
         for (let i = 0; i < count; i++) {
-          const index = Math.floor(Math.random() * updatedObjects.length);
-          const selectedObject = updatedObjects[index];
-          selectedObjects.push(selectedObject);
-          updatedObjects.splice(index, 1);
+            const index = Math.floor(Math.random() * updatedObjects.length);
+            const selectedObject = updatedObjects[index];
+            selectedObjects.push(selectedObject);
+            updatedObjects.splice(index, 1);
         }
         return [selectedObjects, updatedObjects];
-      }
-      
-      let [selectedObjects, remainingObjects] = getRandomObjects(objects, 3);
-      console.log(selectedObjects);
-      console.log(remainingObjects);
+    }
+    
+    let [selectedObjects, remainingObjects] = getRandomObjects(objects, 3)
+    console.log(selectedObjects)
+    console.log(remainingObjects)
 
     useEffect(() => {  
         const fetchData = async () => {
@@ -274,7 +288,8 @@ export default function SgHomeScreen({ navigation, route }) {
         setTimeout(() => {
             setUserInfo(currentUID),
             setIsLoading(false)
-          }, 2000)
+        }, 2000)
+        homePageConsoleSubGenreCombo()
         getRandomObjects(objects)
     }, [isFocused])
 
@@ -356,56 +371,114 @@ console.log('After removing the first character:', newStr);
     }
     /*-----------*/
 
-    function homepageHeader() {
+    function logoGif() {
+        const link = 'https://firebasestorage.googleapis.com/v0/b/sgparadise-auth-production.appspot.com/o/appLogos%2FmainTheme%2FnightTheme%2FnightTheme%2FnightThemeSgParadise.gif?alt=media&token=0d6f1db6-dbf8-4181-be72-91cab71a2851&_gl=1*kxrvs8*_ga*OTg1NzQyMDE1LjE2MzAxNzEwODE.*_ga_CW55HF8NVT*MTY5NzE0Njg0OS4zMjguMS4xNjk3MTUxMzM3LjUyLjAuMA..'
         return (
             <View>
-                {searchBarTouched == false
-                    ?   <View>
-                            <ViewTopRow>
-                                <View style={{paddingTop: 30, flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'flex-start'}}>
-                                    <MainFont style={{alignItems: 'flex-start', justifyContent: 'center'}}>Logo goes here</MainFont>
-                                </View>
-                            </ViewTopRow>
-                            <ViewTopRow>
-                                <View style={{paddingRight: 100, alignItems: 'right', justifyContent: 'center'}}>
-                                    <TouchableOpacity onPress={() => setSearchBarTouched(true)}>
-                                        {searchBar(searchBarTitle, searchType, searchQuery, searchBarTouched, setSearchBarTouched, homepageSearchBar)}
-                                    </TouchableOpacity>
-                                </View>
-                            </ViewTopRow>
-                        </View>
-                    :   <View style={{}}>
-                            <ViewTopRow>
-                                <View style={{paddingTop: 30, flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'flex-start'}}>
-                                    <MainFont style={{alignItems: 'flex-start', justifyContent: 'center'}}>Logo goes here</MainFont>
-                                </View>
-                            </ViewTopRow>
-                        </View>
-                }
+                <Image
+                    style={{width: 400, height: 400}}
+                    source={{uri: link}} />
+            </View>
+        )
+    }
+
+    function gameListingsData(item) {
+        const imageData = {
+            height: 200,
+            width: 150,
+            contentFit: 'cover',
+            borderRadius: 10,
+            source: item.firebaseCoverUrl,
+            transition: 1000
+        }
+        return images.sgAPISearchCoverArtImage(imageData)
+    }
+
+    function gameListings(gameListingData) {
+        const sectionTitle = gameListingData.sectionTitle
+        const sectionDescription = gameListingData.sectionDescription
+        
+        return (
+            <View>
+                <MainHeadingLongTitle>{sectionTitle}</MainHeadingLongTitle>
+                <MainSubFont>{sectionDescription}</MainSubFont>
+                <FlatList
+                    horizontal={true}
+                    scrollEnabled={true}
+                    showsHorizontalScrollIndicator={false}
+                    data={gameListingData.listingArray}
+                    keyboardShouldPersistTaps="always"
+                    keyExtractor={item => item.id}
+                    renderItem={({ item }) => (
+                        <TouchableOpacity style={{  
+                            alignItems:'center',
+                            justifyContent:'center',
+                            margin: 10
+                        }}>
+                            <View style={{
+                                margin: 5,
+                                flexDirection: "row", 
+                                justifyContent: "center"
+                            }}> 
+                                {gameListingsData(item)}
+                            </View>
+                        </TouchableOpacity>
+                    )}
+                />
+            </View>
+        )
+    }
+
+    function gameFullListings1(listingArray) {
+        const gameListingData = {
+            sectionTitle: 'Fuel Your Need for Speed!',
+            sectionDescription: 'Race to the max in adrenaline-pumping video games!',
+            listingArray: listingArray
+        }
+        return (
+            gameListings(gameListingData)
+        )
+    }
+
+    function gameFullListings2(listingArray) {
+        const gameListingData = {
+            sectionTitle: 'Dribble, Shoot, Score - Hoop Dreams Begin Here!',
+            sectionDescription: 'Get ready to lace up, step onto the court, and make your hoop dreams a reality as you dribble, shoot, and score your way to victory in the most thrilling basketball games ever!',
+            listingArray: listingArray
+        }
+        return (
+            gameListings(gameListingData)
+        )
+    }
+
+    function gameFullListings3(listingArray) {
+        const gameListingData = {
+            sectionTitle: 'This is different, once more',
+            sectionDescription: 'Same here',
+            listingArray: listingArray
+        }
+        return (
+            gameListings(gameListingData)
+        )
+    }
+
+    function homePageGameListings() {
+        return (
+            <View>
+                {gameFullListings1(gamesArray3)}
+                {gameFullListings2(gamesArray4)}
+                {gameFullListings3(gamesArray5)}
             </View>
         )
     }
 
     function homepageMainSection() {
         return (
-            <View style={{paddingBottom: 200}}>
-            {homepageHeader()}
+            <View>
                 <ScrollViewContainer showsVerticalScrollIndicator={false}>
                     {spotlightSection()}
-                    {actionSection()}
-                    {actionsasSection()}
+                    {homePageGameListings()}
                     {homepageButtonLayout()}
-                </ScrollViewContainer>
-            </View>
-        )
-    }
-
-    function homepageSearchSection() {
-        return (
-            <View>
-                {homepageHeader()}
-                <ScrollViewContainer showsVerticalScrollIndicator={false}>
-                    {sgGameSearch.searchTagsCollection(consolesSection, searchActive, setSearchActive)}
                 </ScrollViewContainer>
             </View>
         )
@@ -413,13 +486,10 @@ console.log('After removing the first character:', newStr);
 
     function HomepageTotal() {
         return (
-            <SafeAreaViewContainer>
+            <SafeAreaViewContainer >
                 {isLoading !== true 
-                    ?   <Container style={{paddingBottom: windowHeight/5}}>
-                            {searchBarTouched == false
-                                ?   homepageMainSection()
-                                :   homepageSearchSection()
-                            }
+                    ?   <Container>
+                            {homepageMainSection()}
                         </Container>
                     :   <ContentContainer>
                             {loadingScreen()}
@@ -430,19 +500,6 @@ console.log('After removing the first character:', newStr);
     }
 
     /*-----------*/
-    // App-Wide Header
-    function backButton() {
-        const stackName = 'Main'
-        const backNeeded = true
-        return (
-            <TouchableOpacity onPress={() => {
-                navigation.goBack(stackName)
-            }}> 
-            {backArrow(colorsPassThrough, backNeeded)}
-            </TouchableOpacity>
-            
-        )
-    }
 
     function homeScreenLogo() {
         const logoLink = 'https://reactnative.dev/img/tiny_logo.png'
@@ -465,11 +522,6 @@ console.log('After removing the first character:', newStr);
             },
             headerTransparent: true,
             label: false,
-            headerLeft: isLoading == true
-                ?   ''
-                : (props) => (
-                    backButton(props)
-            ),
             headerTitle: isLoading == true
                 ?   ''
                 : (props) => (

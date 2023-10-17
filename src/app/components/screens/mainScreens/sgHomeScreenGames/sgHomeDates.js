@@ -45,7 +45,7 @@ function platformersList(gameData2) {
     const passingGameData = {
         setGamesArray: gameData2.setGamesArray2,
         setGamesArrayTitle: gameData2.setGamesArrayTitle2,
-        setGamesArrayDescription: gameData2.setgamesArrayDescription2,
+        setGamesArrayDescription: gameData2.setGamesArrayDescription2,
         consoleName,
         gameRefSpecificData,
         gameRefSpecificRelatedData,
