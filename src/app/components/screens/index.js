@@ -101,7 +101,7 @@
         } from 'assets/styles/sgScreensStyling'
     /*-----------------*/
     //Firebase and Elastic
-    export { firebase, algoliaConfig, gamesConfig, getStorage, ref, getDownloadURL } from 'server/config/config'
+    export { algoliaConfig, firebase, gamesConfig, getDownloadURL, getStorage, imagesConfig, ref } from 'server/config/config'
     
     // Font Awesome
     export { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'

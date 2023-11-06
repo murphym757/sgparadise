@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { View, FlatList, TouchableOpacity } from 'react-native'
 import { useTags } from 'auth/tagsContext'
 import { useSearchBar } from 'main/sgGameSearchScreenContent/searchIndex'
-import { createStackNavigator } from '@react-navigation/stack'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { useIsFocused } from '@react-navigation/native'
 import {
     Container,
@@ -247,7 +247,7 @@ export default function ConfirmAddGameScreen({navigation, route}) {
 
 
     function sgSearchStack() {
-        const Stack = createStackNavigator()
+        const Stack = createNativeStackNavigator()
         return (
             <Stack.Navigator headerMode="none" initialRouteName="Home">
                 <Stack.Screen name="Home" component={SgConsoleListScreen} initialParams={{ addGameLinkPressed: true }} />

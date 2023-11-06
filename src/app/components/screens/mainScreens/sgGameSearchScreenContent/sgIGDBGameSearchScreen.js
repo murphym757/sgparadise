@@ -5,7 +5,7 @@ import { useTags } from 'auth/tagsContext'
 import { useSearchBar } from 'main/sgGameSearchScreenContent/searchIndex'
 import axios from 'axios'
 // React Navigation
-import { createStackNavigator } from '@react-navigation/stack'
+import { createNativeStackNavigatorigator } from '@react-navigation/native-stack'
 import { useIsFocused } from '@react-navigation/native';
 import { modalConfirmation, searchGameIcon } from '../sgGameScreenContent/sgAPIIndex'
 import {
@@ -40,7 +40,7 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
     const colors = useContext(CurrentThemeContext)
     const images = useContext(AppWideImageContext)
     const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be readconst [modalSelected, setModalSelected] = useState(route.params?.modal)
-    const Root = createStackNavigator();
+    const Root = createNativeStackNavigatorigator();
     const sgDB = firebase.firestore()
     const tagData = sgConsoleIcons
     const testGamesDb = TestImageDB.results
@@ -277,7 +277,7 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
 
 
     function sgSearchGameStack() {
-        const ModalStack = createStackNavigator()
+        const ModalStack = createNativeStackNavigatorigator()
         const sgModal = modalSelected == true
         ? null
         : <ModalStack.Screen name="SgGameModal" component={sgModalScreen} />

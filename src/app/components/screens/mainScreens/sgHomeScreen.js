@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react'
 import { View, TouchableOpacity, FlatList } from 'react-native'
 import { AppWideImageContext } from 'main/sgImageContext'
 import { firebaseSearchContext } from 'main/sgHomeScreenGames/sgHomeSearchScreen'
@@ -6,7 +6,10 @@ import { homeScreenActionContext } from 'main/sgHomeScreenGames/sgHomeActionGame
 import { homeScreenDatesContext } from 'main/sgHomeScreenGames/sgHomeDates'
 import { homeScreenGenreContext } from 'main/sgHomeScreenContext'
 import { homeScreenSpotlightGamesContext } from 'main/sgHomeScreenGames/sgSpotlightedGames'
+import { SgGameListings } from 'main/sgHomeScreenGames/sgGameListingScreen'
+import { sectionHeadingsContext } from 'main/sgHomeScreenGames/sgHomeGamesSectionHeadingContext'
 import { loadingScreen } from 'auth/loadingScreen'
+import { useLoader } from 'server/config/loaderContext'
 import { useAuth } from 'auth/authContext'
 import { useSearchBar } from 'main/sgGameSearchScreenContent/searchIndex'
 import { Image } from 'expo-image'
@@ -27,11 +30,12 @@ import {
     ViewTopRow,
     windowHeight,
 } from 'index';
-import { useIsFocused } from '@react-navigation/native'
-import { createStackNavigator } from '@react-navigation/stack'
-const Stack = createStackNavigator()
+import { useIsFocused, useFocusEffect } from '@react-navigation/native'
 
 export default function SgHomeScreen({ navigation, route }) {
+    const { state, dispatch } = useLoader()
+    const isLoading = state.isLoading
+    const firebaseData = state.firebaseData
     const { 
         backArrow,
         currentUID, 
@@ -43,21 +47,22 @@ export default function SgHomeScreen({ navigation, route }) {
         sgFirebaseGenreCollection,
         toNewSection
     } = useAuth()
+        console.log("🚀 ~ file: sgHomeScreen.js:48 ~ SgHomeScreen ~ currentUID:", currentUID)
 
     // For Spotlight Section
     const [collectionName, setCollectionName] = useState('sgAPI')
     const [gameArrayTest, setGameArrayTest] = useState([])
-    console.log("🚀 ~ file: sgHomeScreen.js:47 ~ SgHomeScreen ~ gameArrayTest:", gameArrayTest)
     const [gameIndex, setGameIndex] = useState()
     const [homepageSearchBar, setHomepageSearchBar] = useState(true)
-    const [isLoading, setIsLoading] = useState(true)
     const [searchBarTouched, setSearchBarTouched] = useState(false)
     const [userInfo, setUserInfo] = useState()
+    console.log("🚀 ~ file: sgHomeScreen.js:56 ~ SgHomeScreen ~ userInfo:", userInfo)
     const { searchBar } = useSearchBar()
     const colors = useContext(CurrentThemeContext)
     const colorsPassThrough = colors
     const date = useContext(homeScreenDatesContext)
     const images = useContext(AppWideImageContext)
+    const gameGroups = useContext(sectionHeadingsContext)
     const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be read
     const sgGameSearch = useContext(firebaseSearchContext)
     const spotlights = useContext(homeScreenSpotlightGamesContext)
@@ -79,12 +84,10 @@ export default function SgHomeScreen({ navigation, route }) {
     const [gamesArrayDescription2, setgamesArrayDescription2] = useState('')
     // For the 3rd Section
     const [gamesArray3, setgamesArray3] = useState([])
-    console.log("🚀 ~ file: sgHomeScreen.js:82 ~ SgHomeScreen ~ gamesArray3:", gamesArray3)
     const [gamesArrayTitle3, setgamesArrayTitle3] = useState('')
     const [gamesArrayDescription3, setgamesArrayDescription3] = useState('')
     // For the 4th Section
     const [gamesArray4, setgamesArray4] = useState([])
-    console.log("🚀 ~ file: sgHomeScreen.js:87 ~ SgHomeScreen ~ gamesArray4:", gamesArray4)
     const [gamesArrayTitle4, setgamesArrayTitle4] = useState('')
     const [gamesArrayDescription4, setgamesArrayDescription4] = useState('')
     // For the 5th Section
@@ -141,6 +144,7 @@ export default function SgHomeScreen({ navigation, route }) {
 
     /*----------- */
 
+    /*
     function homepageSpotlightCollection() {
         const consoleData = {
             setConsoleArray, setConsoleArrayTitle, sgFirebaseConsolesCollection, genreSpecFunc
@@ -280,18 +284,17 @@ export default function SgHomeScreen({ navigation, route }) {
     let [selectedObjects, remainingObjects] = getRandomObjects(objects, 3)
     console.log(selectedObjects)
     console.log(remainingObjects)
+    */
 
-    useEffect(() => {  
-        const fetchData = async () => {
-            displayData(collectionName, 'sgGenesis', 'Racing', setGameArrayTest)
-        }
-        setTimeout(() => {
-            setUserInfo(currentUID),
-            setIsLoading(false)
-        }, 2000)
-        homePageConsoleSubGenreCombo()
-        getRandomObjects(objects)
-    }, [isFocused])
+
+    useFocusEffect(
+        React.useCallback(() => {
+            dispatch({ type: 'ACTIONS.LOAD_PAGE', payload: { isLoading: true }  })
+            setTimeout(() => {
+                setUserInfo(currentUID),
+                dispatch({ type: 'ACTIONS.SUCCESS', payload: { isLoading: false }  })
+            }, 2000)
+        }, [isFocused]))
 
     function findLaymanConsoleName(consoleName) {
         if (consoleName == 'sgGenesis') return 'Sega Genesis'
@@ -324,31 +327,6 @@ console.log('After removing the first character:', newStr);
         })
     }
 
-    // Buttons 
-    function homepageButtonLayout() {
-        if (currentUser !== null) return (
-            <View>
-                <TouchableButton onPress={() => toNewSection(toConsoleList.nextPage, toConsoleList.navigationPass)}>
-                    <TouchableButtonFont>Add Game</TouchableButtonFont>
-                </TouchableButton>
-                <TouchableButton onPress={() => confirmViewGames()}>
-                    <TouchableButtonFont>View All Games</TouchableButtonFont>
-                </TouchableButton>
-            </View>
-        )
-        if (currentUser === null) return (
-            <View>
-                <GeneralFontColor>Not Logged In</GeneralFontColor>
-                <GeneralFontColor onPress={() => navigation.navigate('SgAddGameConfirm',{ itemId: 86})}>
-                    TO Games
-                </GeneralFontColor>
-                <TouchableButton
-                    onPress={() => navigation.navigate('Auth', { screen: 'SgAuthStack' })}>
-                    <TouchableButtonFont>Log in</TouchableButtonFont>
-                </TouchableButton>
-            </View>
-        )
-    }
     /*-----------*/
     // Renders on page
     function consolesSection() {
@@ -370,6 +348,7 @@ console.log('After removing the first character:', newStr);
         return actionGenreContext.platformersListGameSet(passingSectionData)
     }
     /*-----------*/
+    //TODO: Add logos to.env file and cirlculate them through the app that way
 
     function logoGif() {
         const link = 'https://firebasestorage.googleapis.com/v0/b/sgparadise-auth-production.appspot.com/o/appLogos%2FmainTheme%2FnightTheme%2FnightTheme%2FnightThemeSgParadise.gif?alt=media&token=0d6f1db6-dbf8-4181-be72-91cab71a2851&_gl=1*kxrvs8*_ga*OTg1NzQyMDE1LjE2MzAxNzEwODE.*_ga_CW55HF8NVT*MTY5NzE0Njg0OS4zMjguMS4xNjk3MTUxMzM3LjUyLjAuMA..'
@@ -382,6 +361,7 @@ console.log('After removing the first character:', newStr);
         )
     }
 
+    //* Homepage Game Listings
     function gameListingsData(item) {
         const imageData = {
             height: 200,
@@ -461,44 +441,20 @@ console.log('After removing the first character:', newStr);
             gameListings(gameListingData)
         )
     }
+        //TODO: Import the game listings from sgHomeGamesSectionHeadingContext.js (This is going to come from a separate file)
+        //TODO: -----Important-----: This will require some real thinking here, but this will be a semi-complex function 
 
-    function homePageGameListings() {
-        return (
-            <View>
-                {gameFullListings1(gamesArray3)}
-                {gameFullListings2(gamesArray4)}
-                {gameFullListings3(gamesArray5)}
-            </View>
-        )
-    }
 
-    function homepageMainSection() {
-        return (
-            <View>
-                <ScrollViewContainer showsVerticalScrollIndicator={false}>
-                    {spotlightSection()}
-                    {homePageGameListings()}
-                    {homepageButtonLayout()}
-                </ScrollViewContainer>
-            </View>
-        )
-    }
-
-    function HomepageTotal() {
-        return (
-            <SafeAreaViewContainer >
-                {isLoading !== true 
-                    ?   <Container>
-                            {homepageMainSection()}
-                        </Container>
-                    :   <ContentContainer>
-                            {loadingScreen()}
-                        </ContentContainer>
-                }
-            </SafeAreaViewContainer>
-        )
-    }
-
+        function homePageGameListings() {
+            return (
+                <View>
+                    {gameFullListings1(gamesArray3)}
+                    {gameFullListings2(gamesArray4)}
+                    {gameFullListings3(gamesArray5)}
+                </View>
+            )
+        }
+    //*-----Homepage Game Listings-----*/
     /*-----------*/
 
     function homeScreenLogo() {
@@ -549,21 +505,74 @@ console.log('After removing the first character:', newStr);
 
     /*-----------------------------------*/
 
+    //TODO: Restructure code on this page to be more readable
+    //TODO: Minimize code on this page (Remove unnecessary code)
 
-    function HomeStack() {
-        const Stack = createStackNavigator()
-        return (
-            <Stack.Navigator initialRouteName="Home">
-                <Stack.Screen 
-                    name="Home" 
-                    component={HomepageTotal}
-                    options={HomeOptions()}
-                />
-            </Stack.Navigator>
-        )
-    }
+    //* sgHomeScreen.js
+        //* Buttons 
+            function buttonHomePage(buttonFunction, buttonTitle) {
+                return (
+                    <TouchableButton onPress={buttonFunction}>
+                        <TouchableButtonFont>{buttonTitle}</TouchableButtonFont>
+                    </TouchableButton>
+                )
+            }
+            function homepageButtonLayout() {
+                return (
+                    currentUID !== null && currentUID !== undefined
+                        ? <View>
+                            {buttonHomePage(() => toNewSection(toConsoleList.nextPage, toConsoleList.navigationPass), 'Add Game')}
+                            {buttonHomePage(() => confirmViewGames(), 'View All Games')}
+                        </View>
+                        : <View>
+                            {buttonHomePage(() => navigation.navigate('Auth', { screen: 'SgAuthStack' }), 'Log In')}
+                        </View>
+                    
+                )
+            }
+        //*-----Buttons-----*/
 
+        //* Main Section
+            function homepageMainSection() {
+                return (
+                    <SafeAreaViewContainer>
+                        <ScrollViewContainer showsVerticalScrollIndicator={false}>
+                            {isLoading !== true 
+                                ? <Container>
+                                        <MainFont>Logo</MainFont>
+                                        {spotlightSection()}
+                                        {homePageGameListings()}
+                                        {homepageButtonLayout()}
+                                        {SgGameListings(images, gameGroups)}
+                                    </Container>
+                                :   <ContentContainer>
+                                        {loadingScreen()}
+                                    </ContentContainer>
+                            }
+                        </ScrollViewContainer>
+                    </SafeAreaViewContainer>
+                )
+            }
+        //*-----Main Section-----*/
+    //*-----sgHomeScreen.js-----*/
+    
+    //* Not Logged In User
+        //? Shows user uploaded data (Game Related)
+        //? Shows Button set to login screen
+    //*-----------------------------------*/
+
+    //* Logged In User
+        //? Shows user uploaded data (Game Related)
+        //? Shows Button set to add game screen
+    //*-----------------------------------*/
+
+    
+
+    console.log("Within the HomeScreen Main Function------------------")
     return (
-        HomeStack()
+        homepageMainSection()
     )
 }
+
+
+

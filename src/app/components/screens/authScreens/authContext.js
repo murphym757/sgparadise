@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { createContext, useContext, useEffect, useState, useReducer } from 'react'
 import { View, ActivityIndicator } from 'react-native'
 import { auth, sgDB, sgImageStorage } from 'server/config/config'
 import { bannedWords } from 'server/sgProfanityFilter'
@@ -49,18 +49,46 @@ import {
     windowHeight,
 } from 'index'
 
-const AuthContext = React.createContext()
+const AuthContext = createContext()
 
 export function useAuth() {
     return useContext(AuthContext)
 }
 
+const initialState = {
+    currentUID: null,
+    currentUser: null,
+    isLoading: true,
+}
+
+function reducer(state, action) {
+    switch (action.type) {
+      case 'SET_USER':
+        return {
+          ...state,
+          currentUID: action.payload.currentUID,
+          currentUser: action.payload.currentUser,
+          isLoading: false,
+        };
+      case 'CLEAR_USER':
+        return {
+          ...state,
+          currentUID: action.payload.currentUID,
+          currentUser: action.payload.currentUser,
+          isLoading: false,
+        };
+      default:
+        return state;
+    }
+  }
+
 export function AuthProvider({ children }) {
+    const [state, dispatch] = useReducer(reducer, initialState)
     const [currentUID, setCurrentUID] = useState()
+    console.log("🚀 ~ file: authContext.js:88 ~ AuthProvider ~ currentUID:", currentUID)
     const [currentUser, setCurrentUser] = useState()
     const [entries, setEntries] = useState([])
     const [entryText, setEntryText] = useState('')
-    const [isLoading, setIsLoading] = useState(true)
     const [notLoggedInCurrentUser, setNotLoggedInCurrentUser ] = useState()
     const [stateTest, setStateTest] = useState('')
     const [viewCountFirebase, setViewCountFirebase] = useState(0)
@@ -280,7 +308,6 @@ export function AuthProvider({ children }) {
         const querySnapshot = await getDocs(q)
         querySnapshot.forEach((doc) => {
             setGameArrayTest(querySnapshot.docs.map(doc => doc.data()))
-            console.log(`${doc.id} => ${doc.data()}`);
         })
     }
 
@@ -971,24 +998,20 @@ export function AuthProvider({ children }) {
         )
     }
     //*----------------------------------------------*/
-
     useEffect(() => {
         const auth = getAuth();
-        onAuthStateChanged(auth, (user) => {
-            setIsLoading(false)
+        console.log("🚀 ~ file: authContext.js:1003 ~ useEffect ~ auth:", auth)
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
-                // User is signed in, see docs for a list of available properties
-                // https://firebase.google.com/docs/reference/js/firebase.User
+                dispatch({ type: 'SET_USER', payload: { currentUID: user.uid, currentUser: user } })
                 setCurrentUser(user)
                 setCurrentUID(user.uid)
-                // ...
             } else {
-                setCurrentUser(null)
-                setCurrentUID(null)
-                // User is signed out
-                // ...
+                dispatch({ type: 'CLEAR_USER', payload: { currentUID: null, currentUser: null } });
             }
         })
+    
+        return unsubscribe
     }, [])
 
     const value = {

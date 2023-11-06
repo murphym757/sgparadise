@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { View, FlatList, ScrollView, SafeAreaView, TouchableOpacity } from 'react-native'
 // React Navigation
-import { createStackNavigator } from '@react-navigation/stack'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import {
     modalConfirmation,
     searchGameIcon
@@ -162,7 +162,7 @@ export default function SgGameSearchScreen({route, navigation}, props) {
     
 
     function sgSearchGameStack() {
-        const ModalStack = createStackNavigator()
+        const ModalStack = createNativeStackNavigator()
         const sgModal = modalSelected == true 
         ? null
         : <ModalStack.Screen name="SgGameModal" component={sgModalScreen} />

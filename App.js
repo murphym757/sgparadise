@@ -1,23 +1,19 @@
-import React, { useState, useEffect, useCallback, useContext } from 'react';
-import * as Font from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
+import React, { memo, useState, useEffect, useCallback, useContext } from 'react'
 import { AuthProvider } from './src/app/components/screens/authScreens/authContext'
-import { TagsProvider } from './src/app/components/screens/authScreens/tagsContext'
-import { SearchBarProvider } from './src/app/components/screens/mainScreens/sgGameSearchScreenContent/searchIndex'
+import { CurrentThemeContext } from 'index'
 import { IconCreatorProvider } from './src/app/components/screens/userScreens/userIconContext'
+import { LoaderProvider } from './src/server/config/loaderContext'
+import { NavigationContainer, DefaultTheme } from '@react-navigation/native'
+import { SearchBarProvider } from './src/app/components/screens/mainScreens/sgGameSearchScreenContent/searchIndex'
+import { TagsProvider } from './src/app/components/screens/authScreens/tagsContext'
+import { useFonts } from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen'
 import ScreenRoutes from "./src/app/components/screens/screenRoutes"
 
-function useFonts(fontMap) {
-  let [fontsLoaded, setFontsLoaded] = useState(false);
-  (async () => {
-    await Font.loadAsync(fontMap);
-    setFontsLoaded(true);
-  })();
-  return [fontsLoaded];
-}
+SplashScreen.preventAutoHideAsync();
 
-export default function Home() {
-  let [fontsLoaded] = useFonts({
+export default function App() {
+  const [fontsLoaded] = useFonts({
     'SpartanBlack': require('./assets/fonts/spartanFonts/Spartan-Black.ttf'),
     'SpartanBold':require('./assets/fonts/spartanFonts/Spartan-Bold.ttf'),
     'SpartanExtraBold': require('./assets/fonts/spartanFonts/Spartan-ExtraBold.ttf'),
@@ -35,27 +31,43 @@ export default function Home() {
     'LemonMilkMediumItalic': require('./assets/fonts/lemonMilkFonts/LEMONMILK-MediumItalic.otf'),
     'LemonMilkRegular': require('./assets/fonts/lemonMilkFonts/LEMONMILK-Regular.otf'),
     'LemonMilkRegularItalic': require('./assets/fonts/lemonMilkFonts/LEMONMILK-RegularItalic.otf')
-  });
-  useEffect(() => {
-    async function prepare() {
-      await SplashScreen.preventAutoHideAsync();
+  })
+  const colors = useContext(CurrentThemeContext)
+  const ReactNavTheme = {
+    ...DefaultTheme,
+    colors: {
+      ...DefaultTheme.colors,
+      background: colors.primaryColor,
+    },
+  }
+
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded) {
+      await SplashScreen.hideAsync();
     }
-    
-    prepare();
-  }, []);
+  }, [fontsLoaded]);
+
+  if (!fontsLoaded) {
+    return null;
+  }
+
 
     if (fontsLoaded) {
         SplashScreen.hideAsync()
-        return  (
-          <AuthProvider>
-            <SearchBarProvider>
-              <IconCreatorProvider>
-                <TagsProvider>
-                  <ScreenRoutes />
-                </TagsProvider>
-              </IconCreatorProvider>
-            </SearchBarProvider>
-          </AuthProvider>
+        return (
+          <NavigationContainer theme={ReactNavTheme} onLayout={onLayoutRootView}>
+            <LoaderProvider>
+              <AuthProvider>
+                <SearchBarProvider>
+                  <IconCreatorProvider>
+                    <TagsProvider>
+                      <ScreenRoutes />
+                    </TagsProvider>
+                  </IconCreatorProvider>
+                </SearchBarProvider>
+              </AuthProvider>
+            </LoaderProvider>
+          </NavigationContainer>
         );
                 
       } else {

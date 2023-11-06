@@ -15,6 +15,8 @@ import {
     windowHeight
 } from 'index'
 
+console.log('Outside the UserProfileScreen function------------------')
+
 export default function UserProfileScreen({navigation}) {
     const [ error, setError ] = useState('')
     const { currentUser, logOut } = useAuth()
@@ -25,6 +27,7 @@ export default function UserProfileScreen({navigation}) {
     const userLikedPosts = 20
     const userLikes = 44
     const userPosts = 21
+    console.log('Within the UserProfileScreen function------------------')
 
     function onUpdateUser() {
         navigation.navigate('Update Account')

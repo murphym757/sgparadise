@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
-import { SafeAreaView, ScrollView, TouchableOpacity, useIsFocused, View } from 'react-native'
+import { SafeAreaView, ScrollView, TouchableOpacity, View } from 'react-native'
 import { algoliaConfig, Container, CurrentThemeContext, CustomSearchBarContainer, faSearch, FontAwesomeIcon, MainFont, ViewTopRow } from 'index'
 import { customRefinementContext } from 'main/sgGameSearchScreenContent/sgAlgoliaComponents/sgAlgoliaRefinementContext'
 import { InfiniteHits, Hit } from 'main/sgGameSearchScreenContent/sgAlgoliaComponents/sgAlgoliaSearchHitsContext'
@@ -8,6 +8,7 @@ import { ModalButton } from 'auth/sgModal'
 import { SearchBox } from 'main/sgGameSearchScreenContent/sgAlgoliaComponents/sgAlgoliaSearchBarContext'
 import { useAuth } from 'auth/authContext'
 import algoliasearch from 'algoliasearch'
+import { useIsFocused } from '@react-navigation/native'
 
 export default function SgSearchHome({navigation, route}) {
     const [ isLoading, setIsLoading ] = useState(true)
@@ -18,8 +19,9 @@ export default function SgSearchHome({navigation, route}) {
     const colors = useContext(CurrentThemeContext)
     const colorsPassThrough = colors
     const customRefinements = useContext(customRefinementContext)
-    const isFocused = useIsFocused //Needs to be outside of the useEffect to properly be read
+    const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be read
     const listRef = useRef(null);
+    console.log('Within the SgSearchHome function------------------')
 
     useEffect(() => {
         function loadingTime() {

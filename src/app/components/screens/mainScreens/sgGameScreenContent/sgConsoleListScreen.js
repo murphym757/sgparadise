@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react'
 import { View, FlatList, SafeAreaView, TouchableOpacity, ActivityIndicator } from 'react-native'
 import { AppWideImageContext } from 'main/sgImageContext'
 import axios from 'axios'
-import { createStackNavigator } from '@react-navigation/stack'
+import { createNativeStackNavigatorigator } from '@react-navigation/native-stack'
 import { useIsFocused } from "@react-navigation/native"
 import { CurrentThemeContext, dayTime, faChevronLeft, firebase, FontAwesomeIcon, gamesConfig, MainFont, nightTime } from 'index'
 import { modalConfirmation } from './sgAPIIndex'
@@ -136,7 +136,7 @@ export default function SgConsoleListScreens({route, navigation}, props) {
     }
 
     function sgHomeModalStack() {
-        const ModalStack = createStackNavigator()
+        const ModalStack = createNativeStackNavigatorigator()
         const sgModal = modalSelected == true
             ? null
             : <ModalStack.Screen name="MyModal" component={sgModalScreen} />

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { ScrollView, TouchableOpacity, View } from 'react-native'
 import { AppWideImageContext } from 'main/sgImageContext'
-import { createStackNavigator } from '@react-navigation/stack'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { CurrentThemeContext } from 'index';
 import { doc, getDoc } from "firebase/firestore"
 import { gameScreenContext } from 'main/sgGameScreenContent/sgGameScreenContext'
@@ -236,7 +236,7 @@ export default function GameScreen({navigation, route}) {
     /*----------------------------------------------*/
 
     function selectedGameStack() {
-        const Stack = createStackNavigator()
+        const Stack = createNativeStackNavigator()
         return (
             <Stack.Navigator initialRouteName="PrimaryGamePage">
                 <Stack.Screen
