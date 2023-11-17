@@ -102,6 +102,13 @@ export default function SgHomeScreen({ navigation, route }) {
     const [genreArray, setGenreArray] = useState([])
     const [genreArrayTitle, setGenreArrayTitle] = useState('')
 
+
+    const [homeScreenGameArray1, setHomeScreenGameArray1] = useState([])
+    const [homeScreenGameArray2, setHomeScreenGameArray2] = useState([])
+    const [homeScreenGameArray3, setHomeScreenGameArray3] = useState([])
+    const [homeScreenGameArray4, setHomeScreenGameArray4] = useState([])
+    const [homeScreenGameArray5, setHomeScreenGameArray5] = useState([])
+
     // Search Area
     const [searchActive, setSearchActive] = useState(false)
 
@@ -144,147 +151,25 @@ export default function SgHomeScreen({ navigation, route }) {
 
     /*----------- */
 
-    /*
-    function homepageSpotlightCollection() {
-        const consoleData = {
-            setConsoleArray, setConsoleArrayTitle, sgFirebaseConsolesCollection, genreSpecFunc
-        }
-        const gameData1 = {
-            setGamesArray, setGamesArrayTitle, setGamesArrayDescription, sgFirebaseGamesCollectionSubGenre, genreSpecFunc
-        }
-        const gameData2 = {
-            setGamesArray2, setGamesArrayTitle2, setgamesArrayDescription2, sgFirebaseGamesCollectionSubGenre, genreSpecFunc
-        }
-        const gameData3 = {
-            setGenreArray, setGenreArrayTitle, sgFirebaseGenreCollection, genreSpecFunc
-        }
-        const passingGameData3 = {}
-        const passingGameData4 = {}
-        const passingGameData5 = {}
+
+    function dateCheck() {
         const d = new Date();
         let month = d.getMonth();
-        if (month == 0) return date.mayGames(consoleData, gameData1, gameData2, gameData3)
-        if (month == 1) return date.mayGames(consoleData, gameData1, gameData2, gameData3)
-        if (month == 2) return date.mayGames(consoleData, gameData1, gameData2, gameData3)
-        if (month == 3) return date.mayGames(consoleData, gameData1, gameData2, gameData3)
-        if (month == 4) return date.mayGames(consoleData, gameData1, gameData2, gameData3)
-        if (month == 5) return date.mayGames(consoleData, gameData1, gameData2, gameData3)
-        if (month == 6) return date.mayGames(consoleData, gameData1, gameData2, gameData3)
-        if (month == 7) return date.mayGames(consoleData, gameData1, gameData2, gameData3)
-        if (month == 8) return date.mayGames(consoleData, gameData1, gameData2, gameData3)
-        if (month == 9) return date.mayGames(consoleData, gameData1, gameData2, gameData3)
-        if (month == 10) return date.mayGames(consoleData, gameData1, gameData2, gameData3)
-        if (month == 11) return date.mayGames(consoleData, gameData1, gameData2, gameData3)
-        if (month == 12) return date.mayGames(consoleData, gameData1, gameData2, gameData3)
+        if (month == 10) return doSomething('sgGenesis', setHomeScreenGameArray1)
     }
 
-    
-    
-    function doSomething(item, setArrayForGames) {
-        displayData(collectionName, `${item.consoleName}`, `${item.gameSubgenre}`, setArrayForGames)
-    }
 
-    function testing(consoleGroup, subGenreGroup) {
-        const items = [
-            { id: 1, consoleName: consoleGroup[0].console, gameSubgenre: subGenreGroup[0].subGenre },
-            { id: 2, consoleName: consoleGroup[0].console, gameSubgenre: subGenreGroup[1].subGenre },
-            { id: 3, consoleName: consoleGroup[0].console, gameSubgenre: subGenreGroup[2].subGenre },
-            { id: 4, consoleName: consoleGroup[0].console, gameSubgenre: subGenreGroup[3].subGenre },  
-        ]
-        const array2 = [
-            {id: 1, gameArrayToBeSet: setgamesArray3},
-            {id: 2, gameArrayToBeSet: setgamesArray4},
-            {id: 3, gameArrayToBeSet: setgamesArray5},
-            {id: 4, gameArrayToBeSet: setgamesArray6},
-        ];
-        for (let i = 0; i < array2.length; i++) {
-            doSomething(items[i], array2[i].gameArrayToBeSet);
-        }
+    //Todo: Add more 'displayData' functions to the 'doSomething' function to fill out the homepage
+    function doSomething(sgConsole, setArrayForGames) {
+        //* Top Ranked Games 'displayData' function
+        //* Newly Added Games 'displayData' function
+        //* Spotlighted Games 'displayData' function
+        //* Genre Buttons Group 'displayData' function
+        //* Genre Specific Games 'displayData' function
+        //* Genre Specific Games 'displayData' function2
+        //* Genre Specific Games 'displayData' function3
+        displayData('sgAPI', sgConsole, 'gameSubgenre', 'Platformer', 'gameName', 'desc', setArrayForGames)
     }
-
-    function homePageConsoleSubGenreCombo() {
-        const consoleGroup = [
-            {console: 'sgGenesis'}, {console: 'sgGenesis'}, {console: 'sgGenesis'}, {console: 'sgGenesis'}
-        ]
-        const subGenreGroup = [
-            {subGenre: 'Racing'}, {subGenre: 'Basketball'}, {subGenre: 'Platformer'}, {subGenre: 'Football'}
-        ]
-        return testing(consoleGroup, subGenreGroup)
-    }
-
-    function testFunc() {
-        const array1 = [
-            { id: 1, consoleName: 'sgGenesis', gameSubgenre: 'Racing' },
-            { id: 2, consoleName: 'sgGenesis', gameSubgenre: 'Basketball' },
-            { id: 3, consoleName: 'sgGenesis', gameSubgenre: 'Platformer' },
-            { id: 4, consoleName: 'sgGenesis', gameSubgenre: 'Football' },     
-        ];
-        
-        const array2 = [
-        {id: 1, gameArrayToBeSet: setgamesArray3},
-        {id: 2, gameArrayToBeSet: setgamesArray4},
-        {id: 3, gameArrayToBeSet: setgamesArray5},
-        {id: 4, gameArrayToBeSet: setgamesArray6},
-        ];
-        
-        const mergedArray = array1.map(item1 => {
-        const item2 = array2.find(item2 => item2.id === item1.id);
-        return { ...item1, ...item2 };
-        });
-        
-        for (let i = 0; i < array2.length; i++) {
-        displayData(collectionName, mergedArray.consoleName, mergedArray.gameSubgenre, mergedArray.gameArrayToBeSet)
-        }
-    }
-    
-
-    async function homePageContentDisplay(consoleName, gameSubgenre, setGameArrayTest) {
-        const sgConsoleName = 'sgGenesis'
-        const gameExamples = [
-            { id: 1, consoleName: 'sgGenesis', gameSubgenre: 'Racing' },
-            { id: 2, consoleName: 'sgGenesis', gameSubgenre: 'Basketball' },
-            { id: 3, consoleName: 'sgGenesis', gameSubgenre: 'Platformer' },
-            { id: 4, consoleName: 'sgGenesis', gameSubgenre: 'Football' },
-            { id: 5, consoleName: 'sgGenesis', gameSubgenre: 'Shooter' },     
-        ];
-        const gameArrays = [
-            {id: 1, gameArrayToBeSet: setgamesArray3},
-            {id: 2, gameArrayToBeSet: setgamesArray4},
-            {id: 3, gameArrayToBeSet: setgamesArray5},
-            {id: 4, gameArrayToBeSet: setgamesArray6},
-        ]
-        for (let i = 0; i < 4 && i < gameExamples.length; i++) {
-            displayData(collectionName, 'sgGenesis', 'Racing')
-            const item = gameExamples[i];
-            items.push(<div key={item.id}>{item.name}</div>);
-        }
-        return displayData(collectionName, 'sgGenesis', 'Racing')
-    }
-
-    const objects = [
-        { id: 1, name: 'Object 1' },
-        { id: 2, name: 'Object 2' },
-        { id: 3, name: 'Object 3' },
-        { id: 4, name: 'Object 4' },
-        { id: 5, name: 'Object 5' }
-    ];
-    
-    function getRandomObjects(objects, count) {
-        const selectedObjects = [];
-        const updatedObjects = objects.slice();
-        for (let i = 0; i < count; i++) {
-            const index = Math.floor(Math.random() * updatedObjects.length);
-            const selectedObject = updatedObjects[index];
-            selectedObjects.push(selectedObject);
-            updatedObjects.splice(index, 1);
-        }
-        return [selectedObjects, updatedObjects];
-    }
-    
-    let [selectedObjects, remainingObjects] = getRandomObjects(objects, 3)
-    console.log(selectedObjects)
-    console.log(remainingObjects)
-    */
 
 
     useFocusEffect(
@@ -292,7 +177,7 @@ export default function SgHomeScreen({ navigation, route }) {
             dispatch({ type: 'ACTIONS.LOAD_PAGE', payload: { isLoading: true }  })
             setTimeout(() => {
                 setUserInfo(currentUID),
-                dispatch({ type: 'ACTIONS.SUCCESS', payload: { isLoading: false }  })
+                dispatch({ type: 'ACTIONS.SUCCESS', payload: { isLoading: false }  }, dateCheck())
             }, 2000)
         }, [isFocused]))
 
@@ -531,6 +416,32 @@ console.log('After removing the first character:', newStr);
                 )
             }
         //*-----Buttons-----*/
+        //* Game Groups
+            function gameGroup(sectionTitle, sectionDescription, homeScreenGameArray) {
+                return (
+                    <SgGameListings
+                        sectionTitle={sectionTitle}
+                        sectionDescription={sectionDescription}
+                        images={images}
+                        homeScreenGameArray={homeScreenGameArray}
+                    />
+                )
+            }
+
+            function newlyAddedGameGroup() {
+                const newlyAddedSectionTitle = 'Newly Added Games'
+                const newlyAddedSectionDescription = 'Check out the latest games added to the sgParadise!'
+                return gameGroup (newlyAddedSectionTitle, newlyAddedSectionDescription, homeScreenGameArray1)
+            }
+
+            function homePageGameGroups() {
+                return (
+                    <View>
+                        {newlyAddedGameGroup()}
+                    </View>
+                )
+            }
+        //*-----Game Groups-----*/
 
         //* Main Section
             function homepageMainSection() {
@@ -543,7 +454,7 @@ console.log('After removing the first character:', newStr);
                                         {spotlightSection()}
                                         {homePageGameListings()}
                                         {homepageButtonLayout()}
-                                        {SgGameListings(images, gameGroups)}
+                                        {homePageGameGroups()}
                                     </Container>
                                 :   <ContentContainer>
                                         {loadingScreen()}

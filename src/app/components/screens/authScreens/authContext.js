@@ -14,6 +14,7 @@ import {
     setDoc,
     updateDoc,
     where,
+    writeBatch
 } from "firebase/firestore"
 import { 
     createUserWithEmailAndPassword,
@@ -302,14 +303,58 @@ export function AuthProvider({ children }) {
         });
     }
 
+     //* Query Collection for specific data ----- IMPORTANT: Use this
+        function queryCollectionStructure(collectionName, sgConsoleName, sgProvidedParameterType, sgReceivedParameterType, sgProvidedSecondaryParameterType, sgProvidedSecondaryParameterTypeOrder) {
+            const collectionData = collection(sgDB, collectionName, sgConsoleName, 'games')
+            const typeData = where(sgProvidedParameterType, "==", sgReceivedParameterType)
+            const orderData = orderBy(sgProvidedSecondaryParameterType, sgProvidedSecondaryParameterTypeOrder)
+            const limitData = limit(5)
+            return (
+                query(collectionData, typeData, orderData, limitData)
+            )
+        }
+    //*-----Query Collection for specific data-----*//
 
-    async function displayData(collectionName, sgConsoleName, subGenreName, setGameArrayTest) {
-        const q = query(collection(sgDB, collectionName, sgConsoleName, 'games'), where("gameSubgenre", "==", subGenreName), orderBy("gameName", "desc"), limit(5))
+    async function displayData(collectionName, sgConsoleName, sgProvidedParameterType, sgReceivedParameterType, sgProvidedSecondaryParameterType, sgProvidedSecondaryParameterTypeOrder, setGameArrayTest) {
+        const q = queryCollectionStructure(collectionName, sgConsoleName, sgProvidedParameterType, sgReceivedParameterType, sgProvidedSecondaryParameterType, sgProvidedSecondaryParameterTypeOrder)
         const querySnapshot = await getDocs(q)
         querySnapshot.forEach((doc) => {
             setGameArrayTest(querySnapshot.docs.map(doc => doc.data()))
         })
     }
+
+   
+
+    //* Batch write to add multiple documents to a collection
+    
+    async function batchWrite(collectionGroup1, collectionGroup2, collectionGroup3, collectionGroup4, collectionGroup5) {
+        //* Create a group for each homepageGameCollection
+
+            //* MockGroup1
+            const mockGroup1 = {
+                collectionName: 'sgAPI',
+                sgConsoleName: 'sgGenesis',
+                subGenreName: 'Platformer',
+                groupArray: setMockGroup1Array,
+                setQueryArray: setMockGroup1Array
+            }
+            //*-----MockGroup1-----//
+        const documentsRefs = [
+            queryCollectionStructure(collectionGroup1.collectionName, collectionGroup1.sgConsoleName, collectionGroup1.subGenreName),
+            queryCollectionStructure(collectionGroup2.collectionName, collectionGroup2.sgConsoleName, collectionGroup2.subGenreName),
+            queryCollectionStructure(collectionGroup3.collectionName, collectionGroup3.sgConsoleName, collectionGroup3.subGenreName),
+            queryCollectionStructure(collectionGroup4.collectionName, collectionGroup4.sgConsoleName, collectionGroup4.subGenreName),
+            queryCollectionStructure(collectionGroup5.collectionName, collectionGroup5.sgConsoleName, collectionGroup5.subGenreName)
+        ]
+        Promise.all(documentsRefs.map(docRef => docRef.get()))
+            .then(() => {
+                const querySnapshot = getDocs(docRef)
+                querySnapshot.forEach((doc) => {
+                setQueryArray(querySnapshot.docs.map(doc => doc.data()))
+            })
+        })
+    }
+    //*-----Add batch data for firebase-----*//
 
     function addData(collectionName) {
        // Add a new document in collection "cities"

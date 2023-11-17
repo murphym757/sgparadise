@@ -2,7 +2,11 @@ import React from 'react';
 import { View, TouchableOpacity, FlatList } from 'react-native'
 import { MainHeadingLongTitle, MainSubFont } from 'index';
 
-export function SgGameListings(images, gameGroups) {
+export function SgGameListings(props) {
+    const sectionTitle = props.sectionTitle
+    const sectionDescription = props.sectionDescription
+    const homeScreenGameArray = props.homeScreenGameArray
+    const images = props.images
     //* Game Listing images
         function gameListingImageData(item) {
             const imageData = {
@@ -17,10 +21,7 @@ export function SgGameListings(images, gameGroups) {
         }
     //*-----Game Listing images-----*//
 
-    function gameListings(gameListingData) {
-        const sectionTitle = gameListingData.sectionTitle
-        const sectionDescription = gameListingData.sectionDescription
-        
+    function gameListings() {
         return (
             <View>
                 <MainHeadingLongTitle>{sectionTitle}</MainHeadingLongTitle>
@@ -29,7 +30,7 @@ export function SgGameListings(images, gameGroups) {
                     horizontal={true}
                     scrollEnabled={true}
                     showsHorizontalScrollIndicator={false}
-                    data={gameListingData.listingArray}
+                    data={homeScreenGameArray} //* <------This is where the array goes. Pass it in here
                     keyboardShouldPersistTaps="always"
                     keyExtractor={item => item.id}
                     renderItem={({ item }) => (
@@ -52,62 +53,7 @@ export function SgGameListings(images, gameGroups) {
         )
     }
 
-    function gameListingStructure(sectionHeadingsGenre, sectionHeadingsSubGenre, listingArray) {
-        const currentGameListing = sectionHeadingsGenre.find(obj => obj.sectionHeadingData.sectionSubGenre === sectionHeadingsSubGenre)
-        const gameListingData = {
-            sectionTitle: currentGameListing.sectionHeadingData.sectionTitle,
-            sectionDescription: currentGameListing.sectionHeadingData.sectionDescription,
-            listingArray: listingArray
-        }
-        return (
-            gameListings(gameListingData)
-        )
-    }
-
-    //* Array of games to be passed to gameListingStructure
-        function gameListingArray(arrayOfGames) {
-            const listingSections = arrayOfGames
-            const detailedListingSections = [
-                { id: 1, listingSection: listingSections[0] },
-                { id: 2, listingSection: listingSections[1] },
-                { id: 3, listingSection: listingSections[2] },
-                { id: 4, listingSection: listingSections[3] },
-                { id: 5, listingSection: listingSections[4] },
-            ];
-        
-            return detailedListingSections.map((detailedListingSection) => (
-                <React.Fragment key={detailedListingSection.id}>
-                    {detailedListingSection.listingSection}
-                </React.Fragment>
-            ));
-        }
-    //*-----Array of Games-----*//
-
-    //* IMPORTANT: This is the only item that actually changes
-    //* While low, there is a possibility that this function will return the same game listing multiple times
-    function randomlyReturnGameListings() {
-        const sectionHeadingsArray = [
-            gameGroups.actionSectionHeadings,
-            gameGroups.educationalSectionHeadings,
-            gameGroups.strategySectionHeadings,
-            gameGroups.sportsSectionHeadings,
-            gameGroups.rpgSectionHeadings,
-            gameGroups.simulationSectionHeadings
-        ];
-        
-        const randomGameListings = [];
-        
-        for (let i = 0; i < 5; i++) {
-            const randomSectionHeadings = sectionHeadingsArray[Math.floor(Math.random() * sectionHeadingsArray.length)];
-            const randomSubGenre = randomSectionHeadings[Math.floor(Math.random() * randomSectionHeadings.length)].sectionHeadingData.sectionSubGenre;
-            const gameListing = gameListingStructure(randomSectionHeadings, randomSubGenre);
-            randomGameListings.push(gameListing);
-        }
-        
-        return randomGameListings;
-    }
-
     return (
-        gameListingArray(randomlyReturnGameListings())
+        gameListings()
     )
 }
