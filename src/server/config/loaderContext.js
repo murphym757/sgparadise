@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useReducer } from "react"
-import { cos } from "react-native-reanimated"
 // Loader Context
 //TODO: Create a "error code" page and set it to appear under the ACTION.ERROR case
 const LoaderContext = createContext()

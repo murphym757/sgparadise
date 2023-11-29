@@ -6,6 +6,7 @@ import {
     collection,
     deleteField,
     doc,
+    getDoc,
     getDocs,
     limit,
     orderBy,
@@ -303,12 +304,26 @@ export function AuthProvider({ children }) {
         });
     }
 
-     //* Query Collection for specific data ----- IMPORTANT: Use this
+    //* Get game data from firebase (for spotlight)
+    async function getGameDataSpotlight(sgConsoleName, setSpotlightGame, gameName) {
+        const gameRef = doc(sgDB, 'sgAPI', sgConsoleName, 'games', gameName)
+        const gameSnap = await getDoc(gameRef);
+
+        if (gameSnap.exists()) {
+            setSpotlightGame(gameSnap.data())
+            console.log("Document data:", gameSnap.data());
+        } else {
+        // docSnap.data() will be undefined in this case
+        console.log("No such document!");
+        }
+    }
+
+    //* Query Collection for specific data ----- IMPORTANT: Use this
         function queryCollectionStructure(collectionName, sgConsoleName, sgProvidedParameterType, sgReceivedParameterType, sgProvidedSecondaryParameterType, sgProvidedSecondaryParameterTypeOrder) {
             const collectionData = collection(sgDB, collectionName, sgConsoleName, 'games')
             const typeData = where(sgProvidedParameterType, "==", sgReceivedParameterType)
             const orderData = orderBy(sgProvidedSecondaryParameterType, sgProvidedSecondaryParameterTypeOrder)
-            const limitData = limit(5)
+            const limitData = limit(4)
             return (
                 query(collectionData, typeData, orderData, limitData)
             )
@@ -1085,6 +1100,7 @@ export function AuthProvider({ children }) {
         firebaseReauthenticateViaEmail,
         sendVerificationCode,
         displayData,
+        getGameDataSpotlight,
         getGameData,
         addGameToConsoleButtonGroup,
         addGameToConsole,

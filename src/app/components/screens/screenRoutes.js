@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler'
-import React, { useState, useContext } from 'react'
+import React, { useState, useCallback, useContext, useMemo } from 'react'
 if (!global.atob) { global.atob = decode }
 if (!global.btoa) { global.btoa = encode }
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
@@ -20,9 +20,30 @@ const Tab = createMaterialBottomTabNavigator()
 
 export default function ScreenRoutes() {
   const { currentUser } = useAuth()
-  const tabBarListeners = ({ navigation, route }) => ({
-    tabPress: () => navigation.navigate(route.name),
-  })
+    // Example of using useMemo to memoize a computed value
+    const userAuthStatus = useMemo(() => {
+      if (currentUser !== null) return 'Main'
+      return 'Auth'
+    }, [currentUser])
+  
+    // Example of using useCallback to memoize a function
+    const tabBarListeners = useCallback(({ navigation, route }) => ({
+      tabPress: () => navigation.navigate(route.name),
+    }), [])
+  
+    // Example of using useMemo to memoize JSX elements
+    const homeTabScreen = useMemo(() => {
+      return tabScreen('HomeScreen', 'Home', faHome, SgGameStack, true)
+    }, [])
+  
+    const searchTabScreen = useMemo(() => {
+      return tabScreen('SearchScreen', 'Search', faSearch, SgSearchStack, true)
+    }, [])
+  
+    const profileTabScreen = useMemo(() => {
+      return tabScreen('UserProfileScreen', 'Account', faUser, SgAuthStack, true)
+    }, [])
+  
   console.log('The App function is running 4 separate times. Why?')
   
   function tabScreen(tabName, tabBarLabelName, faIconName, componentName, unMountOnBlurOption) {
@@ -53,16 +74,11 @@ export default function ScreenRoutes() {
         style={{ backgroundColor: colors.primaryColor }}
         barStyle={{ backgroundColor: colors.primaryColor }}
       >
-        {tabScreen('HomeScreen', 'Home', faHome, SgGameStack, true)}
-        {tabScreen('SearchScreen', 'Search', faSearch, SgSearchStack, true)}
-        {tabScreen('UserProfileScreen', 'Account', faUser, SgAuthStack, true)}
+        {homeTabScreen}
+        {searchTabScreen}
+        {profileTabScreen}
       </Tab.Navigator>
     )
-  }
-  
-  function userAuthStatus() {
-    if(currentUser !== null) return "Main"
-    return "Auth"
   }
   
   function SgSearchStack() {

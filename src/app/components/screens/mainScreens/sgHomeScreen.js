@@ -1,166 +1,69 @@
-import React, { useState, useEffect, useContext } from 'react'
-import { View, TouchableOpacity, FlatList } from 'react-native'
+import React, { useState, useCallback, useContext, useEffect } from 'react';
+import { View } from 'react-native';
 import { AppWideImageContext } from 'main/sgImageContext'
-import { firebaseSearchContext } from 'main/sgHomeScreenGames/sgHomeSearchScreen'
-import { homeScreenActionContext } from 'main/sgHomeScreenGames/sgHomeActionGames'
-import { homeScreenDatesContext } from 'main/sgHomeScreenGames/sgHomeDates'
-import { homeScreenGenreContext } from 'main/sgHomeScreenContext'
 import { homeScreenSpotlightGamesContext } from 'main/sgHomeScreenGames/sgSpotlightedGames'
 import { SgGameListings } from 'main/sgHomeScreenGames/sgGameListingScreen'
 import { sectionHeadingsContext } from 'main/sgHomeScreenGames/sgHomeGamesSectionHeadingContext'
 import { loadingScreen } from 'auth/loadingScreen'
 import { useLoader } from 'server/config/loaderContext'
 import { useAuth } from 'auth/authContext'
-import { useSearchBar } from 'main/sgGameSearchScreenContent/searchIndex'
 import { Image } from 'expo-image'
+import { LinearGradient } from 'expo-linear-gradient'
 import {
     ContentContainer,
     CurrentThemeContext,
     SafeAreaViewContainer,
     ScrollViewContainer,
     Container,
-    faStar,
-    FontAwesomeIcon,
-    MainHeadingLongTitle,
     MainFont,
-    MainSubFont,
-    GeneralFontColor,
     TouchableButton,
     TouchableButtonFont,
-    ViewTopRow,
-    windowHeight,
 } from 'index';
-import { useIsFocused, useFocusEffect } from '@react-navigation/native'
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function SgHomeScreen({ navigation, route }) {
     const { state, dispatch } = useLoader()
     const isLoading = state.isLoading
-    const firebaseData = state.firebaseData
     const { 
-        backArrow,
         currentUID, 
         currentUser, 
         displayData,
-        sgDB,
-        sgFirebaseConsolesCollection,
-        sgFirebaseGamesCollectionSubGenre,
-        sgFirebaseGenreCollection,
-        toNewSection
+        toNewSection,
+        getGameDataSpotlight
     } = useAuth()
+    
         console.log("🚀 ~ file: sgHomeScreen.js:48 ~ SgHomeScreen ~ currentUID:", currentUID)
 
     // For Spotlight Section
-    const [collectionName, setCollectionName] = useState('sgAPI')
-    const [gameArrayTest, setGameArrayTest] = useState([])
-    const [gameIndex, setGameIndex] = useState()
-    const [homepageSearchBar, setHomepageSearchBar] = useState(true)
-    const [searchBarTouched, setSearchBarTouched] = useState(false)
     const [userInfo, setUserInfo] = useState()
     console.log("🚀 ~ file: sgHomeScreen.js:56 ~ SgHomeScreen ~ userInfo:", userInfo)
-    const { searchBar } = useSearchBar()
     const colors = useContext(CurrentThemeContext)
-    const colorsPassThrough = colors
-    const date = useContext(homeScreenDatesContext)
     const images = useContext(AppWideImageContext)
-    const gameGroups = useContext(sectionHeadingsContext)
-    const isFocused = useIsFocused() //Needs to be outside of the useEffect to properly be read
-    const sgGameSearch = useContext(firebaseSearchContext)
-    const spotlights = useContext(homeScreenSpotlightGamesContext)
-    const [spotlightGameConsoleName, setSpotlightGameConsoleName] = useState()
-     // For the Spotlight Game
-    const [spotlightArray, setSpotlightArray] = useState([])
-    const [spotlightArrayTitle, setSpotlightArrayTitle] = useState('')
-    const [spotlightArrayTagLine, setSpotlightArrayTagLine] = useState('')
-     // For the consoles section
-    const [consoleArray, setConsoleArray] = useState([])
-    const [consoleArrayTitle, setConsoleArrayTitle] = useState('')
-    // For the 1st Section
-    const [gamesArray, setGamesArray] = useState([])
-    const [gamesArrayTitle, setGamesArrayTitle] = useState('')
-    const [gamesArrayDescription, setGamesArrayDescription] = useState('')
-    // For the 2nd Section
-    const [gamesArray2, setGamesArray2] = useState([])
-    const [gamesArrayTitle2, setGamesArrayTitle2] = useState('')
-    const [gamesArrayDescription2, setgamesArrayDescription2] = useState('')
-    // For the 3rd Section
-    const [gamesArray3, setgamesArray3] = useState([])
-    const [gamesArrayTitle3, setgamesArrayTitle3] = useState('')
-    const [gamesArrayDescription3, setgamesArrayDescription3] = useState('')
-    // For the 4th Section
-    const [gamesArray4, setgamesArray4] = useState([])
-    const [gamesArrayTitle4, setgamesArrayTitle4] = useState('')
-    const [gamesArrayDescription4, setgamesArrayDescription4] = useState('')
-    // For the 5th Section
-    const [gamesArray5, setgamesArray5] = useState([])
-    const [gamesArrayTitle5, setgamesArrayTitle5] = useState('')
-    const [gamesArrayDescription5, setgamesArrayDescription5] = useState('')
 
-    const [gamesArray6, setgamesArray6] = useState([])
-    const [gamesArrayTitle6, setgamesArrayTitle6] = useState('')
-    const [gamesArrayDescription6, setgamesArrayDescription6] = useState('')
-
-    const [genreArray, setGenreArray] = useState([])
-    const [genreArrayTitle, setGenreArrayTitle] = useState('')
-
-
+    const [currentMonth, setCurrentMonth] = useState()
+    const [spotlightGame, setSpotlightGame] = useState([])
+    console.log("🚀 ~ file: sgHomeScreen.js:43 ~ SgHomeScreen ~ spotlightGame:", spotlightGame)
     const [homeScreenGameArray1, setHomeScreenGameArray1] = useState([])
     const [homeScreenGameArray2, setHomeScreenGameArray2] = useState([])
     const [homeScreenGameArray3, setHomeScreenGameArray3] = useState([])
     const [homeScreenGameArray4, setHomeScreenGameArray4] = useState([])
     const [homeScreenGameArray5, setHomeScreenGameArray5] = useState([])
 
-    // Search Area
-    const [searchActive, setSearchActive] = useState(false)
-
-
-    // For Search Bar
-    const [ searchBarCancel, setSearchBarCancel ] = useState('Search Games')
-    const [ searchBarTitle, setSearchBarTitle ] = useState('Search Games')
-    const [ searchQuery, setSearchQuery ] = useState('')
-    const [ searchType, setSearchType ] = useState('sgIGDBSearch')
-    const actionGenreContext = useContext(homeScreenActionContext)
-    const genreSpecFunc = useContext(homeScreenGenreContext)
-    const navigationPass = navigation
-    const toGameData = {
-        navigationPass,
-        nextPage: 'sgGamePage'
-    }
-    const toConsoleList = {
-        navigationPass,
-        nextPage: 'SgAddGameConfirm'
-    }
-
-    // Retrieves data before the page loads
-    const passingSectionData = {
-        navigation, 
-        findLaymanConsoleName, 
-        genreSpecFunc, 
-        FontAwesomeIcon, 
-        faStar, 
-        colors
-    }
-
-    const spotlightData = {
-        setSpotlightGameConsoleName, 
-        setSpotlightArray, 
-        setSpotlightArrayTitle, 
-        setSpotlightArrayTagLine, 
-        sgFirebaseGamesCollectionSubGenre, 
-        genreSpecFunc
-    }
-
-    /*----------- */
-
 
     function dateCheck() {
         const d = new Date();
         let month = d.getMonth();
-        if (month == 10) return doSomething('sgGenesis', setHomeScreenGameArray1)
+        //* Make this the second argument different to reflect the latest entries
+        if (month == 10) return (
+            doSomething('sgGenesis', 'Platformer', 'Platformer', "Beat ‘em Up", 'Basketball'), 
+            getGameDataSpotlight('sgGenesis', setSpotlightGame, 'streets-of-rage-3'),
+            setCurrentMonth('November')
+        )
     }
 
 
     //Todo: Add more 'displayData' functions to the 'doSomething' function to fill out the homepage
-    function doSomething(sgConsole, setArrayForGames) {
+    function doSomething(sgConsole, sgSpotlightedGame, sgSpecificGenre1, sgSpecificGenre2, sgSpecificGenre3) {
         //* Top Ranked Games 'displayData' function
         //* Newly Added Games 'displayData' function
         //* Spotlighted Games 'displayData' function
@@ -168,18 +71,34 @@ export default function SgHomeScreen({ navigation, route }) {
         //* Genre Specific Games 'displayData' function
         //* Genre Specific Games 'displayData' function2
         //* Genre Specific Games 'displayData' function3
-        displayData('sgAPI', sgConsole, 'gameSubgenre', 'Platformer', 'gameName', 'desc', setArrayForGames)
+        
+        //? Set this up to take only the latest 5 games added to the database
+            {displayData('sgAPI', sgConsole, 'gameSubgenre', sgSpotlightedGame, 'gameName', 'desc', setHomeScreenGameArray1)}
+        //? Set this up to take only the latest 5 games added to the database ---- ^^^
+        {genreSpecificCollection(sgConsole, sgSpecificGenre1, setHomeScreenGameArray2)}
+        {genreSpecificCollection(sgConsole, sgSpecificGenre2, setHomeScreenGameArray3)}
+        {genreSpecificCollection(sgConsole, sgSpecificGenre3, setHomeScreenGameArray4)}
+    }
+
+    function genreSpecificCollection(sgConsole, sgSpecificGenre, setHomeScreenGameArray) {
+        return (
+            displayData('sgAPI', sgConsole, 'gameSubgenre', sgSpecificGenre, 'gameName', 'desc', setHomeScreenGameArray)
+        )
     }
 
 
-    useFocusEffect(
-        React.useCallback(() => {
-            dispatch({ type: 'ACTIONS.LOAD_PAGE', payload: { isLoading: true }  })
-            setTimeout(() => {
-                setUserInfo(currentUID),
-                dispatch({ type: 'ACTIONS.SUCCESS', payload: { isLoading: false }  }, dateCheck())
+    //* IMPORTANT: This is the function runs twice, but the timeOutId is only called once. This is a work around for the app running twice
+        useEffect(() => {
+            dispatch({ type: 'ACTIONS.LOAD_PAGE', payload: { isLoading: true } })
+            const timeoutId = setTimeout(() => {
+                setUserInfo(currentUID)
+                dispatch({ type: 'ACTIONS.SUCCESS', payload: { isLoading: false } })
+                dateCheck()
             }, 2000)
-        }, [isFocused]))
+        
+            return () => clearTimeout(timeoutId)
+        }, [currentUID, dispatch])
+    //*-----------------------------------*/
 
     function findLaymanConsoleName(consoleName) {
         if (consoleName == 'sgGenesis') return 'Sega Genesis'
@@ -191,48 +110,7 @@ export default function SgHomeScreen({ navigation, route }) {
         if (consoleName == 'sgCD') return 'Sega CD'
     }
 
-    /*
-// pass a function to map
-const map1 = array1.map(x => findLaymanConsoleName(x).substring(5))
 
-console.log(map1);
-
-const str = 'AppDividend';
-console.log('Original String:', str);
-
-const newStr = str.substring(5)
-console.log('After removing the first character:', newStr);
-*/
-
-    /*-----------*/
-    // Links to the search page
-    function confirmViewGames() {
-        navigation.navigate('SgConsoleList',{
-            searchType: searchType
-        })
-    }
-
-    /*-----------*/
-    // Renders on page
-    function consolesSection() {
-        Object.assign(passingSectionData, {gamesArray: consoleArray})
-        return actionGenreContext.consolesListSet(passingSectionData)
-    }
-
-    function spotlightSection() {
-        Object.assign(passingSectionData, {gamesArray: spotlightArray, consoleName: spotlightGameConsoleName})
-        return actionGenreContext.spotlightGamesGen(passingSectionData)
-    }
-    function actionSection() {
-        Object.assign(passingSectionData, {gamesArray})
-        return actionGenreContext.beatEmUpListGameSet(passingSectionData)
-    }
-
-    function actionsasSection() {
-        Object.assign(passingSectionData, {gamesArray: gamesArray2})
-        return actionGenreContext.platformersListGameSet(passingSectionData)
-    }
-    /*-----------*/
     //TODO: Add logos to.env file and cirlculate them through the app that way
 
     function logoGif() {
@@ -246,102 +124,6 @@ console.log('After removing the first character:', newStr);
         )
     }
 
-    //* Homepage Game Listings
-    function gameListingsData(item) {
-        const imageData = {
-            height: 200,
-            width: 150,
-            contentFit: 'cover',
-            borderRadius: 10,
-            source: item.firebaseCoverUrl,
-            transition: 1000
-        }
-        return images.sgAPISearchCoverArtImage(imageData)
-    }
-
-    function gameListings(gameListingData) {
-        const sectionTitle = gameListingData.sectionTitle
-        const sectionDescription = gameListingData.sectionDescription
-        
-        return (
-            <View>
-                <MainHeadingLongTitle>{sectionTitle}</MainHeadingLongTitle>
-                <MainSubFont>{sectionDescription}</MainSubFont>
-                <FlatList
-                    horizontal={true}
-                    scrollEnabled={true}
-                    showsHorizontalScrollIndicator={false}
-                    data={gameListingData.listingArray}
-                    keyboardShouldPersistTaps="always"
-                    keyExtractor={item => item.id}
-                    renderItem={({ item }) => (
-                        <TouchableOpacity style={{  
-                            alignItems:'center',
-                            justifyContent:'center',
-                            margin: 10
-                        }}>
-                            <View style={{
-                                margin: 5,
-                                flexDirection: "row", 
-                                justifyContent: "center"
-                            }}> 
-                                {gameListingsData(item)}
-                            </View>
-                        </TouchableOpacity>
-                    )}
-                />
-            </View>
-        )
-    }
-
-    function gameFullListings1(listingArray) {
-        const gameListingData = {
-            sectionTitle: 'Fuel Your Need for Speed!',
-            sectionDescription: 'Race to the max in adrenaline-pumping video games!',
-            listingArray: listingArray
-        }
-        return (
-            gameListings(gameListingData)
-        )
-    }
-
-    function gameFullListings2(listingArray) {
-        const gameListingData = {
-            sectionTitle: 'Dribble, Shoot, Score - Hoop Dreams Begin Here!',
-            sectionDescription: 'Get ready to lace up, step onto the court, and make your hoop dreams a reality as you dribble, shoot, and score your way to victory in the most thrilling basketball games ever!',
-            listingArray: listingArray
-        }
-        return (
-            gameListings(gameListingData)
-        )
-    }
-
-    function gameFullListings3(listingArray) {
-        const gameListingData = {
-            sectionTitle: 'This is different, once more',
-            sectionDescription: 'Same here',
-            listingArray: listingArray
-        }
-        return (
-            gameListings(gameListingData)
-        )
-    }
-        //TODO: Import the game listings from sgHomeGamesSectionHeadingContext.js (This is going to come from a separate file)
-        //TODO: -----Important-----: This will require some real thinking here, but this will be a semi-complex function 
-
-
-        function homePageGameListings() {
-            return (
-                <View>
-                    {gameFullListings1(gamesArray3)}
-                    {gameFullListings2(gamesArray4)}
-                    {gameFullListings3(gamesArray5)}
-                </View>
-            )
-        }
-    //*-----Homepage Game Listings-----*/
-    /*-----------*/
-
     function homeScreenLogo() {
         const logoLink = 'https://reactnative.dev/img/tiny_logo.png'
         const logoImageData = {
@@ -353,39 +135,6 @@ console.log('After removing the first character:', newStr);
             logoLink: logoLink
         }
         return images.HeaderLogo(logoImageData)
-    }
-    
-    function HomeOptions() {
-        const pageLoadedHeader = {
-            title: 'SGParadise home',
-            headerStyle: {
-                backgroundColor: '#f4511e',
-            },
-            headerTransparent: true,
-            label: false,
-            headerTitle: isLoading == true
-                ?   ''
-                : (props) => (
-                    homeScreenLogo(props)
-            ),
-            headerTintColor: '#fff',
-            headerTitleStyle: {
-                fontWeight: 'bold',
-            }
-        }
-        const pageUnloadedHeader = {
-            title: '',
-            headerStyle: {
-                backgroundColor: '#f4511e',
-            },
-            headerTransparent: true,
-            label: false,
-            headerTintColor: '#fff',
-            headerTitleStyle: {
-                fontWeight: 'bold',
-            }
-        }
-        return isLoading !== true ? pageLoadedHeader : pageUnloadedHeader
     }
 
     /*-----------------------------------*/
@@ -417,27 +166,93 @@ console.log('After removing the first character:', newStr);
             }
         //*-----Buttons-----*/
         //* Game Groups
-            function gameGroup(sectionTitle, sectionDescription, homeScreenGameArray) {
+            function gameGroup(sectionTitle, sectionDescription, homeScreenGameArray, spotlightGrid) {
                 return (
-                    <SgGameListings
-                        sectionTitle={sectionTitle}
-                        sectionDescription={sectionDescription}
-                        images={images}
-                        homeScreenGameArray={homeScreenGameArray}
-                    />
+                    <View>
+                        <SgGameListings
+                            sectionTitle={sectionTitle}
+                            sectionDescription={sectionDescription}
+                            images={images}
+                            homeScreenGameArray={homeScreenGameArray}
+                            colors={colors}
+                            spotlightGrid={spotlightGrid}
+                        />
+                    </View>
+                )
+            }
+            function spotlightImageData() {
+                const imageData = {
+                    height: 400,
+                    width: 400,
+                    contentFit: 'cover',
+                    borderRadius: 5,
+                    source: spotlightGame.firebaseScreenshot1Url,
+                    transition: 1000
+                }
+                return images.sgAPISearchCoverArtImage(imageData)
+            }
+
+            function spotlightGameGroup() {
+                return (
+                    
+                    <View style={{paddingVertical: 25}}> 
+                        <MainFont>{currentMonth}'s Game of the Month</MainFont>
+                        <ContentContainer style={{ position: "relative" }}>
+                            {spotlightImageData()}
+                            <LinearGradient
+                                // Background Linear Gradient
+                                colors={[colors.primaryColor, 'transparent']}
+                                style={{
+                                    position: 'absolute',
+                                    borderRadius: 5,
+                                    width: 400,
+                                    height: 400,
+                                    transition: 1000,
+                                }}
+                                locations={[1, 0.5]}
+                            />
+                        </ContentContainer>
+                        <MainFont>{spotlightGame.gameName}</MainFont>
+                    </View>
+                    
                 )
             }
 
             function newlyAddedGameGroup() {
+                const spotlightGrid = true
                 const newlyAddedSectionTitle = 'Newly Added Games'
                 const newlyAddedSectionDescription = 'Check out the latest games added to the sgParadise!'
-                return gameGroup (newlyAddedSectionTitle, newlyAddedSectionDescription, homeScreenGameArray1)
+                return gameGroup (newlyAddedSectionTitle, newlyAddedSectionDescription, homeScreenGameArray1, spotlightGrid)
+            }
+
+            function genreSpecificGameGroup1() {
+                const spotlightGrid = false
+                const genreSpecificSectionTitle = 'Platformer'
+                const genreSpecificSectionDescription = 'Check out the latest games added to the sgParadise!'
+                return gameGroup (genreSpecificSectionTitle, genreSpecificSectionDescription, homeScreenGameArray2, spotlightGrid)
+            }
+
+            function genreSpecificGameGroup2() {
+                const spotlightGrid = false
+                const genreSpecificSectionTitle = 'Beat ‘em Up'
+                const genreSpecificSectionDescription = 'Check out the latest games added to the sgParadise!'
+                return gameGroup (genreSpecificSectionTitle, genreSpecificSectionDescription, homeScreenGameArray3, spotlightGrid)
+            }
+
+            function genreSpecificGameGroup3() {
+                const spotlightGrid = false
+                const genreSpecificSectionTitle = 'Basketball'
+                const genreSpecificSectionDescription = 'Check out the latest games added to the sgParadise!'
+                return gameGroup (genreSpecificSectionTitle, genreSpecificSectionDescription, homeScreenGameArray4, spotlightGrid)
             }
 
             function homePageGameGroups() {
                 return (
                     <View>
                         {newlyAddedGameGroup()}
+                        {genreSpecificGameGroup1()}
+                        {genreSpecificGameGroup2()}
+                        {genreSpecificGameGroup3()}
                     </View>
                 )
             }
@@ -451,9 +266,8 @@ console.log('After removing the first character:', newStr);
                             {isLoading !== true 
                                 ? <Container>
                                         <MainFont>Logo</MainFont>
-                                        {spotlightSection()}
-                                        {homePageGameListings()}
                                         {homepageButtonLayout()}
+                                        {spotlightGameGroup()}
                                         {homePageGameGroups()}
                                     </Container>
                                 :   <ContentContainer>
@@ -484,6 +298,5 @@ console.log('After removing the first character:', newStr);
         homepageMainSection()
     )
 }
-
 
 
