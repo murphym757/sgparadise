@@ -311,11 +311,32 @@ export function AuthProvider({ children }) {
 
         if (gameSnap.exists()) {
             setSpotlightGame(gameSnap.data())
-            console.log("Document data:", gameSnap.data());
         } else {
         // docSnap.data() will be undefined in this case
         console.log("No such document!");
         }
+    }
+    
+    //* Get the Games Collection for Top 4 (Newly Added, Highest Rated) games
+        function topGamesCollection(sgConsoleName, sgWhereStatus, sgWhere, sgOrder) {
+            const collectionData = collection(sgDB, 'sgAPI', sgConsoleName, 'games')
+            const typeData = sgWhereStatus === true
+                ?   where("gameRating", ">", sgWhere)
+                :   null
+            const orderData = orderBy(sgOrder, 'desc')
+            const limitData = limit(4)
+            return (
+                query(collectionData, typeData, orderData, limitData)
+            )
+        }
+    //*----- Top 4 Games -----//
+
+    async function displayTopNewlyData(sgConsoleName, sgWhereStatus, sgWhere, sgOrder, setGameArrayTest) {
+        const q = topGamesCollection(sgConsoleName, sgWhereStatus, sgWhere, sgOrder, setGameArrayTest)
+        const querySnapshot = await getDocs(q)
+        querySnapshot.forEach((doc) => {
+            setGameArrayTest(querySnapshot.docs.map(doc => doc.data()))
+        })
     }
 
     //* Query Collection for specific data ----- IMPORTANT: Use this
@@ -1101,6 +1122,7 @@ export function AuthProvider({ children }) {
         sendVerificationCode,
         displayData,
         getGameDataSpotlight,
+        displayTopNewlyData,
         getGameData,
         addGameToConsoleButtonGroup,
         addGameToConsole,

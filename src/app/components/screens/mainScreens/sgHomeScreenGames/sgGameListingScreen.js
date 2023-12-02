@@ -52,8 +52,8 @@ export function SgGameListings(props) {
             <View>
                 <View style={{paddingVertical: 5}}>
                     {spotlightGrid === true 
-                        ? charLengthSet(item.gameName, item.gameName.length, 35, 35) 
-                        : charLengthSet(item.gameName, item.gameName.length, 17, 17)
+                        ? charLengthSet(item.gameName, item.gameName.length, 21, 21) 
+                        : charLengthSet(item.gameName, item.gameName.length, 15, 15)
                     }
                     {}
                 </View>

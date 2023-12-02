@@ -16,6 +16,8 @@ import {
     ScrollViewContainer,
     Container,
     MainFont,
+    MainHeading,
+    MainSubHeading,
     TouchableButton,
     TouchableButtonFont,
 } from 'index';
@@ -29,41 +31,79 @@ export default function SgHomeScreen({ navigation, route }) {
         currentUser, 
         displayData,
         toNewSection,
-        getGameDataSpotlight
+        getGameDataSpotlight,
+        displayTopNewlyData
     } = useAuth()
     
         console.log("🚀 ~ file: sgHomeScreen.js:48 ~ SgHomeScreen ~ currentUID:", currentUID)
 
     // For Spotlight Section
     const [userInfo, setUserInfo] = useState()
-    console.log("🚀 ~ file: sgHomeScreen.js:56 ~ SgHomeScreen ~ userInfo:", userInfo)
     const colors = useContext(CurrentThemeContext)
     const images = useContext(AppWideImageContext)
+    const sectionHeadings = useContext(sectionHeadingsContext)
 
     const [currentMonth, setCurrentMonth] = useState()
     const [spotlightGame, setSpotlightGame] = useState([])
-    console.log("🚀 ~ file: sgHomeScreen.js:43 ~ SgHomeScreen ~ spotlightGame:", spotlightGame)
     const [homeScreenGameArray1, setHomeScreenGameArray1] = useState([])
     const [homeScreenGameArray2, setHomeScreenGameArray2] = useState([])
     const [homeScreenGameArray3, setHomeScreenGameArray3] = useState([])
     const [homeScreenGameArray4, setHomeScreenGameArray4] = useState([])
     const [homeScreenGameArray5, setHomeScreenGameArray5] = useState([])
 
+    function sectionPassedData(passedDataGenre, passedDataIndex) {
+        if (passedDataGenre === 'Action') return [
+            sectionHeadings.actionSectionHeadings[passedDataIndex].sectionHeadingData.sectionSubGenre,
+            sectionHeadings.actionSectionHeadings[passedDataIndex].sectionHeadingData.sectionTitle,
+            sectionHeadings.actionSectionHeadings[passedDataIndex].sectionHeadingData.sectionDescription
+        ]
+        if (passedDataGenre === 'Educational') return [
+            sectionHeadings.educationalSectionHeadings[passedDataIndex].sectionHeadingData.sectionSubGenre,
+            sectionHeadings.educationalSectionHeadings[passedDataIndex].sectionHeadingData.sectionTitle,
+            sectionHeadings.educationalSectionHeadings[passedDataIndex].sectionHeadingData.sectionDescription
+        ]
+        if (passedDataGenre === 'RPG') return [
+            sectionHeadings.rpgSectionHeadings[passedDataIndex].sectionHeadingData.sectionSubGenre,
+            sectionHeadings.rpgSectionHeadings[passedDataIndex].sectionHeadingData.sectionTitle,
+            sectionHeadings.rpgSectionHeadings[passedDataIndex].sectionHeadingData.sectionDescription
+        ]
+        if (passedDataGenre === 'Simulation') return [
+            sectionHeadings.simulationSectionHeadings[passedDataIndex].sectionHeadingData.sectionSubGenre,
+            sectionHeadings.simulationSectionHeadings[passedDataIndex].sectionHeadingData.sectionTitle,
+            sectionHeadings.simulationSectionHeadings[passedDataIndex].sectionHeadingData.sectionDescription
+        ]
+        if (passedDataGenre === 'Sports') return [
+            sectionHeadings.sportsSectionHeadings[passedDataIndex].sectionHeadingData.sectionSubGenre,
+            sectionHeadings.sportsSectionHeadings[passedDataIndex].sectionHeadingData.sectionTitle,
+            sectionHeadings.sportsSectionHeadings[passedDataIndex].sectionHeadingData.sectionDescription
+        ]
+        if (passedDataGenre === 'Strategy') return [
+            sectionHeadings.strategySectionHeadings[passedDataIndex].sectionHeadingData.sectionSubGenre,
+            sectionHeadings.strategySectionHeadings[passedDataIndex].sectionHeadingData.sectionTitle,
+            sectionHeadings.strategySectionHeadings[passedDataIndex].sectionHeadingData.sectionDescription
+        ]
+    }
 
     function dateCheck() {
         const d = new Date();
         let month = d.getMonth();
         //* Make this the second argument different to reflect the latest entries
         if (month == 10) return (
-            doSomething('sgGenesis', 'Platformer', 'Platformer', "Beat ‘em Up", 'Basketball'), 
+            doSomething('sgGenesis', 'Action','Action', 'Sports'), 
             getGameDataSpotlight('sgGenesis', setSpotlightGame, 'streets-of-rage-3'),
             setCurrentMonth('November')
+        )
+        if (month == 11) return (
+            doSomething('sgGenesis', 'Action', 'Action', 'Sports'), 
+            getGameDataSpotlight('sgGenesis', setSpotlightGame, 'sonic-the-hedgehog-2'),
+            setCurrentMonth('December')
+
         )
     }
 
 
     //Todo: Add more 'displayData' functions to the 'doSomething' function to fill out the homepage
-    function doSomething(sgConsole, sgSpotlightedGame, sgSpecificGenre1, sgSpecificGenre2, sgSpecificGenre3) {
+    function doSomething(sgConsole, sgGenre1, sgGenre2, sgGenre3) {
         //* Top Ranked Games 'displayData' function
         //* Newly Added Games 'displayData' function
         //* Spotlighted Games 'displayData' function
@@ -71,15 +111,23 @@ export default function SgHomeScreen({ navigation, route }) {
         //* Genre Specific Games 'displayData' function
         //* Genre Specific Games 'displayData' function2
         //* Genre Specific Games 'displayData' function3
-        
-        //? Set this up to take only the latest 5 games added to the database
-            {displayData('sgAPI', sgConsole, 'gameSubgenre', sgSpotlightedGame, 'gameName', 'desc', setHomeScreenGameArray1)}
-        //? Set this up to take only the latest 5 games added to the database ---- ^^^
-        {genreSpecificCollection(sgConsole, sgSpecificGenre1, setHomeScreenGameArray2)}
-        {genreSpecificCollection(sgConsole, sgSpecificGenre2, setHomeScreenGameArray3)}
-        {genreSpecificCollection(sgConsole, sgSpecificGenre3, setHomeScreenGameArray4)}
+        {topRatedCollection(sgConsole)}
+        {newlyAddedCollection(sgConsole)}
+        {genreSpecificCollection(sgConsole, sectionPassedData(sgGenre1, 2)[0], setHomeScreenGameArray2)}
+        {genreSpecificCollection(sgConsole, sectionPassedData(sgGenre2, 0)[0], setHomeScreenGameArray3)}
+        {genreSpecificCollection(sgConsole, sectionPassedData(sgGenre3, 1)[0], setHomeScreenGameArray4)}
     }
 
+    function topRatedCollection(sgConsole) {
+        return (
+            displayTopNewlyData(sgConsole, true, 4, 'gameRating', setHomeScreenGameArray1)
+        )
+    }
+    function newlyAddedCollection(sgConsole) {
+        return (
+            displayTopNewlyData(sgConsole, false, null, 'createdAt', setHomeScreenGameArray5)
+        )
+    }
     function genreSpecificCollection(sgConsole, sgSpecificGenre, setHomeScreenGameArray) {
         return (
             displayData('sgAPI', sgConsole, 'gameSubgenre', sgSpecificGenre, 'gameName', 'desc', setHomeScreenGameArray)
@@ -192,11 +240,11 @@ export default function SgHomeScreen({ navigation, route }) {
                 return images.sgAPISearchCoverArtImage(imageData)
             }
 
-            function spotlightGameGroup() {
+            function spotlightGameGroup(spotlightDescription, spotlightGameName) {
                 return (
                     
                     <View style={{paddingVertical: 25}}> 
-                        <MainFont>{currentMonth}'s Game of the Month</MainFont>
+                        <MainHeading>{spotlightDescription}</MainHeading>
                         <ContentContainer style={{ position: "relative" }}>
                             {spotlightImageData()}
                             <LinearGradient
@@ -212,47 +260,60 @@ export default function SgHomeScreen({ navigation, route }) {
                                 locations={[1, 0.5]}
                             />
                         </ContentContainer>
-                        <MainFont>{spotlightGame.gameName}</MainFont>
+                        <MainHeading style={{color: colors.secondaryFontColor}}>{spotlightGameName}</MainHeading>
                     </View>
                     
                 )
             }
 
-            function newlyAddedGameGroup() {
-                const spotlightGrid = true
-                const newlyAddedSectionTitle = 'Newly Added Games'
-                const newlyAddedSectionDescription = 'Check out the latest games added to the sgParadise!'
-                return gameGroup (newlyAddedSectionTitle, newlyAddedSectionDescription, homeScreenGameArray1, spotlightGrid)
+            function gameGroupCollection(sgSpotlightStatus, gameGroupCollectionTitle, gameGroupCollectionDescription, homeScreenGameArray, spotlightGrid) {
+                const sectionTitle = gameGroupCollectionTitle
+                const sectionDescription = gameGroupCollectionDescription
+                if (sgSpotlightStatus == true) {
+                    return spotlightGameGroup(sectionTitle, sectionDescription) 
+                } else {
+                    return gameGroup (sectionTitle, sectionDescription, homeScreenGameArray, spotlightGrid)
+                }
             }
 
-            function genreSpecificGameGroup1() {
-                const spotlightGrid = false
-                const genreSpecificSectionTitle = 'Platformer'
-                const genreSpecificSectionDescription = 'Check out the latest games added to the sgParadise!'
-                return gameGroup (genreSpecificSectionTitle, genreSpecificSectionDescription, homeScreenGameArray2, spotlightGrid)
+            //* Spotlighted Game
+            function spotlightGameCollection() {
+                const sgSpotlightTitle = `${currentMonth}'s Game of the Month`
+                const sgSpotlightedGameName = spotlightGame.gameName
+                return gameGroupCollection(true, sgSpotlightTitle, sgSpotlightedGameName)
             }
 
-            function genreSpecificGameGroup2() {
-                const spotlightGrid = false
-                const genreSpecificSectionTitle = 'Beat ‘em Up'
-                const genreSpecificSectionDescription = 'Check out the latest games added to the sgParadise!'
-                return gameGroup (genreSpecificSectionTitle, genreSpecificSectionDescription, homeScreenGameArray3, spotlightGrid)
+            //* Top Rated Games
+            function topRatedGamesCollection() {
+                const sgCollectionTitle = 'Top Rated Games'
+                const sgCollectionDescription = 'Check out the top rated games on the sgParadise!'
+                return gameGroupCollection(false, sgCollectionTitle, sgCollectionDescription, homeScreenGameArray1, true)
             }
 
-            function genreSpecificGameGroup3() {
+            //* Newly Added Games
+            function newlyAddedGamesCollection() {
+                const sgCollectionTitle = 'Newly Added Games'
+                const sgCollectionDescription = 'Check out the latest games added to the sgParadise!'
+                return gameGroupCollection(false, sgCollectionTitle, sgCollectionDescription, homeScreenGameArray5, false)
+            }
+
+            //* Genre Specific Games
+            function genreSpecificGameGroup(passedProp, passedPropIndex, homeScreenGameArray) {
                 const spotlightGrid = false
-                const genreSpecificSectionTitle = 'Basketball'
-                const genreSpecificSectionDescription = 'Check out the latest games added to the sgParadise!'
-                return gameGroup (genreSpecificSectionTitle, genreSpecificSectionDescription, homeScreenGameArray4, spotlightGrid)
+                const genreSpecificSectionTitle = sectionPassedData(passedProp, passedPropIndex)[1]
+                const genreSpecificSectionDescription = sectionPassedData(passedProp, passedPropIndex)[2]
+                return gameGroup (genreSpecificSectionTitle, genreSpecificSectionDescription, homeScreenGameArray, spotlightGrid)
             }
 
             function homePageGameGroups() {
                 return (
                     <View>
-                        {newlyAddedGameGroup()}
-                        {genreSpecificGameGroup1()}
-                        {genreSpecificGameGroup2()}
-                        {genreSpecificGameGroup3()}
+                        {spotlightGameCollection()}
+                        {topRatedGamesCollection()}
+                        {newlyAddedGamesCollection()}
+                        {genreSpecificGameGroup('Action', 2, homeScreenGameArray2)}
+                        {genreSpecificGameGroup('Sports', 0, homeScreenGameArray3)}
+                        {genreSpecificGameGroup('Sports', 1, homeScreenGameArray4)}
                     </View>
                 )
             }
@@ -267,7 +328,6 @@ export default function SgHomeScreen({ navigation, route }) {
                                 ? <Container>
                                         <MainFont>Logo</MainFont>
                                         {homepageButtonLayout()}
-                                        {spotlightGameGroup()}
                                         {homePageGameGroups()}
                                     </Container>
                                 :   <ContentContainer>

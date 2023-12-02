@@ -276,6 +276,7 @@ import React from 'react'
         sportsSectionHeadings,
         strategySectionHeadings
     }
+    console.log("🚀 ~ file: sgHomeGamesSectionHeadingContext.js:279 ~ sectionHeadings.actionSectionHeadings:", sectionHeadings.actionSectionHeadings)
 
     
     export const sectionHeadingsContext = React.createContext(sectionHeadings)
