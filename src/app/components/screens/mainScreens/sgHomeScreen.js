@@ -1,55 +1,47 @@
-import React, { useState, useCallback, useContext, useEffect } from 'react';
-import { View } from 'react-native';
+import React, { useState, useContext, useEffect } from 'react'
+import { View } from 'react-native'
 import { AppWideImageContext } from 'main/sgImageContext'
-import { homeScreenSpotlightGamesContext } from 'main/sgHomeScreenGames/sgSpotlightedGames'
-import { SgGameListings } from 'main/sgHomeScreenGames/sgGameListingScreen'
-import { sectionHeadingsContext } from 'main/sgHomeScreenGames/sgHomeGamesSectionHeadingContext'
-import { loadingScreen } from 'auth/loadingScreen'
-import { useLoader } from 'server/config/loaderContext'
-import { useAuth } from 'auth/authContext'
+import { homeScreenListingsContext } from 'main/sgHomeScreenGames/sgGameListingScreen'
 import { Image } from 'expo-image'
 import { LinearGradient } from 'expo-linear-gradient'
+import { loadingScreen } from 'auth/loadingScreen'
+import { monthlyGameListingsContext } from 'main/sgHomeScreenGames/sgGameMonthlyListingsContext'
+import { sectionHeadingsContext } from 'main/sgHomeScreenGames/sgHomeGamesSectionHeadingContext'
+import { SgGameListings } from 'main/sgHomeScreenGames/sgGameListingScreen'
+import { useAuth } from 'auth/authContext'
+import { useLoader } from 'server/config/loaderContext'
 import {
+    Container,
     ContentContainer,
     CurrentThemeContext,
+    MainFont,
     SafeAreaViewContainer,
     ScrollViewContainer,
-    Container,
-    MainFont,
-    MainHeading,
-    MainSubHeading,
     TouchableButton,
     TouchableButtonFont,
-} from 'index';
-import { useFocusEffect } from '@react-navigation/native';
+} from 'index'
 
 export default function SgHomeScreen({ navigation, route }) {
+    const { currentUID, currentUser, displayData, displayTopNewlyData, getGameDataSpotlight, toNewSection } = useAuth()
     const { state, dispatch } = useLoader()
     const isLoading = state.isLoading
-    const { 
-        currentUID, 
-        currentUser, 
-        displayData,
-        toNewSection,
-        getGameDataSpotlight,
-        displayTopNewlyData
-    } = useAuth()
+    const d = new Date()
+    let month = d.getMonth()
     
-        console.log("🚀 ~ file: sgHomeScreen.js:48 ~ SgHomeScreen ~ currentUID:", currentUID)
-
     // For Spotlight Section
-    const [userInfo, setUserInfo] = useState()
-    const colors = useContext(CurrentThemeContext)
-    const images = useContext(AppWideImageContext)
-    const sectionHeadings = useContext(sectionHeadingsContext)
-
     const [currentMonth, setCurrentMonth] = useState()
-    const [spotlightGame, setSpotlightGame] = useState([])
     const [homeScreenGameArray1, setHomeScreenGameArray1] = useState([])
     const [homeScreenGameArray2, setHomeScreenGameArray2] = useState([])
     const [homeScreenGameArray3, setHomeScreenGameArray3] = useState([])
     const [homeScreenGameArray4, setHomeScreenGameArray4] = useState([])
     const [homeScreenGameArray5, setHomeScreenGameArray5] = useState([])
+    const [spotlightGame, setSpotlightGame] = useState([])
+    const [userInfo, setUserInfo] = useState()
+    const colors = useContext(CurrentThemeContext)
+    const homeScreenListings = useContext(homeScreenListingsContext)
+    const images = useContext(AppWideImageContext)
+    const monthlyGameListings = useContext(monthlyGameListingsContext)
+    const sectionHeadings = useContext(sectionHeadingsContext)
 
     function sectionPassedData(passedDataGenre, passedDataIndex) {
         if (passedDataGenre === 'Action') return [
@@ -84,63 +76,58 @@ export default function SgHomeScreen({ navigation, route }) {
         ]
     }
 
+    function monthlyGameData(consoleOfMonth, gameOfTheMonth, genreOfTheMonth, nameOfMonth) {
+        return (
+            homePageStructure(consoleOfMonth,  genreOfTheMonth[0].genreName, genreOfTheMonth[0].genreProvidedIndex, genreOfTheMonth[1].genreName, genreOfTheMonth[1].genreProvidedIndex, genreOfTheMonth[2].genreName, genreOfTheMonth[2].genreProvidedIndex), 
+            getGameDataSpotlight(consoleOfMonth, setSpotlightGame, gameOfTheMonth),
+            setCurrentMonth(nameOfMonth)
+        )
+    }
+
     function dateCheck() {
-        const d = new Date();
-        let month = d.getMonth();
-        //* Make this the second argument different to reflect the latest entries
-        if (month == 10) return (
-            doSomething('sgGenesis', 'Action','Action', 'Sports'), 
-            getGameDataSpotlight('sgGenesis', setSpotlightGame, 'streets-of-rage-3'),
-            setCurrentMonth('November')
-        )
-        if (month == 11) return (
-            doSomething('sgGenesis', 'Action', 'Action', 'Sports'), 
-            getGameDataSpotlight('sgGenesis', setSpotlightGame, 'sonic-the-hedgehog-2'),
-            setCurrentMonth('December')
-
-        )
+        if (month == 0) return monthlyGameData('sgGenesis', '', monthlyGameListings.genreGroupJan, 'January')
+        if (month == 1) return monthlyGameData('sg32X', '', monthlyGameListings.genreGroupFeb, 'February')
+        if (month == 2) return monthlyGameData('sgGenesis', '', monthlyGameListings.genreGroupMar, 'March')
+        if (month == 3) return monthlyGameData('sgMS', '', monthlyGameListings.genreGroupApr, 'April')
+        if (month == 4) return monthlyGameData('sgSat', '', monthlyGameListings.genreGroupMay, 'May')
+        if (month == 5) return monthlyGameData('sgGenesis', '', monthlyGameListings.genreGroupJun, 'June')
+        if (month == 6) return monthlyGameData('sgCD', '', monthlyGameListings.genreGroupJul, 'July')
+        if (month == 7) return monthlyGameData('sgGG', '', monthlyGameListings.genreGroupAug, 'August')
+        if (month == 8) return monthlyGameData('sgGenesis', '', monthlyGameListings.genreGroupSep, 'September')
+        if (month == 9) return monthlyGameData('sg1000', '', monthlyGameListings.genreGroupOct, 'October')
+        if (month == 10) return monthlyGameData('sgGenesis', 'streets-of-rage-2', monthlyGameListings.genreGroupNov, 'November')
+        if (month == 11) return monthlyGameData('sgGenesis', 'sonic-the-hedgehog-2', monthlyGameListings.genreGroupDec, 'December')
     }
 
 
-    //Todo: Add more 'displayData' functions to the 'doSomething' function to fill out the homepage
-    function doSomething(sgConsole, sgGenre1, sgGenre2, sgGenre3) {
-        //* Top Ranked Games 'displayData' function
-        //* Newly Added Games 'displayData' function
-        //* Spotlighted Games 'displayData' function
-        //* Genre Buttons Group 'displayData' function
-        //* Genre Specific Games 'displayData' function
-        //* Genre Specific Games 'displayData' function2
-        //* Genre Specific Games 'displayData' function3
-        {topRatedCollection(sgConsole)}
-        {newlyAddedCollection(sgConsole)}
-        {genreSpecificCollection(sgConsole, sectionPassedData(sgGenre1, 2)[0], setHomeScreenGameArray2)}
-        {genreSpecificCollection(sgConsole, sectionPassedData(sgGenre2, 0)[0], setHomeScreenGameArray3)}
-        {genreSpecificCollection(sgConsole, sectionPassedData(sgGenre3, 1)[0], setHomeScreenGameArray4)}
-    }
+    //* Structure of the Home Page
+        function homePageStructure(sgConsole, sgGenre1, sgGenre1Index, sgGenre2, sgGenre2Index, sgGenre3, sgGenre3Index) {
+            //* Console and Genre Buttons Group 'displayData' function --- Need to be completed
+            
+            {topRatedCollection(sgConsole)}
+            {newlyAddedCollection(sgConsole)}
+            {genreSpecificCollection(sgConsole, sectionPassedData(sgGenre1, sgGenre1Index)[0], setHomeScreenGameArray2)}
+            {genreSpecificCollection(sgConsole, sectionPassedData(sgGenre2, sgGenre2Index)[0], setHomeScreenGameArray3)}
+            {genreSpecificCollection(sgConsole, sectionPassedData(sgGenre3, sgGenre3Index)[0], setHomeScreenGameArray4)}
+        }
 
-    function topRatedCollection(sgConsole) {
-        return (
-            displayTopNewlyData(sgConsole, true, 4, 'gameRating', setHomeScreenGameArray1)
-        )
-    }
-    function newlyAddedCollection(sgConsole) {
-        return (
-            displayTopNewlyData(sgConsole, false, null, 'createdAt', setHomeScreenGameArray5)
-        )
-    }
-    function genreSpecificCollection(sgConsole, sgSpecificGenre, setHomeScreenGameArray) {
-        return (
-            displayData('sgAPI', sgConsole, 'gameSubgenre', sgSpecificGenre, 'gameName', 'desc', setHomeScreenGameArray)
-        )
-    }
-
+        function topRatedCollection(sgConsole) {
+            return displayTopNewlyData(sgConsole, true, 4, 'gameRating', setHomeScreenGameArray1)
+        }
+        function newlyAddedCollection(sgConsole) {
+            return displayTopNewlyData(sgConsole, false, null, 'createdAt', setHomeScreenGameArray5)
+        }
+        function genreSpecificCollection(sgConsole, sgSpecificGenre, setHomeScreenGameArray) {
+            return displayData('sgAPI', sgConsole, 'gameSubgenre', sgSpecificGenre, 'gameName', 'desc', setHomeScreenGameArray)
+        }
+    //*----Structure of the Home Page----*/
 
     //* IMPORTANT: This is the function runs twice, but the timeOutId is only called once. This is a work around for the app running twice
         useEffect(() => {
             dispatch({ type: 'ACTIONS.LOAD_PAGE', payload: { isLoading: true } })
             const timeoutId = setTimeout(() => {
                 setUserInfo(currentUID)
-                dispatch({ type: 'ACTIONS.SUCCESS', payload: { isLoading: false } })
+                dispatch({ type: 'ACTIONS.SUCCESS', payload: { isLoading: false }})
                 dateCheck()
             }, 2000)
         
@@ -228,95 +215,79 @@ export default function SgHomeScreen({ navigation, route }) {
                     </View>
                 )
             }
-            function spotlightImageData() {
-                const imageData = {
-                    height: 400,
-                    width: 400,
-                    contentFit: 'cover',
-                    borderRadius: 5,
-                    source: spotlightGame.firebaseScreenshot1Url,
-                    transition: 1000
+
+            //* Spotlight Section
+                function gameGroupSpotlightCollection(gameGroupCollectionTitle, gameGroupCollectionDescription) {
+                    const sectionTitle = gameGroupCollectionTitle
+                    const sectionDescription = gameGroupCollectionDescription
+                    return homeScreenListings.spotlightGameGroup(sectionTitle, sectionDescription, LinearGradient, spotlightGame, images, colors) 
                 }
-                return images.sgAPISearchCoverArtImage(imageData)
-            }
-
-            function spotlightGameGroup(spotlightDescription, spotlightGameName) {
-                return (
-                    
-                    <View style={{paddingVertical: 25}}> 
-                        <MainHeading>{spotlightDescription}</MainHeading>
-                        <ContentContainer style={{ position: "relative" }}>
-                            {spotlightImageData()}
-                            <LinearGradient
-                                // Background Linear Gradient
-                                colors={[colors.primaryColor, 'transparent']}
-                                style={{
-                                    position: 'absolute',
-                                    borderRadius: 5,
-                                    width: 400,
-                                    height: 400,
-                                    transition: 1000,
-                                }}
-                                locations={[1, 0.5]}
-                            />
-                        </ContentContainer>
-                        <MainHeading style={{color: colors.secondaryFontColor}}>{spotlightGameName}</MainHeading>
-                    </View>
-                    
-                )
-            }
-
-            function gameGroupCollection(sgSpotlightStatus, gameGroupCollectionTitle, gameGroupCollectionDescription, homeScreenGameArray, spotlightGrid) {
-                const sectionTitle = gameGroupCollectionTitle
-                const sectionDescription = gameGroupCollectionDescription
-                if (sgSpotlightStatus == true) {
-                    return spotlightGameGroup(sectionTitle, sectionDescription) 
-                } else {
-                    return gameGroup (sectionTitle, sectionDescription, homeScreenGameArray, spotlightGrid)
+                function spotlightGameCollection() {
+                    const sgSpotlightTitle = `${currentMonth}'s Game of the Month`
+                    const sgSpotlightedGameName = spotlightGame.gameName
+                    return gameGroupSpotlightCollection(sgSpotlightTitle, sgSpotlightedGameName)
                 }
-            }
+            //*---Spotlight Section---//
+            
 
-            //* Spotlighted Game
-            function spotlightGameCollection() {
-                const sgSpotlightTitle = `${currentMonth}'s Game of the Month`
-                const sgSpotlightedGameName = spotlightGame.gameName
-                return gameGroupCollection(true, sgSpotlightTitle, sgSpotlightedGameName)
-            }
+            //* General Content Section
+                function gameGroupCollection(gameGroupCollectionTitle, gameGroupCollectionDescription, homeScreenGameArray, spotlightGrid) {
+                    const sectionTitle = gameGroupCollectionTitle
+                    const sectionDescription = gameGroupCollectionDescription
+                    return homeScreenListings.gameListings(sectionTitle, sectionDescription, homeScreenGameArray, images, spotlightGrid, colors)
+                }
 
-            //* Top Rated Games
-            function topRatedGamesCollection() {
-                const sgCollectionTitle = 'Top Rated Games'
-                const sgCollectionDescription = 'Check out the top rated games on the sgParadise!'
-                return gameGroupCollection(false, sgCollectionTitle, sgCollectionDescription, homeScreenGameArray1, true)
-            }
+                //* Top Rated Games
+                function topRatedGamesCollection() {
+                    const sgCollectionTitle = 'Top Rated Games'
+                    const sgCollectionDescription = 'Check out the top rated games on the sgParadise!'
+                    return gameGroupCollection(sgCollectionTitle, sgCollectionDescription, homeScreenGameArray1, true)
+                }
 
-            //* Newly Added Games
-            function newlyAddedGamesCollection() {
-                const sgCollectionTitle = 'Newly Added Games'
-                const sgCollectionDescription = 'Check out the latest games added to the sgParadise!'
-                return gameGroupCollection(false, sgCollectionTitle, sgCollectionDescription, homeScreenGameArray5, false)
-            }
+                //* Newly Added Games
+                function newlyAddedGamesCollection() {
+                    const sgCollectionTitle = 'Newly Added Games'
+                    const sgCollectionDescription = 'Check out the latest games added to the sgParadise!'
+                    return gameGroupCollection(sgCollectionTitle, sgCollectionDescription, homeScreenGameArray5, false)
+                }
 
-            //* Genre Specific Games
-            function genreSpecificGameGroup(passedProp, passedPropIndex, homeScreenGameArray) {
-                const spotlightGrid = false
-                const genreSpecificSectionTitle = sectionPassedData(passedProp, passedPropIndex)[1]
-                const genreSpecificSectionDescription = sectionPassedData(passedProp, passedPropIndex)[2]
-                return gameGroup (genreSpecificSectionTitle, genreSpecificSectionDescription, homeScreenGameArray, spotlightGrid)
-            }
+                //* Genre Specific Games
+                function genreSpecificGameGroup(passedProp, passedPropIndex, homeScreenGameArray) {
+                    const genreSpecificSectionTitle = sectionPassedData(passedProp, passedPropIndex)[1]
+                    const genreSpecificSectionDescription = sectionPassedData(passedProp, passedPropIndex)[2]
+                    return gameGroupCollection(genreSpecificSectionTitle, genreSpecificSectionDescription, homeScreenGameArray, false)
+                }
+            //*---General Content Section---//
 
-            function homePageGameGroups() {
-                return (
-                    <View>
-                        {spotlightGameCollection()}
-                        {topRatedGamesCollection()}
-                        {newlyAddedGamesCollection()}
-                        {genreSpecificGameGroup('Action', 2, homeScreenGameArray2)}
-                        {genreSpecificGameGroup('Sports', 0, homeScreenGameArray3)}
-                        {genreSpecificGameGroup('Sports', 1, homeScreenGameArray4)}
-                    </View>
-                )
-            }
+            //* Genre Sections
+                function homePageGameGroups(genreGroup) {
+                    return (
+                        <View>
+                            {spotlightGameCollection()}
+                            {topRatedGamesCollection()}
+                            {newlyAddedGamesCollection()}
+                            {genreSpecificGameGroup(genreGroup[0].genreName, genreGroup[0].genreProvidedIndex, homeScreenGameArray2)}
+                            {genreSpecificGameGroup(genreGroup[1].genreName, genreGroup[1].genreProvidedIndex, homeScreenGameArray3)}
+                            {genreSpecificGameGroup(genreGroup[2].genreName, genreGroup[2].genreProvidedIndex, homeScreenGameArray4)}
+                        </View>
+                    )
+                }
+
+                function homepageMonthlyGameGroups() {
+                    if (month == 0) return homePageGameGroups(monthlyGameListings.genreGroupJan)
+                    if (month == 1) return homePageGameGroups(monthlyGameListings.genreGroupFeb)
+                    if (month == 2) return homePageGameGroups(monthlyGameListings.genreGroupMar)
+                    if (month == 3) return homePageGameGroups(monthlyGameListings.genreGroupApr)
+                    if (month == 4) return homePageGameGroups(monthlyGameListings.genreGroupMay)
+                    if (month == 5) return homePageGameGroups(monthlyGameListings.genreGroupJun)
+                    if (month == 6) return homePageGameGroups(monthlyGameListings.genreGroupJul)
+                    if (month == 7) return homePageGameGroups(monthlyGameListings.genreGroupAug)
+                    if (month == 8) return homePageGameGroups(monthlyGameListings.genreGroupSep)
+                    if (month == 9) return homePageGameGroups(monthlyGameListings.genreGroupOct)
+                    if (month == 10) return homePageGameGroups(monthlyGameListings.genreGroupNov)
+                    if (month == 11) return homePageGameGroups(monthlyGameListings.genreGroupDec)
+                }
+            //*---Genre Sections---//
         //*-----Game Groups-----*/
 
         //* Main Section
@@ -328,7 +299,7 @@ export default function SgHomeScreen({ navigation, route }) {
                                 ? <Container>
                                         <MainFont>Logo</MainFont>
                                         {homepageButtonLayout()}
-                                        {homePageGameGroups()}
+                                        {homepageMonthlyGameGroups()}
                                     </Container>
                                 :   <ContentContainer>
                                         {loadingScreen()}

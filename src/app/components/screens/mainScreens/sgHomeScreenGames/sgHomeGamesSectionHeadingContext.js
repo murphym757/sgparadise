@@ -110,7 +110,6 @@ import React from 'react'
             sectionTitle: 'Basketball Blitz: Slam and Jam!',
             sectionDescription: 'Fast-paced full-court action with epic slams and jams!'
         }
-
         const boxingGamesSectionHeading = {
             sectionSubGenre: 'Boxing',
             sectionTitle: 'Knockout in the Ring of Legends!',
