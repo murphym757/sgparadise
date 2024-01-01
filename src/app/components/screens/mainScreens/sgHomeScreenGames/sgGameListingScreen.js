@@ -39,7 +39,7 @@ import { ContentContainerMainHeading, MainHeading, ContentContainer, MainHeading
                     <MainFont>{formattedReleaseDate(item.gameReleaseDate)}</MainFont>
                 </View>
                 <View style={{paddingVertical: 5}}>
-                    <MainFont>{item.gameRating} <FontAwesomeIcon icon={ faStar } color={colors.secondaryColor} size={12} /></MainFont>
+                    <MainFont>{item.gameRating} <FontAwesomeIcon icon={ faStar } color={colors.secondaryFontColor} size={12} /></MainFont>
                 </View>
                 <View style={{paddingTop: 5}}>
                     <MainFont>{item.consoleName}</MainFont>
@@ -113,7 +113,7 @@ import { ContentContainerMainHeading, MainHeading, ContentContainer, MainHeading
 
         function spotlightGameGroup(spotlightDescription, spotlightGameName, LinearGradient, spotlightGame, images, colors) {
             return (
-                <View style={{paddingVertical: 25}}> 
+                <View style={{paddingTop: 25}}> 
                     <MainHeading>{spotlightDescription}</MainHeading>
                     <ContentContainer style={{ position: "relative" }}>
                         {spotlightImageData(spotlightGame, images)}
@@ -130,7 +130,7 @@ import { ContentContainerMainHeading, MainHeading, ContentContainer, MainHeading
                             locations={[1, 0.5]}
                         />
                     </ContentContainer>
-                    <MainHeading style={{color: colors.secondaryFontColor}}>{spotlightGameName}</MainHeading>
+                    <MainHeading style={{color: colors.secondaryColor}}>{spotlightGameName}</MainHeading>
                 </View>
             )
         }

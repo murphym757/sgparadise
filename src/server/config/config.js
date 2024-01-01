@@ -29,6 +29,13 @@ import {
     IGDB_CLIENT_ID,
     IGDB_CLIENT_SECRET,
     GIANTBOMB_API_KEY,
+    SG1KICON,
+    SG32XICON,
+    SGCDICON,
+    SGGGICON,
+    SGGICON,
+    SGMSICON,
+    SGSATICON,
     DAYIMAGE_SGALLLOGO,
     DAYIMAGE_SGALLLOGO_SELECTED,
     NIGHTIMAGE_SGALLLOGO,
@@ -63,7 +70,14 @@ import {
     NIGHTIMAGE_SGPARADISELOGO_ALT
 } from 'react-native-dotenv'
 
-const imagesConfig ={
+const imagesConfig = {
+  sg1000Icon: SG1KICON,
+  sg32XIcon: SG32XICON,
+  sgCDIcon: SGCDICON,
+  sgGGIcon: SGGGICON,
+  sgGENIcon: SGGICON,
+  sgMSIcon: SGMSICON,
+  sgSATIcon: SGSATICON,
   sgallDayImage: DAYIMAGE_SGALLLOGO,
   sgallDayImagePicked: DAYIMAGE_SGALLLOGO_SELECTED,
   sgallNightImage: NIGHTIMAGE_SGALLLOGO,

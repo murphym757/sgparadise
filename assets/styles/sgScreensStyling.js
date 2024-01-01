@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { View, Text, Dimensions } from 'react-native';
+import { View, Text, Dimensions, Pressable } from 'react-native';
 import { RFValue } from "react-native-responsive-fontsize";
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import {
@@ -32,6 +32,26 @@ export const PopGamesView = styled(View) `
     flex: 1;
     height: 300;
     marginTop: ${responsivePxSize(10)};
+`;
+/*---------------------------------------*/
+
+/* Sg Home Screen */
+/*---------------------------------------*/
+export const MiniButton = styled(View) `
+    backgroundColor: ${currentTheme.secondaryColor};
+    paddingVertical: ${responsivePxSize(2)};
+    paddingHorizontal: ${responsivePxSize(2)};
+    borderRadius: ${responsivePxSize(4)};
+    alignItems: 'center';
+    justifyContent: 'center';
+`;
+
+export const MiniButtonFont = styled(Text) `
+    color: ${currentTheme.primaryColor};
+    fontFamily: ${currentTheme.fontsGroup.appWideFontSecondary};
+    fontSize: ${responsivePxSize(15)};
+    lineHeight:  ${responsivePxSize(21)};
+    letterSpacing: ${responsivePxSize(0.25)};
 `;
 
 /*---------------------------------------*/

@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react'
-import { View } from 'react-native'
+import { View, FlatList, Pressable } from 'react-native'
 import { AppWideImageContext } from 'main/sgImageContext'
 import { homeScreenListingsContext } from 'main/sgHomeScreenGames/sgGameListingScreen'
 import { Image } from 'expo-image'
@@ -13,13 +13,25 @@ import { useLoader } from 'server/config/loaderContext'
 import {
     Container,
     ContentContainer,
+    ContentRow,
     CurrentThemeContext,
+    imagesConfig,
     MainFont,
+    MiniButton,
+    MiniButtonFont,
     SafeAreaViewContainer,
     ScrollViewContainer,
     TouchableButton,
     TouchableButtonFont,
 } from 'index'
+
+//* First days of 2024 todos
+//TODO1: Make every image clickable and go to their respective game page
+//TODO2: Make the spotlight section clickable and go to the game page (Todo1)
+//TODO3: Make the console specific buttons clickable and go to their respective console page (Todo1)
+//TODO4: Add the logo to  (and throughout) the app
+//TODO6: Place Log In button on the bottom of the page
+//TODO7: Add game to the database (maybe 15-20 games across all consoles)
 
 export default function SgHomeScreen({ navigation, route }) {
     const { currentUID, currentUser, displayData, displayTopNewlyData, getGameDataSpotlight, toNewSection } = useAuth()
@@ -136,13 +148,13 @@ export default function SgHomeScreen({ navigation, route }) {
     //*-----------------------------------*/
 
     function findLaymanConsoleName(consoleName) {
-        if (consoleName == 'sgGenesis') return 'Sega Genesis'
-        if (consoleName == 'sg1000') return 'Sega SG-1000'  
-        if (consoleName == 'sgMS') return 'Sega Master System'
-        if (consoleName == 'sgGG') return 'Sega Game Gear'
-        if (consoleName == 'sgSat') return 'Sega Saturn'
-        if (consoleName == 'sg32X') return 'Sega 32X'
-        if (consoleName == 'sgCD') return 'Sega CD'
+        if (consoleName == 'sgGenesis') return 'Genesis'
+        if (consoleName == 'sg1000') return 'SG-1000'  
+        if (consoleName == 'sgMS') return 'Master System'
+        if (consoleName == 'sgGG') return 'Game Gear' //? Possibly remove this
+        if (consoleName == 'sgSat') return 'Saturn'
+        if (consoleName == 'sg32X') return '32X'
+        if (consoleName == 'sgCD') return 'CD'
     }
 
 
@@ -199,23 +211,32 @@ export default function SgHomeScreen({ navigation, route }) {
                     
                 )
             }
+            //* Buttons for the homepage
+            //? "sg{buttonIcon}Icon" is a placeholder for the icon name when calling "imagesConfig.sgGENIcon" from index.js
+                function homepagesDefinerButtonIcon(sgIcon) {
+                    const imageData = {
+                        height: 40,
+                        width: 40,
+                        contentFit: 'cover',
+                        borderRadius: 5,
+                        source: sgIcon,
+                        transition: 1000
+                    }
+                    return images.sgAPISearchCoverArtImage(imageData)
+                }
+                function homepagesDefinerButton(buttonIcon, buttonTitle) {
+                    return (
+                        <MiniButton>
+                            <ContentRow>
+                                {homepagesDefinerButtonIcon(buttonIcon)}
+                                <MiniButtonFont style={{padding: 10}}>{buttonTitle}</MiniButtonFont>
+                            </ContentRow>
+                        </MiniButton>
+                    )
+                }
+            //*---Buttons for the homepage---//
         //*-----Buttons-----*/
         //* Game Groups
-            function gameGroup(sectionTitle, sectionDescription, homeScreenGameArray, spotlightGrid) {
-                return (
-                    <View>
-                        <SgGameListings
-                            sectionTitle={sectionTitle}
-                            sectionDescription={sectionDescription}
-                            images={images}
-                            homeScreenGameArray={homeScreenGameArray}
-                            colors={colors}
-                            spotlightGrid={spotlightGrid}
-                        />
-                    </View>
-                )
-            }
-
             //* Spotlight Section
                 function gameGroupSpotlightCollection(gameGroupCollectionTitle, gameGroupCollectionDescription) {
                     const sectionTitle = gameGroupCollectionTitle
@@ -259,11 +280,45 @@ export default function SgHomeScreen({ navigation, route }) {
                 }
             //*---General Content Section---//
 
+            //* Console Icon Section
+                //TODO: Make the onPress function go to the console page
+                function sgConsoleIconButtonGroup() {
+                    const consoleListArray = [
+                        {id: 'sgGenesis', consoleName: 'Genesis', consoleIcon: imagesConfig.sgGENIcon},
+                        {id: 'sg1000', consoleName: 'SG-1000', consoleIcon: imagesConfig.sg1000Icon},
+                        {id: 'sgMS', consoleName: 'Master System', consoleIcon: imagesConfig.sgMSIcon},
+                        {id: 'sgGG', consoleName: 'Game Gear', consoleIcon: imagesConfig.sgGGIcon},
+                        {id: 'sgSat', consoleName: 'Saturn', consoleIcon: imagesConfig.sgSATIcon},
+                        {id: 'sg32X', consoleName: '32X', consoleIcon: imagesConfig.sg32XIcon},
+                        {id: 'sgCD', consoleName: 'CD', consoleIcon: imagesConfig.sgCDIcon}
+                    ]
+                    return (
+                        <FlatList
+                            contentContainerStyle={{}}
+                            horizontal={true}
+                            showsHorizontalScrollIndicator={false}
+                            data={consoleListArray}
+                            keyboardShouldPersistTaps="always"
+                            ItemSeparatorComponent={() => <View style={{ width: 20 }} />}
+                            keyExtractor={item => item.id}
+                            renderItem={({ item }) => (
+                                <View>
+                                    <Pressable onPress={() => console.log(item.consoleName)}>
+                                        {homepagesDefinerButton(item.consoleIcon, item.consoleName)}
+                                    </Pressable>
+                                </View>
+                            )}
+                        />
+                    )
+                }
+            //*---Console Icon Section---//
+
             //* Genre Sections
                 function homePageGameGroups(genreGroup) {
                     return (
                         <View>
                             {spotlightGameCollection()}
+                            {sgConsoleIconButtonGroup()}
                             {topRatedGamesCollection()}
                             {newlyAddedGamesCollection()}
                             {genreSpecificGameGroup(genreGroup[0].genreName, genreGroup[0].genreProvidedIndex, homeScreenGameArray2)}
