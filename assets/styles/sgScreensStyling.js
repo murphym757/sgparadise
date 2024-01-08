@@ -38,20 +38,18 @@ export const PopGamesView = styled(View) `
 /* Sg Home Screen */
 /*---------------------------------------*/
 export const MiniButton = styled(View) `
-    backgroundColor: ${currentTheme.secondaryColor};
     paddingVertical: ${responsivePxSize(2)};
     paddingHorizontal: ${responsivePxSize(2)};
-    borderRadius: ${responsivePxSize(4)};
+    borderWidth: ${responsivePxSize(1)};
+    borderRadius: ${responsivePxSize(12)};
     alignItems: 'center';
     justifyContent: 'center';
 `;
 
 export const MiniButtonFont = styled(Text) `
-    color: ${currentTheme.primaryColor};
     fontFamily: ${currentTheme.fontsGroup.appWideFontSecondary};
     fontSize: ${responsivePxSize(15)};
     lineHeight:  ${responsivePxSize(21)};
-    letterSpacing: ${responsivePxSize(0.25)};
 `;
 
 /*---------------------------------------*/

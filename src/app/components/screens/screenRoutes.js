@@ -65,6 +65,7 @@ export default function ScreenRoutes() {
   
   function SgUserStackNavbar() {
     const colors = useContext(CurrentThemeContext)
+    //TODO: Create a new route for pressing the console buttons to display console specific data
     return (
       <Tab.Navigator
         initialRouteName="MainScreen"
@@ -100,6 +101,7 @@ export default function ScreenRoutes() {
   }
   
   function SgGameStack() {
+    //TODO: Create a new route for pressing the console buttons to display console specific data
     return (
       <Stack.Navigator initialRouteName="Game">
         <Stack.Screen

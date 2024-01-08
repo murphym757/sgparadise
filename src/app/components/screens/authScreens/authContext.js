@@ -318,12 +318,12 @@ export function AuthProvider({ children }) {
     }
     
     //* Get the Games Collection for Top 4 (Newly Added, Highest Rated) games
-        function topGamesCollection(sgConsoleName, sgWhereStatus, sgWhere, sgOrder) {
+        function topGamesCollection(sgConsoleName, sgWhereStatus, sgWhere, sgOperator, sgOrder, sgSort) {
             const collectionData = collection(sgDB, 'sgAPI', sgConsoleName, 'games')
             const typeData = sgWhereStatus === true
-                ?   where("gameRating", ">", sgWhere)
+                ?   where(sgOrder, sgOperator, sgWhere)
                 :   null
-            const orderData = orderBy(sgOrder, 'desc')
+            const orderData = orderBy(sgSort, 'desc')
             const limitData = limit(4)
             return (
                 query(collectionData, typeData, orderData, limitData)
@@ -331,35 +331,13 @@ export function AuthProvider({ children }) {
         }
     //*----- Top 4 Games -----//
 
-    async function displayTopNewlyData(sgConsoleName, sgWhereStatus, sgWhere, sgOrder, setGameArrayTest) {
-        const q = topGamesCollection(sgConsoleName, sgWhereStatus, sgWhere, sgOrder, setGameArrayTest)
+    async function displayTopNewlyData(sgConsoleName, sgWhereStatus, sgWhere, sgOperator, sgOrder, sgSort, setGameArrayTest) {
+        const q = topGamesCollection(sgConsoleName, sgWhereStatus, sgWhere, sgOperator, sgOrder, sgSort, setGameArrayTest)
         const querySnapshot = await getDocs(q)
         querySnapshot.forEach((doc) => {
             setGameArrayTest(querySnapshot.docs.map(doc => doc.data()))
         })
     }
-
-    //* Query Collection for specific data ----- IMPORTANT: Use this
-        function queryCollectionStructure(collectionName, sgConsoleName, sgProvidedParameterType, sgReceivedParameterType, sgProvidedSecondaryParameterType, sgProvidedSecondaryParameterTypeOrder) {
-            const collectionData = collection(sgDB, collectionName, sgConsoleName, 'games')
-            const typeData = where(sgProvidedParameterType, "==", sgReceivedParameterType)
-            const orderData = orderBy(sgProvidedSecondaryParameterType, sgProvidedSecondaryParameterTypeOrder)
-            const limitData = limit(4)
-            return (
-                query(collectionData, typeData, orderData, limitData)
-            )
-        }
-    //*-----Query Collection for specific data-----*//
-
-    async function displayData(collectionName, sgConsoleName, sgProvidedParameterType, sgReceivedParameterType, sgProvidedSecondaryParameterType, sgProvidedSecondaryParameterTypeOrder, setGameArrayTest) {
-        const q = queryCollectionStructure(collectionName, sgConsoleName, sgProvidedParameterType, sgReceivedParameterType, sgProvidedSecondaryParameterType, sgProvidedSecondaryParameterTypeOrder)
-        const querySnapshot = await getDocs(q)
-        querySnapshot.forEach((doc) => {
-            setGameArrayTest(querySnapshot.docs.map(doc => doc.data()))
-        })
-    }
-
-   
 
     //* Batch write to add multiple documents to a collection
     
@@ -650,7 +628,6 @@ export function AuthProvider({ children }) {
         sgDB.collection(collectionName).doc(consoleName).collection(gamesCollection).doc(gameName).delete()
     }
     
-    /*
         function displayData(collectionName, docName, objectName) {
         return sgDB.collection(collectionName).doc(docName)
         .onSnapshot((doc) => {
@@ -664,7 +641,6 @@ export function AuthProvider({ children }) {
             console.log("Error getting document:", err)
         })
     }
-    */
 
     // Returns data from firebase based on a specific subgenre
     async function sgFirebaseGamesCollectionSubGenre(collectiveGameData) {

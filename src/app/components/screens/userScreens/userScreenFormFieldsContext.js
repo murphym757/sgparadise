@@ -87,7 +87,7 @@ function sgFormFieldNonSecure(sgPlaceholderFiled, sgChangeTextField, sgValueFiel
 
 function firebaseAuthUserDataFunctionButton(registerType, buttonTitle, passingUserData, isLoading, colors) {
     return (
-        <TouchableButton style={{backgroundColor: colors.secondaryColor }}
+        <TouchableButton style={{ backgroundColor: colors.secondaryColor }}
             disabled={isLoading}
             onPress={
             registerType === 'login'

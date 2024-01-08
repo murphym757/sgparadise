@@ -34,13 +34,14 @@ import {
 //TODO7: Add game to the database (maybe 15-20 games across all consoles)
 
 export default function SgHomeScreen({ navigation, route }) {
-    const { currentUID, currentUser, displayData, displayTopNewlyData, getGameDataSpotlight, toNewSection } = useAuth()
+    const { currentUID, currentUser, displayTopNewlyData, getGameDataSpotlight, toNewSection } = useAuth()
     const { state, dispatch } = useLoader()
     const isLoading = state.isLoading
     const d = new Date()
     let month = d.getMonth()
     
     // For Spotlight Section
+    const [activeButton, setActiveButton] = useState(null)
     const [currentMonth, setCurrentMonth] = useState()
     const [homeScreenGameArray1, setHomeScreenGameArray1] = useState([])
     const [homeScreenGameArray2, setHomeScreenGameArray2] = useState([])
@@ -55,49 +56,40 @@ export default function SgHomeScreen({ navigation, route }) {
     const monthlyGameListings = useContext(monthlyGameListingsContext)
     const sectionHeadings = useContext(sectionHeadingsContext)
 
-    function sectionPassedData(passedDataGenre, passedDataIndex) {
-        if (passedDataGenre === 'Action') return [
-            sectionHeadings.actionSectionHeadings[passedDataIndex].sectionHeadingData.sectionSubGenre,
-            sectionHeadings.actionSectionHeadings[passedDataIndex].sectionHeadingData.sectionTitle,
-            sectionHeadings.actionSectionHeadings[passedDataIndex].sectionHeadingData.sectionDescription
-        ]
-        if (passedDataGenre === 'Educational') return [
-            sectionHeadings.educationalSectionHeadings[passedDataIndex].sectionHeadingData.sectionSubGenre,
-            sectionHeadings.educationalSectionHeadings[passedDataIndex].sectionHeadingData.sectionTitle,
-            sectionHeadings.educationalSectionHeadings[passedDataIndex].sectionHeadingData.sectionDescription
-        ]
-        if (passedDataGenre === 'RPG') return [
-            sectionHeadings.rpgSectionHeadings[passedDataIndex].sectionHeadingData.sectionSubGenre,
-            sectionHeadings.rpgSectionHeadings[passedDataIndex].sectionHeadingData.sectionTitle,
-            sectionHeadings.rpgSectionHeadings[passedDataIndex].sectionHeadingData.sectionDescription
-        ]
-        if (passedDataGenre === 'Simulation') return [
-            sectionHeadings.simulationSectionHeadings[passedDataIndex].sectionHeadingData.sectionSubGenre,
-            sectionHeadings.simulationSectionHeadings[passedDataIndex].sectionHeadingData.sectionTitle,
-            sectionHeadings.simulationSectionHeadings[passedDataIndex].sectionHeadingData.sectionDescription
-        ]
-        if (passedDataGenre === 'Sports') return [
-            sectionHeadings.sportsSectionHeadings[passedDataIndex].sectionHeadingData.sectionSubGenre,
-            sectionHeadings.sportsSectionHeadings[passedDataIndex].sectionHeadingData.sectionTitle,
-            sectionHeadings.sportsSectionHeadings[passedDataIndex].sectionHeadingData.sectionDescription
-        ]
-        if (passedDataGenre === 'Strategy') return [
-            sectionHeadings.strategySectionHeadings[passedDataIndex].sectionHeadingData.sectionSubGenre,
-            sectionHeadings.strategySectionHeadings[passedDataIndex].sectionHeadingData.sectionTitle,
-            sectionHeadings.strategySectionHeadings[passedDataIndex].sectionHeadingData.sectionDescription
+    function sectionHeadingsArray(passedDataIndex, genreTitleHeadings) {
+        return [
+            genreTitleHeadings[passedDataIndex].sectionHeadingData.sectionSubGenre,
+            genreTitleHeadings[passedDataIndex].sectionHeadingData.sectionTitle,
+            genreTitleHeadings[passedDataIndex].sectionHeadingData.sectionDescription
         ]
     }
 
+    function sectionPassedData(passedDataGenre, passedDataIndex) {
+        if (passedDataGenre === 'Action') return (sectionHeadingsArray(passedDataIndex, sectionHeadings.actionSectionHeadings))
+        if (passedDataGenre === 'Educational') return (sectionHeadingsArray(passedDataIndex, sectionHeadings.educationalSectionHeadings))
+        if (passedDataGenre === 'RPG') return (sectionHeadingsArray(passedDataIndex, sectionHeadings.rpgSectionHeadings))
+        if (passedDataGenre === 'Simulation') return (sectionHeadingsArray(passedDataIndex, sectionHeadings.simulationSectionHeadings))
+        if (passedDataGenre === 'Sports') return (sectionHeadingsArray(passedDataIndex, sectionHeadings.sportsSectionHeadings))
+        if (passedDataGenre === 'Strategy') return (sectionHeadingsArray(passedDataIndex, sectionHeadings.strategySectionHeadings))
+    }
+
+    //* Important: I have to reset the homeScreenGameArray's to an empty array before setting the new data. If I don't, the data will not update
     function monthlyGameData(consoleOfMonth, gameOfTheMonth, genreOfTheMonth, nameOfMonth) {
         return (
-            homePageStructure(consoleOfMonth,  genreOfTheMonth[0].genreName, genreOfTheMonth[0].genreProvidedIndex, genreOfTheMonth[1].genreName, genreOfTheMonth[1].genreProvidedIndex, genreOfTheMonth[2].genreName, genreOfTheMonth[2].genreProvidedIndex), 
+            activeButton !== null 
+            ? homePageStructure(activeButton,  genreOfTheMonth[0].genreName, genreOfTheMonth[0].genreProvidedIndex, genreOfTheMonth[1].genreName, genreOfTheMonth[1].genreProvidedIndex, genreOfTheMonth[2].genreName, genreOfTheMonth[2].genreProvidedIndex)
+            : homePageStructure(consoleOfMonth,  genreOfTheMonth[0].genreName, genreOfTheMonth[0].genreProvidedIndex, genreOfTheMonth[1].genreName, genreOfTheMonth[1].genreProvidedIndex, genreOfTheMonth[2].genreName, genreOfTheMonth[2].genreProvidedIndex), 
             getGameDataSpotlight(consoleOfMonth, setSpotlightGame, gameOfTheMonth),
-            setCurrentMonth(nameOfMonth)
+            setCurrentMonth(nameOfMonth),
+            setHomeScreenGameArray2([]),
+            setHomeScreenGameArray3([]),
+            setHomeScreenGameArray4([])
         )
     }
 
     function dateCheck() {
-        if (month == 0) return monthlyGameData('sgGenesis', '', monthlyGameListings.genreGroupJan, 'January')
+        if (month == 0) return monthlyGameData('sgGenesis', 'sonic-the-hedgehog-2', monthlyGameListings.genreGroupJan, 'January')
+        //if (month == 0) return monthlyGameData('sgGenesis', '', monthlyGameListings.genreGroupJan, 'January')
         if (month == 1) return monthlyGameData('sg32X', '', monthlyGameListings.genreGroupFeb, 'February')
         if (month == 2) return monthlyGameData('sgGenesis', '', monthlyGameListings.genreGroupMar, 'March')
         if (month == 3) return monthlyGameData('sgMS', '', monthlyGameListings.genreGroupApr, 'April')
@@ -115,7 +107,8 @@ export default function SgHomeScreen({ navigation, route }) {
     //* Structure of the Home Page
         function homePageStructure(sgConsole, sgGenre1, sgGenre1Index, sgGenre2, sgGenre2Index, sgGenre3, sgGenre3Index) {
             //* Console and Genre Buttons Group 'displayData' function --- Need to be completed
-            
+            //TODO: Fix bug where the console buttons change the data shown for 'newly added' and 'top rated', but not for the genre specific data
+    
             {topRatedCollection(sgConsole)}
             {newlyAddedCollection(sgConsole)}
             {genreSpecificCollection(sgConsole, sectionPassedData(sgGenre1, sgGenre1Index)[0], setHomeScreenGameArray2)}
@@ -124,13 +117,13 @@ export default function SgHomeScreen({ navigation, route }) {
         }
 
         function topRatedCollection(sgConsole) {
-            return displayTopNewlyData(sgConsole, true, 4, 'gameRating', setHomeScreenGameArray1)
+            return displayTopNewlyData(sgConsole, true, 4, '>', 'gameRating', 'gameRating', setHomeScreenGameArray1)
         }
         function newlyAddedCollection(sgConsole) {
-            return displayTopNewlyData(sgConsole, false, null, 'createdAt', setHomeScreenGameArray5)
+            return displayTopNewlyData(sgConsole, false, null, null, null, 'createdAt', setHomeScreenGameArray5)
         }
         function genreSpecificCollection(sgConsole, sgSpecificGenre, setHomeScreenGameArray) {
-            return displayData('sgAPI', sgConsole, 'gameSubgenre', sgSpecificGenre, 'gameName', 'desc', setHomeScreenGameArray)
+            return displayTopNewlyData(sgConsole, true, sgSpecificGenre, '==', 'gameSubgenre', 'gameName', setHomeScreenGameArray)
         }
     //*----Structure of the Home Page----*/
 
@@ -144,7 +137,7 @@ export default function SgHomeScreen({ navigation, route }) {
             }, 2000)
         
             return () => clearTimeout(timeoutId)
-        }, [currentUID, dispatch])
+        }, [currentUID, dispatch, activeButton])
     //*-----------------------------------*/
 
     function findLaymanConsoleName(consoleName) {
@@ -224,14 +217,16 @@ export default function SgHomeScreen({ navigation, route }) {
                     }
                     return images.sgAPISearchCoverArtImage(imageData)
                 }
-                function homepagesDefinerButton(buttonIcon, buttonTitle) {
+                function homepagesDefinerButton(buttonIcon, buttonTitle, miniStyling) {
                     return (
-                        <MiniButton>
-                            <ContentRow>
-                                {homepagesDefinerButtonIcon(buttonIcon)}
-                                <MiniButtonFont style={{padding: 10}}>{buttonTitle}</MiniButtonFont>
-                            </ContentRow>
-                        </MiniButton>
+                        <View style={{paddingVertical: 20}}>
+                            <MiniButton style={{backgroundColor: miniStyling.backgroundColor, borderColor: miniStyling.borderColor}}>
+                                <ContentRow style={{paddingHorizontal: 10}}>
+                                    {homepagesDefinerButtonIcon(buttonIcon)}
+                                    <MiniButtonFont style={{padding: 10, color: miniStyling.color}}>{buttonTitle}</MiniButtonFont>
+                                </ContentRow>
+                            </MiniButton>
+                        </View>
                     )
                 }
             //*---Buttons for the homepage---//
@@ -292,6 +287,33 @@ export default function SgHomeScreen({ navigation, route }) {
                         {id: 'sg32X', consoleName: '32X', consoleIcon: imagesConfig.sg32XIcon},
                         {id: 'sgCD', consoleName: 'CD', consoleIcon: imagesConfig.sgCDIcon}
                     ]
+                    const handleButtonPress = (buttonId) => {
+                        setActiveButton(buttonId);
+                        console.log(`Button ${buttonId} pressed`);
+                    };
+                    const defaultStyling = {
+                        backgroundColor: colors.primaryColor,
+                        borderColor: colors.secondaryFontColor,
+                        color: colors.secondaryColor
+                    }
+                    const activeStyling = {
+                        backgroundColor: colors.secondaryColor,
+                        borderColor: colors.secondaryFontColor,
+                        color: colors.primaryColor
+                    }
+                    const renderItem = ({ item }) => {
+                        const isPressed = activeButton === item.id
+                        const itemStyle = isPressed ? activeStyling : defaultStyling
+
+                        return (
+                            <View>
+                                <Pressable onPress={() => handleButtonPress(item.id)}>
+                                    {homepagesDefinerButton(item.consoleIcon, item.consoleName, itemStyle)}
+                                </Pressable>
+                            </View>
+                        )
+                    }
+                    
                     return (
                         <FlatList
                             contentContainerStyle={{}}
@@ -301,15 +323,9 @@ export default function SgHomeScreen({ navigation, route }) {
                             keyboardShouldPersistTaps="always"
                             ItemSeparatorComponent={() => <View style={{ width: 20 }} />}
                             keyExtractor={item => item.id}
-                            renderItem={({ item }) => (
-                                <View>
-                                    <Pressable onPress={() => console.log(item.consoleName)}>
-                                        {homepagesDefinerButton(item.consoleIcon, item.consoleName)}
-                                    </Pressable>
-                                </View>
-                            )}
+                            renderItem={renderItem}
                         />
-                    )
+                    );
                 }
             //*---Console Icon Section---//
 
@@ -353,8 +369,8 @@ export default function SgHomeScreen({ navigation, route }) {
                             {isLoading !== true 
                                 ? <Container>
                                         <MainFont>Logo</MainFont>
-                                        {homepageButtonLayout()}
                                         {homepageMonthlyGameGroups()}
+                                        {homepageButtonLayout()}
                                     </Container>
                                 :   <ContentContainer>
                                         {loadingScreen()}
