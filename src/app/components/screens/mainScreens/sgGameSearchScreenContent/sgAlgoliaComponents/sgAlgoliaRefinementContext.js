@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button, ScrollView, Text, TouchableOpacity, View } from 'react-native';
-import { useClearRefinements, useRefinementList } from 'react-instantsearch-hooks';
+import { useClearRefinements, useRefinementList } from 'react-instantsearch-core';
 import { RFValue } from "react-native-responsive-fontsize";
 import { AlgoliaSearchListLabelText, windowHeight } from 'index';
 

@@ -87,14 +87,12 @@ function reducer(state, action) {
 export function AuthProvider({ children }) {
     const [state, dispatch] = useReducer(reducer, initialState)
     const [currentUID, setCurrentUID] = useState()
-    console.log("🚀 ~ file: authContext.js:88 ~ AuthProvider ~ currentUID:", currentUID)
     const [currentUser, setCurrentUser] = useState()
     const [entries, setEntries] = useState([])
     const [entryText, setEntryText] = useState('')
     const [notLoggedInCurrentUser, setNotLoggedInCurrentUser ] = useState()
     const [stateTest, setStateTest] = useState('')
     const [viewCountFirebase, setViewCountFirebase] = useState(0)
-    console.log("🚀 ~ file: authContext.js:42 ~ AuthProvider ~ entries:", entries)
     const errorBool = true
     const sg1000IGDB = '84'
     const sg32XIGDB = '30'
@@ -213,7 +211,6 @@ export function AuthProvider({ children }) {
                 setCheckUsernameExistence(true)
             }
         // doc.data() is never undefined for query doc snapshots
-        console.log(doc.id, " = ", doc.data());
         });
 
     }
@@ -264,7 +261,6 @@ export function AuthProvider({ children }) {
             email,
             password
         )
-    console.log("🚀 ~ file: authContext.js:198 ~ firebaseReauthenticateViaEmail ~ credential:", credential)
     reauthenticateWithCredential(user, credential).then(() => {
         // User re-authenticated.
             console.log('The User have been re-authenticated.')
@@ -303,14 +299,15 @@ export function AuthProvider({ children }) {
         console.log(doc.id, " => ", doc.data());
         });
     }
-
+    //TODO: Only retrieve the game data consisting of the game name, game slug, game cover, release date and game rating
     //* Get game data from firebase (for spotlight)
-    async function getGameDataSpotlight(sgConsoleName, setSpotlightGame, gameName) {
+    async function getGameDataSpotlight(sgConsoleName, setSpotlightGame, setSpotlightGameNameLength, gameName) {
         const gameRef = doc(sgDB, 'sgAPI', sgConsoleName, 'games', gameName)
         const gameSnap = await getDoc(gameRef);
 
         if (gameSnap.exists()) {
             setSpotlightGame(gameSnap.data())
+            setSpotlightGameNameLength(gameSnap.data().gameName.length)
         } else {
         // docSnap.data() will be undefined in this case
         console.log("No such document!");

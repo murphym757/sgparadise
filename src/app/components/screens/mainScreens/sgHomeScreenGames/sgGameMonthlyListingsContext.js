@@ -13,7 +13,8 @@ const genreGroupFeb = [
 ]
 
 const genreGroupMar = [
-    {genreName: 'RPG', genreProvidedIndex: 1},
+    //{genreName: 'RPG', genreProvidedIndex: 1},
+    {genreName: 'Action', genreProvidedIndex: 2},
     {genreName: 'Sports', genreProvidedIndex: 2},
     {genreName: 'Simulation', genreProvidedIndex: 5}
 ]

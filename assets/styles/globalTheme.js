@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { Appearance } from 'react-native';
 
 // Sg Paradise 3 Default Color Scheme
 const primaryColor = 'rgb(228, 218, 214)' // Timberwolf
@@ -28,6 +29,7 @@ const sgUniStyles = {
     failureAlertFont,
     failureAlertColor: secondaryColor,
     white,
+    offWhite: primaryColor,
     black,
     offBlack,
     imageOpacityOverlay: primaryColorAlt,
@@ -62,6 +64,7 @@ const sgParadiseDefaultTheme = {
         secondaryColorAlt: secondaryColorAlt,
         primaryFontColor: primaryColorAlt,
         secondaryFontColor: secondaryFontColorAlt,
+        offWhite: primaryColor,
         sgUniStyles,
         fontsGroup
     },
@@ -74,20 +77,22 @@ const sgParadiseDefaultTheme = {
         secondaryColorAlt: secondaryColor,
         primaryFontColor: primaryColor,
         secondaryFontColor: secondaryFontColor,
+        offWhite: primaryColor,
         sgUniStyles,
         fontsGroup
     }
     
 }
-// Checks for night hours
-let currentTime = new Date()
-export let time = currentTime.getHours()
-export const dayTime = time >= 17 || time < 7
-export const nightTime = time <= 17 || time > 7
+//* Checks for night hours (No longer needed, but useful for future reference)
+//let currentTime = new Date()
+//export let time = currentTime.getHours()
+//export const dayTime = time >= 17 || time < 7
+//export const nightTime = time <= 17 || time > 7
 
 function themeSelector() {
-    if (dayTime) return sgParadiseDefaultTheme.dark
-    if (nightTime) return sgParadiseDefaultTheme.light
+    const colorScheme = Appearance.getColorScheme();
+    if (colorScheme === 'dark') return sgParadiseDefaultTheme.dark
+    if (colorScheme === 'light') return sgParadiseDefaultTheme.light
 }
 export const currentTheme = themeSelector()
 

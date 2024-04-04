@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react'
 import { Alert, Modal, StyleSheet, SafeAreaView, Text, View, Pressable } from 'react-native'
 import { customRefinementContext } from 'main/sgGameSearchScreenContent/sgAlgoliaComponents/sgAlgoliaRefinementContext'
-import { useClearRefinements } from 'react-instantsearch-hooks'
+import { useClearRefinements } from 'react-instantsearch-core'
 import {
   ViewContainer,
   ContentContainer,

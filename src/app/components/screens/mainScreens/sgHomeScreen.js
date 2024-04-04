@@ -90,7 +90,7 @@ export default function SgHomeScreen({ navigation, route }) {
     function dateCheck() {
         if (month == 0) return monthlyGameData('sgGenesis', 'sonic-the-hedgehog-2', monthlyGameListings.genreGroupJan, 'January')
         //if (month == 0) return monthlyGameData('sgGenesis', '', monthlyGameListings.genreGroupJan, 'January')
-        if (month == 1) return monthlyGameData('sg32X', '', monthlyGameListings.genreGroupFeb, 'February')
+        if (month == 1) return monthlyGameData('sgGenesis', 'streets-of-rage-2', monthlyGameListings.genreGroupFeb, 'February')
         if (month == 2) return monthlyGameData('sgGenesis', '', monthlyGameListings.genreGroupMar, 'March')
         if (month == 3) return monthlyGameData('sgMS', '', monthlyGameListings.genreGroupApr, 'April')
         if (month == 4) return monthlyGameData('sgSat', '', monthlyGameListings.genreGroupMay, 'May')
@@ -329,11 +329,39 @@ export default function SgHomeScreen({ navigation, route }) {
                 }
             //*---Console Icon Section---//
 
+            
+            
             //* Genre Sections
+            function homePageGameGroupHeader() {
+                return (
+                    activeButton !== null 
+                        ? consoleHomePageStructure() 
+                        : spotlightGameCollection()
+                    
+                )
+            }
+
+            //* Console Page (Maybe move this to a different file)
+            //TODO: Create another call to the firebase cloud for just console data
+                function consoleHomePageStructure() {
+                    return (
+                        <Container>
+                                <Pressable onPress={() => setActiveButton(null)}>
+                                    <MainFont>Back Button</MainFont>
+                                </Pressable>
+                            <MainFont>Console Name</MainFont>
+                            <MainFont>Console Release Date</MainFont>
+                            <MainFont>Console Generation</MainFont>
+                            <MainFont>Console Timeline</MainFont>
+                            <MainFont>Console Description</MainFont>
+                        </Container>
+                    )
+                }
+            //*-----Console Page-----*/
                 function homePageGameGroups(genreGroup) {
                     return (
                         <View>
-                            {spotlightGameCollection()}
+                            {homePageGameGroupHeader()}
                             {sgConsoleIconButtonGroup()}
                             {topRatedGamesCollection()}
                             {newlyAddedGamesCollection()}

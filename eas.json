@@ -22,6 +22,12 @@
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {
+        "appleId": "seapanter305@gmail.com",
+        "ascAppId": "6477732728",
+        "appleTeamId": "VGXS3PGK27"
+      }
+    }
   }
 }

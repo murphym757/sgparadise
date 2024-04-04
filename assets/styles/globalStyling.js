@@ -155,7 +155,6 @@ export const BackButtonBottomLayer = styled(View) `
 /*---------------------------------------*/
 
 export const LinkedContentGenreView = styled(View) `
-    paddingVertical: ${responsivePxSize(20)};
 `;
 
 export const LinkedContentGeneralInfoView = styled(View) `

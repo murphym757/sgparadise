@@ -1,5 +1,5 @@
 import React, { useRef, useState, useContext } from 'react';
-import { useSearchBox } from 'react-instantsearch-hooks';
+import { useSearchBox } from 'react-instantsearch-core';
 import { RFValue } from "react-native-responsive-fontsize";
 import { 
     CurrentThemeContext,

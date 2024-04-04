@@ -2,7 +2,7 @@ import React, { forwardRef, useState, useContext } from 'react'
 import { StyleSheet, View, FlatList, Text, TouchableOpacity } from 'react-native'
 import { AppWideImageContext } from 'main/sgImageContext'
 import { homeScreenGenreContext } from 'main/sgHomeScreenContext'
-import { useInfiniteHits, usePagination } from 'react-instantsearch-hooks'
+import { useInfiniteHits, usePagination } from 'react-instantsearch-core'
 import { 
   algoliaConfig,
   CurrentThemeContext,

@@ -129,7 +129,7 @@ export default function GameScreen({navigation, route}) {
 
         function PrimaryGamePageStructure() {
             const passingPrimaryGamePageData = {
-                currentGameArray, navigation, colors, gamePageCoverImages
+                currentGameArray, gamePageCoverImages
             }
             return gameScreenFunc.gameLandingPage(passingPrimaryGamePageData)
         }

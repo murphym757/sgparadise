@@ -1,7 +1,8 @@
 {
   "expo": {
+    "owner": "murphym757",
     "name": "Sg Paradise",
-    "slug": "sg-paradise",
+    "slug": "sgparadise",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -10,11 +11,8 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "scheme": "sgparadise-app-scheme",
     "userInterfaceStyle": "automatic",
-    /*"updates": {
-      "fallbackToCacheTimeout": 0,
-      "url": "https://u.expo.dev/53789bae-3cfb-4d0a-9c25-73866c02b858"
-    },*/
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -23,9 +21,6 @@
       "buildNumber": "1.0.0",
       "supportsTablet": true,
       "userInterfaceStyle": "automatic"
-      /*"runtimeVersion": {
-        "policy": "appVersion"
-      }*/
     },
     "android": {
       "adaptiveIcon": {
@@ -34,15 +29,48 @@
       },
       "userInterfaceStyle": "automatic",
       "package": "com.sgparadise.sgparadise"
-      //"runtimeVersion": "1.0.0"
     },
     "web": {
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/favicon.png",
+      "bundler": "metro"
     },
     "extra": {
       "eas": {
         "projectId": "53789bae-3cfb-4d0a-9c25-73866c02b858"
       }
+    },
+    "plugins": [
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./assets/fonts/spartanFonts/Spartan-Black.ttf",
+            "./assets/fonts/spartanFonts/Spartan-Bold.ttf",
+            "./assets/fonts/spartanFonts/Spartan-ExtraBold.ttf",
+            "./assets/fonts/spartanFonts/Spartan-ExtraLight.ttf",
+            "./assets/fonts/spartanFonts/Spartan-Light.ttf",
+            "./assets/fonts/spartanFonts/Spartan-Medium.ttf",
+            "./assets/fonts/spartanFonts/Spartan-Regular.ttf",
+            "./assets/fonts/spartanFonts/Spartan-SemiBold.ttf",
+            "./assets/fonts/spartanFonts/Spartan-Thin.ttf",
+            "./assets/fonts/lemonMilkFonts/LEMONMILK-Bold.otf",
+            "./assets/fonts/lemonMilkFonts/LEMONMILK-BoldItalic.otf",
+            "./assets/fonts/lemonMilkFonts/LEMONMILK-Light.otf",
+            "./assets/fonts/lemonMilkFonts/LEMONMILK-LightItalic.otf",
+            "./assets/fonts/lemonMilkFonts/LEMONMILK-Medium.otf",
+            "./assets/fonts/lemonMilkFonts/LEMONMILK-MediumItalic.otf",
+            "./assets/fonts/lemonMilkFonts/LEMONMILK-Regular.otf",
+            "./assets/fonts/lemonMilkFonts/LEMONMILK-RegularItalic.otf"
+          ]
+        }
+      ],
+      "expo-router"
+    ],
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/53789bae-3cfb-4d0a-9c25-73866c02b858"
     }
   }
 }
