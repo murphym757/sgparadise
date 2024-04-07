@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { View, FlatList, SafeAreaView, TouchableOpacity, ActivityIndicator } from 'react-native'
+import { View, FlatList, SafeAreaView, Pressable, ActivityIndicator } from 'react-native'
 import { AppWideImageContext } from 'main/sgImageContext'
 import axios from 'axios'
 import { createNativeStackNavigatorigator } from '@react-navigation/native-stack'
@@ -196,12 +196,12 @@ export default function SgConsoleListScreens({route, navigation}, props) {
                             keyExtractor={item => item.id}
                             renderItem={({ item }) => (
                             <View>
-                                <TouchableOpacity onPress={() => setConsoleId(item)}>
+                                <Pressable onPress={() => setConsoleId(item)}>
                                     {consoleListImage(item)}
                                     {isLoading && (
                                         <ActivityIndicator size="large" />
                                     )}
-                                </TouchableOpacity>
+                                </Pressable>
                             </View>
                             )}
                         />

@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { View, FlatList, TouchableOpacity } from 'react-native'
+import { View, FlatList, Pressable } from 'react-native'
 import {
     CurrentThemeContext,
     faTimesCircle,
@@ -40,7 +40,7 @@ export function TagsProvider({ children }) {
                 keyboardShouldPersistTaps="always"
                 keyExtractor={item => item.id}
                 renderItem={({ item }) => (
-                    <TouchableOpacity style={{  
+                    <Pressable style={{  
                         margin: 3,
                         borderWidth: 1,
                         borderRadius: 50,
@@ -64,7 +64,7 @@ export function TagsProvider({ children }) {
                                 icon={ faTimesCircle } color={colors.primaryFontColor} size={16}
                             />
                         </View>
-                    </TouchableOpacity>
+                    </Pressable>
                 )}
             />
             </View>
@@ -87,7 +87,7 @@ export function TagsProvider({ children }) {
                     keyboardShouldPersistTaps="always"
                     keyExtractor={item => item.id}
                     renderItem={({ item }) => (
-                        <TouchableOpacity 
+                        <Pressable 
                         style={{  
                             margin: 3,
                             borderWidth: 1,
@@ -111,7 +111,7 @@ export function TagsProvider({ children }) {
                             icon={ faTimesCircle } color={colors.primaryFontColor} size={16}
                         />
                         </View>
-                    </TouchableOpacity>
+                    </Pressable>
                     )}
                 />
             )
@@ -132,7 +132,7 @@ export function TagsProvider({ children }) {
                 keyboardShouldPersistTaps="always"
                 keyExtractor={item => item.id}
                 renderItem={({ item }) => (
-                    <TouchableOpacity 
+                    <Pressable 
                     style={{ 
                         flex: 1, 
                         justifyContent: 'center', 
@@ -150,7 +150,7 @@ export function TagsProvider({ children }) {
                                 icon={ item.tagIcon } color={colors.primaryColorLight} size={35} 
                             />
                         </View>
-                </TouchableOpacity>
+                </Pressable>
                 )}
             />
         )

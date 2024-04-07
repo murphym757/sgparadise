@@ -398,11 +398,8 @@ export default function Page() {
         }, [fontsLoaded, fontError])
     
         if (!fontsLoaded && !fontError) { return null }
-
-        console.log('Test config for later')
         return (
             <View style={styles.container} onLayout={onLayoutRootView}>
-                <Stack.Screen />
                 <View style={styles.main}>
                     {isLoading
                         ?   activityIndicator()

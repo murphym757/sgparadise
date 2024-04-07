@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { View, FlatList, TouchableOpacity } from 'react-native'
+import { View, FlatList, Pressable } from 'react-native'
 import { AppWideImageContext } from 'main/sgImageContext'
 import {
     MainFont,
@@ -67,7 +67,7 @@ function sgGameListingSpotlight(passingSectionData, item, laymanConsoleName, con
     
     return (
         <View style={{paddingBottom: 75, flex: 1, flexDirection: 'column'}}>
-            <TouchableOpacity style={{height:100, marginTop: 3, marginBottom: 100}}
+            <Pressable style={{height:100, marginTop: 3, marginBottom: 100}}
                 onPress={() => passDataToNextPage(passingSectionData.navigation, item, consoleName)}>
                 <View style={{
                     position: 'relative'
@@ -106,7 +106,7 @@ function sgGameListingSpotlight(passingSectionData, item, laymanConsoleName, con
                             </View>
                     </ViewTopRow>
                 </View>
-            </TouchableOpacity>
+            </Pressable>
         </View>
     )
 }
@@ -141,7 +141,7 @@ function sgGameListing(passingSectionData, item, consoleName) {
     const coverWidth = 125
     const nameValue = item.gameName
     return (
-        <TouchableOpacity style={{height:125, marginTop: 3, marginBottom: 100}}
+        <Pressable style={{height:125, marginTop: 3, marginBottom: 100}}
             onPress={() => passDataToNextPage(passingSectionData.navigation, item, consoleName)}>
             {gameCoverListingHomeScreen()}
             <View style={{paddingVertical: 5}}>
@@ -149,7 +149,7 @@ function sgGameListing(passingSectionData, item, consoleName) {
             </View>
             <MainFont>{item.gameReleaseDate}</MainFont>
             <MainFont>{item.gameRating} <passingSectionData.FontAwesomeIcon icon={ passingSectionData.faStar } color={passingSectionData.colors.secondaryColor} size={15} /></MainFont>
-        </TouchableOpacity>
+        </Pressable>
     )
 }
 

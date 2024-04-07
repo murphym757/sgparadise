@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useContext } from 'react';
-import { View, SafeAreaView, Pressable, TouchableOpacity, Text } from 'react-native';
+import { View, SafeAreaView, Pressable, Text } from 'react-native';
 import { useAuth } from 'auth/authContext'
 import { useIconCreator } from 'user/userIconContext'
 import {

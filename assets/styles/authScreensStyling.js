@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { View, Text, TextInput, Dimensions, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, Dimensions, Pressable } from 'react-native';
 import { RFValue } from "react-native-responsive-fontsize";
 import {
     currentTheme
@@ -75,7 +75,7 @@ export const CustomInputField = styled(TextInput) `
     paddingLeft: 16px;
 `;
 
-export const TouchableButton = styled(TouchableOpacity) `
+export const TouchableButton = styled(Pressable) `
     backgroundColor: ${currentTheme.secondaryColor};
     marginHorizontal: ${responsivePxSize(30)};
     marginTop: ${responsivePxSize(20)};
@@ -91,7 +91,7 @@ export const TouchableButtonFont = styled(Text) `
     fontFamily: ${currentTheme.fontsGroup.appWideFontSecondary};
 `;
 
-export const TouchableButtonAlt = styled(TouchableOpacity) `
+export const TouchableButtonAlt = styled(Pressable) `
     backgroundColor: ${currentTheme.primaryColor};
     marginHorizontal: ${responsivePxSize(30)};
     marginTop: ${responsivePxSize(20)};
@@ -108,7 +108,7 @@ export const TouchableButtonFontAlt = styled(Text) `
     fontFamily: ${currentTheme.fontsGroup.appWideFontSecondary};
 `;
 
-export const TouchableButtonDelete = styled(TouchableOpacity) `
+export const TouchableButtonDelete = styled(Pressable) `
     backgroundColor: ${currentTheme.primaryColorAltLight};
     marginHorizontal: ${responsivePxSize(30)};
     marginTop: ${responsivePxSize(20)};

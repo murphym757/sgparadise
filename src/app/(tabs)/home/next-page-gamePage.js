@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { useLocalSearchParams, Link } from "expo-router"
-import { Text, ScrollView, TouchableOpacity, View, Dimensions } from "react-native"
+import { Text, ScrollView, Pressable, View, Dimensions } from "react-native"
 import { CurrentThemeContext, Container, ContentRow, GameNameBig } from 'index'
 import { doc, getDoc } from "firebase/firestore"
 import { AppWideImageContext } from 'main/sgImageContext'

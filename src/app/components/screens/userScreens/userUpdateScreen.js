@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { View, SafeAreaView, TouchableOpacity } from 'react-native'
+import { View, SafeAreaView, Pressable } from 'react-native'
 import { useAuth } from 'auth/authContext'
 import { useIconCreator } from 'user/userIconContext'
 import { UserScreenContext } from 'user/userScreenContext'
@@ -164,7 +164,7 @@ export default function UpdateUserScreen({navigation}) {
         return (
           <View>
             {changeEmailButtonPressed === true 
-              ? <TouchableOpacity onPress={() => {
+              ? <Pressable onPress={() => {
                   setChangeEmailButtonPressed(false), 
                   setReauthenticationConfirmation(false),
                   setEmail(''),
@@ -177,13 +177,13 @@ export default function UpdateUserScreen({navigation}) {
                   setPasswordAuthCheckStatus(null)
                 }}> 
                   {backArrow(colorsPassThrough, backFunc)}
-                </TouchableOpacity>
-              : <TouchableOpacity onPress={() => {
+                </Pressable>
+              : <Pressable onPress={() => {
                   setChangePasswordButtonPressed(false), 
                   setReauthenticationConfirmation(false)
                 }}> 
               {backArrow(colorsPassThrough, backFunc)}
-            </TouchableOpacity>
+            </Pressable>
             }
           </View>
         )
@@ -195,12 +195,12 @@ export default function UpdateUserScreen({navigation}) {
           <View style={{position: 'relative', flex: 1, paddingBottom: 100}}>
             {changeEmailButtonPressed == true || changePasswordButtonPressed == true
               ? changeButtonPressedBack(backNeeded)
-              : <TouchableOpacity onPress={() => {
+              : <Pressable onPress={() => {
                   navigation.goBack(), 
                   setReauthenticationConfirmation(false)
                 }}> 
                   {backArrow(colorsPassThrough, backNeeded)}
-                </TouchableOpacity>
+                </Pressable>
             }
           </View>
         )

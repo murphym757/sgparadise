@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
-import { SafeAreaView, ScrollView, TouchableOpacity, View } from 'react-native'
+import { SafeAreaView, ScrollView, Pressable, View } from 'react-native'
 import { algoliaConfig, Container, CurrentThemeContext, CustomSearchBarContainer, faSearch, FontAwesomeIcon, MainFont, ViewTopRow } from 'index'
 import { customRefinementContext } from 'main/sgGameSearchScreenContent/sgAlgoliaComponents/sgAlgoliaRefinementContext'
 import { InfiniteHits, Hit } from 'main/sgGameSearchScreenContent/sgAlgoliaComponents/sgAlgoliaSearchHitsContext'
@@ -93,9 +93,9 @@ export default function SgSearchHome({navigation, route}) {
                             />
                         </View>
                     :   <View>
-                            <TouchableOpacity onPress={() => { navigation.goBack() }}>
+                            <Pressable onPress={() => { navigation.goBack() }}>
                                 {backArrow(colorsPassThrough, backNeeded)}
-                            </TouchableOpacity>
+                            </Pressable>
                     </View>
                 }
                     <SearchBox gamePageLinkProp={gameDataToBePassed} gamePageLinkPressed={gamePageLinkPressed} gamePageLinkPressedSearchable={'tec toy'} searchBarTitle={'Search Games'} onChange={scrollToTop} />

@@ -55,11 +55,11 @@ export function SearchBarProvider({ children, navigation }) {
                                 />
                                 {/*Commented out for further research. Decision to remove this will come at a later date
                                     homepageSearchBar == true
-                                    ?   <TouchableOpacity onPress={() => resetSearchBarQuery()} style={{ alignItems: 'right', justifyContent: 'center', backgroundColor: colors.primaryColor }}>
+                                    ?   <Pressable onPress={() => resetSearchBarQuery()} style={{ alignItems: 'right', justifyContent: 'center', backgroundColor: colors.primaryColor }}>
                                             <View>
                                                 <FontAwesomeIcon icon={ faTimes } color={colors.primaryColorAlt} size={25} />
                                             </View>
-                                        </TouchableOpacity>
+                                        </Pressable>
                                     :   <View/>
                                 */}
                             </ViewTopRow>

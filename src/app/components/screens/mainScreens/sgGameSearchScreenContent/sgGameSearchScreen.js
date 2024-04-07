@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { View, FlatList, ScrollView, SafeAreaView, TouchableOpacity } from 'react-native'
+import { View, FlatList, ScrollView, SafeAreaView, Pressable } from 'react-native'
 // React Navigation
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import {
@@ -91,9 +91,9 @@ export default function SgGameSearchScreen({route, navigation}, props) {
                 flex: 1,
                 marginBottom: 120
             }}>
-                <TouchableOpacity onPress={() => setGameId(item)}>
+                <Pressable onPress={() => setGameId(item)}>
                     {searchGameIcon(colors, item)}
-                </TouchableOpacity>
+                </Pressable>
             </View>
         )
     }

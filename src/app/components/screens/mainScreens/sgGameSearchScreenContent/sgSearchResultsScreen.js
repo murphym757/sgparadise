@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useContext } from 'react'
-import { FlatList, TouchableOpacity, View } from 'react-native'
+import { FlatList, Pressable, View } from 'react-native'
 import { Container, CurrentThemeContext, MainFont, MainHeading, MainSubFont, SafeAreaViewContainer, SearchGameResults, windowHeight } from 'index'
 import { useAuth } from 'auth/authContext'
 import { useSearchBar } from 'main/sgGameSearchScreenContent/searchIndex'
@@ -62,10 +62,10 @@ export default function sgSearchResultsScreen({route, navigation}) {
                 keyExtractor={item => item.id}
                 renderItem={({ item }) => (
                     <SearchGameResults>
-                        <TouchableOpacity onPress={() => chosenGame(item)}>
+                        <Pressable onPress={() => chosenGame(item)}>
                         <MainSubFont>{item.name}</MainSubFont>
                         <MainFont>{unixTimestampConverter(item)}</MainFont>
-                        </TouchableOpacity>
+                        </Pressable>
                     </SearchGameResults>
                 )}
             />

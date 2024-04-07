@@ -244,7 +244,16 @@ function returnedPrimaryGamePage(currentGameArray, gamePageCoverImages, setActiv
                             ? gamePageGameplayImage(preDeterminedImage)
                             : gamePageGameplayImage(currentImage)
                         }
-                        <View style={{position: 'absolute', left: 10, bottom: 10}}>
+                        <View style={{
+                            position: 'absolute', 
+                            left: 10, 
+                            bottom: 10,
+                            shadowColor: '#000',
+                            shadowOffset: { width: 0, height: 2 },
+                            shadowOpacity: 0.8,
+                            shadowRadius: 2,
+                            elevation: 5
+                        }}>
                             {gamePageGameCoverIcon(coverIcon)}
                         </View>
                     </View>

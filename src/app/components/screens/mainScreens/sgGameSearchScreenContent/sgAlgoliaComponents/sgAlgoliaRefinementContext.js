@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { Button, ScrollView, Text, Pressable, View } from 'react-native';
 import { useClearRefinements, useRefinementList } from 'react-instantsearch-core';
 import { RFValue } from "react-native-responsive-fontsize";
 import { AlgoliaSearchListLabelText, windowHeight } from 'index';
@@ -55,7 +55,7 @@ function customRefinementList(title, searchAttribute, colors) {
       <ScrollView style={{height: responsivePxSize(150)}}>
         {items.map((item) => {
           return (
-            <TouchableOpacity
+            <Pressable
               key={item.label}
               style={{
                 paddingVertical: responsivePxSize(12),
@@ -82,7 +82,7 @@ function customRefinementList(title, searchAttribute, colors) {
               }}>
                 <Text style={{color: colors.secondaryColor, fontWeight: '800'}}>{item.count}</Text>
               </View>
-            </TouchableOpacity>
+            </Pressable>
           );
         })}
       </ScrollView>
@@ -100,7 +100,7 @@ function refinementConsoleList(props) {
         showsHorizontalScrollIndicator={false}>
         {items.map((item) => {
           return (
-            <TouchableOpacity
+            <Pressable
               key={item.label}
               style={{
                 paddingVertical: responsivePxSize(12),
@@ -128,7 +128,7 @@ function refinementConsoleList(props) {
                   <Text style={{color: colors.secondaryColor, fontWeight: '800'}}>{item.count}</Text>
                 </View>
               </View>
-          </TouchableOpacity>
+          </Pressable>
         );
       })}
       </ScrollView>

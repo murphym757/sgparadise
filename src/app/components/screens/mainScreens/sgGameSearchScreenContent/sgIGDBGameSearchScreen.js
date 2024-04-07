@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { ActivityIndicator, Button, FlatList, SafeAreaView, ScrollView, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Button, FlatList, SafeAreaView, ScrollView, Pressable, View } from 'react-native'
 import { AppWideImageContext } from 'main/sgImageContext'
 import { useTags } from 'auth/tagsContext'
 import { useSearchBar } from 'main/sgGameSearchScreenContent/searchIndex'
@@ -203,9 +203,9 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
                 flex: 1,
                 marginBottom: 120
             }}>
-                <TouchableOpacity onPress={() => setGameId(item)}>
+                <Pressable onPress={() => setGameId(item)}>
                     {searchGameIcon(colors, item)}
-                </TouchableOpacity>
+                </Pressable>
             </View>
         )
     }
@@ -259,9 +259,9 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
                                         keyExtractor={item => item.id}
                                         renderItem={({ item }) => (
                                         <View>
-                                            <TouchableOpacity onPress={() => igdbGameData(item)}>
+                                            <Pressable onPress={() => igdbGameData(item)}>
                                                 <MainFont>{item.name}</MainFont>
-                                            </TouchableOpacity>
+                                            </Pressable>
                                         </View>
                                         )}
                                     />
@@ -322,25 +322,25 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
                     flexWrap: 'wrap',
                     flexDirection: 'row'
                 }}>
-                    <TouchableOpacity onPress={() => resetAll()}>
+                    <Pressable onPress={() => resetAll()}>
                         <View style={{ marginTop: 10, alignItems: 'flex-start', justifyContent: 'center', backgroundColor: colors.primaryColor }}>
                             <FontAwesomeIcon
                                 icon={ faChevronLeft } color={colors.primaryFontColor} size={50}
                             />
                         </View>
-                        </TouchableOpacity>
+                        </Pressable>
                     <View style={{
                         width: 300
                     }}>
                         {searchBar(searchBarTitle, searchType, searchQuery)}
                     </View>
-                    <TouchableOpacity onPress={() => setSearchFilterSelected(true)}>
+                    <Pressable onPress={() => setSearchFilterSelected(true)}>
                     <View style={{ paddingLeft: 10, marginTop: 20, alignItems: 'right', justifyContent: 'center', backgroundColor: colors.primaryColor }}>
                         <FontAwesomeIcon
                             icon={ faFilter } color={colors.primaryFontColor} size={30}
                         />
                     </View>
-                </TouchableOpacity>
+                </Pressable>
                 </View>
         )
     }
@@ -362,7 +362,7 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
                     keyboardShouldPersistTaps="always"
                     keyExtractor={item => item.id}
                     renderItem={({ item }) => (
-                        <TouchableOpacity
+                        <Pressable
                         style={{
                             flex: 1,
                             justifyContent: 'center',
@@ -380,7 +380,7 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
                                     icon={ item.tagIcon } color={colors.primaryColorLight} size={35}
                                 />
                             </View>
-                    </TouchableOpacity>
+                    </Pressable>
                     )}
                 />
             )

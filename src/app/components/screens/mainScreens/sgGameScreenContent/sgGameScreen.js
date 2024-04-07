@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { ScrollView, TouchableOpacity, View } from 'react-native'
+import { ScrollView, Pressable, View } from 'react-native'
 import { AppWideImageContext } from 'main/sgImageContext'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { CurrentThemeContext } from 'index';
@@ -223,12 +223,12 @@ export default function GameScreen({navigation, route}) {
             headerLeft: isLoading == true
                 ?   ''
                 : (props) => (
-                    <TouchableOpacity onPress={() => {
+                    <Pressable onPress={() => {
                         updateGameViewCount(collectionName, consoleName, gamesCollection, gameName) // The view count is updated here, but falsely updated on the page. The process was done this way because there was next to no way to properly updated the state in Firebase and have that number represented on the page.
                         navigation.goBack()
                     }}>
                         <BackButton {...props} />
-                    </TouchableOpacity>
+                    </Pressable>
                 )
 
         }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity, FlatList, Dimensions } from 'react-native'
+import { View, Pressable, FlatList, Dimensions } from 'react-native'
 import { ContentContainerMainHeading, MainHeading, ContentContainer, MainHeadingLongTitle, MainSubFont, faStar, MainFont, FontAwesomeIcon } from 'index';
     
     function charLengthSet(nameValue, nameLength, maxNameLength, nameLengthSet, FontOption, fontColor) {
@@ -83,7 +83,7 @@ import { ContentContainerMainHeading, MainHeading, ContentContainer, MainHeading
                         data={homeScreenGameArray} //* <------This is where the array goes. Pass it in here
                         keyboardShouldPersistTaps="always"
                         renderItem={({ item }) => ( //* <-------This is a entire set of game listings
-                            <TouchableOpacity 
+                            <Pressable 
                                 key={item.id} 
                                 style={{  
                                 alignItems:'center',
@@ -98,7 +98,7 @@ import { ContentContainerMainHeading, MainHeading, ContentContainer, MainHeading
                                     {gameListingImageData(item, images, spotlightGrid)}
                                     {gameListingTextData(item, spotlightGrid, colors)}
                                 </View>
-                            </TouchableOpacity>
+                            </Pressable>
                         )}
                     />
                 </View>

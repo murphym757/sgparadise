@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { View, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native'
+import { View, FlatList, ActivityIndicator, Pressable } from 'react-native'
 import { useAuth } from 'auth/authContext'
 import { AppWideImageContext } from 'main/sgImageContext'
 import { confirmGameContext } from 'main/sgGameSearchScreenContent/sgSelectedGameScreens/sgSelectedGameContext'
@@ -163,7 +163,7 @@ export default function SgSelectedGameplayScreen({route, navigation}) {
                 keyExtractor={item => item.id}
                 renderItem={({ item }) => (
                     <View style={{ height: 110 }}>
-                        <TouchableOpacity
+                        <Pressable
                             style={{
                                 margin: 3,
                                 alignItems:'center',
@@ -171,7 +171,7 @@ export default function SgSelectedGameplayScreen({route, navigation}) {
                             }}
                             onPress={() => chosenGameplayData(item)}>
                             {gameplaySelectionNewGroup(item)}
-                        </TouchableOpacity>
+                        </Pressable>
                         {isLoading && (
                             <ActivityIndicator size="large" />
                         )}

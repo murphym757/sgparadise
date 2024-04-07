@@ -1,5 +1,5 @@
 import React, { forwardRef, useState, useContext } from 'react'
-import { StyleSheet, View, FlatList, Text, TouchableOpacity } from 'react-native'
+import { StyleSheet, View, FlatList, Text, Pressable } from 'react-native'
 import { AppWideImageContext } from 'main/sgImageContext'
 import { homeScreenGenreContext } from 'main/sgHomeScreenContext'
 import { useInfiniteHits, usePagination } from 'react-instantsearch-core'
@@ -23,7 +23,6 @@ export const InfiniteHits = forwardRef(
 
     async function chosenAlgoliaGame(item) {
       setGameSelected(item.gameName)
-      passDataToNextPage(item)
   }
 
     // Links to the game page
@@ -48,9 +47,11 @@ export const InfiniteHits = forwardRef(
       <FlatList
         ref={ref}
         data={hits} 
-        ListHeaderComponent={() => (hits.length === 0
-          ? <Text>The list is empty</Text>  
-          : null)
+        ListHeaderComponent={() => (
+            hits.length === 0
+              ? <Text>The list is empty</Text>  
+              : null
+          )
         }
         keyExtractor={(item) => item.objectID}
         ItemSeparatorComponent={() => <View style={{borderBottomWidth: 1, borderColor: colors.primaryColorLight}} />}
@@ -61,9 +62,9 @@ export const InfiniteHits = forwardRef(
         }}
         renderItem={({ item }) => (
           <View style={{paddingHorizontal: 18, paddingVertical: 25}}>
-            <TouchableOpacity onPress={() => chosenAlgoliaGame(item)}>
+            <Pressable onPress={() => chosenAlgoliaGame(item)}>
               <Hit hit={item} />
-            </TouchableOpacity>
+            </Pressable>
           </View>
         )}
       />
