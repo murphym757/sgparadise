@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { useLocalSearchParams, Link } from "expo-router"
-import { Text, ScrollView, Pressable, View, Dimensions } from "react-native"
-import { CurrentThemeContext, Container, ContentRow, GameNameBig } from 'index'
+import { Text, ScrollView, Pressable, View, Dimensions, PixelRatio } from "react-native"
+import { CurrentThemeContext, Container, ContentRow, GameNameBig, windowHeight } from 'index'
 import { doc, getDoc } from "firebase/firestore"
 import { AppWideImageContext } from 'main/sgImageContext'
 import { gameScreenContext } from 'main/sgGameScreenContent/sgGameScreenContext'
@@ -9,7 +9,6 @@ import { useAuth } from 'auth/authContext'
 import { PageStructureContext } from '../reuseableComponents/pageStructure'
 import { useLoader } from 'server/config/loaderContext'
 import { ActivityIndicator } from 'react-native-paper'
-
 
 
 //* Import Firebase 
@@ -25,6 +24,7 @@ export default function PageContentGamePage() {
   } = route.params */
   const windowWidth = Dimensions.get('window').width
   const [ currentGameArray, setCurrentGameArray ] = useState([])
+  console.log("🚀 ~ PageContentGamePage ~ currentGameArray:", currentGameArray)
   const [ gameHomeNewScreenShot, setGameHomeNewScreenShot ] = useState('')
   const [ gameHomeScreenCover, setGameHomeScreenCover ] = useState('')
   const [ gameHomeScreenShot, setGameHomeScreenShot ] = useState('')
@@ -86,28 +86,27 @@ export default function PageContentGamePage() {
 }
 
   //* Link Function
-  function pageLinkToSearch(passedProp) {
-    const nextPagePath = "/search"
-    const linkContent = 'Go to Search page'
-    const linkedDataSearch = {
-        nextPagePath,
-        linkContent
+    function pageLinkToSearch(passedProp) {
+      const nextPagePath = "/search"
+      const linkContent = 'Go to Search page'
+      const linkedDataSearch = {
+          nextPagePath,
+          linkContent
+      }
+      return (
+          <Link 
+              href={{
+                  pathname: nextPagePath, 
+                  params: { 
+                      backHeaderTitle: pageTitle,
+                      passedProp:passedProp
+                  }
+              }} 
+              style={{color: colors.primaryFontColor}}>
+                {passedProp}
+          </Link>
+      )
     }
-    return (
-        <Link 
-            href={{
-                pathname: nextPagePath, 
-                params: { 
-                    backHeaderTitle: pageTitle,
-                    passedProp:passedProp
-                }
-            }} 
-            style={{color: colors.primaryFontColor}}>
-              {passedProp}
-        </Link>
-    )
-}
-
   //*-----Link Function-----*//
 
 //* Image Functions
@@ -214,12 +213,32 @@ export default function PageContentGamePage() {
     )
   }
 
+  function responsivePxSize(pixelSize){
+    const getWindowHeight = () => {
+      return Dimensions.get('window').height
+    }
+
+    const getAdjustedPixelSize = (pixelSize, baseHeight) => {
+      const windowHeight = getWindowHeight()
+      const scaleFactor = windowHeight / baseHeight
+      return Math.round(PixelRatio.roundToNearestPixel(pixelSize * scaleFactor))
+    };
+
+    // Usage
+    const baseHeight = 667; // The height of the base design
+
+    const adjustedPixelSize = getAdjustedPixelSize(pixelSize, baseHeight);
+
+    console.log("Adjusted Pixel Size:", adjustedPixelSize);
+
+  }
+
   function gamePageBottom() {
     return (
       <ScrollView
           horizontal={true}
           showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{flexWrap: "wrap", paddingHorizontal: 10}}>
+          contentContainerStyle={{flexWrap: "wrap", paddingHorizontal: responsivePxSize(22)}}>
           {gameScreenFunc.returnedPrimaryGameGeneralInfo(currentGameArray)}
           {gameScreenFunc.returnedPrimaryGamePubDev(currentGameArray, pageLinkToSearch)}
           {gameScreenFunc.returnedPrimaryGameGenresModes(currentGameArray, pageLinkToSearch)}
@@ -232,8 +251,8 @@ export default function PageContentGamePage() {
       <Container style={{flex: 1}}>
         <View style={{flex: 0}}>{detailedGameName()}</View>
         <View style={{flex: windowWidth === 1024 ? 10 : 3}}>{gamePageTop()}</View>
-        <View style={{flex: windowWidth === 1024 ? 2 :1}}>{gamePageMiddle()}</View>
-        <View style={{flex: windowWidth === 1024 ? 4 :3}}>{gamePageBottom()}</View>
+        <View style={{flex: windowWidth === 1024 ? 2 : 1}}>{gamePageMiddle()}</View>
+        <View style={{flex: windowWidth === 1024 ? 4 : 3}}>{gamePageBottom()}</View>
       </Container>
     )
   }

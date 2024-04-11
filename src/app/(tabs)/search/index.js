@@ -17,7 +17,6 @@ export default function PageContentGamePage() {
   const pageStructure = useContext(PageStructureContext)
   const customRefinements = useContext(customRefinementContext)
   const [searchQuery, setSearchQuery] = useState('')
-  const pageTitle = 'Index page of Search Tab'
   const isNextPage = false
   const backHeaderTitle = 'Search'
   const params = useLocalSearchParams()
@@ -94,7 +93,6 @@ export default function PageContentGamePage() {
       return (
           <View style={styles.container}>
             {searchBar('Search Game')}
-            <Text style={{color: colors.primaryFontColor}}>{pageTitle}</Text>
             <Text style={{color: colors.primaryFontColor}}>{passedProp}</Text>
             {sgAlgolia()}
           </View>

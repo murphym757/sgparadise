@@ -1,7 +1,7 @@
 
-import React, { useState, useContext } from 'react';
-import { SafeAreaView, View} from 'react-native';
-import { RFValue } from "react-native-responsive-fontsize";
+import React, { useState, useContext } from 'react'
+import { SafeAreaView, View} from 'react-native'
+import { responsivePxSize } from 'assets/styles/globalStyling'
 import { useAuth } from 'auth/authContext'
 import {
     Container,
@@ -63,7 +63,7 @@ export default function UserProfileScreen({navigation}) {
 
         function displayUserData(int, string) {
             return (
-                <ViewSortColumn style={{paddingHorizontal: RFValue(20, windowHeight)}}>
+                <ViewSortColumn style={{paddingHorizontal: responsivePxSize(20)}}>
                     {displayUserDataTop(int)}
                     {displayUserDataBottom(string)}
                 </ViewSortColumn>
@@ -72,7 +72,7 @@ export default function UserProfileScreen({navigation}) {
 
         function displayUserDataSection() {
             return (
-                <ViewSortRow style={{justifyContent: 'center', paddingVertical: RFValue(50, windowHeight)}}>
+                <ViewSortRow style={{justifyContent: 'center', paddingVertical: responsivePxSize(50)}}>
                     {displayUserData(userPosts, 'Posts')}
                     {displayUserData(userComments, 'Comments')}
                     {displayUserData(userLikes, 'Likes')}
@@ -86,10 +86,10 @@ export default function UserProfileScreen({navigation}) {
         function displayUserInfo() {
             return (
                 <Container style={{alignItems: 'center'}}>
-                    <View style={{paddingVertical: RFValue(20, windowHeight)}}>
+                    <View style={{paddingVertical: responsivePxSize(20)}}>
                         <MainFont>Image Goes Here</MainFont>
                     </View>
-                    <View style={{paddingTop: RFValue(20, windowHeight), paddingBottom: RFValue(5, windowHeight)}}>
+                    <View style={{paddingTop: responsivePxSize(20), paddingBottom: responsivePxSize(5)}}>
                         <MainFont>{currentUser.displayName}</MainFont>
                     </View>
                 </Container>

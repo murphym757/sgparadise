@@ -1,12 +1,13 @@
 import React, { useRef, useState, useContext } from 'react';
 import { useSearchBox } from 'react-instantsearch-core';
-import { RFValue } from "react-native-responsive-fontsize";
 import { 
     CurrentThemeContext,
     CustomSearchBarContainer,
     CustomSearchBarTextInput, 
     windowHeight
 } from 'index'
+import { responsivePxSize } from 'assets/styles/globalStyling'
+
 
 export function SearchBox(props) {
   const colors = useContext(CurrentThemeContext) 
@@ -62,7 +63,7 @@ export function SearchBox(props) {
           flexDirection: 'row', 
           justifyContent: 'center', 
           alignItems: 'flex-start', 
-          fontSize: RFValue(20, windowHeight),
+          fontSize: responsivePxSize(20),
           paddingRight: 110
         }}
         placeholderTextColor={colors.primaryColorAlt}

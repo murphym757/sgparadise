@@ -317,14 +317,14 @@ function returnedPrimaryGamePage(currentGameArray, gamePageCoverImages, setActiv
             function returnedPrimaryGameGeneralInfo(currentGameArray) {
                 function primaryGamePageFlatList(item) {
                     return (
-                        <View style={{paddingHorizontal: 20}}>
+                        <Container>
                             {detailedGameSummary(item)}
                             <View style={{flexDirection: 'row'}}>
                                 {detailedGameReleaseDate(item)}
                                 {detailedGameRating(item)}
                                 {detailedGameViews(item)}
                             </View>
-                        </View>
+                        </Container>
                     )
                 }
                 return (
@@ -382,10 +382,10 @@ function returnedPrimaryGamePage(currentGameArray, gamePageCoverImages, setActiv
 
             function detailedGamePubDevInfo(item, pageLinkToSearch) {
                 return (
-                    <CardContent>
+                    <View style={{marginHorizontal: 5}}>
                         {detailedPublishers(item, pageLinkToSearch)}
                         {detailedDevelopers(item, pageLinkToSearch)}
-                    </CardContent>
+                    </View>
                 )
             }
             function returnedPrimaryGamePubDev(currentGameArray, pageLinkToSearch) {
@@ -397,9 +397,9 @@ function returnedPrimaryGamePage(currentGameArray, gamePageCoverImages, setActiv
                     )
                 }
                 return (
-                    <Container>
+                    <CardContent>
                         {returnPrimarySection(currentGameArray, primaryGamePageFlatList)}
-                    </Container>
+                    </CardContent>
                 )
             }
         //*-----Publishers and Developers-----*/
@@ -433,11 +433,11 @@ function returnedPrimaryGamePage(currentGameArray, gamePageCoverImages, setActiv
 
             function detailedGameGenresAndModesInfo(item, pageLinkToSearch) {
                 return (
-                    <Container>
+                    <View style={{marginHorizontal: 5}}w>
                         {detailedGameGenre(item, pageLinkToSearch)}
                         {detailedGameSubgenre(item, pageLinkToSearch)}
                         {detailedGameModes(item, pageLinkToSearch)}
-                    </Container>
+                    </View>
                 )
             }
 
@@ -450,9 +450,9 @@ function returnedPrimaryGamePage(currentGameArray, gamePageCoverImages, setActiv
                     )
                 }
                 return (
-                    <Container>
+                    <CardContent>
                         {returnPrimarySection(currentGameArray, primaryGamePageFlatList)}
-                    </Container>
+                    </CardContent>
                 )
             }
         //*-----Genres and Modes-----*/

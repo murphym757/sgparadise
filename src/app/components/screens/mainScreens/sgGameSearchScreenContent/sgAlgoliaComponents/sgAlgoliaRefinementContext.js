@@ -1,14 +1,8 @@
 import React from 'react'
-import { Button, ScrollView, Text, Pressable, View } from 'react-native';
-import { useClearRefinements, useRefinementList } from 'react-instantsearch-core';
-import { RFValue } from "react-native-responsive-fontsize";
-import { AlgoliaSearchListLabelText, windowHeight } from 'index';
-
-function responsivePxSize(pixelSize){
-  return (
-      RFValue(pixelSize, windowHeight)
-  )
-}
+import { Button, ScrollView, Text, Pressable, View } from 'react-native'
+import { useClearRefinements, useRefinementList } from 'react-instantsearch-core'
+import { AlgoliaSearchListLabelText } from 'index'
+import { responsivePxSize } from 'assets/styles/globalStyling'
 
 function customRefinementListButtons(colors, setModalVisible, modalVisible) {
   const { canRefine: canClear, refine: clear } = useClearRefinements();

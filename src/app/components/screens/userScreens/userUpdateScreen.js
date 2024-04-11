@@ -8,7 +8,7 @@ import { LoginValidationsContext } from 'user/loginValidationContext'
 import { UpdateUserInfoValidationsContext } from 'user/updateUserInfoValidationContext'
 import { FormFieldsContext } from 'user/userScreenFormFieldsContext'
 import { getAuth, updateEmail } from "firebase/auth"
-import { RFValue } from "react-native-responsive-fontsize"
+import { responsivePxSize } from 'assets/styles/globalStyling'
 
 import {
   TouchableButton,
@@ -18,7 +18,6 @@ import {
   MainSecondaryFont,
   Container,
   ContentRow,
-  windowHeight,
 } from 'index';
 
 export default function UpdateUserScreen({navigation}) {
@@ -241,7 +240,7 @@ export default function UpdateUserScreen({navigation}) {
             <View>
               {backButton()}
             </View>
-            <View style={{paddingBottom: RFValue(50, windowHeight)}}>
+            <View style={{paddingBottom: responsivePxSize(50)}}>
               {sgIconCreator(setChangeIconButtonPressed, navigation)}
             </View>
           </View>

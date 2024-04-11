@@ -1,17 +1,11 @@
-import styled from 'styled-components';
-import { View, Text, Dimensions, Pressable } from 'react-native';
-import { RFValue } from "react-native-responsive-fontsize";
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import styled from 'styled-components'
+import { View, Text, Dimensions, Pressable } from 'react-native'
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import {
     currentTheme
-} from './globalTheme';
+} from './globalTheme'
+import { responsivePxSize } from './globalStyling'
 
-function responsivePxSize(pixelSize){
-    return (
-        `${windowController(pixelSize, windowHeight)}px`
-    )
-}
-export const windowController = RFValue
 export const windowHeight = Dimensions.get('window').height
 export const windowWidth = Dimensions.get('window').width
 

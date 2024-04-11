@@ -1,17 +1,29 @@
 import styled from 'styled-components'
-import { View, Text, ScrollView, SafeAreaView, Dimensions, StyleSheet, TextInput } from 'react-native';
-import { RFValue } from "react-native-responsive-fontsize"
+import { View, Text, ScrollView, SafeAreaView, Dimensions, PixelRatio, StyleSheet, TextInput } from 'react-native'
 import { Image } from 'expo-image'
 import {
     currentTheme
 } from './globalTheme'
 
-function responsivePxSize(pixelSize){
+export function responsivePxSize(pixelSize){
+    const getWindowHeight = () => {
+        return Dimensions.get('window').height
+    }
+
+    const getAdjustedPixelSize = (pixelSize, baseHeight) => {
+        const windowHeight = getWindowHeight()
+        const scaleFactor = windowHeight / baseHeight
+            return Math.round(PixelRatio.roundToNearestPixel(pixelSize * scaleFactor))
+    }
+
+    // Usage
+    const baseHeight = 1000 // The height of the base design
+
+    const adjustedPixelSize = getAdjustedPixelSize(pixelSize, baseHeight);
     return (
-        `${windowController(pixelSize, windowHeight)}px`
+        `${adjustedPixelSize}px`
     )
 }
-export const windowController = RFValue
 export const windowHeight = Dimensions.get('window').height
 export const windowWidth = Dimensions.get('window').width
 

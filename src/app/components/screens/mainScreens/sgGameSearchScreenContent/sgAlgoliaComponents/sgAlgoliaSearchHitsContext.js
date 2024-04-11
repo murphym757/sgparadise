@@ -1,5 +1,6 @@
 import React, { forwardRef, useState, useContext } from 'react'
 import { StyleSheet, View, FlatList, Text, Pressable } from 'react-native'
+import { Link } from 'expo-router'
 import { AppWideImageContext } from 'main/sgImageContext'
 import { homeScreenGenreContext } from 'main/sgHomeScreenContext'
 import { useInfiniteHits, usePagination } from 'react-instantsearch-core'
@@ -22,8 +23,35 @@ export const InfiniteHits = forwardRef(
     const [ gameSelected, setGameSelected ] = useState('')
 
     async function chosenAlgoliaGame(item) {
-      setGameSelected(item.gameName)
+      props.pageLinkToGame(item.gameName)
+      console.log('Chosen Algolia Game: ', item.gameName)
   }
+
+  //* Link Function
+  //TODO: Change the nextPagePath to the correct path (i.e. the game page path)
+    function pageLinkToSearch(passedProp, item) {
+      const nextPagePath = "/home/next-page-gamePage"
+      const linkContent = 'Go to Search page'
+      const pageTitle = 'Search'
+      const linkedDataSearch = {
+          nextPagePath,
+          linkContent
+      }
+      return (
+          <Link 
+              href={{
+                  pathname: nextPagePath, 
+                  params: { 
+                      backHeaderTitle: pageTitle,
+                      gameSlug: item.gameSlug
+                  }
+              }} 
+              style={{color: colors.primaryFontColor}}>
+                {passedProp}
+          </Link>
+      )
+    }
+  //*-----Link Function-----*//
 
     // Links to the game page
     function passDataToNextPage(item) {
@@ -42,7 +70,6 @@ export const InfiniteHits = forwardRef(
           })
       )
     }
-
     return (
       <FlatList
         ref={ref}
@@ -62,8 +89,8 @@ export const InfiniteHits = forwardRef(
         }}
         renderItem={({ item }) => (
           <View style={{paddingHorizontal: 18, paddingVertical: 25}}>
-            <Pressable onPress={() => chosenAlgoliaGame(item)}>
-              <Hit hit={item} />
+            <Pressable>
+              {pageLinkToSearch(<Hit hit={item} />, item)}
             </Pressable>
           </View>
         )}

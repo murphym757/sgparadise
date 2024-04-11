@@ -1,12 +1,12 @@
-import React, { useContext, useState } from 'react';
-import { View, Pressable } from 'react-native';
-import { CurrentThemeContext, windowHeight, TouchableButton, TouchableButtonFont } from 'index';
-import { RFValue } from "react-native-responsive-fontsize";
-import { createAvatar } from '@dicebear/core';
-import { botttsNeutral } from '@dicebear/collection';
-import { SvgXml } from 'react-native-svg';
-import DropDownPicker from 'react-native-dropdown-picker';
-import ColorPicker, { Panel3 } from 'reanimated-color-picker';
+import React, { useContext, useState } from 'react'
+import { View, Pressable } from 'react-native'
+import { CurrentThemeContext, TouchableButton, TouchableButtonFont } from 'index'
+import { responsivePxSize } from "assets/styles/globalTheme"
+import { createAvatar } from '@dicebear/core'
+import { botttsNeutral } from '@dicebear/collection'
+import { SvgXml } from 'react-native-svg'
+import DropDownPicker from 'react-native-dropdown-picker'
+import ColorPicker, { Panel3 } from 'reanimated-color-picker'
 import { useAuth } from 'auth/authContext'
 
 const IconContext = React.createContext()
@@ -102,12 +102,12 @@ export function IconCreatorProvider({ children }) {
                         color: colors.primaryFontColor,
                     }}
                     labelStyle={{
-                        fontSize: `${RFValue(15, windowHeight)}`,
+                        fontSize: `${responsivePxSize(15)}`,
                         fontWeight: 500,
                         fontFamily: 'SpartanRegular'
                     }}
                     textStyle={{
-                        fontSize: `${RFValue(15, windowHeight)}`,
+                        fontSize: `${responsivePxSize(15)}`,
                         fontWeight: 500,
                         fontFamily: 'SpartanRegular',
                         color: colors.primaryFontColor
@@ -207,7 +207,7 @@ export function IconCreatorProvider({ children }) {
 
         function sgIcronCreatorColorPicker() {
             return (
-                <View style={{paddingVertical: RFValue(100, windowHeight), paddingLeft: RFValue(125, windowHeight)}}>
+                <View style={{paddingVertical: responsivePxSize(100), paddingLeft: responsivePxSize(125)}}>
                     {colorPickerFunc()}
                 </View>
             )
@@ -232,7 +232,7 @@ export function IconCreatorProvider({ children }) {
         //*
         function sgIconCreatorButton(avatar, setChangeIconButtonPressed, navigation) {
             return (
-                <View style={{paddingTop: RFValue(25, windowHeight), paddingBottom: RFValue(50, windowHeight)}}>
+                <View style={{paddingTop: responsivePxSize(25), paddingBottom: responsivePxSize(50)}}>
                     {firebaseIconData(avatar, setChangeIconButtonPressed, navigation)}
                 </View>
             )   

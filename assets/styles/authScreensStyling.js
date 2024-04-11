@@ -1,16 +1,10 @@
-import styled from 'styled-components';
-import { View, Text, TextInput, Dimensions, Pressable } from 'react-native';
-import { RFValue } from "react-native-responsive-fontsize";
+import styled from 'styled-components'
+import { View, Text, TextInput, Dimensions, Pressable } from 'react-native'
 import {
     currentTheme
-} from './globalTheme';
+} from './globalTheme'
+import { responsivePxSize } from './globalStyling'
 
-function responsivePxSize(pixelSize){
-    return (
-        `${windowController(pixelSize, windowHeight)}px`
-    )
-}
-export const windowController = RFValue
 export const windowHeight = Dimensions.get('window').height
 export const windowWidth = Dimensions.get('window').width
 
