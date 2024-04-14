@@ -97,7 +97,7 @@ function refinementConsoleList(props) {
             <Pressable
               key={item.label}
               style={{
-                paddingVertical: responsivePxSize(12),
+                paddingHorizontal: 20,
                 flexDirection: 'row',
                 justifyContent: 'space-between',
                 borderBottomWidth: responsivePxSize(1),

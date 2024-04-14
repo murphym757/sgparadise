@@ -1,5 +1,6 @@
 import React, { useRef, useState, useContext } from 'react';
 import { useSearchBox } from 'react-instantsearch-core';
+import { Searchbar, Button, Modal, Portal, Text } from "react-native-paper"
 import { 
     CurrentThemeContext,
     CustomSearchBarContainer,
@@ -10,11 +11,9 @@ import { responsivePxSize } from 'assets/styles/globalStyling'
 
 
 export function SearchBox(props) {
-  const colors = useContext(CurrentThemeContext) 
   const { query, refine } = useSearchBox(props);
   const [inputValue, setInputValue] = useState(query);
   const inputRef = useRef(null);
-  
 
   function setQuery(newQuery) {
     setInputValue(newQuery);
@@ -35,20 +34,17 @@ export function SearchBox(props) {
 
   function defaultSearchBar() {
     return (
-      <CustomSearchBarTextInput
-        ref={inputRef}
-        value={inputValue}
-        onChangeText={setQuery}
-        style={{flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'flex-start', paddingRight: 190}}
-        placeholderTextColor={colors.primaryColorAlt}
-        placeholder={props.searchBarTitle}
-        clearButtonMode="while-editing"
-        underlineColorAndroid="transparent"
-        autoCapitalize="none"
-        autoCorrect={false}
-        spellCheck={false}
-        autoCompleteType="off"
-    />
+      <Searchbar
+          ref={inputRef}
+          placeholder={props.searchBarTitle}
+          onChangeText={setQuery}
+          value={inputValue}
+          iconColor={props.colors.primaryColorAlt}
+          inputStyle={{color: props.colors.primaryColor}}
+          style={{
+            backgroundColor: props.colors.secondaryColor
+          }}
+        />
     )
   }
 
@@ -66,7 +62,7 @@ export function SearchBox(props) {
           fontSize: responsivePxSize(20),
           paddingRight: 110
         }}
-        placeholderTextColor={colors.primaryColorAlt}
+        placeholderTextColor={props.colors.primaryColorAlt}
         placeholder={props.gamePageLinkProp}
         clearButtonMode="while-editing"
         underlineColorAndroid="transparent"

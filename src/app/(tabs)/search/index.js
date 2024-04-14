@@ -1,7 +1,7 @@
-import React, { useState, useContext } from "react"
+import React, { useState, useContext, useRef } from "react"
 import { useLocalSearchParams, Link } from "expo-router"
-import { Text, View, StyleSheet, ScrollView } from "react-native"
-import { Searchbar } from "react-native-paper"
+import { View, StyleSheet, ScrollView } from "react-native"
+import { Searchbar, Button, Modal, Portal, Text } from "react-native-paper"
 import { CurrentThemeContext, Container, algoliaConfig } from 'index'
 import { customRefinementContext } from 'main/sgGameSearchScreenContent/sgAlgoliaComponents/sgAlgoliaRefinementContext'
 import { InfiniteHits, Hit } from 'main/sgGameSearchScreenContent/sgAlgoliaComponents/sgAlgoliaSearchHitsContext'
@@ -11,15 +11,18 @@ import { SearchBox } from 'main/sgGameSearchScreenContent/sgAlgoliaComponents/sg
 import { useAuth } from 'auth/authContext'
 import algoliasearch from 'algoliasearch'
 import { PageStructureContext } from '../reuseableComponents/pageStructure'
+import { responsivePxSize } from 'assets/styles/globalStyling'
 
 export default function PageContentGamePage() {
   const colors = useContext(CurrentThemeContext)
   const pageStructure = useContext(PageStructureContext)
   const customRefinements = useContext(customRefinementContext)
   const [searchQuery, setSearchQuery] = useState('')
+  const [visible, setVisible] = useState(false)
   const isNextPage = false
   const backHeaderTitle = 'Search'
   const params = useLocalSearchParams()
+  const listRef = useRef(null)
   const { 
     passedProp,
   } = params
@@ -46,22 +49,40 @@ export default function PageContentGamePage() {
     },
   })  
 
-  function sgAlgolia() {
+  function sgAlgolia(searchBarProp) {
     const searchClient = algoliasearch(algoliaConfig.appId, algoliaConfig.apiKey);
     return (
         <InstantSearch searchClient={searchClient} indexName="games" style={{ flex: 1 }}>
-            
+            <View style={{flexDirection: "row", justifyContent: "center"}}>
+              <View style={{flex: 7}}>
+                {sgAlgoliaCustomSearchBar(searchBarProp)}
+              </View>
+              <View style={{flex: 1, justifyContent: 'center'}}>
+                {searchBarModalButton()}
+              </View> 
+            </View>
             <View style={{flex: 1}}>
-                <View style={{flex: 1}}>
+                <Container style={{flex: 1, flexDirection: "row", justifyContent: 'center'}}>
                     {sgAlgoliaConsoleRefinements()}
-                </View>
+                </Container>
                 <View style={{flex: 10 }}>
-                    <ScrollView showsVerticalScrollIndicator={false} scrollEventThrottle={16}>
-                        {sgAlgoliaHits()}
-                    </ScrollView>
+                  {sgAlgoliaHits()}
                 </View>
             </View>
         </InstantSearch>
+    )
+  }
+
+  function sgAlgoliaCustomSearchBar(searchBarProp) {
+    return (
+        <SearchBox 
+          colors={colors}
+          gamePageLinkProp={passedProp} 
+          gamePageLinkPressed={false} 
+          gamePageLinkPressedSearchable={'tec toy'} 
+          searchBarTitle={searchBarProp} 
+          onChange={scrollToTop} 
+        />
     )
   }
 
@@ -72,29 +93,50 @@ export default function PageContentGamePage() {
   }
   function sgAlgoliaHits() {
     return (
+      <ScrollView showsVerticalScrollIndicator={false} scrollEventThrottle={16}>
         <InfiniteHits hitComponent={Hit} />
-    )
-}
-
-  function searchBar(prop) {
-    return (
-      <Searchbar
-        placeholder={prop}
-        onChangeText={setSearchQuery}
-        value={passedProp !== undefined ?passedProp :searchQuery}
-        iconColor={colors.primaryColorAlt}
-        inputStyle={{color: colors.primaryColor}}
-        style={{backgroundColor: colors.secondaryColor}}
-      />
+      </ScrollView>
     )
   }
+
+  function scrollToTop() {
+    listRef.current?.scrollToOffset({ animated: false, offset: 0 });
+  }
+
+  function modalContent() {
+    return (
+      <Text>Example Modal.  Click outside this area to dismiss.</Text>
+    )
+  }
+  function searchBarModalButton() {
+    const containerStyle = {
+      backgroundColor: colors.primaryColor, 
+      padding: 30
+    }
+
+    return (
+      <View>
+        <Portal>
+          <Modal visible={visible} onDismiss={() => setVisible(false)} contentContainerStyle={containerStyle}>
+            {modalContent()}
+          </Modal>
+        </Portal>
+        <Button 
+          icon="filter"
+          color={colors.primaryColorAlt}
+          labelStyle={{ fontSize: responsivePxSize(30) }}
+          onPress={() => setVisible(true)}
+        />
+      </View>
+    )
+  }
+  
 
   function pageContent() {
       return (
           <View style={styles.container}>
-            {searchBar('Search Game')}
             <Text style={{color: colors.primaryFontColor}}>{passedProp}</Text>
-            {sgAlgolia()}
+            {sgAlgolia('Search Game')}
           </View>
       )
   }
