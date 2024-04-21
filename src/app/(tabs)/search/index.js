@@ -49,30 +49,7 @@ export default function PageContentGamePage() {
     },
   })  
 
-  function sgAlgolia(searchBarProp) {
-    const searchClient = algoliasearch(algoliaConfig.appId, algoliaConfig.apiKey);
-    return (
-        <InstantSearch searchClient={searchClient} indexName="games" style={{ flex: 1 }}>
-            <View style={{flexDirection: "row", justifyContent: "center"}}>
-              <View style={{flex: 7}}>
-                {sgAlgoliaCustomSearchBar(searchBarProp)}
-              </View>
-              <View style={{flex: 1, justifyContent: 'center'}}>
-                {searchBarModalButton()}
-              </View> 
-            </View>
-            <View style={{flex: 1}}>
-                <Container style={{flex: 1, flexDirection: "row", justifyContent: 'center'}}>
-                    {sgAlgoliaConsoleRefinements()}
-                </Container>
-                <View style={{flex: 10 }}>
-                  {sgAlgoliaHits()}
-                </View>
-            </View>
-        </InstantSearch>
-    )
-  }
-
+  //* algolia searchArea
   function sgAlgoliaCustomSearchBar(searchBarProp) {
     return (
         <SearchBox 
@@ -85,53 +62,62 @@ export default function PageContentGamePage() {
         />
     )
   }
-
-  function sgAlgoliaConsoleRefinements() {
+  function searchBarModalButton(fontSizeProp) {
     return (
-        <customRefinements.refinementConsoleList colors={colors} />
+      <ModalButton refinementColors={colors} fontSizeProp={fontSizeProp} />
+  )
+  }
+
+  function sgSearchArea(searchBarProp) {
+    return (
+      <View style={{flexDirection: "row", justifyContent: "center"}}>
+        <View style={{flex: 7}}>
+          {sgAlgoliaCustomSearchBar(searchBarProp)}
+        </View>
+        <View style={{flex: 1, justifyContent: 'center'}}>
+          {searchBarModalButton(30)}
+        </View> 
+      </View>
     )
   }
-  function sgAlgoliaHits() {
+
+  //* algolia console refinements
+  function sgConsoleRefinements() {
     return (
-      <ScrollView showsVerticalScrollIndicator={false} scrollEventThrottle={16}>
-        <InfiniteHits hitComponent={Hit} />
-      </ScrollView>
+      <Container style={{flex: 1, flexDirection: "row", justifyContent: 'center'}}>
+        <customRefinements.refinementConsoleList colors={colors} />
+      </Container>
+    )
+  }
+  //* algolia hits
+  function sgHits() {
+    return (
+      <View style={{flex: 10 }}>
+        <InfiniteHits 
+          hitComponent={Hit}
+          title="Games"
+          />
+      </View>
+    )
+  }
+  
+  function sgAlgolia(searchBarProp) {
+    const searchClient = algoliasearch(algoliaConfig.appId, algoliaConfig.apiKey)
+    return (
+        <InstantSearch searchClient={searchClient} indexName="games" style={{ flex: 1 }}>
+            {sgSearchArea(searchBarProp)}
+            <View style={{flex: 1}}>
+              {sgConsoleRefinements()}
+              {sgHits()}
+            </View>
+        </InstantSearch>
     )
   }
 
   function scrollToTop() {
     listRef.current?.scrollToOffset({ animated: false, offset: 0 });
   }
-
-  function modalContent() {
-    return (
-      <Text>Example Modal.  Click outside this area to dismiss.</Text>
-    )
-  }
-  function searchBarModalButton() {
-    const containerStyle = {
-      backgroundColor: colors.primaryColor, 
-      padding: 30
-    }
-
-    return (
-      <View>
-        <Portal>
-          <Modal visible={visible} onDismiss={() => setVisible(false)} contentContainerStyle={containerStyle}>
-            {modalContent()}
-          </Modal>
-        </Portal>
-        <Button 
-          icon="filter"
-          color={colors.primaryColorAlt}
-          labelStyle={{ fontSize: responsivePxSize(30) }}
-          onPress={() => setVisible(true)}
-        />
-      </View>
-    )
-  }
   
-
   function pageContent() {
       return (
           <View style={styles.container}>

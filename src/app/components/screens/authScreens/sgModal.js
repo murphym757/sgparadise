@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react'
-import { Alert, Modal, StyleSheet, SafeAreaView, Text, View, Pressable } from 'react-native'
+import { Alert, StyleSheet, SafeAreaView, View, Pressable } from 'react-native'
 import { customRefinementContext } from 'main/sgGameSearchScreenContent/sgAlgoliaComponents/sgAlgoliaRefinementContext'
 import { useClearRefinements } from 'react-instantsearch-core'
 import {
@@ -9,11 +9,17 @@ import {
   faFilter,
   AlgoliaSearchTitleText
 } from 'index'
+import { Searchbar, Button, Modal, Portal, Text, Switch } from "react-native-paper"
+
 
 export function ModalButton(props) { 
   const customRefinements = useContext(customRefinementContext)
   const colors = props.refinementColors
   const [modalVisible, setModalVisible] = useState(false);
+  const [visible, setVisible] = useState(false)
+  const [isSwitchOneOn, setIsSwitchOneOn] = useState(false)
+  const [isSwitchTwoOn, setIsSwitchTwoOn] = useState(false)
+  const [isSwitchThreeOn, setIsSwitchThreeOn] = useState(false)
   const { canRefine: canClear, refine: clear } = useClearRefinements();
 
   const styles = StyleSheet.create({
@@ -59,19 +65,30 @@ export function ModalButton(props) {
       },
   });
 
+  function refinementSeparator(groupTitle, groupData, colors, isSwitchOn, onToggleSwitch) {
+    return (
+      <View style={{paddingBottom: 35}}>
+        {customRefinements.customRefinementList(groupTitle, groupData, colors, isSwitchOn, onToggleSwitch)}
+      </View>
+    )
+  }
 
   function refinementListRender() {
+  const onToggleSwitch1 = () => setIsSwitchOneOn(!isSwitchOneOn)
+  const onToggleSwitch2 = () => setIsSwitchTwoOn(!isSwitchTwoOn)
+  const onToggleSwitch3 = () => setIsSwitchThreeOn(!isSwitchThreeOn)
     return (
       <SafeAreaView>
-            <ViewContainer>
+            <View>
               <ContentContainer>
                 <AlgoliaSearchTitleText>Games</AlgoliaSearchTitleText>
+                
               </ContentContainer>
-              {customRefinements.customRefinementList('Sub Genres', 'gameSubgenre', colors)}
-              {customRefinements.customRefinementList('Genres', 'gameGenre', colors)}
-              {customRefinements.customRefinementList('Consoles', 'consoleName', colors)}
-            </ViewContainer>
-            {customRefinements.customRefinementListButtons(colors, setModalVisible, modalVisible)}
+                {refinementSeparator('Sub Genres', 'gameSubgenre', colors, isSwitchOneOn, onToggleSwitch1)}
+                {refinementSeparator('Genres', 'gameGenre', colors, isSwitchTwoOn, onToggleSwitch2)}
+                {refinementSeparator('Consoles', 'consoleName', colors, isSwitchThreeOn, onToggleSwitch3)}
+            </View>
+            {customRefinements.customRefinementListButtons(colors, setVisible, visible)}
           </SafeAreaView>
     )
   }
@@ -114,10 +131,47 @@ export function ModalButton(props) {
       </View>
     );
   }
+
+  function reactPaperModal() {
+    const containerStyle = {
+      backgroundColor: colors.primaryColor, 
+      padding: 30,
+      margin: 20,
+      borderRadius: 20,
+      padding: 30,
+      shadowColor: colors.black,
+      shadowOffset: {
+      width: 0,
+      height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 4,
+      elevation: 5,
+    }
+    return (
+      <View>
+        <Portal>
+          <Modal 
+            visible={visible}
+            onDismiss={() => setVisible(false)} 
+            contentContainerStyle={containerStyle}
+          >
+            {refinementListRender()}
+          </Modal>
+        </Portal>
+        <Button 
+            icon="filter"
+            color={colors.primaryColorAlt}
+            labelStyle={{ fontSize: props.fontSizeProp }}
+            onPress={() => setVisible(true)}
+          />
+      </View>
+    );
+  }
         
   return (
     <View>
-      {modalFunc()}
+      {reactPaperModal()}
     </View>
   );
 }

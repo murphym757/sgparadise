@@ -233,6 +233,7 @@ export default function PageContentGamePage() {
 
   }
 
+  //TODO: Find a way to connect a gievn game's data to the Algolia search query
   function gamePageBottom() {
     return (
       <ScrollView
