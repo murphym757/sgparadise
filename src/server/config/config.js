@@ -28,7 +28,7 @@ import {
   IGDB_CLIENT_ID,
   IGDB_CLIENT_SECRET,
   GIANTBOMB_API_KEY
-} from 'react-native-dotenv'
+} from "@env"
 
 const imagesConfig = {
   sg1000Icon: process.env.EXPO_PUBLIC_SG1KICON,

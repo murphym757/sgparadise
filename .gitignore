@@ -1,6 +1,6 @@
 node_modules/**/*
-.env.local
-.env
+.env*.local
+.env*
 eas.json
 .expo/*
 npm-debug.*
@@ -11,6 +11,9 @@ npm-debug.*
 *.mobileprovision
 *.orig.*
 web-build/
+
+# Ignore iOS project folder
+ios/**/*
 
 # macOS
 .DS_Store

@@ -1,10 +1,17 @@
 export default () => ({
     "expo": {
+        "owner": "murphym757",
+        "name": "Sg Paradise",
+        "slug": "sgparadise",
+        "orientation": "portrait",
+        "icon": "./assets/images/icon.png",
         "scheme": "sgparadise-app-scheme",
+        "notification": {
+            "icon": "./assets/images/icon.png",
+        },
         "ios": {
             "bundleIdentifier": "com.sgparadise.sgparadise",
             "buildNumber": "1.0.0",
-            "orientation": "portrait",
             "supportsTablet": true,
             "userInterfaceStyle": "automatic",
             "splash": {
@@ -17,6 +24,7 @@ export default () => ({
                     "backgroundColor": "#1A1A1A"
                 }
             },
+            "usesAppleSignIn": true
         },
         "extra": {
             igdbClientId: process.env.IGDB_CLIENT_ID,
@@ -37,8 +45,32 @@ export default () => ({
             }
         },
         "plugins": [
-            "expo-font",
-            "expo-router"
+            [
+                "expo-font",
+                {
+                    "fonts": [
+                        "./assets/fonts/spartanFonts/Spartan-Black.ttf",
+                        "./assets/fonts/spartanFonts/Spartan-Bold.ttf",
+                        "./assets/fonts/spartanFonts/Spartan-ExtraBold.ttf",
+                        "./assets/fonts/spartanFonts/Spartan-ExtraLight.ttf",
+                        "./assets/fonts/spartanFonts/Spartan-Light.ttf",
+                        "./assets/fonts/spartanFonts/Spartan-Medium.ttf",
+                        "./assets/fonts/spartanFonts/Spartan-Regular.ttf",
+                        "./assets/fonts/spartanFonts/Spartan-SemiBold.ttf",
+                        "./assets/fonts/spartanFonts/Spartan-Thin.ttf",
+                        "./assets/fonts/lemonMilkFonts/LEMONMILK-Bold.otf",
+                        "./assets/fonts/lemonMilkFonts/LEMONMILK-BoldItalic.otf",
+                        "./assets/fonts/lemonMilkFonts/LEMONMILK-Light.otf",
+                        "./assets/fonts/lemonMilkFonts/LEMONMILK-LightItalic.otf",
+                        "./assets/fonts/lemonMilkFonts/LEMONMILK-Medium.otf",
+                        "./assets/fonts/lemonMilkFonts/LEMONMILK-MediumItalic.otf",
+                        "./assets/fonts/lemonMilkFonts/LEMONMILK-Regular.otf",
+                        "./assets/fonts/lemonMilkFonts/LEMONMILK-RegularItalic.otf"
+                    ]
+                }
+            ],
+            "expo-router",
+            "expo-apple-authentication",
         ],
         "updates": {
             "url": "https://u.expo.dev/53789bae-3cfb-4d0a-9c25-73866c02b858"
