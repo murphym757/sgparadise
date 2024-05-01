@@ -40,7 +40,7 @@
     "expo-image": "~1.10.6",
     "expo-linear-gradient": "~12.7.2",
     "expo-linking": "~6.2.2",
-    "expo-router": "~3.4.9",
+    "expo-router": "~3.4.10",
     "expo-splash-screen": "~0.26.5",
     "expo-status-bar": "~1.11.1",
     "expo-system-ui": "~2.9.4",
@@ -48,6 +48,7 @@
     "firebase": "^9.18.0",
     "html-entities": "^1.4.0",
     "instantsearch.js": "^4.46.1",
+    "jwt-decode": "^4.0.0",
     "lottie-react-native": "6.5.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -70,7 +71,8 @@
     "reanimated-color-picker": "^1.5.1",
     "sharp": "^0.30.7",
     "string-similarity": "^4.0.4",
-    "styled-components": "^5.3.0"
+    "styled-components": "^5.3.0",
+    "expo-secure-store": "~12.8.1"
   },
   "devDependencies": {
     "@babel/core": "^7.18.6",

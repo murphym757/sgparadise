@@ -3,13 +3,11 @@ import React, { useState, useEffect, useContext } from 'react'
 import { FlatList, Pressable, View } from 'react-native'
 import { Container, CurrentThemeContext, MainFont, MainHeading, MainSubFont, SafeAreaViewContainer, SearchGameResults, windowHeight } from 'index'
 import { useAuth } from 'auth/authContext'
-import { useSearchBar } from 'main/sgGameSearchScreenContent/searchIndex'
 import axios from 'axios'
 
 export default function sgSearchResultsScreen({route, navigation}) {
     //let { searchBarTitle, searchType, searchQuery } = route.params
     const { clientIdIGDB, accessTokenIGDB, igdbConsoleId, gbConsoleId, selectedSystemLogo, searchType } = route.params
-    const { gamesFilterListName, sgIGDBSearchQuery } = useSearchBar()
     const { unixTimestampConverter } = useAuth()
     const colors = useContext(CurrentThemeContext)
 

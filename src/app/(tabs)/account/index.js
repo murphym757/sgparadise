@@ -1,11 +1,24 @@
 import React, { useContext, useState } from "react"
 import { useLocalSearchParams, Link, Stack } from "expo-router"
 import { StyleSheet, Text, Dimensions, View, Pressable } from "react-native"
+import * as AppleAuthentication from 'expo-apple-authentication';
 import { CurrentThemeContext, Container, MainFont, MainSubFont } from 'index'
 import { PageStructureContext } from '../reuseableComponents/pageStructure'
 import { TextInput, Button } from 'react-native-paper'
+import { useAppleAuth } from 'auth/appleAuthContext'
 
 export default function PageContentGamePage() {
+    const { 
+        appleAuthAvailable,
+        appleAuthButton, 
+        appleUserToken, 
+        appleUserEmail, 
+        appleTokenExpirationDate, 
+        getAppleCredentialState,
+        logoutAppleUser,
+        refreshAppleToken
+    } = useAppleAuth()
+    console.log("🚀 ~ PageContentGamePage ~ appleTokenExpirationDate:", appleTokenExpirationDate)
     const windowWidth = Dimensions.get('window').width
     const colors = useContext(CurrentThemeContext)
     const pageStructure = useContext(PageStructureContext)
@@ -41,6 +54,10 @@ export default function PageContentGamePage() {
         subtitle: {
             fontSize: 36,
             color: colors.secondaryColor,
+        },
+        button: {
+            width: 388,
+            height: 35,
         },
     })  
 
@@ -147,24 +164,6 @@ export default function PageContentGamePage() {
         }
     //*-----Sign Up Section-----*/
 
-    //* Apple Login Section
-        function appleLogin() {
-            const formButton = 'Sign In With Apple'
-            return (
-                <View>
-                    <Button
-                        style={{backgroundColor: colors.secondaryFontColor}}
-                        mode="contained"
-                        icon="apple" 
-                        onPress={() => console.log('Pressed')}>
-                            {formButton}
-                    </Button>
-                </View>
-            )
-        }
-    //*-----Apple Login Section-----*/
-
-
     function registrationCheck() {
         return (
             <View>
@@ -173,11 +172,48 @@ export default function PageContentGamePage() {
         )
     }
 
+    function siteWideButton(buttonTitle, buttonFunction) {
+        return (
+            <Button 
+                style={{buttonColor: colors.primaryColor, backgroundColor: colors.secondaryColor}}
+                mode="contained" 
+                onPress={buttonFunction}>
+                    {buttonTitle}
+            </Button>
+        )
+    }
+
+    //* Apple Login Section
+    //* Needs to retrieve the user's email (optional) and uid. This will then go into firebase for the user's account
+        function appleAuthCheck() {
+            return (
+                <View>
+                    {appleUserToken === undefined || appleUserToken === null
+                        ?   appleAuthButton() 
+                        :   <View>
+                                <Text style={{color: colors.primaryFontColor}}>Apple User Email: {appleUserEmail}</Text>
+                                <Text style={{color: colors.primaryFontColor}}>Apple Token Expiration Date: {appleTokenExpirationDate}</Text>
+                                <View style={{paddingVertical:20}}>
+                                    {siteWideButton('Get Apple Credential State', () => getAppleCredentialState())}
+                                </View>
+                                <View style={{paddingVertical:20}}>
+                                    {siteWideButton('Refresh', () => refreshAppleToken())}
+                                </View>
+                                <View style={{paddingVertical:20}}>
+                                    {siteWideButton('Logout', () => logoutAppleUser())}
+                                </View>
+                            </View>
+                    }
+                </View>
+            )
+        }
+    //*-----Apple Login Section-----*/
+
     function authCheck() {
         return (
             <Container style={{width: windowWidth}}>
                 {registrationCheck()}
-                {appleLogin()}
+                {appleAuthCheck()}
                 <Text style={{color: colors.primaryFontColor}}>Create a auth section</Text>
             </Container>
         )

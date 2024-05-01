@@ -51,6 +51,10 @@ import {
     windowHeight,
 } from 'index'
 
+import AppleAuthContext from './appleAuthContext'
+
+//* Break this page down into smaller components: IGDB, Firebase, Auth, etc.
+
 const AuthContext = createContext()
 
 export function useAuth() {
@@ -65,24 +69,24 @@ const initialState = {
 
 function reducer(state, action) {
     switch (action.type) {
-      case 'SET_USER':
-        return {
-          ...state,
-          currentUID: action.payload.currentUID,
-          currentUser: action.payload.currentUser,
-          isLoading: false,
-        };
-      case 'CLEAR_USER':
-        return {
-          ...state,
-          currentUID: action.payload.currentUID,
-          currentUser: action.payload.currentUser,
-          isLoading: false,
-        };
-      default:
-        return state;
-    }
-  }
+        case 'SET_USER':
+            return {
+            ...state,
+            currentUID: action.payload.currentUID,
+            currentUser: action.payload.currentUser,
+            isLoading: false,
+            }
+        case 'CLEAR_USER':
+            return {
+            ...state,
+            currentUID: action.payload.currentUID,
+            currentUser: action.payload.currentUser,
+            isLoading: false,
+            }
+        default:
+            return state;
+        }
+}
 
 export function AuthProvider({ children }) {
     const [state, dispatch] = useReducer(reducer, initialState)
@@ -101,6 +105,21 @@ export function AuthProvider({ children }) {
     const sgGGIGDB = '35'
     const sgMSIGDB = '64'
     const sgSatIGDB = '32'
+
+
+    //* Apple Authentification
+    
+
+    //*-----Apple Authentification-----//
+
+    //* IGDB Authentification
+
+    //*-----IGDB Authentification-----//
+
+    //* Firebase Authentification
+
+    //*-----Firebase Authentification-----//
+
 
     function signUp(email, password, setCheckEmailExistence) {
         const auth = getAuth();

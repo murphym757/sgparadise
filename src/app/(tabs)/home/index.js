@@ -1,6 +1,7 @@
 import React, { memo, useCallback, useContext, useEffect, useState } from 'react'
 import { FlatList, SafeAreaView, ScrollView, StyleSheet, Text, View, Pressable } from 'react-native'
 
+
 //* Expo
 import { useFonts } from 'expo-font'
 import { Image } from 'expo-image'
@@ -13,6 +14,7 @@ import { SgHomeScreen } from 'main/sgHomeScreenIndex'
 import { ActivityIndicator, Button } from 'react-native-paper'
 
 import { useAuth } from 'auth/authContext'
+import { useAppleAuth } from 'auth/appleAuthContext'
 import { homeScreenListingsContext } from 'main/sgHomeScreenGames/sgGameListingScreen'
 import { monthlyGameListingsContext } from 'main/sgHomeScreenGames/sgGameMonthlyListingsContext'
 import { sectionHeadingsContext } from 'main/sgHomeScreenGames/sgHomeGamesSectionHeadingContext'
@@ -35,6 +37,7 @@ SplashScreen.preventAutoHideAsync()
 
 export default function Page() {
     const { currentUID, currentUser, displayTopNewlyData, getGameDataSpotlight, toNewSection } = useAuth()
+    const { appleAuthAvailable, checkAppleAuthAvailability, userToken } = useAppleAuth()
     const { state, dispatch } = useLoader()
     const isLoading = state.isLoading
     const colors = useContext(CurrentThemeContext)
@@ -45,6 +48,7 @@ export default function Page() {
     const sectionHeadings = useContext(sectionHeadingsContext)
     const topHalfHomeScreenData = useContext(topHalfHomeScreenContext)
     const bottomHalfHomeScreenData = useContext(bottomHalfHomeScreenContext)
+    
     const [activeButton, setActiveButton] = useState()
     const [currentMonth, setCurrentMonth] = useState()
     const [homeScreenGameArray1, setHomeScreenGameArray1] = useState([])
@@ -56,6 +60,7 @@ export default function Page() {
     console.log("🚀 ~ Page ~ spotlightGame:", spotlightGame)
     const [spotlightGameNameLength, setSpotlightGameNameLength] = useState()
     const [userInfo, setUserInfo] = useState()
+    console.log("🚀 ~ Page ~ userInfo:", userInfo)
     const [fontsLoaded, fontError] = useFonts({
         'SpartanBlack': require('../../../../assets/fonts/spartanFonts/Spartan-Black.ttf'),
         'SpartanBold':require('../../../../assets/fonts/spartanFonts/Spartan-Bold.ttf'),
@@ -146,6 +151,8 @@ export default function Page() {
             GenreSpecificArraySection3() 
         )
     }
+
+    
     
     //* IMPORTANT: This should be one of the only places where the data is loaded (throughout the app, to reduce data usage)
     useEffect(() => {
@@ -159,7 +166,7 @@ export default function Page() {
     
     useEffect(() => {
         if (!isLoading) {
-            setUserInfo(currentUID)
+            checkAppleAuthAvailability()
             gameOfMonthData.dateCheck(monthlyGameListings, monthlyGameData)
         }
     }, [isLoading]) // Run when isLoading changes
@@ -281,6 +288,10 @@ export default function Page() {
         }
         return (
             <View>
+                {appleAuthAvailable === true 
+                    ? <Text style={{color: colors.primaryColorAlt}}>Apple Auth is available</Text>
+                    : <Text style={{color: colors.primaryColorAlt}}>Apple Auth is not available</Text>
+                }
                 <Text style={styles.title}>Hello Worlds</Text>
                 <Text style={styles.subtitle}>This is the first page of your app.</Text>
             </View>

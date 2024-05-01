@@ -14,6 +14,7 @@ export default () => ({
             "buildNumber": "1.0.0",
             "supportsTablet": true,
             "userInterfaceStyle": "automatic",
+            "usesAppleSignIn": true,
             "splash": {
                 "image": "./assets/images/dayThemeSgParadise.png",
                 "resizeMode": "contain",
@@ -24,7 +25,10 @@ export default () => ({
                     "backgroundColor": "#1A1A1A"
                 }
             },
-            "usesAppleSignIn": true
+            "usesAppleSignIn": true,
+            "config": {
+                "usesNonExemptEncryption": false
+            }
         },
         "extra": {
             igdbClientId: process.env.IGDB_CLIENT_ID,
@@ -67,6 +71,12 @@ export default () => ({
                         "./assets/fonts/lemonMilkFonts/LEMONMILK-Regular.otf",
                         "./assets/fonts/lemonMilkFonts/LEMONMILK-RegularItalic.otf"
                     ]
+                }
+            ],
+            [
+                "expo-secure-store",
+                {
+                    "faceIDPermission": "Allow $(PRODUCT_NAME) to access your Face ID biometric data."
                 }
             ],
             "expo-router",

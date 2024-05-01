@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { View, FlatList, Pressable } from 'react-native'
 import { useTags } from 'auth/tagsContext'
-import { useSearchBar } from 'main/sgGameSearchScreenContent/searchIndex'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { useIsFocused } from '@react-navigation/native'
 import {
@@ -43,7 +42,6 @@ import {
 
 export default function ConfirmAddGameScreen({navigation, route}) {
     const [ isLoading, setIsLoading] = useState(true)
-    const { searchBar, gameName } = useSearchBar()
     const { selectedTags, tagsSelection} = useTags()
     const colors = useContext(CurrentThemeContext)
     const sgDB = firebase.firestore()
@@ -161,7 +159,6 @@ export default function ConfirmAddGameScreen({navigation, route}) {
                     <View style={{
                         width: 300
                     }}>
-                        {searchBar(searchBarTitle, searchType, searchQuery)}  
                     </View>
                     <Pressable onPress={() => setSearchFilterSelected(true)}>
                     <View style={{ paddingLeft: 10, marginTop: 20, alignItems: 'right', justifyContent: 'center', backgroundColor: colors.primaryColor }}>

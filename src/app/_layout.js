@@ -7,12 +7,12 @@ import { CurrentThemeContext } from 'index'
 //* React Navigation 
 import { ThemeProvider, DefaultTheme } from "@react-navigation/native"
 
-//* Providers
+//* Providers (Important Breakdown AuthProvider)
 import { AuthProvider } from './components/screens/authScreens/authContext'
 import { IconCreatorProvider } from './components/screens/userScreens/userIconContext'
 import { LoaderProvider } from '../server/config/loaderContext'
-import { SearchBarProvider } from './components/screens/mainScreens/sgGameSearchScreenContent/searchIndex'
 import { TagsProvider } from './components/screens/authScreens/tagsContext'
+import { AppleAuthProvider } from './components/screens/authScreens/appleAuthContext'
 
 import { Provider as PaperProvider } from 'react-native-paper'
 //
@@ -63,13 +63,13 @@ function AppProviders() {
         <ThemeProvider value={sgParadiseAppTheme}>
             <LoaderProvider>
                 <AuthProvider>
-                    <IconCreatorProvider>
-                        <TagsProvider>
-                            <SearchBarProvider>
+                    <AppleAuthProvider>
+                        <IconCreatorProvider>
+                            <TagsProvider>
                                 <AppStack colors={colors} />
-                            </SearchBarProvider>
-                        </TagsProvider>
+                            </TagsProvider>
                     </IconCreatorProvider>
+                    </AppleAuthProvider>
                 </AuthProvider>
             </LoaderProvider>
         </ThemeProvider>

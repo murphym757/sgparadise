@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext } from 'react';
 import { ActivityIndicator, Button, FlatList, SafeAreaView, ScrollView, Pressable, View } from 'react-native'
 import { AppWideImageContext } from 'main/sgImageContext'
 import { useTags } from 'auth/tagsContext'
-import { useSearchBar } from 'main/sgGameSearchScreenContent/searchIndex'
 import axios from 'axios'
 // React Navigation
 import { createNativeStackNavigatorigator } from '@react-navigation/native-stack'
@@ -34,7 +33,6 @@ export default function SgIGDBGameSearchScreen({route, navigation}, props) {
     const [ searchQuery, setSearchQuery ] = useState('')
     const [ searchType, setSearchType ] = useState('sgIGDBSearch')
     const [ sgConsoleIcons, setSgConsoleIcons ] = useState([])
-    const { searchBar, searchResults } = useSearchBar()
     const { selectedSystemLogo } = route.params
     const { selectedTags, tagsSelection } = useTags()
     const colors = useContext(CurrentThemeContext)

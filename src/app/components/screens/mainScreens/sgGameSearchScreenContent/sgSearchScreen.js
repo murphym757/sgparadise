@@ -1,7 +1,6 @@
 
 import React, { useState, useEffect, useContext } from 'react'
 import { View } from 'react-native'
-import { useSearchBar } from 'main/sgGameSearchScreenContent/searchIndex'
 import { Container, CurrentThemeContext, MainHeading, SafeAreaViewContainer, TouchableButton, TouchableButtonFont, windowHeight } from 'index';
 import axios from 'axios'
 
@@ -15,7 +14,6 @@ export default function SgSearchScreen({route, navigation}) {
     const [ searchQuery, setSearchQuery ] = useState('') //Figure out why searchQuery is coming back as "undefined"
     const [ searchQueryArray, setSearchQueryArray ] = useState([])
     const { keySearchData, keySearchDataPartOfArray, clientIdIGDB, accessTokenIGDB, igdbConsoleId, gbConsoleId, selectedSystemLogo, searchType } = route.params
-    const { searchBar, sgIGDBSearchQuery } = useSearchBar()
     const colors = useContext(CurrentThemeContext)
 
     // IGDB search data (Put on confirmation page)
@@ -89,7 +87,6 @@ export default function SgSearchScreen({route, navigation}) {
         return (
             <Container>
                 <MainHeading>{"Search for a game"}</MainHeading>
-                {searchBar(searchBarTitle, searchType, searchQuery, searchBarTouched, homepageSearchBar)}
                 <TouchableButton onPress={() => confirmSearchGame()}>
                     <TouchableButtonFont>Search</TouchableButtonFont>
                 </TouchableButton>
