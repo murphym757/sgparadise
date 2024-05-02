@@ -1,9 +1,33 @@
 import React, { createContext, useContext, useState } from 'react'
+import {
+    collection,
+    deleteField,
+    doc,
+    getDoc,
+    getDocs,
+    limit,
+    orderBy,
+    query,
+    serverTimestamp,
+    setDoc,
+    updateDoc,
+    where,
+    writeBatch
+} from "firebase/firestore"
 import { 
+    createUserWithEmailAndPassword,
+    EmailAuthProvider,
     getAuth, 
-    createUserWithEmailAndPassword, 
-    signInWithEmailAndPassword 
+    onAuthStateChanged,
+    reauthenticateWithCredential, 
+    sendPasswordResetEmail,
+    signInWithEmailAndPassword,
+    updateEmail,
+    updatePassword,
+    updateProfile,
 } from "firebase/auth"
+import { auth, sgDB, sgImageStorage } from 'server/config/config'
+
 
 const FirebaseAuthContext = createContext()
 
@@ -21,6 +45,7 @@ export function FirebaseAuthProvider({ children }) {
                 createUserWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
                     const user = userCredential.user
+                    console.log("🚀 ~ .then ~ user:", user)
                     addUserDataUsers(user.uid, email)
                 })
                 .catch((error) => {
@@ -34,8 +59,7 @@ export function FirebaseAuthProvider({ children }) {
 
             //* Create User Data sgUsers (on Cloud Firestore)
             async function addUserDataUsers(userID, userEmail) {
-                const newUserNameRef = doc(sgDB, 'sgUsers', userID)
-                await setDoc(newUserNameRef, {   
+                await setDoc(doc(sgDB, 'sgUsers', userID), {   
                     id: userID,
                     email: userEmail,
                     createdAt: serverTimestamp()
