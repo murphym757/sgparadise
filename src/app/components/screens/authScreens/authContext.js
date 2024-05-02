@@ -308,6 +308,7 @@ export function AuthProvider({ children }) {
             console.log(errorMessage)
         })
     }
+    //*-----Firebase Authentification-----//
 
     async function displayDataNew() {
         const q = query(collection(sgDB, "cities"), where("capital", "==", true));

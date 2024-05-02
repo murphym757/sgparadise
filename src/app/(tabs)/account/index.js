@@ -5,7 +5,10 @@ import * as AppleAuthentication from 'expo-apple-authentication';
 import { CurrentThemeContext, Container, MainFont, MainSubFont } from 'index'
 import { PageStructureContext } from '../reuseableComponents/pageStructure'
 import { TextInput, Button } from 'react-native-paper'
+import { useAuth } from 'auth/authContext'
 import { useAppleAuth } from 'auth/appleAuthContext'
+import { useFirebaseAuth } from 'auth/firebaseAuthContext'
+import { RegistrationValidationsContext } from 'user/registrationValidationContext'
 
 export default function PageContentGamePage() {
     const { 
@@ -18,21 +21,89 @@ export default function PageContentGamePage() {
         logoutAppleUser,
         refreshAppleToken
     } = useAppleAuth()
-    console.log("🚀 ~ PageContentGamePage ~ appleTokenExpirationDate:", appleTokenExpirationDate)
+    const { firebaseAuthValue } = useFirebaseAuth()
+    const { validateRegisterEmail, validateRegisterPassword } = useAuth()
     const windowWidth = Dimensions.get('window').width
     const colors = useContext(CurrentThemeContext)
     const pageStructure = useContext(PageStructureContext)
     const pageTitle = 'Index page of Account Tab'
     const isNextPage = false
     const backHeaderTitle = 'Search'
+    const [newUserErrorEmailCheck, setNewUserErrorEmailCheck] = useState([])
+    console.log("🚀 ~ PageContentGamePage ~ newUserErrorEmailCheck:", newUserErrorEmailCheck)
+    const [newUserErrorPasswordCheck,  setNewUserErrorPasswordCheck] = useState([])
+    console.log("🚀 ~ PageContentGamePage ~ newUserErrorPasswordCheck:", newUserErrorPasswordCheck)
     const [userLoggedIn, setUserLoggedIn] = useState(false) //* <---------Remove this line
     const [username, setUsername] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
+    const [passwordCheckStatus, setPasswordCheckStatus] = useState('fulfilled')
     const [registrationType, setRegistrationType] = useState('login')
     const [error, setError] = useState(null)
     const [helperText, setHelperText] = useState('hello world')
+
+    //* Validation Errors --- (Registration Screen)
+    const newUserEmailValidationErrors = validateRegisterEmail(email, firebaseAuthValue.checkEmailExistence)
+    const newUserPasswordValidationErrors = validateRegisterPassword(password, confirmPassword)
+
+    function userRegistrationCheck() {
+        setNewUserErrorEmailCheck([])
+        setNewUserErrorPasswordCheck([])
+    }
+
+
+
+
+    //*------------------------------------New User Email Validation------------------------------------*//
+
+    function newUserEmailValidationPromise() {
+        const newUserEmailPromise = new Promise((resolve, reject) => {
+            if (newUserEmailValidationErrors.length > 0) {
+                setNewUserErrorEmailCheck(newUserEmailValidationErrors)
+                reject('Email validation failed:', newUserEmailValidationErrors)
+            } else {
+                setNewUserErrorEmailCheck(newUserEmailValidationErrors)
+                resolve('Email is valid!')
+            } 
+        })
+        return newUserEmailPromise
+    }
+    
+    function newUserPasswordValidationPromise() {
+        const passwordMatchPromise = new Promise((resolve, reject) => {
+            if (newUserPasswordValidationErrors.length > 0) {
+                setNewUserErrorPasswordCheck(newUserPasswordValidationErrors)
+                console.log('Password validation failed:', newUserPasswordValidationErrors);
+            } else {
+                if (password == confirmPassword) {
+                    resolve('The password has been updated')
+                    setNewUserErrorPasswordCheck(null)
+                } else {
+                    reject('The passwords do not match')
+                    setNewUserErrorPasswordCheck(newUserPasswordValidationErrors)
+                    setPasswordCheckStatus('rejected')
+                }
+            }
+        })
+        return passwordMatchPromise
+    }
+    
+    function validationNewUserFunction() {
+        Promise.all([newUserEmailValidationPromise(), newUserPasswordValidationPromise()]).then(() => {
+            firebaseAuthValue.sgAccountSignUp(email, password, firebaseAuthValue.setCheckEmailExistence)
+        }).catch((err) => {
+            console.error(err)
+        }).finally(() => {
+            console.log( "The Promise is settled, meaning it has been resolved or rejected. --- New User Email Validation")
+        })
+    }
+
+    //*-------------------*/
+
+
+
+
 
     const styles = StyleSheet.create({
         container: {
@@ -70,7 +141,7 @@ export default function PageContentGamePage() {
             //TODO: Create a profile edit section
         //TODO: Create a settings section
 
-    function accountTextField(textInputLabel, textInputValue, textChangeText) {
+    function accountTextField(textInputLabel, textInputValue, textChangeText, errorBool, errorMessage) {
         return (
             <View style={{flex: 1}}>
                 <TextInput
@@ -81,10 +152,10 @@ export default function PageContentGamePage() {
                     underlineColor={colors.secondaryColor}
                     activeUnderlineColor={colors.secondaryColor}
                     style={{backgroundColor: colors.primaryColor}}
-                    error={error} // Add this line
-                    helperText={helperText} // And this line
+                    error={errorBool} // Add this line
+                    errorMessage={errorMessage} // And this line
                 />
-                {error && <Text>{helperText}</Text>}
+                {errorBool && <Text>{errorMessage}</Text>}
             </View>
         )
     }
@@ -112,27 +183,47 @@ export default function PageContentGamePage() {
             )
         }
 
-        function inputForm(formTitle, formFields, formButton, formRedirect, formFieldsAlt) {
+        function inputFormFields(formTitle, formFields, formRedirect) {
             return (
-                <View style={{justifyContent: "center", paddingBottom: 50}}>
+                <View>
                     <MainFont style={{color: colors.primaryFontColor}}>{formTitle}</MainFont>
                     {formFields.map((formField, index) => {
                         return inputRow(formField.label, formField.value, formField.onChange, index)
                     })}
                     {formRedirect === true ? formRedirectLink('Forgot Password') : null}
-                    <View style={{paddingTop: 20}}>
-                        <Button
-                            style={{buttonColor: colors.primaryColor, backgroundColor: colors.secondaryColor}}
-                            mode="contained" 
-                            onPress={() => console.log('Pressed')}>
-                                {formButton}
-                        </Button>
-                    </View>
-                    <View style={{paddingTop: 20}}>
+                </View>
+            )
+        }
+        
+        function inputFormButton(formButton) {
+            return (
+                <View style={{paddingTop: 20}}>
+                    <Button
+                        style={{buttonColor: colors.primaryColor, backgroundColor: colors.secondaryColor}}
+                        mode="contained" 
+                        onPress={() => validationNewUserFunction()}>
+                            {formButton}
+                    </Button>
+                </View>
+            )
+        }
+
+        function inputFormRedirectLink(formFieldsAlt) {
+            return (
+                <View style={{paddingTop: 20}}>
                         <Pressable onPress={formFieldsAlt.onChange}>
                             <MainFont>{formFieldsAlt.value}</MainFont><MainSubFont>{formFieldsAlt.label}</MainSubFont>
                         </Pressable>
                     </View>
+            )
+        }
+
+        function inputForm(formTitle, formFields, formButton, formRedirect, formFieldsAlt, formType) {
+            return (
+                <View style={{justifyContent: "center", paddingBottom: 50}}>
+                    {inputFormFields(formTitle, formFields, formRedirect)}
+                    {inputFormButton(formButton)}
+                    {inputFormRedirectLink(formFieldsAlt)}
                 </View>
             )
         }
@@ -146,7 +237,7 @@ export default function PageContentGamePage() {
             ]
             const formFieldsAlt = { label: 'Sign Up', value: `Don't Have Account?`, onChange: () => setRegistrationType('signUp')}
 
-            return inputForm('Login', formFields, 'Login', true, formFieldsAlt)
+            return inputForm('Login', formFields, 'Login', true, formFieldsAlt, 'login')
         }
     //*-----Login Section-----*/
 
@@ -160,7 +251,7 @@ export default function PageContentGamePage() {
             ]
             const formFieldsAlt = { label: 'Login', value: 'Have An Account?', onChange: () => setRegistrationType('login')}
 
-            return inputForm('Sign Up', formFields, 'Sign Up', false, formFieldsAlt)
+            return inputForm('Sign Up', formFields, 'Sign Up', false, formFieldsAlt, 'signUp')
         }
     //*-----Sign Up Section-----*/
 

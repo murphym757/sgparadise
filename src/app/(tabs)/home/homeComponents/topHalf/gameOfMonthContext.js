@@ -8,7 +8,7 @@ function dateCheck(monthlyGameListings, monthlyGameData) {
             { console: 'sg32X', game: '', genreGroup: monthlyGameListings.genreGroupFeb, monthName: 'February' },
             { console: 'sgGenesis', game: 'sonic-the-hedgehog-2', genreGroup: monthlyGameListings.genreGroupMar, monthName: 'March' },
             { console: 'sgGenesis', game: 'sonic-the-hedgehog-2', genreGroup: monthlyGameListings.genreGroupApr, monthName: 'April' },
-            { console: 'sgSat', game: '', genreGroup: monthlyGameListings.genreGroupMay, monthName: 'May' },
+            { console: 'sgGenesis', game: 'sonic-the-hedgehog-2', genreGroup: monthlyGameListings.genreGroupMay, monthName: 'May' },
             { console: 'sgGenesis', game: '', genreGroup: monthlyGameListings.genreGroupJun, monthName: 'June' },
             { console: 'sgCD', game: '', genreGroup: monthlyGameListings.genreGroupJul, monthName: 'July' },
             { console: 'sgGG', game: '', genreGroup: monthlyGameListings.genreGroupAug, monthName: 'August' },

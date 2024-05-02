@@ -9,6 +9,7 @@ import { ThemeProvider, DefaultTheme } from "@react-navigation/native"
 
 //* Providers (Important Breakdown AuthProvider)
 import { AuthProvider } from './components/screens/authScreens/authContext'
+import { FirebaseAuthProvider } from './components/screens/authScreens/firebaseAuthContext'
 import { IconCreatorProvider } from './components/screens/userScreens/userIconContext'
 import { LoaderProvider } from '../server/config/loaderContext'
 import { TagsProvider } from './components/screens/authScreens/tagsContext'
@@ -64,11 +65,13 @@ function AppProviders() {
             <LoaderProvider>
                 <AuthProvider>
                     <AppleAuthProvider>
-                        <IconCreatorProvider>
-                            <TagsProvider>
-                                <AppStack colors={colors} />
-                            </TagsProvider>
-                    </IconCreatorProvider>
+                        <FirebaseAuthProvider>
+                            <IconCreatorProvider>
+                                <TagsProvider>
+                                    <AppStack colors={colors} />
+                                </TagsProvider>
+                            </IconCreatorProvider>
+                        </FirebaseAuthProvider>
                     </AppleAuthProvider>
                 </AuthProvider>
             </LoaderProvider>
