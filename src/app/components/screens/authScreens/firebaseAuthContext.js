@@ -12,7 +12,8 @@ import {
     setDoc,
     updateDoc,
     where,
-    writeBatch
+    writeBatch,
+    deleteDoc
 } from "firebase/firestore"
 import { 
     createUserWithEmailAndPassword,
@@ -25,6 +26,7 @@ import {
     updateEmail,
     updatePassword,
     updateProfile,
+    deleteUser
 } from "firebase/auth"
 import { auth, sgDB, sgImageStorage } from 'server/config/config'
 
@@ -37,6 +39,8 @@ export function useFirebaseAuth() {
 
 export function FirebaseAuthProvider({ children }) {
     const [checkEmailExistence, setCheckEmailExistence] = useState(false)
+    const [checkUserExistence, setCheckUserExistence] = useState(null)
+    const [checkPasswordExistence, setCheckPasswordExistence] = useState(null)
 
     //* Sign Up Process
         //* Authentification Section
@@ -45,7 +49,6 @@ export function FirebaseAuthProvider({ children }) {
                 createUserWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
                     const user = userCredential.user
-                    console.log("🚀 ~ .then ~ user:", user)
                     addUserDataUsers(user.uid, email)
                 })
                 .catch((error) => {
@@ -68,28 +71,61 @@ export function FirebaseAuthProvider({ children }) {
     //*-----Sign Up Process-----*/
     //* Delete User Process
         //* Authentification Section
-            function deleteAccountAuth() {
-                return auth.currentUser.delete().then(() => {
-                    navigation.navigate('Home')
-                }).catch((err) => {
-                    setError(`${err}`)
-                })
-            }
+        function deleteAccountAuth() {
+            const auth = getAuth()
+            const user = auth.currentUser
+        
+            deleteUser(user).then(() => {
+        		// User deleted.
+            }).catch((err) => {
+                setError(`${err}`)
+            });
+        }
     
          //* Delete User Data sgUsers (on Cloud Firestore)
-            async function deleteAccountDb(userId) {
-                const accountRef = doc(sgDB, 'users', userId)
+        async function deleteAccountDb(userId) {
+            await deleteDoc(doc(sgDB, 'sgUsers', userId))
+        }
         
-                await updateDoc(accountRef, {
-                    account: deleteField()
-                })
-            }
     //*-----Delete User Process-----*/
+    //* Login/Logout Process
+        async function sgLogIn(email, password) {
+            const auth = getAuth();
+                return signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    // Signed in 
+                        const user = userCredential.user
+                    //
+                })
+                .catch((error) => {
+                    const errorCode = error.code
+                    const errorMessage = error.message
+                    if (errorCode === 'auth/user-not-found') return (
+                        setCheckUserExistence(false)
+                    )
+                    if (errorCode === 'auth/wrong-password') return (
+                        setCheckPasswordExistence(false)
+                    )
+                });
+        }
 
+        function sgLogOut() {
+            return auth.signOut().then(() => {
+                navigation.navigate('Home')
+            }).catch((err) => {
+                setError(`${err}`)
+            })
+        }
+    //*-----Login/Logout Process-----*/
     const firebaseAuthValue = {
         checkEmailExistence,
+        checkUserExistence,
+        checkPasswordExistence,
+        setCheckUserExistence,
         sgAccountSignUp,
-        deleteAccountAuth
+        deleteAccountAuth,
+        sgLogIn,
+        sgLogOut
     }
 
     const cloudFirestoreValue = {
@@ -98,8 +134,9 @@ export function FirebaseAuthProvider({ children }) {
     }
 
     const value = {
+        auth,
         firebaseAuthValue,
-        cloudFirestoreValue
+        cloudFirestoreValue,
     }
 
     return (

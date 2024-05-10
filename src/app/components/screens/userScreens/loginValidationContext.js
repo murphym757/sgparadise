@@ -1,20 +1,20 @@
-import React from 'react'
+import React, { createContext } from 'react'
 
 //* This is the function is used to reauthenticate the user via checking email and password (universal such be on other screens)
 
-  function emailValidationPromise(passingEmailData) {
+  function emailValidationPromise(emailData) {
     const emailMatchPromise = new Promise((resolve, reject) => {
-      if (passingEmailData.emailValidationErrors.length < 0) {
-        passingEmailData.setErrorEmailCheck(passingEmailData.emailValidationErrors)
-        console.log('Email validation failed:', passingEmailData.emailValidationErrors);
+      if (emailData.emailValidationErrors.length < 0) {
+        emailData.setErrorEmailCheck(emailData.emailValidationErrors)
+        console.log('Email validation failed:', emailData.emailValidationErrors);
       } else {
-        if (passingEmailData.email == passingEmailData.currentUser.email) {
+        if (emailData.email == currentUser.email) {
           resolve('The email has been updated')
-          passingEmailData.setErrorEmailCheck(null)
+          emailData.setErrorEmailCheck(null)
         } else {
           reject('The email is still the same')
-          passingEmailData.setErrorEmailCheck(passingEmailData.emailValidationErrors)
-          passingEmailData.setEmailCheckStatus('rejected')
+          emailData.setErrorEmailCheck(emailData.emailValidationErrors)
+          emailData.setEmailCheckStatus('rejected')
         }
         console.log('Email is valid!');
       }
@@ -26,14 +26,14 @@ import React from 'react'
 
 //*------------------------------------Login Email Validation------------------------------------*//
 
-  function emailLoginValidationPromise(passingUserData) {
+  function emailLoginValidationPromise(emailData, firebaseAuthValue) {
     const loginEmailMatchPromise = new Promise((resolve, reject) => {
-      if (passingUserData.emailValidationErrors.length < 0) {
-        passingUserData.setUserErrorEmailCheck(passingUserData.emailValidationErrors)
-        reject(('Email validation failed:', passingUserData.emailValidationErrors));
+      if (emailData.loginEmailValidationErrors.length < 0) {
+        emailData.setLoginErrorEmailCheck(emailData.loginEmailValidationErrors)
+        reject(('Email validation failed:', emailData.loginEmailValidationErrors));
       } else {
-        passingUserData.setUserErrorEmailCheck(passingUserData.emailValidationErrors)
-        passingUserData.setCheckUserExistence(true)
+        emailData.setLoginErrorEmailCheck(emailData.loginEmailValidationErrors)
+        firebaseAuthValue.setCheckUserExistence(true)
         //? There is no need to set the password check to true because the password is not being checked here
         resolve('Email is valid!')
       } 
@@ -41,9 +41,9 @@ import React from 'react'
     return loginEmailMatchPromise
   }
 
-  function validationEmailLoginFunction(passingUserData) {
-    Promise.all([emailLoginValidationPromise(passingUserData)]).then(() => {
-      passingUserData.logIn(passingUserData.email, passingUserData.password, passingUserData.setCheckUserExistence, passingUserData.setCheckPasswordExistence)
+  function validationEmailLoginFunction(firebaseAuthValue, emailData, passwordData) {
+    Promise.all([emailLoginValidationPromise(emailData, firebaseAuthValue)]).then(() => {
+      firebaseAuthValue.sgLogIn(emailData.email, passwordData.password)
     }).catch((err) => {
     }).finally(() => {
       console.log( "The Promise is settled, meaning it has been resolved or rejected. --- Login Email Validation")
@@ -52,10 +52,9 @@ import React from 'react'
 
 //*-------------------*/
 
+
 const loginValidations = {
-  emailValidationPromise,
-  validationEmailLoginFunction,
-  
+  validationEmailLoginFunction
 }
 
-export const LoginValidationsContext = React.createContext(loginValidations)
+export const loginValidationsContext = createContext(loginValidations)

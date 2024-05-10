@@ -8,7 +8,9 @@ import { TextInput, Button } from 'react-native-paper'
 import { useAuth } from 'auth/authContext'
 import { useAppleAuth } from 'auth/appleAuthContext'
 import { useFirebaseAuth } from 'auth/firebaseAuthContext'
-import { RegistrationValidationsContext } from 'user/registrationValidationContext'
+import { formFieldValidationContext } from 'auth/formFieldValidationsContext'
+import { signValidationsContext } from 'validations/signUpValidationContext'
+import { loginValidationsContext } from 'validations/loginValidationContext' //* Fix this bug (importing the wrong file)
 
 export default function PageContentGamePage() {
     const { 
@@ -21,11 +23,13 @@ export default function PageContentGamePage() {
         logoutAppleUser,
         refreshAppleToken
     } = useAppleAuth()
-    const { firebaseAuthValue } = useFirebaseAuth()
-    const { validateRegisterEmail, validateRegisterPassword } = useAuth()
+    const { auth, firebaseAuthValue, cloudFirestoreValue } = useFirebaseAuth()
     const windowWidth = Dimensions.get('window').width
     const colors = useContext(CurrentThemeContext)
     const pageStructure = useContext(PageStructureContext)
+    const formFieldValidation = useContext(formFieldValidationContext)
+    const signUpValidation = useContext(signValidationsContext)
+    const loginValidation = useContext(loginValidationsContext)
     const pageTitle = 'Index page of Account Tab'
     const isNextPage = false
     const backHeaderTitle = 'Search'
@@ -33,6 +37,12 @@ export default function PageContentGamePage() {
     console.log("🚀 ~ PageContentGamePage ~ newUserErrorEmailCheck:", newUserErrorEmailCheck)
     const [newUserErrorPasswordCheck,  setNewUserErrorPasswordCheck] = useState([])
     console.log("🚀 ~ PageContentGamePage ~ newUserErrorPasswordCheck:", newUserErrorPasswordCheck)
+    const [errorEmailCheck, setErrorEmailCheck] = useState([])
+    const [loginErrorEmailCheck, setLoginErrorEmailCheck] = useState([])
+    console.log("🚀 ~ PageContentGamePage ~ loginErrorEmailCheck:", loginErrorEmailCheck)
+    const [errorPasswordCheck, setErrorPasswordCheck] = useState([])
+    const [loginErrorPasswordCheck,  setLoginErrorPasswordCheck] = useState([])
+    console.log("🚀 ~ PageContentGamePage ~ loginErrorPasswordCheck:", loginErrorPasswordCheck)
     const [userLoggedIn, setUserLoggedIn] = useState(false) //* <---------Remove this line
     const [username, setUsername] = useState('')
     const [email, setEmail] = useState('')
@@ -42,68 +52,15 @@ export default function PageContentGamePage() {
     const [registrationType, setRegistrationType] = useState('login')
     const [error, setError] = useState(null)
     const [helperText, setHelperText] = useState('hello world')
+    const [checkUserExistence, setCheckUserExistence] = useState(false)
 
     //* Validation Errors --- (Registration Screen)
-    const newUserEmailValidationErrors = validateRegisterEmail(email, firebaseAuthValue.checkEmailExistence)
-    const newUserPasswordValidationErrors = validateRegisterPassword(password, confirmPassword)
-
+        //*Sign Up
+        //*Login
     function userRegistrationCheck() {
         setNewUserErrorEmailCheck([])
         setNewUserErrorPasswordCheck([])
     }
-
-
-
-
-    //*------------------------------------New User Email Validation------------------------------------*//
-
-    function newUserEmailValidationPromise() {
-        const newUserEmailPromise = new Promise((resolve, reject) => {
-            if (newUserEmailValidationErrors.length > 0) {
-                setNewUserErrorEmailCheck(newUserEmailValidationErrors)
-                reject('Email validation failed:', newUserEmailValidationErrors)
-            } else {
-                setNewUserErrorEmailCheck(newUserEmailValidationErrors)
-                resolve('Email is valid!')
-            } 
-        })
-        return newUserEmailPromise
-    }
-    
-    function newUserPasswordValidationPromise() {
-        const passwordMatchPromise = new Promise((resolve, reject) => {
-            if (newUserPasswordValidationErrors.length > 0) {
-                setNewUserErrorPasswordCheck(newUserPasswordValidationErrors)
-                console.log('Password validation failed:', newUserPasswordValidationErrors);
-            } else {
-                if (password == confirmPassword) {
-                    resolve('The password has been updated')
-                    setNewUserErrorPasswordCheck(null)
-                } else {
-                    reject('The passwords do not match')
-                    setNewUserErrorPasswordCheck(newUserPasswordValidationErrors)
-                    setPasswordCheckStatus('rejected')
-                }
-            }
-        })
-        return passwordMatchPromise
-    }
-    
-    function validationNewUserFunction() {
-        Promise.all([newUserEmailValidationPromise(), newUserPasswordValidationPromise()]).then(() => {
-            firebaseAuthValue.sgAccountSignUp(email, password, firebaseAuthValue.setCheckEmailExistence)
-        }).catch((err) => {
-            console.error(err)
-        }).finally(() => {
-            console.log( "The Promise is settled, meaning it has been resolved or rejected. --- New User Email Validation")
-        })
-    }
-
-    //*-------------------*/
-
-
-
-
 
     const styles = StyleSheet.create({
         container: {
@@ -141,7 +98,7 @@ export default function PageContentGamePage() {
             //TODO: Create a profile edit section
         //TODO: Create a settings section
 
-    function accountTextField(textInputLabel, textInputValue, textChangeText, errorBool, errorMessage) {
+    function accountTextField(textInputLabel, textInputValue, textChangeText, textInputError) {
         return (
             <View style={{flex: 1}}>
                 <TextInput
@@ -152,10 +109,11 @@ export default function PageContentGamePage() {
                     underlineColor={colors.secondaryColor}
                     activeUnderlineColor={colors.secondaryColor}
                     style={{backgroundColor: colors.primaryColor}}
-                    error={errorBool} // Add this line
-                    errorMessage={errorMessage} // And this line
+                    errorMessage={textInputError} // And this line
                 />
-                {errorBool && <Text>{errorMessage}</Text>}
+                <View style={{paddingVertical: 10}}>
+                    {textInputError && textInputError.map((error, index) => <MainFont style={{color: colors.secondaryColorFontColor, paddingVertical: 5}} key={index}>{error}</MainFont>)}
+                </View>
             </View>
         )
     }
@@ -163,10 +121,10 @@ export default function PageContentGamePage() {
     //* Important-------Include Google, Apple and Facebook login
 
     //* Form Section
-        function inputRow(textInputLabel, textInputValue, textChangeText, key) {
+        function inputRow(textInputLabel, textInputValue, textChangeText, key, textInputError) {
             return (
                 <View style={{flexDirection: "row"}} key={key}>
-                    {accountTextField(textInputLabel, textInputValue, textInputValue => textChangeText(textInputValue))}
+                    {accountTextField(textInputLabel, textInputValue, textInputValue => textChangeText(textInputValue), textInputError)}
                 </View>
             )
         }
@@ -183,25 +141,25 @@ export default function PageContentGamePage() {
             )
         }
 
-        function inputFormFields(formTitle, formFields, formRedirect) {
+        function inputFormFields(formTitle, formFields, formRedirect, formType) {
             return (
                 <View>
                     <MainFont style={{color: colors.primaryFontColor}}>{formTitle}</MainFont>
                     {formFields.map((formField, index) => {
-                        return inputRow(formField.label, formField.value, formField.onChange, index)
+                        return inputRow(formField.label, formField.value, formField.onChange, index, formField.errorMessage)
                     })}
                     {formRedirect === true ? formRedirectLink('Forgot Password') : null}
                 </View>
             )
         }
         
-        function inputFormButton(formButton) {
+        function inputFormButton(formButton, formFunction) {
             return (
                 <View style={{paddingTop: 20}}>
                     <Button
                         style={{buttonColor: colors.primaryColor, backgroundColor: colors.secondaryColor}}
                         mode="contained" 
-                        onPress={() => validationNewUserFunction()}>
+                        onPress={formFunction}>
                             {formButton}
                     </Button>
                 </View>
@@ -218,11 +176,11 @@ export default function PageContentGamePage() {
             )
         }
 
-        function inputForm(formTitle, formFields, formButton, formRedirect, formFieldsAlt, formType) {
+        function inputForm(formTitle, formFields, formButton, formRedirect, formFieldsAlt, formType, formFunction) {
             return (
                 <View style={{justifyContent: "center", paddingBottom: 50}}>
-                    {inputFormFields(formTitle, formFields, formRedirect)}
-                    {inputFormButton(formButton)}
+                    {inputFormFields(formTitle, formFields, formRedirect, formType)}
+                    {inputFormButton(formButton, formFunction)}
                     {inputFormRedirectLink(formFieldsAlt)}
                 </View>
             )
@@ -231,18 +189,45 @@ export default function PageContentGamePage() {
     
     //* Login Section
         function sgLogin() {
+            const loginEmailValidationErrors = formFieldValidation.validateLoginEmail(email, firebaseAuthValue.checkUserExistence, firebaseAuthValue.checkPasswordExistence)
+            const loginPasswordValidationErrors = formFieldValidation.validateLoginPassword(password)
+            const emailData = {
+                email,
+                loginEmailValidationErrors,
+                setErrorEmailCheck,
+                setLoginErrorEmailCheck
+            }
+            const passwordData = {
+                password,
+                loginPasswordValidationErrors,
+                setErrorPasswordCheck,
+                setLoginErrorPasswordCheck
+            }
             const formFields = [
-                { label: 'Email', value: email, onChange: setEmail },
-                { label: 'Password', value: password, onChange: setPassword },
+                { label: 'Email', value: email, onChange: setEmail, errorMessage: loginErrorEmailCheck},
+                { label: 'Password', value: password, onChange: setPassword, errorMessage: loginErrorPasswordCheck},
             ]
             const formFieldsAlt = { label: 'Sign Up', value: `Don't Have Account?`, onChange: () => setRegistrationType('signUp')}
 
-            return inputForm('Login', formFields, 'Login', true, formFieldsAlt, 'login')
+            return inputForm('Login', formFields, 'Login', true, formFieldsAlt, 'login', () => loginValidation.validationLoginFunction(firebaseAuthValue, emailData, passwordData))
         }
     //*-----Login Section-----*/
 
     //* Sign Up Section
         function sgSignUp() {
+            const newUserEmailValidationErrors = formFieldValidation.validateRegisterEmail(email, firebaseAuthValue.checkEmailExistence)
+            const newUserPasswordValidationErrors = formFieldValidation.validateRegisterPassword(password, confirmPassword)
+            const emailData = {
+                email,
+                newUserEmailValidationErrors,
+                setNewUserErrorEmailCheck
+            }
+            const passwordData = {
+                password,
+                confirmPassword,
+                newUserPasswordValidationErrors,
+                setNewUserErrorPasswordCheck
+            }
             const formFields = [
                 { label: 'Username', value: username, onChange: setUsername},
                 { label: 'Email', value: email, onChange: setEmail },
@@ -251,7 +236,7 @@ export default function PageContentGamePage() {
             ]
             const formFieldsAlt = { label: 'Login', value: 'Have An Account?', onChange: () => setRegistrationType('login')}
 
-            return inputForm('Sign Up', formFields, 'Sign Up', false, formFieldsAlt, 'signUp')
+            return inputForm('Sign Up', formFields, 'Sign Up', false, formFieldsAlt, 'signUp', () => signUpValidation.validationNewUserFunction(firebaseAuthValue, emailData, passwordData))
         }
     //*-----Sign Up Section-----*/
 
@@ -284,14 +269,20 @@ export default function PageContentGamePage() {
                         :   <View>
                                 <Text style={{color: colors.primaryFontColor}}>Apple User Email: {appleUserEmail}</Text>
                                 <Text style={{color: colors.primaryFontColor}}>Apple Token Expiration Date: {appleTokenExpirationDate}</Text>
-                                <View style={{paddingVertical:20}}>
+                                <View style={{paddingVertical:10}}>
                                     {siteWideButton('Get Apple Credential State', () => getAppleCredentialState())}
                                 </View>
-                                <View style={{paddingVertical:20}}>
+                                <View style={{paddingVertical:10}}>
                                     {siteWideButton('Refresh', () => refreshAppleToken())}
                                 </View>
-                                <View style={{paddingVertical:20}}>
+                                <View style={{paddingVertical:10}}>
                                     {siteWideButton('Logout', () => logoutAppleUser())}
+                                </View>
+                                <View style={{paddingVertical:10}}>
+                                    {siteWideButton('Delete User', () => {
+                                        firebaseAuthValue.deleteAccountAuth()
+                                        cloudFirestoreValue.deleteAccountDb(currentUser.uid)
+                                    })}
                                 </View>
                             </View>
                     }

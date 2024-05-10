@@ -13,6 +13,7 @@ module.exports = function(api) {
             auth: "./src/app/components/screens/authScreens",
             main: "./src/app/components/screens/mainScreens",
             user: "./src/app/components/screens/userScreens",
+            validations: "./src/app/(tabs)/account/accountComponents/validations",
             server: "./src/server",
           },
         },
