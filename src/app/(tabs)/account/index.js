@@ -33,17 +33,18 @@ export default function PageContentGamePage() {
     const pageTitle = 'Index page of Account Tab'
     const isNextPage = false
     const backHeaderTitle = 'Search'
+
+    //* Error Handling
+    const [newUserErrorUsernameCheck, setNewUserErrorUsernameCheck] = useState([])
     const [newUserErrorEmailCheck, setNewUserErrorEmailCheck] = useState([])
-    console.log("🚀 ~ PageContentGamePage ~ newUserErrorEmailCheck:", newUserErrorEmailCheck)
     const [newUserErrorPasswordCheck,  setNewUserErrorPasswordCheck] = useState([])
-    console.log("🚀 ~ PageContentGamePage ~ newUserErrorPasswordCheck:", newUserErrorPasswordCheck)
-    const [errorEmailCheck, setErrorEmailCheck] = useState([])
+    const [newUserErrorConfirmPasswordCheck,  setNewUserErrorConfirmPasswordCheck] = useState([])
     const [loginErrorEmailCheck, setLoginErrorEmailCheck] = useState([])
-    console.log("🚀 ~ PageContentGamePage ~ loginErrorEmailCheck:", loginErrorEmailCheck)
-    const [errorPasswordCheck, setErrorPasswordCheck] = useState([])
     const [loginErrorPasswordCheck,  setLoginErrorPasswordCheck] = useState([])
-    console.log("🚀 ~ PageContentGamePage ~ loginErrorPasswordCheck:", loginErrorPasswordCheck)
+
     const [userLoggedIn, setUserLoggedIn] = useState(false) //* <---------Remove this line
+    const [currentUser, setCurrentUser] = useState(null)
+    const [usernameExist, setUsernameExist] = useState(false)
     const [username, setUsername] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -53,14 +54,7 @@ export default function PageContentGamePage() {
     const [error, setError] = useState(null)
     const [helperText, setHelperText] = useState('hello world')
     const [checkUserExistence, setCheckUserExistence] = useState(false)
-
-    //* Validation Errors --- (Registration Screen)
-        //*Sign Up
-        //*Login
-    function userRegistrationCheck() {
-        setNewUserErrorEmailCheck([])
-        setNewUserErrorPasswordCheck([])
-    }
+    const [checkEmailExistence, setCheckEmailExistence] = useState(false)
 
     const styles = StyleSheet.create({
         container: {
@@ -189,18 +183,16 @@ export default function PageContentGamePage() {
     
     //* Login Section
         function sgLogin() {
-            const loginEmailValidationErrors = formFieldValidation.validateLoginEmail(email, firebaseAuthValue.checkUserExistence, firebaseAuthValue.checkPasswordExistence)
-            const loginPasswordValidationErrors = formFieldValidation.validateLoginPassword(password)
+            const loginEmailValidationErrors = formFieldValidation.loginValidations.validateLoginEmail(email, firebaseAuthValue.checkUserExistence, firebaseAuthValue.checkPasswordExistence)
+            const loginPasswordValidationErrors = formFieldValidation.loginValidations.validateLoginPassword(password)
             const emailData = {
                 email,
                 loginEmailValidationErrors,
-                setErrorEmailCheck,
                 setLoginErrorEmailCheck
             }
             const passwordData = {
                 password,
                 loginPasswordValidationErrors,
-                setErrorPasswordCheck,
                 setLoginErrorPasswordCheck
             }
             const formFields = [
@@ -215,8 +207,19 @@ export default function PageContentGamePage() {
 
     //* Sign Up Section
         function sgSignUp() {
-            const newUserEmailValidationErrors = formFieldValidation.validateRegisterEmail(email, firebaseAuthValue.checkEmailExistence)
-            const newUserPasswordValidationErrors = formFieldValidation.validateRegisterPassword(password, confirmPassword)
+            const newUserUsernameValidationErrors = formFieldValidation.signUpValidations.validateNewUsername(username, currentUser, usernameExist)
+            console.log("🚀 ~ sgSignUp ~ newUserUsernameValidationErrors:", newUserUsernameValidationErrors)
+            const newUserEmailValidationErrors = formFieldValidation.signUpValidations.validateRegisterEmail(email, firebaseAuthValue.checkEmailExistence)
+            console.log("🚀 ~ sgSignUp ~ newUserEmailValidationErrors:", newUserEmailValidationErrors)
+            const newUserPasswordValidationErrors = formFieldValidation.signUpValidations.validateRegisterPassword(password, confirmPassword)
+            console.log("🚀 ~ sgSignUp ~ newUserPasswordValidationErrors:", newUserPasswordValidationErrors)
+            const usernameData = {
+                username, 
+                currentUser,
+                usernameExist,
+                newUserUsernameValidationErrors,
+                setNewUserErrorUsernameCheck
+            }
             const emailData = {
                 email,
                 newUserEmailValidationErrors,
@@ -226,17 +229,19 @@ export default function PageContentGamePage() {
                 password,
                 confirmPassword,
                 newUserPasswordValidationErrors,
-                setNewUserErrorPasswordCheck
+                setNewUserErrorPasswordCheck,
+                setPasswordCheckStatus,
+                setNewUserErrorConfirmPasswordCheck
             }
             const formFields = [
-                { label: 'Username', value: username, onChange: setUsername},
-                { label: 'Email', value: email, onChange: setEmail },
-                { label: 'Password', value: password, onChange: setPassword },
-                { label: 'Confirm Password', value: confirmPassword, onChange: setConfirmPassword}
+                { label: 'Username', value: username, onChange: setUsername, errorMessage: newUserErrorUsernameCheck},
+                { label: 'Email', value: email, onChange: setEmail, errorMessage: newUserErrorEmailCheck},
+                { label: 'Password', value: password, onChange: setPassword, errorMessage: newUserErrorPasswordCheck},
+                { label: 'Confirm Password', value: confirmPassword, onChange: setConfirmPassword, errorMessage: newUserErrorConfirmPasswordCheck}
             ]
             const formFieldsAlt = { label: 'Login', value: 'Have An Account?', onChange: () => setRegistrationType('login')}
 
-            return inputForm('Sign Up', formFields, 'Sign Up', false, formFieldsAlt, 'signUp', () => signUpValidation.validationNewUserFunction(firebaseAuthValue, emailData, passwordData))
+            return inputForm('Sign Up', formFields, 'Sign Up', false, formFieldsAlt, 'signUp', () => signUpValidation.validationNewUserFunction(firebaseAuthValue, usernameData, emailData, passwordData))
         }
     //*-----Sign Up Section-----*/
 

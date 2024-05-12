@@ -1,4 +1,5 @@
 import React, { createContext } from 'react'
+import { bannedWords } from 'server/sgProfanityFilter.js'
 
     //* Validation for email, password, and username
 
@@ -242,15 +243,49 @@ import React, { createContext } from 'react'
     
         //*----------------------------------------------*/
 
+        // SignUp Group
+            // validateRegisterEmail
+            // validateRegisterPassword
+            // validateNewUsername
+
+        //Login Group
+            // validateLoginEmail
+            // validateLoginPassword
+
+        //Forgot Password Group
+            // validateForgotPasswordEmail
+
+        //Update Group
+            // validateNewEmail
+            // validateNewPassword
+            // validateNewUsername
+
+        const signUpValidations = {
+            validateRegisterEmail,
+            validateRegisterPassword,
+            validateNewUsername
+        }
+
+        const loginValidations = {
+            validateLoginEmail,
+            validateLoginPassword
+        }
+
+        const forgotPasswordValidations = {
+            validateForgotPasswordEmail
+        }
+
+        const updateValidations = {
+            validateNewEmail,
+            validateNewPassword,
+            validateNewUsername
+        }
+
     const validationData = {
-        validateForgotPasswordEmail,
-        validateRegisterEmail,
-        validateLoginEmail,
-        validateNewEmail,
-        validateRegisterPassword,
-        validateLoginPassword,
-        validateNewPassword,
-        validateNewUsername
+        signUpValidations,
+        loginValidations,
+        forgotPasswordValidations,
+        updateValidations
     }
     
     export const formFieldValidationContext = createContext(validationData)
