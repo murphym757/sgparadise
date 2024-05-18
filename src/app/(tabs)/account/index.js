@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react"
 import { useLocalSearchParams, Link, Stack } from "expo-router"
-import { StyleSheet, Text, Dimensions, View, Pressable } from "react-native"
+import { StyleSheet, Text, Dimensions, View, Pressable, Animated } from "react-native"
 import * as AppleAuthentication from 'expo-apple-authentication';
 import { CurrentThemeContext, Container, MainFont, MainSubFont } from 'index'
 import { PageStructureContext } from '../reuseableComponents/pageStructure'
@@ -11,6 +11,8 @@ import { useFirebaseAuth } from 'auth/firebaseAuthContext'
 import { formFieldValidationContext } from 'auth/formFieldValidationsContext'
 import { signValidationsContext } from 'validations/signUpValidationContext'
 import { loginValidationsContext } from 'validations/loginValidationContext' //* Fix this bug (importing the wrong file)
+import { forgotPasswordValidationContext } from 'validations/forgotPasswordValidationContext'
+import { withSpring } from 'react-native-reanimated'
 
 export default function PageContentGamePage() {
     const { 
@@ -30,6 +32,7 @@ export default function PageContentGamePage() {
     const formFieldValidation = useContext(formFieldValidationContext)
     const signUpValidation = useContext(signValidationsContext)
     const loginValidation = useContext(loginValidationsContext)
+    const forgotPasswordValidation = useContext(forgotPasswordValidationContext)
     const pageTitle = 'Index page of Account Tab'
     const isNextPage = false
     const backHeaderTitle = 'Search'
@@ -41,6 +44,7 @@ export default function PageContentGamePage() {
     const [newUserErrorConfirmPasswordCheck,  setNewUserErrorConfirmPasswordCheck] = useState([])
     const [loginErrorEmailCheck, setLoginErrorEmailCheck] = useState([])
     const [loginErrorPasswordCheck,  setLoginErrorPasswordCheck] = useState([])
+    const [forgotPasswordErrorEmailCheck, setForgotPasswordErrorEmailCheck] = useState([])
 
     const [userLoggedIn, setUserLoggedIn] = useState(false) //* <---------Remove this line
     const [currentUser, setCurrentUser] = useState(null)
@@ -49,9 +53,10 @@ export default function PageContentGamePage() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
+    const [forgotPasswordEmail, setForgotPasswordEmail] = useState('')
     const [passwordCheckStatus, setPasswordCheckStatus] = useState('fulfilled')
     const [registrationType, setRegistrationType] = useState('login')
-    const [error, setError] = useState(null)
+    const [formError, setFormError] = useState(null)
     const [helperText, setHelperText] = useState('hello world')
     const [checkUserExistence, setCheckUserExistence] = useState(false)
     const [checkEmailExistence, setCheckEmailExistence] = useState(false)
@@ -92,6 +97,12 @@ export default function PageContentGamePage() {
             //TODO: Create a profile edit section
         //TODO: Create a settings section
 
+    function formErrorMessage(error, index, fontSize) {
+        return (
+            <MainFont style={{fontSize: fontSize, color: colors.secondaryFontColor, paddingVertical: 5}} key={index}>{error}</MainFont>
+        )
+    }
+
     function accountTextField(textInputLabel, textInputValue, textChangeText, textInputError) {
         return (
             <View style={{flex: 1}}>
@@ -106,7 +117,7 @@ export default function PageContentGamePage() {
                     errorMessage={textInputError} // And this line
                 />
                 <View style={{paddingVertical: 10}}>
-                    {textInputError && textInputError.map((error, index) => <MainFont style={{color: colors.secondaryColorFontColor, paddingVertical: 5}} key={index}>{error}</MainFont>)}
+                    {textInputError && textInputError.map((error, index) => formErrorMessage(error, index, 12))}
                 </View>
             </View>
         )
@@ -142,7 +153,6 @@ export default function PageContentGamePage() {
                     {formFields.map((formField, index) => {
                         return inputRow(formField.label, formField.value, formField.onChange, index, formField.errorMessage)
                     })}
-                    {formRedirect === true ? formRedirectLink('Forgot Password') : null}
                 </View>
             )
         }
@@ -160,13 +170,26 @@ export default function PageContentGamePage() {
             )
         }
 
-        function inputFormRedirectLink(formFieldsAlt) {
+        function resetErrorCheck(errorCheck) {
+            if (errorCheck === 'Login') return setNewUserErrorUsernameCheck(null), setNewUserErrorEmailCheck(null), setNewUserErrorPasswordCheck(null), setNewUserErrorConfirmPasswordCheck(null)
+            if (errorCheck === 'Sign Up') return setLoginErrorEmailCheck(null), setLoginErrorPasswordCheck(null), setForgotPasswordErrorEmailCheck(null)
+        }
+
+        function inputFormRedirectLink(formFieldsAlt, formRedirect) {
             return (
                 <View style={{paddingTop: 20}}>
-                        <Pressable onPress={formFieldsAlt.onChange}>
-                            <MainFont>{formFieldsAlt.value}</MainFont><MainSubFont>{formFieldsAlt.label}</MainSubFont>
-                        </Pressable>
-                    </View>
+                    {formRedirect === true 
+                        ? <View>
+                            <Pressable onPress={() => { formFieldsAlt.onChangeAlt(); resetErrorCheck(formFieldsAlt.label); }}>
+                                <MainSubFont>{formFieldsAlt.labelAlt}</MainSubFont>
+                            </Pressable>  
+                        </View>
+                        : <View>
+                            <Pressable onPress={() => { formFieldsAlt.onChange(); resetErrorCheck(formFieldsAlt.label); }}>
+                                <MainFont>{formFieldsAlt.value}</MainFont><MainSubFont>{formFieldsAlt.label}</MainSubFont>
+                            </Pressable>
+                        </View>}
+                </View>
             )
         }
 
@@ -174,13 +197,34 @@ export default function PageContentGamePage() {
             return (
                 <View style={{justifyContent: "center", paddingBottom: 50}}>
                     {inputFormFields(formTitle, formFields, formRedirect, formType)}
+                    {formRedirect === true 
+                        ? <View style={{ alignItems: 'flex-end', paddingBottom: 25 }}>
+                            {inputFormRedirectLink(formFieldsAlt, formRedirect)}
+                            </View>
+                        : null}
                     {inputFormButton(formButton, formFunction)}
                     {inputFormRedirectLink(formFieldsAlt)}
                 </View>
             )
         }
     //*-----Form Section-----*/
-    
+
+    //* Forgot Password Section
+        function sgForgotPassword() {
+            const forgotPasswordEmailValidationErrors = formFieldValidation.forgotPasswordValidations.validateForgotPasswordEmail(email, firebaseAuthValue.checkEmailExistence)
+            const emailData = {
+                forgotPasswordEmail,
+                forgotPasswordEmailValidationErrors,
+                setForgotPasswordErrorEmailCheck
+            }
+            const formFields = [
+                { label: 'Email', value: forgotPasswordEmail, onChange: setForgotPasswordEmail, errorMessage: forgotPasswordErrorEmailCheck}
+            ]
+            const formFieldsAlt = { label: 'Sign Up', value: `Don't Have Account?`, onChange: () => setRegistrationType('signUp'), labelAlt: null, onChangeAlt: null}
+
+            return inputForm('Forgot Password', formFields, 'Reset Password', false, formFieldsAlt, 'forgotPassword', () => forgotPasswordValidation.validationEmailForgotPasswordFunction(firebaseAuthValue, emailData))
+        }
+    //*-----Forgot Password Section-----*/
     //* Login Section
         function sgLogin() {
             const loginEmailValidationErrors = formFieldValidation.loginValidations.validateLoginEmail(email, firebaseAuthValue.checkUserExistence, firebaseAuthValue.checkPasswordExistence)
@@ -199,7 +243,7 @@ export default function PageContentGamePage() {
                 { label: 'Email', value: email, onChange: setEmail, errorMessage: loginErrorEmailCheck},
                 { label: 'Password', value: password, onChange: setPassword, errorMessage: loginErrorPasswordCheck},
             ]
-            const formFieldsAlt = { label: 'Sign Up', value: `Don't Have Account?`, onChange: () => setRegistrationType('signUp')}
+            const formFieldsAlt = { label: 'Sign Up', value: `Don't Have Account?`, onChange: () => setRegistrationType('signUp'), labelAlt: 'Forgot Password', onChangeAlt: () => setRegistrationType('forgotPassword')}
 
             return inputForm('Login', formFields, 'Login', true, formFieldsAlt, 'login', () => loginValidation.validationLoginFunction(firebaseAuthValue, emailData, passwordData))
         }
@@ -208,11 +252,8 @@ export default function PageContentGamePage() {
     //* Sign Up Section
         function sgSignUp() {
             const newUserUsernameValidationErrors = formFieldValidation.signUpValidations.validateNewUsername(username, currentUser, usernameExist)
-            console.log("🚀 ~ sgSignUp ~ newUserUsernameValidationErrors:", newUserUsernameValidationErrors)
             const newUserEmailValidationErrors = formFieldValidation.signUpValidations.validateRegisterEmail(email, firebaseAuthValue.checkEmailExistence)
-            console.log("🚀 ~ sgSignUp ~ newUserEmailValidationErrors:", newUserEmailValidationErrors)
             const newUserPasswordValidationErrors = formFieldValidation.signUpValidations.validateRegisterPassword(password, confirmPassword)
-            console.log("🚀 ~ sgSignUp ~ newUserPasswordValidationErrors:", newUserPasswordValidationErrors)
             const usernameData = {
                 username, 
                 currentUser,
@@ -239,18 +280,16 @@ export default function PageContentGamePage() {
                 { label: 'Password', value: password, onChange: setPassword, errorMessage: newUserErrorPasswordCheck},
                 { label: 'Confirm Password', value: confirmPassword, onChange: setConfirmPassword, errorMessage: newUserErrorConfirmPasswordCheck}
             ]
-            const formFieldsAlt = { label: 'Login', value: 'Have An Account?', onChange: () => setRegistrationType('login')}
+            const formFieldsAlt = { label: 'Login', value: 'Have An Account?', onChange: () => setRegistrationType('login'), labelAlt: null, onChangeAlt: null}
 
             return inputForm('Sign Up', formFields, 'Sign Up', false, formFieldsAlt, 'signUp', () => signUpValidation.validationNewUserFunction(firebaseAuthValue, usernameData, emailData, passwordData))
         }
     //*-----Sign Up Section-----*/
 
     function registrationCheck() {
-        return (
-            <View>
-                {registrationType === 'login' ? sgLogin(): sgSignUp()}
-            </View>
-        )
+            if (registrationType === 'login') return sgLogin()
+            if (registrationType === 'signUp') return sgSignUp()
+            if (registrationType === 'forgotPassword') return sgForgotPassword()
     }
 
     function siteWideButton(buttonTitle, buttonFunction) {

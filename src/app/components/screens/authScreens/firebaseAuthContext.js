@@ -117,6 +117,25 @@ export function FirebaseAuthProvider({ children }) {
             })
         }
     //*-----Login/Logout Process-----*/
+    //* Reset Password Process
+        //* Function for user to change password via email
+            function sendVerificationCode(email) {
+                const auth = getAuth();
+                sendPasswordResetEmail(auth, email)
+                .then(() => {
+                    // Password reset email sent!
+                    // ..
+                    console.log('Verification code sent successfully');
+                })
+                .catch((err) => {
+                    const errorCode = err.code;
+                    const errorMessage = err.message;
+                    console.log('Failed to send verification code: ', err);
+                    console.log(errorCode)
+                    console.log(errorMessage)
+                })
+            }
+    //*-----Reset Password Process-----*/
     const firebaseAuthValue = {
         checkEmailExistence,
         checkUserExistence,
@@ -125,7 +144,8 @@ export function FirebaseAuthProvider({ children }) {
         sgAccountSignUp,
         deleteAccountAuth,
         sgLogIn,
-        sgLogOut
+        sgLogOut,
+        sendVerificationCode
     }
 
     const cloudFirestoreValue = {
