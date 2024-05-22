@@ -20,7 +20,7 @@ import React, { createContext } from 'react'
     function validationEmailForgotPasswordFunction(firebaseAuthValue, forgotPasswordData) {
         Promise.all([emailForgotPasswordValidationPromise(forgotPasswordData)]).then(() => {
         forgotPasswordData.setForgotPasswordErrorEmailCheck(forgotPasswordData.forgotPasswordEmailValidationErrors)
-            firebaseAuthValue.sendVerificationCode(forgotPasswordData.email)
+            firebaseAuthValue.sendVerificationCode(forgotPasswordData.forgotPasswordEmail)
         }).catch((err) => {
         }).finally(() => {
         console.log( "The Promise is settled, meaning it has been resolved or rejected. --- Forgot Password Email Validation")

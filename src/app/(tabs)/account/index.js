@@ -57,6 +57,7 @@ export default function PageContentGamePage() {
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
     const [forgotPasswordEmail, setForgotPasswordEmail] = useState('')
+    const [emailPassed, setEmailPassed] = useState(false)
     const [passwordCheckStatus, setPasswordCheckStatus] = useState('fulfilled')
     const [registrationType, setRegistrationType] = useState('login')
     const [formError, setFormError] = useState(null)
@@ -131,7 +132,8 @@ export default function PageContentGamePage() {
             const emailData = {
                 forgotPasswordEmail,
                 forgotPasswordEmailValidationErrors,
-                setForgotPasswordErrorEmailCheck
+                setForgotPasswordErrorEmailCheck,
+                setEmailPassed
             }
             const formFields = [
                 { label: 'Email', value: forgotPasswordEmail, onChange: setForgotPasswordEmail, errorMessage: forgotPasswordErrorEmailCheck}
