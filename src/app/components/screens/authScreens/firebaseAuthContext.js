@@ -26,7 +26,8 @@ import {
     updateEmail,
     updatePassword,
     updateProfile,
-    deleteUser
+    deleteUser,
+    signOut
 } from "firebase/auth"
 import { auth, sgDB, sgImageStorage } from 'server/config/config'
 
@@ -110,12 +111,17 @@ export function FirebaseAuthProvider({ children }) {
         }
 
         function sgLogOut() {
-            return auth.signOut().then(() => {
-                navigation.navigate('Home')
+            const auth = getAuth()
+            signOut(auth).then(() => {
+            // Sign-out successful.
             }).catch((err) => {
-                setError(`${err}`)
+                const errorCode = err.code
+                const errorMessage = err.message
+                console.log(errorCode)
+                console.log(errorMessage)
             })
         }
+        
     //*-----Login/Logout Process-----*/
     //* Reset Password Process
         //* Function for user to change password via email

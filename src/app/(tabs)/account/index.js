@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react"
+import React, { useEffect, useContext, useState } from "react"
 import { useLocalSearchParams, Link, Stack } from "expo-router"
 import { StyleSheet, Text, Dimensions, View, Pressable, Animated } from "react-native"
 import * as AppleAuthentication from 'expo-apple-authentication';
@@ -27,7 +27,7 @@ export default function PageContentGamePage() {
         refreshAppleToken
     } = useAppleAuth()
     const { auth, firebaseAuthValue, cloudFirestoreValue } = useFirebaseAuth()
-    console.log("🚀 ~ PageContentGamePage ~ auth:", auth)
+    console.log("🚀 ~ PageContentGamePage ~ auth:", auth.currentUser)
     const windowWidth = Dimensions.get('window').width
     const colors = useContext(CurrentThemeContext)
     const pageStructure = useContext(PageStructureContext)
@@ -39,6 +39,9 @@ export default function PageContentGamePage() {
     const pageTitle = 'Index page of Account Tab'
     const isNextPage = false
     const backHeaderTitle = 'Search'
+
+    const [user, setUser] = useState(null);
+
 
     //* Error Handling
     const [newUserErrorUsernameCheck, setNewUserErrorUsernameCheck] = useState([])
@@ -101,7 +104,13 @@ export default function PageContentGamePage() {
             //TODO: Create a profile edit section
         //TODO: Create a settings section
 
-    
+        useEffect(() => {
+            const unsubscribe = auth.onAuthStateChanged(user => {
+                setUser(user)
+            })
+            // Cleanup subscription on unmount
+            return () => unsubscribe();
+        }, [])
 
     //* Important-------Include Google, Apple and Facebook login
 
@@ -136,7 +145,7 @@ export default function PageContentGamePage() {
                 setEmailPassed
             }
             const formFields = [
-                { label: 'Email', value: forgotPasswordEmail, onChange: setForgotPasswordEmail, errorMessage: forgotPasswordErrorEmailCheck}
+                { label: 'Email', value: forgotPasswordEmail, onChange: setForgotPasswordEmail, errorMessage: forgotPasswordErrorEmailCheck, privateData: false}
             ]
             const formFieldsAlt = { label: 'Sign Up', value: `Don't Have Account?`, onChange: () => setRegistrationType('signUp'), labelAlt: null, onChangeAlt: null}
             const inputFormData = {
@@ -168,8 +177,8 @@ export default function PageContentGamePage() {
                 setLoginErrorPasswordCheck
             }
             const formFields = [
-                { label: 'Email', value: email, onChange: setEmail, errorMessage: loginErrorEmailCheck},
-                { label: 'Password', value: password, onChange: setPassword, errorMessage: loginErrorPasswordCheck},
+                { label: 'Email', value: email, onChange: setEmail, errorMessage: loginErrorEmailCheck, privateData: false},
+                { label: 'Password', value: password, onChange: setPassword, errorMessage: loginErrorPasswordCheck, privateData: true},
             ]
             const formFieldsAlt = { label: 'Sign Up', value: `Don't Have Account?`, onChange: () => setRegistrationType('signUp'), labelAlt: 'Forgot Password', onChangeAlt: () => setRegistrationType('forgotPassword')}
             const inputFormData = {
@@ -213,10 +222,10 @@ export default function PageContentGamePage() {
                 setNewUserErrorConfirmPasswordCheck
             }
             const formFields = [
-                { label: 'Username', value: username, onChange: setUsername, errorMessage: newUserErrorUsernameCheck},
-                { label: 'Email', value: email, onChange: setEmail, errorMessage: newUserErrorEmailCheck},
-                { label: 'Password', value: password, onChange: setPassword, errorMessage: newUserErrorPasswordCheck},
-                { label: 'Confirm Password', value: confirmPassword, onChange: setConfirmPassword, errorMessage: newUserErrorConfirmPasswordCheck}
+                { label: 'Username', value: username, onChange: setUsername, errorMessage: newUserErrorUsernameCheck, privateData: false},
+                { label: 'Email', value: email, onChange: setEmail, errorMessage: newUserErrorEmailCheck, privateData: false},
+                { label: 'Password', value: password, onChange: setPassword, errorMessage: newUserErrorPasswordCheck, privateData: true},
+                { label: 'Confirm Password', value: confirmPassword, onChange: setConfirmPassword, errorMessage: newUserErrorConfirmPasswordCheck, privateData: true}
             ]
             const formFieldsAlt = { label: 'Login', value: 'Have An Account?', onChange: () => setRegistrationType('login'), labelAlt: null, onChangeAlt: null}
             
@@ -299,7 +308,10 @@ export default function PageContentGamePage() {
         return (
             <View>
                 <MainFont style={styles.subtitle}>User Section</MainFont>
-
+                <MainSubFont style={{color: colors.primaryFontColor}}>User: {user ? user.email : ''}</MainSubFont>
+                <View style={{paddingVertical:10}}>
+                    {siteWideButton('Logout', () => firebaseAuthValue.sgLogOut(setEmail(''), setPassword(''), setConfirmPassword(''), setUsername('')))}
+                </View>
             </View>
         ) 
     }
@@ -308,7 +320,7 @@ export default function PageContentGamePage() {
         return (
             <View style={styles.container}>
                 <View style={styles.main}>
-                    {auth ? authCheck() : authCheck()}
+                    {user === null ? authCheck() : userSection()}
                 </View>
             </View>
         )

@@ -9,7 +9,7 @@ function formErrorMessage(error, index, fontSize, colors) {
     )
 }
 
-function accountTextField(textInputLabel, textInputValue, textChangeText, textInputError, colors, verticalSpacing) {
+function accountTextField(textInputLabel, textInputValue, textChangeText, textInputError, colors, verticalSpacing, privateData) {
     return (
         <View style={{flex: 1}}>
             <TextInput
@@ -21,6 +21,7 @@ function accountTextField(textInputLabel, textInputValue, textChangeText, textIn
                 activeUnderlineColor={colors.secondaryColor}
                 style={{backgroundColor: colors.primaryColor}}
                 errorMessage={textInputError} // And this line
+                secureTextEntry={privateData === true ? true : false}
             />
             <View style={{paddingVertical: verticalSpacing}}>
                 {textInputError && textInputError.map((error, index) => formErrorMessage(error, index, 12, colors))}
@@ -29,10 +30,10 @@ function accountTextField(textInputLabel, textInputValue, textChangeText, textIn
     )
 }
 
-function inputRow(textInputLabel, textInputValue, textChangeText, key, textInputError, colors, verticalSpacing) {
+function inputRow(textInputLabel, textInputValue, textChangeText, key, textInputError, colors, verticalSpacing, privateData) {
     return (
         <View style={{flexDirection: "row"}} key={key}>
-            {accountTextField(textInputLabel, textInputValue, textInputValue => textChangeText(textInputValue), textInputError, colors, verticalSpacing)}
+            {accountTextField(textInputLabel, textInputValue, textInputValue => textChangeText(textInputValue), textInputError, colors, verticalSpacing, privateData)}
         </View>
     )
 }
@@ -42,7 +43,7 @@ function inputFormFields(formTitle, formFields, colors, verticalSpacing) {
         <View>
             <MainFont style={{color: colors.primaryFontColor}}>{formTitle}</MainFont>
             {formFields.map((formField, index) => {
-                return inputRow(formField.label, formField.value, formField.onChange, index, formField.errorMessage, colors, verticalSpacing)
+                return inputRow(formField.label, formField.value, formField.onChange, index, formField.errorMessage, colors, verticalSpacing, formField.privateData)
             })}
         </View>
     )
