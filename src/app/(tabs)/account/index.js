@@ -12,6 +12,7 @@ import { formFieldValidationContext } from 'auth/formFieldValidationsContext'
 import { signValidationsContext } from 'validations/signUpValidationContext'
 import { loginValidationsContext } from 'validations/loginValidationContext' //* Fix this bug (importing the wrong file)
 import { forgotPasswordValidationContext } from 'validations/forgotPasswordValidationContext'
+import { formFieldContext } from "./formContext";
 import { withSpring } from 'react-native-reanimated'
 
 export default function PageContentGamePage() {
@@ -26,6 +27,7 @@ export default function PageContentGamePage() {
         refreshAppleToken
     } = useAppleAuth()
     const { auth, firebaseAuthValue, cloudFirestoreValue } = useFirebaseAuth()
+    console.log("🚀 ~ PageContentGamePage ~ auth:", auth)
     const windowWidth = Dimensions.get('window').width
     const colors = useContext(CurrentThemeContext)
     const pageStructure = useContext(PageStructureContext)
@@ -33,6 +35,7 @@ export default function PageContentGamePage() {
     const signUpValidation = useContext(signValidationsContext)
     const loginValidation = useContext(loginValidationsContext)
     const forgotPasswordValidation = useContext(forgotPasswordValidationContext)
+    const formStructure = useContext(formFieldContext)
     const pageTitle = 'Index page of Account Tab'
     const isNextPage = false
     const backHeaderTitle = 'Search'
@@ -97,42 +100,9 @@ export default function PageContentGamePage() {
             //TODO: Create a profile edit section
         //TODO: Create a settings section
 
-    function formErrorMessage(error, index, fontSize) {
-        return (
-            <MainFont style={{fontSize: fontSize, color: colors.secondaryFontColor, paddingVertical: 5}} key={index}>{error}</MainFont>
-        )
-    }
-
-    function accountTextField(textInputLabel, textInputValue, textChangeText, textInputError) {
-        return (
-            <View style={{flex: 1}}>
-                <TextInput
-                    label={textInputLabel}
-                    value={textInputValue}
-                    onChangeText={textChangeText}
-                    textColor={colors.primaryFontColor}
-                    underlineColor={colors.secondaryColor}
-                    activeUnderlineColor={colors.secondaryColor}
-                    style={{backgroundColor: colors.primaryColor}}
-                    errorMessage={textInputError} // And this line
-                />
-                <View style={{paddingVertical: 10}}>
-                    {textInputError && textInputError.map((error, index) => formErrorMessage(error, index, 12))}
-                </View>
-            </View>
-        )
-    }
+    
 
     //* Important-------Include Google, Apple and Facebook login
-
-    //* Form Section
-        function inputRow(textInputLabel, textInputValue, textChangeText, key, textInputError) {
-            return (
-                <View style={{flexDirection: "row"}} key={key}>
-                    {accountTextField(textInputLabel, textInputValue, textInputValue => textChangeText(textInputValue), textInputError)}
-                </View>
-            )
-        }
 
         function formRedirectLink(renderedLink) {
             return (
@@ -146,67 +116,13 @@ export default function PageContentGamePage() {
             )
         }
 
-        function inputFormFields(formTitle, formFields, formRedirect, formType) {
-            return (
-                <View>
-                    <MainFont style={{color: colors.primaryFontColor}}>{formTitle}</MainFont>
-                    {formFields.map((formField, index) => {
-                        return inputRow(formField.label, formField.value, formField.onChange, index, formField.errorMessage)
-                    })}
-                </View>
-            )
-        }
-        
-        function inputFormButton(formButton, formFunction) {
-            return (
-                <View style={{paddingTop: 20}}>
-                    <Button
-                        style={{buttonColor: colors.primaryColor, backgroundColor: colors.secondaryColor}}
-                        mode="contained" 
-                        onPress={formFunction}>
-                            {formButton}
-                    </Button>
-                </View>
-            )
-        }
 
         function resetErrorCheck(errorCheck) {
             if (errorCheck === 'Login') return setNewUserErrorUsernameCheck(null), setNewUserErrorEmailCheck(null), setNewUserErrorPasswordCheck(null), setNewUserErrorConfirmPasswordCheck(null)
             if (errorCheck === 'Sign Up') return setLoginErrorEmailCheck(null), setLoginErrorPasswordCheck(null), setForgotPasswordErrorEmailCheck(null)
         }
 
-        function inputFormRedirectLink(formFieldsAlt, formRedirect) {
-            return (
-                <View style={{paddingTop: 20}}>
-                    {formRedirect === true 
-                        ? <View>
-                            <Pressable onPress={() => { formFieldsAlt.onChangeAlt(); resetErrorCheck(formFieldsAlt.label); }}>
-                                <MainSubFont>{formFieldsAlt.labelAlt}</MainSubFont>
-                            </Pressable>  
-                        </View>
-                        : <View>
-                            <Pressable onPress={() => { formFieldsAlt.onChange(); resetErrorCheck(formFieldsAlt.label); }}>
-                                <MainFont>{formFieldsAlt.value}</MainFont><MainSubFont>{formFieldsAlt.label}</MainSubFont>
-                            </Pressable>
-                        </View>}
-                </View>
-            )
-        }
-
-        function inputForm(formTitle, formFields, formButton, formRedirect, formFieldsAlt, formType, formFunction) {
-            return (
-                <View style={{justifyContent: "center", paddingBottom: 50}}>
-                    {inputFormFields(formTitle, formFields, formRedirect, formType)}
-                    {formRedirect === true 
-                        ? <View style={{ alignItems: 'flex-end', paddingBottom: 25 }}>
-                            {inputFormRedirectLink(formFieldsAlt, formRedirect)}
-                            </View>
-                        : null}
-                    {inputFormButton(formButton, formFunction)}
-                    {inputFormRedirectLink(formFieldsAlt)}
-                </View>
-            )
-        }
+        
     //*-----Form Section-----*/
 
     //* Forgot Password Section
@@ -221,8 +137,18 @@ export default function PageContentGamePage() {
                 { label: 'Email', value: forgotPasswordEmail, onChange: setForgotPasswordEmail, errorMessage: forgotPasswordErrorEmailCheck}
             ]
             const formFieldsAlt = { label: 'Sign Up', value: `Don't Have Account?`, onChange: () => setRegistrationType('signUp'), labelAlt: null, onChangeAlt: null}
-
-            return inputForm('Forgot Password', formFields, 'Reset Password', false, formFieldsAlt, 'forgotPassword', () => forgotPasswordValidation.validationEmailForgotPasswordFunction(firebaseAuthValue, emailData))
+            const inputFormData = {
+                formTitle: 'Forgot Password', 
+                formFields, 
+                formButton: 'Reset Password', 
+                formRedirect: false, 
+                formFieldsAlt, 
+                formType: 'forgotPassword', 
+                formFunction: () => forgotPasswordValidation.validationEmailForgotPasswordFunction(firebaseAuthValue, emailData), 
+                resetErrorCheck,
+                colors
+            }
+            return formStructure.inputForm(inputFormData)
         }
     //*-----Forgot Password Section-----*/
     //* Login Section
@@ -244,8 +170,18 @@ export default function PageContentGamePage() {
                 { label: 'Password', value: password, onChange: setPassword, errorMessage: loginErrorPasswordCheck},
             ]
             const formFieldsAlt = { label: 'Sign Up', value: `Don't Have Account?`, onChange: () => setRegistrationType('signUp'), labelAlt: 'Forgot Password', onChangeAlt: () => setRegistrationType('forgotPassword')}
-
-            return inputForm('Login', formFields, 'Login', true, formFieldsAlt, 'login', () => loginValidation.validationLoginFunction(firebaseAuthValue, emailData, passwordData))
+            const inputFormData = {
+                formTitle: 'Login', 
+                formFields, 
+                formButton: 'Login', 
+                formRedirect: true, 
+                formFieldsAlt, 
+                formType: 'login', 
+                formFunction: () => loginValidation.validationLoginFunction(firebaseAuthValue, emailData, passwordData), 
+                resetErrorCheck,
+                colors
+            }
+            return formStructure.inputForm(inputFormData)
         }
     //*-----Login Section-----*/
 
@@ -281,8 +217,20 @@ export default function PageContentGamePage() {
                 { label: 'Confirm Password', value: confirmPassword, onChange: setConfirmPassword, errorMessage: newUserErrorConfirmPasswordCheck}
             ]
             const formFieldsAlt = { label: 'Login', value: 'Have An Account?', onChange: () => setRegistrationType('login'), labelAlt: null, onChangeAlt: null}
+            
+            const inputFormData = {
+                formTitle: 'Sign Up', 
+                formFields, 
+                formButton: 'Sign Up', 
+                formRedirect: false, 
+                formFieldsAlt, 
+                formType: 'signUp', 
+                formFunction: () => signUpValidation.validationNewUserFunction(firebaseAuthValue, usernameData, emailData, passwordData), 
+                resetErrorCheck,
+                colors: colors
+        }
 
-            return inputForm('Sign Up', formFields, 'Sign Up', false, formFieldsAlt, 'signUp', () => signUpValidation.validationNewUserFunction(firebaseAuthValue, usernameData, emailData, passwordData))
+            return formStructure.inputForm(inputFormData)
         }
     //*-----Sign Up Section-----*/
 
@@ -344,11 +292,21 @@ export default function PageContentGamePage() {
             </Container>
         )
     }
+
+    function userSection() {
+        return (
+            <View>
+                <MainFont style={styles.subtitle}>User Section</MainFont>
+
+            </View>
+        ) 
+    }
+    
     function pageContent() {
         return (
             <View style={styles.container}>
                 <View style={styles.main}>
-                    {authCheck()}
+                    {auth ? authCheck() : authCheck()}
                 </View>
             </View>
         )
