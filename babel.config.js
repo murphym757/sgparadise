@@ -14,6 +14,7 @@ module.exports = function(api) {
             main: "./src/app/components/screens/mainScreens",
             user: "./src/app/components/screens/userScreens",
             validations: "./src/app/(tabs)/account/accountComponents/validations",
+            accountPage: "./src/app/(tabs)/account/accountComponents/accountPage",
             server: "./src/server",
           },
         },

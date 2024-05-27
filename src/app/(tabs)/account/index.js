@@ -4,7 +4,7 @@ import { StyleSheet, Text, Dimensions, View, Pressable, Animated } from "react-n
 import * as AppleAuthentication from 'expo-apple-authentication';
 import { CurrentThemeContext, Container, MainFont, MainSubFont } from 'index'
 import { PageStructureContext } from '../reuseableComponents/pageStructure'
-import { TextInput, Button } from 'react-native-paper'
+import { TextInput, Button, Dialog, Portal } from 'react-native-paper'
 import { useAuth } from 'auth/authContext'
 import { useAppleAuth } from 'auth/appleAuthContext'
 import { useFirebaseAuth } from 'auth/firebaseAuthContext'
@@ -12,6 +12,9 @@ import { formFieldValidationContext } from 'auth/formFieldValidationsContext'
 import { signValidationsContext } from 'validations/signUpValidationContext'
 import { loginValidationsContext } from 'validations/loginValidationContext' //* Fix this bug (importing the wrong file)
 import { forgotPasswordValidationContext } from 'validations/forgotPasswordValidationContext'
+import { accountPageContext } from 'accountPage/accountPageContext'
+import { editAccountPageContext } from 'accountPage/editAccountPageContext'
+import { AppWideImageContext } from 'main/sgImageContext'
 import { formFieldContext } from "./formContext";
 import { withSpring } from 'react-native-reanimated'
 
@@ -35,7 +38,9 @@ export default function PageContentGamePage() {
     const signUpValidation = useContext(signValidationsContext)
     const loginValidation = useContext(loginValidationsContext)
     const forgotPasswordValidation = useContext(forgotPasswordValidationContext)
+    const accountPage = useContext(accountPageContext)
     const formStructure = useContext(formFieldContext)
+    const images = useContext(AppWideImageContext)
     const pageTitle = 'Index page of Account Tab'
     const isNextPage = false
     const backHeaderTitle = 'Search'
@@ -67,6 +72,11 @@ export default function PageContentGamePage() {
     const [helperText, setHelperText] = useState('hello world')
     const [checkUserExistence, setCheckUserExistence] = useState(false)
     const [checkEmailExistence, setCheckEmailExistence] = useState(false)
+
+    //* Dialog Box 
+    const [dialogVisible, setDialogVisible] = useState(false)
+    const [dialogBoxType, setDialogBoxType] = useState('')
+    console.log("🚀 ~ PageContentGamePage ~ dialogBoxType:", dialogBoxType)
 
     const styles = StyleSheet.create({
         container: {
@@ -304,15 +314,93 @@ export default function PageContentGamePage() {
         )
     }
 
-    function userSection() {
+    //* Dialog Box
+    function sgDialogBoxContent(dialogBoxData) {
+        return (
+            <Dialog.Content>
+                <MainFont>{dialogBoxData.dialogBoxTitle}</MainFont>
+                <MainSubFont>{dialogBoxData.dialogBoxContent}</MainSubFont>
+            </Dialog.Content>
+        )
+    }
+
+    function sgDialogBoxOptions() {
+        return (
+            <Dialog.Actions>
+                <Button onPress={() => {console.log('Cancel'); setDialogVisible(false)}}>Cancel</Button>
+                <Button onPress={() => {console.log('Ok'); setDialogVisible(false)}}>Ok</Button>
+            </Dialog.Actions>
+        )
+    }
+
+    function sgDialogBox(dialogBoxData) {
         return (
             <View>
-                <MainFont style={styles.subtitle}>User Section</MainFont>
-                <MainSubFont style={{color: colors.primaryFontColor}}>User: {user ? user.email : ''}</MainSubFont>
+                <Portal>
+                    <Dialog visible={dialogVisible} onDismiss={() => setDialogVisible(false)}>
+                    {sgDialogBoxContent(dialogBoxData)}
+                    {sgDialogBoxOptions()}
+                    </Dialog>
+                </Portal>
+            </View>
+        )
+    }
+
+    function updateEmailDialog() {
+        const dialogBoxData = { 
+            dialogBoxTitle: 'Update Email',
+            dialogBoxContent: 'This is a simple dialog box'
+        }
+        return sgDialogBox(dialogBoxData)
+    }
+    function changeUsernameDialog() {
+        const dialogBoxData = { 
+            dialogBoxTitle: 'Change Username',
+            dialogBoxContent: 'This is a simple dialog box'
+        }
+        return sgDialogBox(dialogBoxData)
+    }
+    function deleteAccountDialog() {
+        const dialogBoxData = { 
+            dialogBoxTitle: 'Delete Account',
+            dialogBoxContent: 'This is a simple dialog box'
+        }
+        return sgDialogBox(dialogBoxData)
+    }
+
+    function dialogSelector() {
+        if (dialogBoxType === 'updateEmail') return updateEmailDialog()
+        if (dialogBoxType === 'changeUsername') return changeUsernameDialog()
+        if (dialogBoxType === 'deleteAccount') return deleteAccountDialog()
+    
+    }
+//*----Dialog Box----*//
+
+    //TODO: MORE, MORE, MORE...fill out the user section (once the user's logged in)
+    //TODO: Design is everything. Make this section appealing and easy to use. While adding more features
+    //TODO: Make this section a context as well
+    function userSection() {
+        const styleData = {
+            colors,
+            styles,
+            images
+        }
+        const userData = {
+            user,
+            email: user.email
+        }
+        
+        return (
+            <Container style={{width: windowWidth}}>
+                {dialogSelector()}
+                {accountPage.upperHalfAccountPage(styleData, userData)}
+                {accountPage.lowerHalfAccountPage(styleData, userData, setDialogBoxType,setDialogVisible)}
                 <View style={{paddingVertical:10}}>
                     {siteWideButton('Logout', () => firebaseAuthValue.sgLogOut(setEmail(''), setPassword(''), setConfirmPassword(''), setUsername('')))}
                 </View>
-            </View>
+                {siteWideButton('Show Dialog', () => setDialogVisible(true))}
+                {siteWideButton('Hide Dialog', () => setDialogVisible(false))}
+            </Container>
         ) 
     }
     
