@@ -1,6 +1,8 @@
 import React, { createContext } from 'react'
 import { View, FlatList } from 'react-native'
 import { TextInput, Card, Divider, Icon } from 'react-native-paper'
+import { useLocalSearchParams, Link, Stack } from "expo-router"
+
 import {
     Container,
     ContentDivider,
@@ -16,6 +18,31 @@ import {
 } from 'index';
 
 //*----Account Page----*//
+
+//* Link to next page
+function pageLink(styleData, linkedData, userData, linkContent, nextPagePath) {
+    return (
+        <Link 
+            href={{
+                pathname: nextPagePath, 
+                params: { 
+                    backHeaderTitle: linkedData.currentPageTitle,
+                    user: userData.user
+                }
+            }} 
+            style={{color: styleData.colors.primaryFontColor}}>
+            {linkContent}
+        </Link>
+    )
+}
+
+//TODO: Implement a modal for the user to update their email, username, and delete their account
+//TODO: Implement a dialog box showing the changes the user has made to their account and ask them for confirmation of the changes
+//TODO: FOr the delete account, pro vide a warning that the user will lose all their data and ask for confirmation
+
+//*----User Changes Modal----*//
+
+//*----User Changes Modal----*//
 
     function userIcon(styleData) {
         const imageData = {
@@ -55,34 +82,34 @@ import {
         )
     }
 
-    function cardListing(listingTitle, listingType, setDialogBoxType, setDialogVisible) {
+    function cardListing(listingTitle) {
         return (
-            <MainFont onPress={() => {console.log(listingTitle); setDialogBoxType(listingType); setDialogVisible(true)}} variant="titleLarge" style={{paddingVertical: 10}}>{listingTitle}</MainFont>
+            <View style={{paddingVertical: 10}}>
+                <MainFont variant="titleLarge">{listingTitle}</MainFont>
+            </View>
         )
     }
 
-    function editAccountOptions(styleData, setDialogBoxType, setDialogVisible) {
+    function editAccountOptions(styleData, userData, linkData) {
         return (
             <View>
                 <Card mode='outlined' style={{backgroundColor: styleData.colors.primaryColor, borderColor: styleData.colors.secondaryColor}}>
                     <Card.Title style={styleData.styles.subtitle} title="Your Account" subtitle="Make any necessary changes to your account" />
-                    <Card.Content> 
-                        {cardListing('Update Email', 'updateEmail', setDialogBoxType, setDialogVisible)}
+                    <Card.Content>
+                        {pageLink(styleData, linkData, userData, cardListing('Update Email'), linkData.nextPagePathEmail)}
                             <Divider style={{ backgroundColor: styleData.colors.secondaryColor }}/>
-                        {cardListing('Change Username', 'changeUsername',  setDialogBoxType, setDialogVisible)}
-                            <Divider style={{ backgroundColor: styleData.colors.secondaryColor }}/>
-                        {cardListing('Delete Account, Make font color different', 'deleteAccount', setDialogBoxType, setDialogVisible)}
+                        {pageLink(styleData, linkData, userData, cardListing('Change Username'), linkData.nextPagePathUsername)}
                     </Card.Content>
                 </Card>
             </View>
         )
     }
     
-    function lowerHalfAccountPage(styleData, userData, setDialogBoxType, setDialogVisible) {
+    function lowerHalfAccountPage(styleData, userData, linkData) {
         return (
             <View style={{flexDirection: "row", justifyContent: "center"}}>
                 <View style={{flex: 1, justifyContent: "center"}}>
-                    {editAccountOptions(styleData, setDialogBoxType, setDialogVisible)}
+                    {editAccountOptions(styleData, userData, linkData)}
                 </View>
             </View>
         )

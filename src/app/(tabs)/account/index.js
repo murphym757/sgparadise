@@ -4,7 +4,7 @@ import { StyleSheet, Text, Dimensions, View, Pressable, Animated } from "react-n
 import * as AppleAuthentication from 'expo-apple-authentication';
 import { CurrentThemeContext, Container, MainFont, MainSubFont } from 'index'
 import { PageStructureContext } from '../reuseableComponents/pageStructure'
-import { TextInput, Button, Dialog, Portal } from 'react-native-paper'
+import { TextInput, Button, Dialog, Portal, Modal } from 'react-native-paper'
 import { useAuth } from 'auth/authContext'
 import { useAppleAuth } from 'auth/appleAuthContext'
 import { useFirebaseAuth } from 'auth/firebaseAuthContext'
@@ -17,6 +17,8 @@ import { editAccountPageContext } from 'accountPage/editAccountPageContext'
 import { AppWideImageContext } from 'main/sgImageContext'
 import { formFieldContext } from "./formContext";
 import { withSpring } from 'react-native-reanimated'
+import { ModalButton } from 'auth/sgModal'
+
 
 export default function PageContentGamePage() {
     const { 
@@ -41,9 +43,8 @@ export default function PageContentGamePage() {
     const accountPage = useContext(accountPageContext)
     const formStructure = useContext(formFieldContext)
     const images = useContext(AppWideImageContext)
-    const pageTitle = 'Index page of Account Tab'
     const isNextPage = false
-    const backHeaderTitle = 'Search'
+    const backHeaderTitle = 'Account'
 
     const [user, setUser] = useState(null);
 
@@ -346,20 +347,6 @@ export default function PageContentGamePage() {
         )
     }
 
-    function updateEmailDialog() {
-        const dialogBoxData = { 
-            dialogBoxTitle: 'Update Email',
-            dialogBoxContent: 'This is a simple dialog box'
-        }
-        return sgDialogBox(dialogBoxData)
-    }
-    function changeUsernameDialog() {
-        const dialogBoxData = { 
-            dialogBoxTitle: 'Change Username',
-            dialogBoxContent: 'This is a simple dialog box'
-        }
-        return sgDialogBox(dialogBoxData)
-    }
     function deleteAccountDialog() {
         const dialogBoxData = { 
             dialogBoxTitle: 'Delete Account',
@@ -368,17 +355,8 @@ export default function PageContentGamePage() {
         return sgDialogBox(dialogBoxData)
     }
 
-    function dialogSelector() {
-        if (dialogBoxType === 'updateEmail') return updateEmailDialog()
-        if (dialogBoxType === 'changeUsername') return changeUsernameDialog()
-        if (dialogBoxType === 'deleteAccount') return deleteAccountDialog()
-    
-    }
 //*----Dialog Box----*//
 
-    //TODO: MORE, MORE, MORE...fill out the user section (once the user's logged in)
-    //TODO: Design is everything. Make this section appealing and easy to use. While adding more features
-    //TODO: Make this section a context as well
     function userSection() {
         const styleData = {
             colors,
@@ -389,17 +367,22 @@ export default function PageContentGamePage() {
             user,
             email: user.email
         }
-        
+        const linkData = {
+            currentPageTitle: backHeaderTitle,
+            nextPagePathEmail: '/account/editAccountScreens/updateEmail',
+            nextPagePathUsername: '/account/editAccountScreens/changeUsername'
+        }
         return (
             <Container style={{width: windowWidth}}>
-                {dialogSelector()}
+                {deleteAccountDialog()}
                 {accountPage.upperHalfAccountPage(styleData, userData)}
-                {accountPage.lowerHalfAccountPage(styleData, userData, setDialogBoxType,setDialogVisible)}
+                {accountPage.lowerHalfAccountPage(styleData, userData, linkData, setDialogBoxType,setDialogVisible)}
                 <View style={{paddingVertical:10}}>
                     {siteWideButton('Logout', () => firebaseAuthValue.sgLogOut(setEmail(''), setPassword(''), setConfirmPassword(''), setUsername('')))}
                 </View>
-                {siteWideButton('Show Dialog', () => setDialogVisible(true))}
-                {siteWideButton('Hide Dialog', () => setDialogVisible(false))}
+                <View style={{paddingTop:50}}>
+                    {siteWideButton('Delete Account', () => setDialogVisible(true))}
+                </View>
             </Container>
         ) 
     }
