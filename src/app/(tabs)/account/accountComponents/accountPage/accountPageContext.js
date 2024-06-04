@@ -20,14 +20,14 @@ import {
 //*----Account Page----*//
 
 //* Link to next page
-function pageLink(styleData, linkedData, userData, linkContent, nextPagePath) {
+function pageLink(styleData, linkedData, user, linkContent, nextPagePath) {
     return (
         <Link 
             href={{
                 pathname: nextPagePath, 
                 params: { 
                     backHeaderTitle: linkedData.currentPageTitle,
-                    user: userData.user
+                    user: user
                 }
             }} 
             style={{color: styleData.colors.primaryFontColor}}>
@@ -56,27 +56,30 @@ function pageLink(styleData, linkedData, userData, linkContent, nextPagePath) {
         return styleData.images.detailedGameCover(imageData, imageData.imageLink)
     }
 
-    function userGeneralData(styleData, userData) {
-        const username = 'junglefan305'
-        const userJoined = 'May 2024'
+    function userGeneralData(styleData, user) {
+        const userEmail = user.email ? user.email : 'Email'
+        const username = user.displayName ? user.displayName : 'Username'
+        const userJoined = user.metadata.creationTime ? new Date(user.metadata.creationTime) : 'Date'
+        const userJoinedString = userJoined instanceof Date ? userJoined.toLocaleDateString() : userJoined
+        
         return (
             <View>
-                    <MainFont style={styleData.styles.subtitle}>User Section</MainFont>
-                    <MainSubFont style={{color: styleData.colors.primaryFontColor, paddingVertical:5}}>{userData.user ? userData.user.email : ''}</MainSubFont>
-                    <MainFont style={{paddingVertical: 5}}>{username}</MainFont>
-                    <MainFont style={{paddingVertical: 5}}>Joined {userJoined}</MainFont>
+                <MainFont style={styleData.styles.subtitle}>User Section</MainFont>
+                <MainSubFont style={{color: styleData.colors.primaryFontColor, paddingVertical:5}}>{userEmail}</MainSubFont>
+                <MainFont style={{paddingVertical: 5}}>{username}</MainFont>
+                <MainFont style={{paddingVertical: 5}}>Joined {userJoinedString}</MainFont>
             </View>
         )
     }
 
-    function upperHalfAccountPage(styleData, userData) {
+    function upperHalfAccountPage(styleData, user) {
         return (
             <View style={{flexDirection: "row", justifyContent: "center"}}>
                 <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
                     {userIcon(styleData)}
                 </View>
                 <View style={{flex: 2}}>
-                    {userGeneralData(styleData, userData)}
+                    {userGeneralData(styleData, user)}
                 </View> 
             </View>
         )
@@ -90,26 +93,29 @@ function pageLink(styleData, linkedData, userData, linkContent, nextPagePath) {
         )
     }
 
-    function editAccountOptions(styleData, userData, linkData) {
+    function editAccountOptions(styleData, user, linkData) {
+        const updateEmail = user.email ? 'Update Email' : 'Create Email'
+        const updateUsername = user.displayName ? 'Update Username' : 'Create Username'
+
         return (
             <View>
                 <Card mode='outlined' style={{backgroundColor: styleData.colors.primaryColor, borderColor: styleData.colors.secondaryColor}}>
                     <Card.Title style={styleData.styles.subtitle} title="Your Account" subtitle="Make any necessary changes to your account" />
                     <Card.Content>
-                        {pageLink(styleData, linkData, userData, cardListing('Update Email'), linkData.nextPagePathEmail)}
+                        {pageLink(styleData, linkData, user, cardListing(updateEmail), linkData.nextPagePathEmail)}
                             <Divider style={{ backgroundColor: styleData.colors.secondaryColor }}/>
-                        {pageLink(styleData, linkData, userData, cardListing('Change Username'), linkData.nextPagePathUsername)}
+                        {pageLink(styleData, linkData, user, cardListing(updateUsername), linkData.nextPagePathUsername)}
                     </Card.Content>
                 </Card>
             </View>
         )
     }
     
-    function lowerHalfAccountPage(styleData, userData, linkData) {
+    function lowerHalfAccountPage(styleData, user, linkData) {
         return (
             <View style={{flexDirection: "row", justifyContent: "center"}}>
                 <View style={{flex: 1, justifyContent: "center"}}>
-                    {editAccountOptions(styleData, userData, linkData)}
+                    {editAccountOptions(styleData, user, linkData)}
                 </View>
             </View>
         )

@@ -363,10 +363,6 @@ export default function PageContentGamePage() {
             styles,
             images
         }
-        const userData = {
-            user,
-            email: user.email
-        }
         const linkData = {
             currentPageTitle: backHeaderTitle,
             nextPagePathEmail: '/account/editAccountScreens/updateEmail',
@@ -375,8 +371,8 @@ export default function PageContentGamePage() {
         return (
             <Container style={{width: windowWidth}}>
                 {deleteAccountDialog()}
-                {accountPage.upperHalfAccountPage(styleData, userData)}
-                {accountPage.lowerHalfAccountPage(styleData, userData, linkData, setDialogBoxType,setDialogVisible)}
+                {accountPage.upperHalfAccountPage(styleData, user)}
+                {accountPage.lowerHalfAccountPage(styleData, user, linkData, setDialogBoxType,setDialogVisible)}
                 <View style={{paddingVertical:10}}>
                     {siteWideButton('Logout', () => firebaseAuthValue.sgLogOut(setEmail(''), setPassword(''), setConfirmPassword(''), setUsername('')))}
                 </View>

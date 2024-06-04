@@ -1,24 +1,45 @@
-import React, { useEffect, useContext, useState } from "react"
-import { useLocalSearchParams, Link, Stack } from "expo-router"
-import { StyleSheet, Text, Dimensions, View, Pressable, Animated } from "react-native"
-import { Button, TextInput, Modal, Portal } from "react-native-paper"
-import { CurrentThemeContext, Container, MainFont, MainSubFont } from 'index'
+import React, { useContext, useState } from "react"
+import { useLocalSearchParams } from "expo-router"
+import { Container } from 'index'
+import { Dimensions } from 'react-native'
+import { useFirebaseAuth } from 'auth/firebaseAuthContext'
 import { PageStructureContext } from '../../reuseableComponents/pageStructure'
-
+import { formFieldValidationContext } from 'auth/formFieldValidationsContext'
+import { editAccountContext } from './editAccountContext'
+import { loginValidationsContext } from '../accountComponents/validations/loginValidationContext'
 
 export default function UpdateUsernamePage() {
+    const { auth, firebaseAuthValue } = useFirebaseAuth()
+    const [newUsername, setNewUsername] = useState('')
+    const [errorUsernameCheck, setErrorUsernameCheck] = useState([])
+    const editAccount = useContext(editAccountContext)
+    const formFieldValidation = useContext(formFieldValidationContext)
+    const loginValidation = useContext(loginValidationsContext)
     const pageStructure = useContext(PageStructureContext)
+    const windowWidth = Dimensions.get('window').width
+
     const params = useLocalSearchParams()
-    const { 
-        backHeaderTitle, 
-        user
-    } = params
+    const { backHeaderTitle } = params
     const isNextPage = true
 
     function updateUsernameContent() {
+        const currentUsername = auth.currentUser.displayName
+        const newUsernameValidationErrors = formFieldValidation.updateValidations.validateNewUsername(newUsername, currentUsername, firebaseAuthValue.checkUserExistence)
+        const formTitle = currentUsername ? 'Update Username' : 'Create Username'
+        const groupData = {
+            groupName: 'Username',
+            currentValue: currentUsername,
+            newValue: newUsername,
+            onChangeNewValue: setNewUsername,
+            errorCheck: errorUsernameCheck,
+            onChangeErrorCheck: setErrorUsernameCheck,
+            validationErrors: newUsernameValidationErrors,
+            firebaseAuthValueFunction: () => firebaseAuthValue.updateUsernameAuth(newUsername)
+        }
+        const formFunction = () => loginValidation.usernameValidationPromise(groupData)
         return (
-            <Container>
-                <MainFont>Update Username Page</MainFont>
+            <Container style={{width: windowWidth}}>
+                {editAccount.editAccountForm('Username', formTitle, formFunction, groupData)}
             </Container>
         )
     }

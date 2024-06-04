@@ -142,6 +142,33 @@ export function FirebaseAuthProvider({ children }) {
                 })
             }
     //*-----Reset Password Process-----*/
+    //* Update User Data Process
+        //* Username Update
+            async function updateUsernameAuth(newUsername) {
+                const auth = getAuth()
+                return updateProfile(auth.currentUser, {
+                    displayName: newUsername,
+                }).then(() => {
+                // Profile updated!
+                // ...
+                })
+            }
+        //* Email Update
+        async function updateEmailAuth(newEmail) {
+            const auth = getAuth();
+            const user = auth.currentUser;
+            return updateEmail(user, newEmail).then(() => {
+            // Email updated!
+            // ...
+            console.log("Email updated successfully!")
+            }).catch((error) => {
+                const errorCode = error.code
+                if (errorCode === 'auth/email-already-in-use') return (
+                    setCheckEmailExistence(true)
+                )
+            })
+        }
+    //*-----Update User Data Process-----*/
     const firebaseAuthValue = {
         checkEmailExistence,
         checkUserExistence,
@@ -151,7 +178,9 @@ export function FirebaseAuthProvider({ children }) {
         deleteAccountAuth,
         sgLogIn,
         sgLogOut,
-        sendVerificationCode
+        sendVerificationCode,
+        updateUsernameAuth,
+        updateEmailAuth
     }
 
     const cloudFirestoreValue = {

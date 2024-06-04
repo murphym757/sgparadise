@@ -2,7 +2,7 @@ import React, { createContext } from 'react'
 
 function newUserUsernameValidationPromise(usernameData) {
     const usernameMatchPromise = new Promise((resolve, reject) => {
-        if (usernameData.newUserUsernameValidationErrors.length < 0) {
+        if (usernameData.newUserUsernameValidationErrors.length > 0) {
             usernameData.setNewUserErrorUsernameCheck(usernameData.newUserUsernameValidationErrors)
             reject('Username validation failed:', usernameData.newUserUsernameValidationErrors)
         } else {
@@ -16,7 +16,7 @@ function newUserUsernameValidationPromise(usernameData) {
 
 function newUserEmailValidationPromise(emailData) {
     const newUserEmailPromise = new Promise((resolve, reject) => {
-        if (emailData.newUserEmailValidationErrors.length < 0) {
+        if (emailData.newUserEmailValidationErrors.length > 0) {
             emailData.setNewUserErrorEmailCheck(emailData.newUserEmailValidationErrors)
             reject('Email validation failed:', emailData.newUserEmailValidationErrors)
         } else {

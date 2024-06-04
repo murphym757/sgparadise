@@ -82,15 +82,30 @@ function inputForm(inputFormData) {
                 ? <View style={{ alignItems: 'flex-end' }}>
                     {inputFormRedirectLink(linkChangeForgotPassword, null, inputFormData.formFieldsAlt.labelAlt, 20)}
                 </View>
-                : null}
+                : null
+            }
             {inputFormButton(inputFormData.formButton, inputFormData.formFunction, inputFormData.colors, 20)}
-            {inputFormRedirectLink(linkChange, inputFormData.formFieldsAlt.value, inputFormData.formFieldsAlt.label, 20)}
+            {inputFormData.formFieldsAlt !== null
+                ? inputFormRedirectLink(linkChange, inputFormData.formFieldsAlt.value, inputFormData.formFieldsAlt.label, 20)
+                : null 
+            }
+            {}
+        </View>
+    )
+}
+
+function inputFormUpdateData(inputFormData) {
+    return (
+        <View style={{justifyContent: "center"}}>
+            {inputFormFields(inputFormData.formTitle, inputFormData.formFields, inputFormData.colors, 10)}
+            {inputFormButton(inputFormData.formButton, inputFormData.formFunction, inputFormData.colors, 20)}
         </View>
     )
 }
 
 const formStructure = {
-    inputForm
+    inputForm,
+    inputFormUpdateData
 }
 
 export const formFieldContext = createContext(formStructure)

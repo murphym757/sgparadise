@@ -216,7 +216,7 @@ import { bannedWords } from 'server/sgProfanityFilter.js'
                         errors.push(`Username contains profanity. Please choose a different username: ${maskedUsername}`);
                     }
                 }
-    
+
                 if (!username) {
                     errors.push('Username is required');
                 }
@@ -233,7 +233,7 @@ import { bannedWords } from 'server/sgProfanityFilter.js'
                     errors.push('This is your current username');
                 }
     
-                if (usernameExist === null || usernameExist === true)  {
+                if (usernameExist === true)  {
                     errors.push('This username is already in use')
                 } 
     
