@@ -1,6 +1,5 @@
 import React, { createContext } from 'react'
 
-
     function validationPromiseUpdateUser(dataGroup) {
         const matchPromise = new Promise((resolve, reject) => {
             if (dataGroup.validationErrors.length > 0) {
@@ -21,31 +20,31 @@ import React, { createContext } from 'react'
         return matchPromise
     }
 
-    //! This is the function that is used to validate the user's email and username, but there still is an error here
     function validationUpdateUserFunction(dataGroup) {
         validationPromiseUpdateUser(dataGroup).then(() => {
-            dataGroup.firebaseAuthValueFunction();
+            dataGroup.firebaseAuthValueFunction()
         }).catch((err) => {
-            console.error(err);
+            console.error(err)
         }).finally(() => {
-            console.log("The Promise is settled, meaning it has been resolved or rejected. --- Login Email Validation");
-        });
+            console.log("The Promise is settled, meaning it has been resolved or rejected. --- Login Email Validation")
+        })
     }
-//* This is the function is used to reauthenticate the user via checking email and password (universal such be on other screens)
 
-    function emailValidationPromise(emailData) {
-        return validationUpdateUserFunction(emailData)
-    }
+    //* Used for changing logged in user's email
+
+        function emailValidationPromise(emailData) {
+            return validationUpdateUserFunction(emailData)
+        }
 
     //*-------------------*/
 
-//* Used for changing s logged in user's username
+    //* Used for changing logged in user's username
 
-    function usernameValidationPromise(usernameData) {
-        return validationUpdateUserFunction(usernameData)
-    }
+        function usernameValidationPromise(usernameData) {
+            return validationUpdateUserFunction(usernameData)
+        }
 
-//*-------------------*/
+    //*-------------------*/
 
     //*------------------------------------Login Email Validation------------------------------------*//
 
