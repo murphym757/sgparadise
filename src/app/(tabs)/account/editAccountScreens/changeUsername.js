@@ -23,6 +23,7 @@ export default function UpdateUsernamePage() {
     const isNextPage = true
 
     function updateUsernameContent() {
+        const formButtonLink = '/account'
         const currentUsername = auth.currentUser.displayName
         const newUsernameValidationErrors = formFieldValidation.updateValidations.validateNewUsername(newUsername, currentUsername, firebaseAuthValue.checkUserExistence)
         const formTitle = currentUsername ? 'Update Username' : 'Create Username'
@@ -39,7 +40,7 @@ export default function UpdateUsernamePage() {
         const formFunction = () => loginValidation.usernameValidationPromise(groupData)
         return (
             <Container style={{width: windowWidth}}>
-                {editAccount.editAccountForm('Username', formTitle, formFunction, groupData)}
+                {editAccount.editAccountForm(formButtonLink, 'Username', formTitle, formFunction, groupData)}
             </Container>
         )
     }

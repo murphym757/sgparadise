@@ -1,6 +1,6 @@
-import React, { createContext } from 'react'
+import { createContext } from 'react';
 import { View, Pressable } from 'react-native'
-import { TextInput, Button } from 'react-native-paper'
+import { TextInput } from 'react-native-paper'
 import { MainFont, MainSubFont } from 'index'
 
 function formErrorMessage(error, index, fontSize, colors) {
@@ -49,18 +49,6 @@ function inputFormFields(formTitle, formFields, colors, verticalSpacing) {
     )
 }
 
-function inputFormButton(formButton, formFunction, colors, verticalSpacing) {
-    return (
-        <View style={{paddingVertical: verticalSpacing}}>
-            <Button
-                style={{buttonColor: colors.primaryColor, backgroundColor: colors.secondaryColor}}
-                mode="contained" 
-                onPress={formFunction}>
-                    {formButton}
-            </Button>
-        </View>
-    )
-}
 
 function inputFormRedirectLink(linkChange, linkValue, linkLabel, verticalSpacing) {
     return (
@@ -84,7 +72,7 @@ function inputForm(inputFormData) {
                 </View>
                 : null
             }
-            {inputFormButton(inputFormData.formButton, inputFormData.formFunction, inputFormData.colors, 20)}
+            {inputFormData.formButton}
             {inputFormData.formFieldsAlt !== null
                 ? inputFormRedirectLink(linkChange, inputFormData.formFieldsAlt.value, inputFormData.formFieldsAlt.label, 20)
                 : null 
@@ -98,7 +86,7 @@ function inputFormUpdateData(inputFormData) {
     return (
         <View style={{justifyContent: "center"}}>
             {inputFormFields(inputFormData.formTitle, inputFormData.formFields, inputFormData.colors, 10)}
-            {inputFormButton(inputFormData.formButton, inputFormData.formFunction, inputFormData.colors, 20)}
+            {inputFormData.formButton}
         </View>
     )
 }

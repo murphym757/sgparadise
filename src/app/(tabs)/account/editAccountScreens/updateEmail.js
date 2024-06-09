@@ -23,6 +23,7 @@ export default function UpdateEmailPage() {
     const isNextPage = true
 
     function updateEmailContent() {
+        const formButtonLink = '/account'
         const currentEmail = auth.currentUser.email
         const newEmailValidationErrors = formFieldValidation.updateValidations.validateNewEmail(newEmail, currentEmail, firebaseAuthValue.checkEmailExistence)
         const formTitle = currentEmail ? 'Update Email' : 'Create Email'
@@ -39,7 +40,7 @@ export default function UpdateEmailPage() {
         const formFunction = () => loginValidation.emailValidationPromise(groupData)
         return (
             <Container style={{width: windowWidth}}>
-                {editAccount.editAccountForm('Email', formTitle, formFunction, groupData)}
+                {editAccount.editAccountForm(formButtonLink, 'Email', formTitle, formFunction, groupData)}
             </Container>
         )
     }

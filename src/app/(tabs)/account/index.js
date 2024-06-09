@@ -4,7 +4,7 @@ import { StyleSheet, Text, Dimensions, View, Pressable, Animated } from "react-n
 import * as AppleAuthentication from 'expo-apple-authentication';
 import { CurrentThemeContext, Container, MainFont, MainSubFont } from 'index'
 import { PageStructureContext } from '../reuseableComponents/pageStructure'
-import { TextInput, Button, Dialog, Portal, Modal } from 'react-native-paper'
+import { TextInput, Button, Dialog, Portal, Snackbar } from 'react-native-paper'
 import { useAuth } from 'auth/authContext'
 import { useAppleAuth } from 'auth/appleAuthContext'
 import { useFirebaseAuth } from 'auth/firebaseAuthContext'
@@ -18,6 +18,7 @@ import { AppWideImageContext } from 'main/sgImageContext'
 import { formFieldContext } from "./formContext";
 import { withSpring } from 'react-native-reanimated'
 import { ModalButton } from 'auth/sgModal'
+import { appWideComponentsContext } from '../reuseableComponents/appComponentsContext'
 
 
 export default function PageContentGamePage() {
@@ -43,6 +44,7 @@ export default function PageContentGamePage() {
     const accountPage = useContext(accountPageContext)
     const formStructure = useContext(formFieldContext)
     const images = useContext(AppWideImageContext)
+    const appWideButton = useContext(appWideComponentsContext)
     const isNextPage = false
     const backHeaderTitle = 'Account'
 
@@ -73,6 +75,12 @@ export default function PageContentGamePage() {
     const [helperText, setHelperText] = useState('hello world')
     const [checkUserExistence, setCheckUserExistence] = useState(false)
     const [checkEmailExistence, setCheckEmailExistence] = useState(false)
+    const [visible, setVisible] = useState(false)
+
+    const mainColor = colors.primaryColor
+    const secondaryColor = colors.secondaryColor
+    const mainColorAlt = colors.primaryColorAlt
+
 
     //* Dialog Box 
     const [dialogVisible, setDialogVisible] = useState(false)
@@ -146,7 +154,42 @@ export default function PageContentGamePage() {
         
     //*-----Form Section-----*/
 
+    //* Snackbar Section (Displays a message to the user based on successful changes)
+    function sgSnackbar() {
+        return (
+            <View style={styles.container}>
+                <Button onPress={() => setVisible(!visible)}>{visible ? 'Hide' : 'Show'}</Button>
+                <Snackbar
+                    visible={visible}
+                    onDismiss={() => setVisible(false)}
+                    action={{
+                        label: 'clear',
+                        onPress: () => {
+                        // Do something
+                        },
+                    }}
+                >
+                Successfully Updated
+                </Snackbar>
+            </View>      
+        )
+    }
+
     //* Forgot Password Section
+        function sgAccountSignUp(formTitle, formFields, formRedirect, formFieldsAlt, formType, buttonData) {
+            const inputFormData = {
+                formTitle, 
+                formFields, 
+                formRedirect, 
+                formFieldsAlt, 
+                formType, 
+                formButton: appWideButton.sgButton(buttonData),
+                resetErrorCheck,
+                colors
+            }
+            return formStructure.inputForm(inputFormData)
+        }
+        
         function sgForgotPassword() {
             const forgotPasswordEmailValidationErrors = formFieldValidation.forgotPasswordValidations.validateForgotPasswordEmail(email, firebaseAuthValue.checkEmailExistence)
             const emailData = {
@@ -155,22 +198,21 @@ export default function PageContentGamePage() {
                 setForgotPasswordErrorEmailCheck,
                 setEmailPassed
             }
+            const buttonData = {
+                backgroundColor: colors.secondaryColor,
+                buttonErrors: forgotPasswordErrorEmailCheck,
+                buttonColor: colors.primaryColor,
+                buttonFunction: () => forgotPasswordValidation.validationEmailForgotPasswordFunction(firebaseAuthValue, emailData),
+                buttonLink: '/account',
+                buttonTitle: 'Reset Password',
+                buttonVerticalSpacing: 20
+            }
             const formFields = [
                 { label: 'Email', value: forgotPasswordEmail, onChange: setForgotPasswordEmail, errorMessage: forgotPasswordErrorEmailCheck, privateData: false}
             ]
             const formFieldsAlt = { label: 'Sign Up', value: `Don't Have Account?`, onChange: () => setRegistrationType('signUp'), labelAlt: null, onChangeAlt: null}
-            const inputFormData = {
-                formTitle: 'Forgot Password', 
-                formFields, 
-                formButton: 'Reset Password', 
-                formRedirect: false, 
-                formFieldsAlt, 
-                formType: 'forgotPassword', 
-                formFunction: () => forgotPasswordValidation.validationEmailForgotPasswordFunction(firebaseAuthValue, emailData), 
-                resetErrorCheck,
-                colors
-            }
-            return formStructure.inputForm(inputFormData)
+
+            return sgAccountSignUp('Forgot Password', formFields, false, formFieldsAlt, 'forgotPassword', buttonData)
         }
     //*-----Forgot Password Section-----*/
     //* Login Section
@@ -187,23 +229,22 @@ export default function PageContentGamePage() {
                 loginPasswordValidationErrors,
                 setLoginErrorPasswordCheck
             }
+            const buttonData = {
+                backgroundColor: colors.secondaryColor,
+                buttonErrors: loginErrorEmailCheck || loginErrorPasswordCheck,
+                buttonColor: colors.primaryColor,
+                buttonFunction: () => loginValidation.validationLoginFunction(firebaseAuthValue, emailData, passwordData),
+                buttonLink: '/account',
+                buttonTitle: 'Login',
+                buttonVerticalSpacing: 20
+            }
             const formFields = [
                 { label: 'Email', value: email, onChange: setEmail, errorMessage: loginErrorEmailCheck, privateData: false},
-                { label: 'Password', value: password, onChange: setPassword, errorMessage: loginErrorPasswordCheck, privateData: true},
+                { label: 'Password', value: password, onChange: setPassword, errorMessage: loginErrorPasswordCheck, privateData: true}
             ]
             const formFieldsAlt = { label: 'Sign Up', value: `Don't Have Account?`, onChange: () => setRegistrationType('signUp'), labelAlt: 'Forgot Password', onChangeAlt: () => setRegistrationType('forgotPassword')}
-            const inputFormData = {
-                formTitle: 'Login', 
-                formFields, 
-                formButton: 'Login', 
-                formRedirect: true, 
-                formFieldsAlt, 
-                formType: 'login', 
-                formFunction: () => loginValidation.validationLoginFunction(firebaseAuthValue, emailData, passwordData), 
-                resetErrorCheck,
-                colors
-            }
-            return formStructure.inputForm(inputFormData)
+
+            return sgAccountSignUp('Login', formFields, true, formFieldsAlt, 'login', buttonData)
         }
     //*-----Login Section-----*/
 
@@ -232,6 +273,15 @@ export default function PageContentGamePage() {
                 setPasswordCheckStatus,
                 setNewUserErrorConfirmPasswordCheck
             }
+            const buttonData = {
+                backgroundColor: colors.secondaryColor,
+                buttonErrors: newUserErrorUsernameCheck || newUserErrorEmailCheck || newUserErrorPasswordCheck || newUserErrorConfirmPasswordCheck,
+                buttonColor: colors.primaryColor,
+                buttonFunction: () => signUpValidation.validationNewUserFunction(firebaseAuthValue, usernameData, emailData, passwordData),
+                buttonLink: '/account',
+                buttonTitle: 'Sign Up',
+                buttonVerticalSpacing: 20
+            }
             const formFields = [
                 { label: 'Username', value: username, onChange: setUsername, errorMessage: newUserErrorUsernameCheck, privateData: false},
                 { label: 'Email', value: email, onChange: setEmail, errorMessage: newUserErrorEmailCheck, privateData: false},
@@ -240,19 +290,7 @@ export default function PageContentGamePage() {
             ]
             const formFieldsAlt = { label: 'Login', value: 'Have An Account?', onChange: () => setRegistrationType('login'), labelAlt: null, onChangeAlt: null}
             
-            const inputFormData = {
-                formTitle: 'Sign Up', 
-                formFields, 
-                formButton: 'Sign Up', 
-                formRedirect: false, 
-                formFieldsAlt, 
-                formType: 'signUp', 
-                formFunction: () => signUpValidation.validationNewUserFunction(firebaseAuthValue, usernameData, emailData, passwordData), 
-                resetErrorCheck,
-                colors: colors
-        }
-
-            return formStructure.inputForm(inputFormData)
+            return sgAccountSignUp('Sign Up', formFields, true, formFieldsAlt, 'signUp', buttonData)
         }
     //*-----Sign Up Section-----*/
 
@@ -283,21 +321,10 @@ export default function PageContentGamePage() {
                         :   <View>
                                 <Text style={{color: colors.primaryFontColor}}>Apple User Email: {appleUserEmail}</Text>
                                 <Text style={{color: colors.primaryFontColor}}>Apple Token Expiration Date: {appleTokenExpirationDate}</Text>
-                                <View style={{paddingVertical:10}}>
-                                    {siteWideButton('Get Apple Credential State', () => getAppleCredentialState())}
-                                </View>
-                                <View style={{paddingVertical:10}}>
-                                    {siteWideButton('Refresh', () => refreshAppleToken())}
-                                </View>
-                                <View style={{paddingVertical:10}}>
-                                    {siteWideButton('Logout', () => logoutAppleUser())}
-                                </View>
-                                <View style={{paddingVertical:10}}>
-                                    {siteWideButton('Delete User', () => {
-                                        firebaseAuthValue.deleteAccountAuth()
-                                        cloudFirestoreValue.deleteAccountDb(currentUser.uid)
-                                    })}
-                                </View>
+                                {getAppleCredStateButtonAppleAuth('Get Apple Credential State', '/account')}
+                                {refreshButtonAppleAuth('Refresh', '/account')}
+                                {logoutButtonAppleAuth('Logout', '/account')}
+                                {deleteButtonAppleAuth('Delete User', '/account')}
                             </View>
                     }
                 </View>
@@ -372,22 +399,98 @@ export default function PageContentGamePage() {
             <Container style={{width: windowWidth}}>
                 {deleteAccountDialog()}
                 {accountPage.upperHalfAccountPage(styleData, user)}
-                {accountPage.lowerHalfAccountPage(styleData, user, linkData, setDialogBoxType,setDialogVisible)}
-                <View style={{paddingVertical:10}}>
-                    {siteWideButton('Logout', () => firebaseAuthValue.sgLogOut(setEmail(''), setPassword(''), setConfirmPassword(''), setUsername('')))}
-                </View>
-                <View style={{paddingTop:50}}>
-                    {siteWideButton('Delete Account', () => setDialogVisible(true))}
-                </View>
+                {accountPage.lowerHalfAccountPage(styleData, user, linkData, setDialogBoxType, setDialogVisible)}
+                {logoutButtonAuth('Logout', '/account')}
+                {deleteButtonAuth( 'Delete Account', '/account')}
             </Container>
         ) 
     }
-    
+
+    function sgButton(buttonTitle, buttonLink, buttonFunction, buttonColor, backgroundColor, paddingTop) {
+        const buttonData = {
+            backgroundColor,
+            buttonColor,
+            buttonErrors: null,
+            buttonFunction,
+            buttonLink,
+            buttonTitle,
+            buttonVerticalSpacing: 10
+        }
+        return (
+            <View style={{paddingTop: paddingTop}}>
+                {appWideButton.sgButton(buttonData)}
+            </View>
+        )
+    }
+
+    //* sg Buttons
+        //* sg Apple Auth Buttons
+            //* Get Apple Credential State Button
+            function getAppleCredStateButtonAppleAuth(buttonTitle, buttonLink) {
+                const buttonFunction = () => getAppleCredentialState()
+                const buttonColor = mainColor
+                const backgroundColor = secondaryColor
+                
+                return sgButton(buttonTitle, buttonLink, buttonFunction, buttonColor, backgroundColor, 0)
+            }
+
+            //* Refresh Apple Token Button
+            function refreshButtonAppleAuth(buttonTitle, buttonLink) {
+                const buttonFunction = () => refreshAppleToken()
+                const buttonColor = mainColor
+                const backgroundColor = secondaryColor
+                
+                return sgButton(buttonTitle, buttonLink, buttonFunction, buttonColor, backgroundColor, 0)
+            }
+
+            //* Apple Logout Button
+            function logoutButtonAppleAuth(buttonTitle, buttonLink) {
+                const buttonFunction = () => logoutAppleUser()
+                const buttonColor = mainColor
+                const backgroundColor = mainColorAlt
+                
+                return sgButton(buttonTitle, buttonLink, buttonFunction, buttonColor, backgroundColor, 0)
+            }
+
+            //* Delete Account Button (via Apple Auth)
+            function deleteButtonAppleAuth(buttonTitle, buttonLink) {
+                const buttonFunction = () => {
+                    firebaseAuthValue.deleteAccountAuth()
+                    cloudFirestoreValue.deleteAccountDb(currentUser.uid)
+                }
+                const buttonColor = mainColor
+                const backgroundColor = secondaryColor
+                
+                return sgButton(buttonTitle, buttonLink, buttonFunction, buttonColor, backgroundColor, 40)
+            }
+        //*-----sg Apple Auth Buttons-----*/
+        
+        //* sg Auth Buttons
+            //* Logout Button
+                function logoutButtonAuth(buttonTitle, buttonLink) {
+                    const buttonFunction = () => firebaseAuthValue.sgLogOut(setEmail(''), setPassword(''), setConfirmPassword(''), setUsername(''))
+                    const buttonColor = mainColor
+                    const backgroundColor = secondaryColor
+                    
+                    return sgButton(buttonTitle, buttonLink, buttonFunction, buttonColor, backgroundColor, 0)
+                }
+
+            //* Delete Account Button
+                function deleteButtonAuth(buttonTitle, buttonLink) {
+                    const buttonFunction = () => setDialogVisible(true)
+                    const buttonColor = mainColor
+                    const backgroundColor = mainColorAlt
+                    
+                    return sgButton(buttonTitle, buttonLink, buttonFunction, buttonColor, backgroundColor, 40)
+                }
+        //*-----sg Auth Buttons-----*/
+    //*-----sg Buttons Section-----*/
     function pageContent() {
         return (
             <View style={styles.container}>
                 <View style={styles.main}>
                     {user === null ? authCheck() : userSection()}
+                    {sgSnackbar()}
                 </View>
             </View>
         )
